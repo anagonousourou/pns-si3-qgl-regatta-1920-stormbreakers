@@ -1,14 +1,15 @@
-# pns-si3-qgl-regatta-1920-stormbreakers
+# Equipe StormBreakers
 
 ![](flag.png?raw=true)
 
-BOUZIDI Héba
-STRIEBEL Florian
-ANAGONOU Patrick
-LEBRISSE David
+Membres de l'équipe :
+- BOUZIDI Héba
+- STRIEBEL Florian
+- ANAGONOU Patrick
+- LEBRISSE David
 
-Stormbreakers
+Nom de l'équipe : Stormbreakers
 
-Mjollnir
+Nom du bateau : Mjollnir
 
-non-apprenti
+Etudiants non-apprentis
