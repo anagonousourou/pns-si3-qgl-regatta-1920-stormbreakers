@@ -4,8 +4,8 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>fr.unice.polytech.si3.qgl</groupId>
-	<artifactId>teamid</artifactId> <!-- CHANGE ME -->
-	<version>0.1-SNAPSHOT</version> <!-- CHANGE ME -->
+	<artifactId>StormBreakers_Regatta</artifactId> <!-- CHANGE ME -->
+	<version>V0</version> <!-- CHANGE ME -->
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding> <!-- CHANGE ME IF NEEDED, other : ISO-8859-1 -->
