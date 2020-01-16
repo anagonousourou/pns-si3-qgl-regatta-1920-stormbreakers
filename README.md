@@ -1,7 +1,7 @@
 # pns-si3-qgl-regatta-1920-stormbreakers
 pns-si3-qgl-regatta-1920-stormbreakers created by GitHub Classroom
 
-[Flag.png]
+![](flag.png?raw=true)
 
 BOUZIDI Héba
 STRIEBEL Florian
