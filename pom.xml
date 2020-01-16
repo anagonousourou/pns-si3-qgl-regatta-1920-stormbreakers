@@ -4,8 +4,8 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>fr.unice.polytech.si3.qgl</groupId>
-	<artifactId>StormBreakers_Regatta</artifactId> <!-- CHANGE ME -->
-	<version>V0</version> <!-- CHANGE ME -->
+	<artifactId>stormbreakers</artifactId> <!-- CHANGE ME -->
+	<version>0.1-SNAPSHOT</version> <!-- CHANGE ME -->
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding> <!-- CHANGE ME IF NEEDED, other : ISO-8859-1 -->
@@ -40,7 +40,6 @@
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
 			<version>${jackson.databind.version}</version>
-			<scope>provided</scope>
 		</dependency>
 
 		<!-- Testing -->
