@@ -24,11 +24,12 @@ public class Bateau extends AutreBateau {
    */
     @JsonCreator 
     Bateau(
-    @JsonProperty("position")Position position,
-    @JsonProperty("shape") Shape shape,
-    @JsonProperty("life") int life,
-    @JsonProperty("deck") Deck deck,
-    @JsonProperty("entities") List<Equipment> entities){
+        @JsonProperty("position")Position position,
+        @JsonProperty("shape") Shape shape,
+        @JsonProperty("life") int life,
+        @JsonProperty("deck") Deck deck,
+        @JsonProperty("entities") List<Equipment> entities
+    ){
     	super(position,shape,life);
     	this.name=name;
     	this.deck=deck;

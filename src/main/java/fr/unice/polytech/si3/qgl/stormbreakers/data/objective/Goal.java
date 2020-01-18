@@ -17,17 +17,17 @@ include = JsonTypeInfo.As.PROPERTY,
 property="mode")
 @JsonSubTypes({
     @JsonSubTypes.Type(value = RegattaGoal.class, name="REGATTA"),
-    @JsonSubTypes.Type(value = BattleGoal.class, name="")
+    @JsonSubTypes.Type(value = BattleGoal.class, name="BATTLE")
 })
 
 public abstract class Goal {
     private String mode;
 
-
     @JsonCreator
     Goal(@JsonProperty("mode") String mode) {
     	this.mode=mode;
     }
+
     @JsonProperty("mode")
     public String getMode() {
     	return mode;

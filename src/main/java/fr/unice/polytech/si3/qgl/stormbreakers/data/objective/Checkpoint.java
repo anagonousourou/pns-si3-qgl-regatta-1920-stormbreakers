@@ -15,4 +15,14 @@ public class Checkpoint {
     	this.position=position;
     	this.shape=shape;
     }
+
+    @JsonProperty("position")
+    public Position getPosition() {
+        return position;
+    }
+
+    @JsonProperty("shape")
+    public Shape getShape() {
+        return shape;
+    }
 }

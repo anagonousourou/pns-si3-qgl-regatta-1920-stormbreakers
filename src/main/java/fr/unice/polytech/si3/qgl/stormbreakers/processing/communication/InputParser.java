@@ -74,7 +74,7 @@ public class InputParser {
     private Bateau createBateau(JsonNode result, ObjectMapper objectMapper) {
 		// TODO Auto-generated method stub
     	try {
-    		return objectMapper.readValue(result.get("shipCount").toPrettyString(),Bateau.class);
+    		return objectMapper.readValue(result.get("ship").toPrettyString(),Bateau.class);
 		} catch (JsonProcessingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
