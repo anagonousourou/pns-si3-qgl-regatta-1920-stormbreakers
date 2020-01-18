@@ -1,8 +1,12 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.data.actions;
 
-public class Oar extends ActionType {
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-    Oar(int sailorId) {
+public class Oar extends SailorAction {
+
+    @JsonCreator
+    public Oar(@JsonProperty("sailorId") int sailorId) {
         super(sailorId,"OAR");
     }
 

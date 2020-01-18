@@ -52,6 +52,9 @@ public class Cockpit implements ICockpit {
 
 	public String nextRound(String round) {
 		System.out.println("Next round input: " + round);
+
+		
+
 		//System.out.println(this.actions.toPrettyString());
 		return this.actions.toPrettyString();
 	}

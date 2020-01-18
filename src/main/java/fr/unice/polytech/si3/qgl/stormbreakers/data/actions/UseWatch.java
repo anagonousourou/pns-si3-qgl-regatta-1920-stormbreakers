@@ -1,8 +1,12 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.data.actions;
 
-public class UseWatch extends ActionType {
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-    UseWatch(int sailorId) {
+public class UseWatch extends SailorAction {
+
+    @JsonCreator
+    UseWatch(@JsonProperty("sailorId")  int sailorId) {
         super(sailorId,"USE_WATCH");
     }
 

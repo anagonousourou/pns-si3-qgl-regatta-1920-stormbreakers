@@ -1,8 +1,12 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.data.actions;
 
-public class LowerSail extends ActionType {
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-    LowerSail(int sailorId) {
+public class LowerSail extends SailorAction {
+
+    @JsonCreator
+    LowerSail( @JsonProperty("sailorId") int sailorId) {
         super(sailorId,"LOWER_SAIL");
     }
 
