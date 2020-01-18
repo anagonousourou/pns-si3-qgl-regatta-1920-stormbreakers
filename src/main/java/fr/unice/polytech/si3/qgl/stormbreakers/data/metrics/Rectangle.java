@@ -2,13 +2,13 @@ package fr.unice.polytech.si3.qgl.stormbreakers.data.metrics;
 
 public class Rectangle extends Shape {
     private double width;
-    private double lenght;
+    private double height;
     private double orientation;
 
-    Rectangle(double width, double lenght, double orientation) {
+    Rectangle(double width, double height, double orientation) {
         super("rectangle");
         this.width = width;
-        this.lenght = lenght;
+        this.height = height;
         this.orientation = orientation;
     }
 }

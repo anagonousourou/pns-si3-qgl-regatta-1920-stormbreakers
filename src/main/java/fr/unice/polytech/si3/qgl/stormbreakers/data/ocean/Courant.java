@@ -7,7 +7,7 @@ public class Courant extends OceanEntity {
     private double strength;
 
     Courant(Position position, Shape shape, double strength) {
-        super(position,shape);
+        super("stream",position,shape);
         this.strength = strength;
     }
 

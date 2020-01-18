@@ -7,7 +7,7 @@ public class AutreBateau extends OceanEntity {
     private int life;
 
     AutreBateau(Position position, Shape shape, int life) {
-        super(position,shape);
+        super("ship",position,shape);
         this.life=life;
     }
 
