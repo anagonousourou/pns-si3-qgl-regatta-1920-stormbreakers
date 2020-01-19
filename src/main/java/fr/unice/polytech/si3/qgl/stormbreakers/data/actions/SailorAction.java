@@ -21,13 +21,13 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
         @JsonSubTypes.Type(value = Oar.class, name="OAR"),
         @JsonSubTypes.Type(value = UseWatch.class, name="USE_WATCH")
 })
-public abstract class SailorAction {
+public class SailorAction {
     private int sailorId;
     private String type;
 
 
     @JsonCreator
-    SailorAction(
+    public SailorAction(
             @JsonProperty("sailorId") int sailorId,
             @JsonProperty("type") String type) {
         this.sailorId = sailorId;

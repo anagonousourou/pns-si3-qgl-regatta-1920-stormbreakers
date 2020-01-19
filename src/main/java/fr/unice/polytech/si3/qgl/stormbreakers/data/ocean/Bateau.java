@@ -4,8 +4,10 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Shape;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Deck;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Equipment;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Rame;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -31,7 +33,6 @@ public class Bateau extends AutreBateau {
         @JsonProperty("entities") List<Equipment> entities
     ){
     	super(position,shape,life);
-    	this.name=name;
     	this.deck=deck;
     	this.entities=entities;
     }
@@ -43,8 +44,10 @@ public class Bateau extends AutreBateau {
     
     @JsonProperty("entities")
     public List<Equipment> getEquipments() {
-    	// TODO Auto-generated method stub
     	return entities;
+    }
+    public List<Equipment> getRames() {
+    	return this.entities.stream().filter(e-> e.getType()=="oar").collect(Collectors.toList());
     }
     @JsonProperty("deck")
     public Deck getDeck() {

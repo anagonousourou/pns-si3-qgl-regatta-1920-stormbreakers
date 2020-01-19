@@ -1,11 +1,10 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.data.game;
 
+import java.util.List;
+
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Marin;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Goal;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Bateau;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class InitGame {
     Goal goal;
@@ -18,5 +17,37 @@ public class InitGame {
     	this.ship=ship;
     	this.sailors=sailors;
     	this.shipCount=shipCount;
+    }
+
+    public Goal getGoal() {
+        return goal;
+    }
+
+    public void setGoal(Goal goal) {
+        this.goal = goal;
+    }
+
+    public Bateau getShip() {
+        return ship;
+    }
+
+    public void setShip(Bateau ship) {
+        this.ship = ship;
+    }
+
+    public List<Marin> getSailors() {
+        return sailors;
+    }
+
+    public void setSailors(List<Marin> sailors) {
+        this.sailors = sailors;
+    }
+
+    public int getShipCount() {
+        return shipCount;
+    }
+
+    public void setShipCount(int shipCount) {
+        this.shipCount = shipCount;
     }
 }
