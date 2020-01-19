@@ -15,15 +15,16 @@ import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import fr.unice.polytech.si3.qgl.regatta.cockpit.ICockpit;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.Oar;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.SailorAction;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Marin;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Checkpoint;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Goal;
 import fr.unice.polytech.si3.qgl.stormbreakers.processing.communication.InputParser;
+import fr.unice.polytech.si3.qgl.stormbreakers.processing.communication.OutputBuilder;
 
 public class Cockpit implements ICockpit {
 
-	private ArrayNode actions;
-	
 	public void initGame(String game) {
 		InputParser parser = new InputParser();
 		parser.fetchInitGameState(game);
@@ -31,8 +32,15 @@ public class Cockpit implements ICockpit {
 
 	public String nextRound(String round) {
 		System.out.println("Next round input: " + round);
-		//System.out.println(this.actions.toPrettyString());
-		return this.actions.toPrettyString();
+
+		// TODO: 19/01/2020 Creer action a partir des Marins recuperes
+
+		List<SailorAction> actions = new ArrayList<SailorAction>();
+		actions.add(new Oar(0));
+		actions.add(new Oar(1));
+
+		OutputBuilder outputBuilder = new OutputBuilder();
+		return outputBuilder.writeActions(actions);
 	}
 
 	@Override
