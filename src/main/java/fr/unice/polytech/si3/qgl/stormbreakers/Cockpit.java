@@ -23,15 +23,11 @@ public class Cockpit implements ICockpit {
 	}
 
 	public String nextRound(String round) {
-		System.out.println("Next round input: " + round);
 
 		// TODO: 19/01/2020 Creer action a partir des Marins recuperes
 
-		
-
 		OutputBuilder outputBuilder = new OutputBuilder();
 		String r=outputBuilder.writeActions(this.actions());
-		System.out.println(r);
 		return r;
 	}
 
@@ -41,10 +37,6 @@ public class Cockpit implements ICockpit {
 	}
 
 	List<SailorAction> actions() {
-		if(this.gameData.getShip().getRames().size()==this.marins.size()){
-			return this.marins.stream().map(marin-> new Oar(marin.getId()))
-			.collect(Collectors.toList());
-		} else if(this.gameData.getShip().getRames().size() > this.marins.size()) {
 			List<Marin> leftSailors = new ArrayList<>();
 			List<Marin> rightSailors = new ArrayList<>();
 			marins.forEach(marin -> {
@@ -55,11 +47,6 @@ public class Cockpit implements ICockpit {
 				}
 			});
 			return dispatchSailors(leftSailors, rightSailors);
-		} else if(this.gameData.getShip().getRames().size()<this.marins.size()){
-			//TODO : si c'est un cas possible... sinon, condition a virer
-			return null;
-		}
-		return null;
 		
 	}
 	/**
@@ -79,7 +66,6 @@ public class Cockpit implements ICockpit {
 		} else {
 			finalSailorsList = dismissSailors(rightSailors, rightSailorsCount - leftSailorsCount);
 		}
-		
 		return finalSailorsList.stream().map(marin-> new Oar(marin.getId()))
 				.collect(Collectors.toList());
 	}
