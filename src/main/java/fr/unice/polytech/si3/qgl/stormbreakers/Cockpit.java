@@ -48,7 +48,7 @@ public class Cockpit implements ICockpit {
 			List<Marin> leftSailors = new ArrayList<>();
 			List<Marin> rightSailors = new ArrayList<>();
 			marins.forEach(marin -> {
-				if(marin.getX() == gameData.getShip().getDeck().getLength() - 1) {
+				if(marin.getY() == gameData.getShip().getDeck().getWidth() - 1) {
 					rightSailors.add(marin);
 				} else {
 					leftSailors.add(marin);

@@ -10,18 +10,18 @@ import java.io.IOException;
 class CockpitTest {
 
     Cockpit cockpit;
-    String inputInit;
+    String inputInit1, inputInit2, inputInit3, inputInit4;
 
     @BeforeEach
     void setUp() throws IOException {
-        this.inputInit=new String(this.getClass().getResourceAsStream("/init.json").readAllBytes());
+        this.inputInit1 = new String(this.getClass().getResourceAsStream("/init1.json").readAllBytes());
         this.cockpit = new Cockpit();
     }
     
 
     @Test
     void nextRoundTest() {
-        this.cockpit.initGame(inputInit);
+        this.cockpit.initGame(inputInit1);
         assertEquals("[{\"sailorId\":0,\"type\":\"OAR\"},{\"sailorId\":1,\"type\":\"OAR\"}]", this.cockpit.nextRound("{}"));
     }
 }
