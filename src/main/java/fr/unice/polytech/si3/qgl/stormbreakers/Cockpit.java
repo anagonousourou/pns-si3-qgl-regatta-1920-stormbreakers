@@ -24,8 +24,6 @@ public class Cockpit implements ICockpit {
 
 	public String nextRound(String round) {
 
-		// TODO: 19/01/2020 Creer action a partir des Marins recuperes
-
 		OutputBuilder outputBuilder = new OutputBuilder();
 		String r=outputBuilder.writeActions(this.actions());
 		return r;
@@ -40,7 +38,7 @@ public class Cockpit implements ICockpit {
 			List<Marin> leftSailors = new ArrayList<>();
 			List<Marin> rightSailors = new ArrayList<>();
 			marins.forEach(marin -> {
-				if(marin.getY() == gameData.getShip().getDeck().getWidth() - 1) {
+				if(marin.getY() == 0) {
 					rightSailors.add(marin);
 				} else {
 					leftSailors.add(marin);
@@ -63,8 +61,10 @@ public class Cockpit implements ICockpit {
 			finalSailorsList = marins;
 		} else if(leftSailorsCount > rightSailorsCount) {
 			finalSailorsList = dismissSailors(leftSailors, leftSailorsCount - rightSailorsCount);
+			finalSailorsList.addAll(rightSailors);
 		} else {
 			finalSailorsList = dismissSailors(rightSailors, rightSailorsCount - leftSailorsCount);
+			finalSailorsList.addAll(leftSailors);
 		}
 		return finalSailorsList.stream().map(marin-> new Oar(marin.getId()))
 				.collect(Collectors.toList());
@@ -77,11 +77,7 @@ public class Cockpit implements ICockpit {
 	 * @return List des marins qui ne rameront pas
 	 */
 	private List<Marin> dismissSailors(List<Marin> sideSailors, int nb) {
-		List<Marin> tmp = new ArrayList<>(marins);
-		while(nb > 0) {
-			tmp.remove(sideSailors.get(nb-1));
-			nb--;
-		}
-		return tmp;
+		return sideSailors.stream().limit(sideSailors.size()-nb)
+		.collect(Collectors.toList());
 	}
 }

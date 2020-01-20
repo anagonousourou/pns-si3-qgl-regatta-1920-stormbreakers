@@ -27,18 +27,15 @@ public class Marin implements Deckable {
     }
 
 	public int getId() {
-		// TODO Auto-generated method stub
 		return id;
 	}
 
 	public int getX() {
-		// TODO Auto-generated method stub
 		return x;
 	}
     
 	public int getY() {
-		// TODO Auto-generated method stub
-		return x;
+		return y;
 	}
 	
 	public String toString() {
