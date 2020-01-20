@@ -5,13 +5,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
-import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.LiftSail;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.LowerSail;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.Moving;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.Oar;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.Turn;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.UseWatch;
-
 @JsonTypeInfo(use=JsonTypeInfo.Id.NAME,
 include = JsonTypeInfo.As.PROPERTY,
 property="mode")

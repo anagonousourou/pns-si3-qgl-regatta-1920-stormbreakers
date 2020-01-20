@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import fr.unice.polytech.si3.qgl.regatta.cockpit.ICockpit;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.Oar;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.SailorAction;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.game.InitGame;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Marin;
@@ -41,7 +42,7 @@ public class Cockpit implements ICockpit {
 
 	List<SailorAction> actions() {
 		if(this.gameData.getShip().getRames().size()==this.marins.size()){
-			return this.marins.stream().map(marin-> new SailorAction(marin.getId(),"oar"))
+			return this.marins.stream().map(marin-> new Oar(marin.getId()))
 			.collect(Collectors.toList());
 		} else if(this.gameData.getShip().getRames().size() > this.marins.size()) {
 			List<Marin> leftSailors = new ArrayList<>();
@@ -79,7 +80,7 @@ public class Cockpit implements ICockpit {
 			finalSailorsList = dismissSailors(rightSailors, rightSailorsCount - leftSailorsCount);
 		}
 		
-		return finalSailorsList.stream().map(marin-> new SailorAction(marin.getId(),"oar"))
+		return finalSailorsList.stream().map(marin-> new Oar(marin.getId()))
 				.collect(Collectors.toList());
 	}
 	

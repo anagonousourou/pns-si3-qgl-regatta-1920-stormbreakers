@@ -22,6 +22,6 @@ class CockpitTest {
     @Test
     void nextRoundTest() {
         this.cockpit.initGame(inputInit);
-        assertEquals("[{\"sailorId\":0,\"type\":\"oar\"},{\"sailorId\":1,\"type\":\"oar\"}]", this.cockpit.nextRound("{}"));
+        assertEquals("[{\"sailorId\":0,\"type\":\"OAR\"},{\"sailorId\":1,\"type\":\"OAR\"}]", this.cockpit.nextRound("{}"));
     }
 }
