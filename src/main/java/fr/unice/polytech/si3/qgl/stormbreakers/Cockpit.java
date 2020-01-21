@@ -19,14 +19,11 @@ public class Cockpit implements ICockpit {
 		InputParser parser = new InputParser();
 		this.gameData=parser.fetchInitGameState(game);
 		this.marins=gameData.getSailors();
-		
 	}
 
 	public String nextRound(String round) {
-
 		OutputBuilder outputBuilder = new OutputBuilder();
-		String r=outputBuilder.writeActions(this.actions());
-		return r;
+		return outputBuilder.writeActions(this.actions());
 	}
 
 	@Override
@@ -39,9 +36,9 @@ public class Cockpit implements ICockpit {
 			List<Marin> rightSailors = new ArrayList<>();
 			marins.forEach(marin -> {
 				if(marin.getY() == 0) {
-					rightSailors.add(marin);
-				} else {
 					leftSailors.add(marin);
+				} else {
+					rightSailors.add(marin);
 				}
 			});
 			return dispatchSailors(leftSailors, rightSailors);
@@ -74,7 +71,7 @@ public class Cockpit implements ICockpit {
 	 * Methode servant a retirer les marins qui ne rameront pas
 	 * @param sideSailors - le side du bateau qui a trop de marins
 	 * @param nb - nombre de marins en trop
-	 * @return List des marins qui ne rameront pas
+	 * @return List des marins qui rameront
 	 */
 	private List<Marin> dismissSailors(List<Marin> sideSailors, int nb) {
 		return sideSailors.stream().limit(sideSailors.size()-nb)
