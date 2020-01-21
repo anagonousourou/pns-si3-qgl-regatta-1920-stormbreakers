@@ -19,16 +19,11 @@ public class Cockpit implements ICockpit {
 		InputParser parser = new InputParser();
 		this.gameData=parser.fetchInitGameState(game);
 		this.marins=gameData.getSailors();
-		
 	}
 
 	public String nextRound(String round) {
-
-		// TODO: 19/01/2020 Creer action a partir des Marins recuperes
-
 		OutputBuilder outputBuilder = new OutputBuilder();
-		String r=outputBuilder.writeActions(this.actions());
-		return r;
+		return outputBuilder.writeActions(this.actions());
 	}
 
 	@Override
@@ -40,10 +35,10 @@ public class Cockpit implements ICockpit {
 			List<Marin> leftSailors = new ArrayList<>();
 			List<Marin> rightSailors = new ArrayList<>();
 			marins.forEach(marin -> {
-				if(marin.getY() == gameData.getShip().getDeck().getWidth() - 1) {
-					rightSailors.add(marin);
-				} else {
+				if(marin.getY() == 0) {
 					leftSailors.add(marin);
+				} else {
+					rightSailors.add(marin);
 				}
 			});
 			return dispatchSailors(leftSailors, rightSailors);
@@ -63,8 +58,10 @@ public class Cockpit implements ICockpit {
 			finalSailorsList = marins;
 		} else if(leftSailorsCount > rightSailorsCount) {
 			finalSailorsList = dismissSailors(leftSailors, leftSailorsCount - rightSailorsCount);
+			finalSailorsList.addAll(rightSailors);
 		} else {
 			finalSailorsList = dismissSailors(rightSailors, rightSailorsCount - leftSailorsCount);
+			finalSailorsList.addAll(leftSailors);
 		}
 		return finalSailorsList.stream().map(marin-> new Oar(marin.getId()))
 				.collect(Collectors.toList());
@@ -74,14 +71,10 @@ public class Cockpit implements ICockpit {
 	 * Methode servant a retirer les marins qui ne rameront pas
 	 * @param sideSailors - le side du bateau qui a trop de marins
 	 * @param nb - nombre de marins en trop
-	 * @return List des marins qui ne rameront pas
+	 * @return List des marins qui rameront
 	 */
 	private List<Marin> dismissSailors(List<Marin> sideSailors, int nb) {
-		List<Marin> tmp = new ArrayList<>(marins);
-		while(nb > 0) {
-			tmp.remove(sideSailors.get(nb-1));
-			nb--;
-		}
-		return tmp;
+		return sideSailors.stream().limit(sideSailors.size()-nb)
+		.collect(Collectors.toList());
 	}
 }
