@@ -24,6 +24,12 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Bateau;
 
 public class InputParser {
 
+
+	/**
+	 * Cree un objet contenant les donnees d'initialisation de la partie
+	 * @param jsonInput donnes d'initialisation au format JSON
+	 * @return InitGame
+	 */
 	public InitGame fetchInitGameState(String jsonInput) {
 		
 		ObjectMapper objectMapper = new ObjectMapper();
@@ -47,9 +53,18 @@ public class InputParser {
 	}
 
 	public NextRound fetchNextRoundState(String jsonInput) {
+		ObjectMapper objectMapper = new ObjectMapper();
+		try {
+			return objectMapper.readValue(jsonInput, NextRound.class);
+		} catch (JsonMappingException e) {
+			e.printStackTrace();
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
 		return null;
 	}
 
+	// TODO: 23/01/2020 Enlever le throws -> try/catch 
 	public List<Marin> fetchMarinsEntities(String jsonInput) throws JsonMappingException, JsonProcessingException {
 		ObjectMapper objectMapper = new ObjectMapper();
 		List<Marin> marins =new ArrayList<>();

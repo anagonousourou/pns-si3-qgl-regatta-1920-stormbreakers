@@ -6,13 +6,17 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Marin;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Goal;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Bateau;
 
+/**
+ * Classe representant les parametres d'initialisation d'une partie
+ */
+
 public class InitGame {
-    Goal goal;
-    Bateau ship;
-    List<Marin> sailors;
-    int shipCount;
+    private Goal goal;
+    private Bateau ship;
+    private List<Marin> sailors;
+    private int shipCount;
     
-    public InitGame(Goal goal,Bateau ship,List<Marin> sailors,int shipCount) {
+    public InitGame(Goal goal, Bateau ship, List<Marin> sailors, int shipCount) {
     	this.goal=goal;
     	this.ship=ship;
     	this.sailors=sailors;
