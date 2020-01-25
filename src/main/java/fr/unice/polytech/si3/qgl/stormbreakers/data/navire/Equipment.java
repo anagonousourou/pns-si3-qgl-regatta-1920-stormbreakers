@@ -4,8 +4,6 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.BattleGoal;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.RegattaGoal;
 
 @JsonTypeInfo(use=JsonTypeInfo.Id.NAME,
         include = JsonTypeInfo.As.PROPERTY,

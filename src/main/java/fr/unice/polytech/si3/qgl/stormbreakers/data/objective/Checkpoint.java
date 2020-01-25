@@ -12,7 +12,7 @@ public class Checkpoint {
     
     @JsonCreator
     public Checkpoint(@JsonProperty("position") Position pos, @JsonProperty("shape") Shape shape) {
-    	this.position=position;
+    	this.position=pos;
     	this.shape=shape;
     }
 

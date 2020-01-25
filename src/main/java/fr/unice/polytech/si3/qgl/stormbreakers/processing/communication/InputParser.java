@@ -37,10 +37,8 @@ public class InputParser {
 			Bateau bateau = createBateau(result, objectMapper);
 			return new InitGame(goal, bateau, marins, shipCount);
 		} catch (JsonMappingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return null;

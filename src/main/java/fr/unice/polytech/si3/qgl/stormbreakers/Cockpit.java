@@ -9,16 +9,32 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.Oar;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.SailorAction;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.game.InitGame;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Marin;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Checkpoint;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.RegattaGoal;
 import fr.unice.polytech.si3.qgl.stormbreakers.processing.communication.InputParser;
 import fr.unice.polytech.si3.qgl.stormbreakers.processing.communication.OutputBuilder;
 
 public class Cockpit implements ICockpit {
 	private InitGame gameData;
 	private List<Marin> marins;
+	private List<Checkpoint> checkpoints;
+	private int currentCheckpoint=0;
 	public void initGame(String game) {
 		InputParser parser = new InputParser();
 		this.gameData=parser.fetchInitGameState(game);
+		if(this.gameData.getGoal().getMode().equals("REGATTA")){
+			this.checkpoints=((RegattaGoal)this.gameData.getGoal()).getCheckpoints();
+		}
+		
 		this.marins=gameData.getSailors();
+	}
+
+	public double travelDistance(Checkpoint target){
+		return this.gameData.getShip().getPosition().distanceTo(target.getPosition());
+	}
+
+	public double orientationNeeded(Checkpoint target){
+		return this.gameData.getShip().getPosition().thetaTo(target.getPosition());
 	}
 
 	public String nextRound(String round) {
