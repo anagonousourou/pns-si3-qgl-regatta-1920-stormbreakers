@@ -35,4 +35,8 @@ public class Position {
         return Math.sqrt((pos.x-this.x)*(pos.x-this.x)+(pos.y-this.y)*(pos.y-this.y));
     }
 
+	public double getOrientation() {
+		return this.orientation;
+	}
+
 }
