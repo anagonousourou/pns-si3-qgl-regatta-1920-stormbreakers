@@ -16,29 +16,23 @@ public class Position {
         
     }
     
-
-    public double distanceTo(Position pos){
-        return Math.sqrt((pos.x-this.x)*(pos.x-this.x)+(pos.y-this.y)*(pos.y-this.y));
-    }
-
+    @JsonProperty("x")
     public double getX() {
         return x;
     }
 
-    public void setX(double x) {
-        this.x = x;
-    }
-
+    @JsonProperty("y")
     public double getY() {
         return y;
-    }
-
-    public void setY(double y) {
-        this.y = y;
     }
 
     public double thetaTo(Position other){
         return Math.atan2(other.getY(),other.getX())
         - Math.atan2(this.getY(),this.getX());
     }
+
+    public double distanceTo(Position pos){
+        return Math.sqrt((pos.x-this.x)*(pos.x-this.x)+(pos.y-this.y)*(pos.y-this.y));
+    }
+
 }
