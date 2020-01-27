@@ -2,6 +2,7 @@ package fr.unice.polytech.si3.qgl.stormbreakers.data.actions;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Marin;
 
 public class Moving extends SailorAction {
     private int xdistance;
@@ -25,5 +26,9 @@ public class Moving extends SailorAction {
     @JsonProperty("ydistance")
     public int getYdistance() {
         return ydistance;
+    }
+
+    public void applyTo(Marin sailor) {
+        if (sailor!=null) sailor.move(xdistance,ydistance);
     }
 }

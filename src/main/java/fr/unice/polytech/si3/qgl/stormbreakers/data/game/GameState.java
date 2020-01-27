@@ -1,5 +1,7 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.data.game;
 
+import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.Moving;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.SailorAction;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Equipment;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Marin;
@@ -54,6 +56,24 @@ public class GameState {
         vieBateau = nextRound.getShip().getLife();
         equipmentState = nextRound.getShip().getEquipments();
         wind = nextRound.getWind();
+    }
+
+    /**
+     * Actualise l'etat du jeu, a partir d'une liste de deplacement
+     * @param moves liste de deplacement des marins
+     */
+    void actualiser(List<Moving> moves) {
+        for (Moving move : moves) {
+            Marin sailor = findSailorById(move.getSailorId());
+            move.applyTo(sailor);
+        }
+    }
+
+    private Marin findSailorById(int sailorId) {
+        for (Marin sailor : orgaMarins) {
+            if (sailor.getId() == sailorId) return sailor;
+        }
+        return null;
     }
 
 
