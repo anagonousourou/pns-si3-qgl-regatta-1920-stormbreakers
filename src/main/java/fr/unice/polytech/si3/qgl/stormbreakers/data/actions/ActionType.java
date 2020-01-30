@@ -2,12 +2,12 @@ package fr.unice.polytech.si3.qgl.stormbreakers.data.actions;
 
 
 public enum ActionType {
-    moving("MOVING"),
-    liftSail("LIFT_SAIL"),
-    lowerSail("LOWER_SAIL"),
-    turn("TURN"),
-    oar("OAR"),
-    useWatch("USE_WATCH");
+    MOVING("MOVING"),
+    LIFTSAIL("LIFT_SAIL"),
+    LOWERSAIL("LOWER_SAIL"),
+    TURN("TURN"),
+    OAR("OAR"),
+    USEWATCH("USE_WATCH");
 
     public final String actionCode;
     ActionType(String actionCode) {

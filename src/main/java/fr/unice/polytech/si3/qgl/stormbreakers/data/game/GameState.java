@@ -1,7 +1,6 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.data.game;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.Moving;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.SailorAction;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Equipment;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Marin;
@@ -75,6 +74,22 @@ public class GameState {
         }
         return null;
     }
+
+	public Position getPositionBateau() {
+		return positionBateau;
+	}
+
+	public int getVieBateau() {
+		return vieBateau;
+	}
+
+	public List<Equipment> getEquipmentState() {
+		return equipmentState;
+	}
+
+	public Vent getWind() {
+		return wind;
+	}
 
 
 

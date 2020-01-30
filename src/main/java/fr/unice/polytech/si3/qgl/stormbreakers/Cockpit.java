@@ -93,4 +93,13 @@ public class Cockpit implements ICockpit {
 		return sideSailors.stream().limit(sideSailors.size()-nb)
 		.collect(Collectors.toList());
 	}
+
+	public int getCurrentCheckpoint() {
+		return currentCheckpoint;
+	}
+
+	public List<Checkpoint> getCheckpoints() {
+		return checkpoints;
+	}
+	
 }

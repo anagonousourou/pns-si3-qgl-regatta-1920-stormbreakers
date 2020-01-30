@@ -11,4 +11,8 @@ public class Courant extends OceanEntity {
         this.strength = strength;
     }
 
+	public double getStrength() {
+		return strength;
+	}
+
 }

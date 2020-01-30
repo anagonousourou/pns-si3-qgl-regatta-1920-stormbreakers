@@ -42,9 +42,7 @@ public class InputParser {
 			int shipCount = objectMapper.readValue(result.get("shipCount").toPrettyString(), Integer.class);
 			Bateau bateau = createBateau(result, objectMapper);
 			return new InitGame(goal, bateau, marins, shipCount);
-		} catch (JsonMappingException e) {
-			e.printStackTrace();
-		} catch (JsonProcessingException e) {
+		}  catch (JsonProcessingException e) {
 			e.printStackTrace();
 		}
 		return null;
@@ -54,8 +52,6 @@ public class InputParser {
 		ObjectMapper objectMapper = new ObjectMapper();
 		try {
 			return objectMapper.readValue(jsonInput, NextRound.class);
-		} catch (JsonMappingException e) {
-			e.printStackTrace();
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
 		}
@@ -63,10 +59,10 @@ public class InputParser {
 	}
 
 	// TODO: 23/01/2020 Enlever le throws -> try/catch 
-	public List<Marin> fetchMarinsEntities(String jsonInput) throws JsonMappingException, JsonProcessingException {
+	public List<Marin> fetchMarinsEntities(String jsonInput) throws  JsonProcessingException {
 		ObjectMapper objectMapper = new ObjectMapper();
 		List<Marin> marins =new ArrayList<>();
-		objectMapper.readTree(jsonInput).get("sailors").forEach(sailor -> {
+		objectMapper.readTree(jsonInput).get("sailors").forEach(sailor -> 
 			marins.add(new Marin(
 							sailor.get("id").asInt(),
 							sailor.get("x").asInt(),
@@ -74,9 +70,9 @@ public class InputParser {
 							sailor.get("name").asText()
 
 					)
-				);
+				)
 
-		});
+		);
 		
 		System.out.println(marins);
 		return marins;
@@ -88,11 +84,9 @@ public class InputParser {
 	/** object Creator **/
 
 	private Bateau createBateau(JsonNode result, ObjectMapper objectMapper) {
-		// TODO Auto-generated method stub
 		try {
 			return objectMapper.readValue(result.get("ship").toPrettyString(), Bateau.class);
 		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return null;
@@ -103,7 +97,7 @@ public class InputParser {
 		Goal goal;
 		try {
 			goal = objectMapper.readValue(result.get("goal").toPrettyString(), Goal.class);
-			List<Checkpoint> checkpoints = new ArrayList<Checkpoint>();
+			List<Checkpoint> checkpoints = new ArrayList<>();
 			if (goal.getMode().equals("REGATA")) {
 
 				result.get("checkpoints").forEach(r -> {
@@ -111,7 +105,6 @@ public class InputParser {
 						Checkpoint checkpoint = objectMapper.readValue(r.toPrettyString(), Checkpoint.class);
 						checkpoints.add(checkpoint);
 					} catch (JsonProcessingException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				});
@@ -119,7 +112,6 @@ public class InputParser {
 			}
 			return goal;
 		} catch (JsonProcessingException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 			return null;
 		}
@@ -134,7 +126,7 @@ public class InputParser {
 			});
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
-			return null;
+			return new ArrayList<>();
 		}
 	}
 }

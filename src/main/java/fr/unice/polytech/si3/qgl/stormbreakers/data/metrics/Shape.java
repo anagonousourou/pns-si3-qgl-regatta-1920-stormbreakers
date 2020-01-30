@@ -19,4 +19,8 @@ public abstract class Shape {
     Shape(@JsonProperty("type") String type) {
         this.type = type;
     }
+    @JsonProperty("type")
+	public String getType() {
+		return type;
+	}
 }

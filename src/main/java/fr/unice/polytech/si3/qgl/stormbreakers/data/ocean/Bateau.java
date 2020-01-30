@@ -16,13 +16,7 @@ public class Bateau extends AutreBateau {
     private Deck deck;
     private List<Equipment> entities;
 
-   /* Bateau(Position position, Shape shape, int life, String name, Deck deck, List<Equipment> entities) {
-        super(position,shape,life);
-        this.name = name;
-        this.deck = deck;
-        this.entities = entities;
-    }
-   */
+
     @JsonCreator 
     Bateau(
         @JsonProperty("position")Position position,
