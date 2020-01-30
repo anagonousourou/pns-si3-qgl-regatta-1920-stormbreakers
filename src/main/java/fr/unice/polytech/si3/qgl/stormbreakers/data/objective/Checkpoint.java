@@ -7,8 +7,8 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Shape;
 
 public class Checkpoint {
-    Position position;
-    Shape shape;
+    private Position position;
+    private Shape shape;
     
     @JsonCreator
     public Checkpoint(@JsonProperty("position") Position pos, @JsonProperty("shape") Shape shape) {
@@ -24,5 +24,9 @@ public class Checkpoint {
     @JsonProperty("shape")
     public Shape getShape() {
         return shape;
+    }
+
+    public boolean isPosInside(double x, double y) {
+        return shape.isPosInside(x,y);
     }
 }

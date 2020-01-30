@@ -4,6 +4,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.Moving;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Equipment;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Marin;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Checkpoint;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Vent;
 
 import java.util.List;
@@ -20,6 +21,8 @@ public class GameState {
     private int vieBateau;
     private List<Marin> orgaMarins;
     private List<Equipment> equipmentState;
+
+    private List<Checkpoint> checkpoints;
 
     private Vent wind;
 
@@ -55,6 +58,11 @@ public class GameState {
         vieBateau = nextRound.getShip().getLife();
         equipmentState = nextRound.getShip().getEquipments();
         wind = nextRound.getWind();
+        actualiserCheckpoints();
+    }
+
+    void actualiserCheckpoints() {
+        if (isCheckpointOk(getNextCheckpoint())) validateCheckpoint();
     }
 
     /**
@@ -90,6 +98,22 @@ public class GameState {
 	public Vent getWind() {
 		return wind;
 	}
+
+
+    public Checkpoint getNextCheckpoint() {
+        if (checkpoints.size()==0) return null;
+        return checkpoints.get(0);
+    }
+
+    private void validateCheckpoint() {
+        checkpoints.remove(0);
+    }
+
+    private boolean isCheckpointOk(Checkpoint checkPt) {
+        return checkPt.isPosInside(positionBateau.getX(),positionBateau.getY());
+
+    }
+
 
 
 

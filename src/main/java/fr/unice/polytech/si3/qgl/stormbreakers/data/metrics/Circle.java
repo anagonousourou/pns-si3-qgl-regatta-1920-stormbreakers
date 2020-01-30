@@ -16,4 +16,13 @@ public class Circle extends Shape {
     public double getRadius() {
         return radius;
     }
+
+    @Override
+    public boolean isPosInside(double x, double y) {
+        return distFromCenter(x,y)<=radius;
+    }
+
+    private double distFromCenter(double x, double y) {
+        return new Position(0,0).distanceTo(new Position(x,y));
+    }
 }

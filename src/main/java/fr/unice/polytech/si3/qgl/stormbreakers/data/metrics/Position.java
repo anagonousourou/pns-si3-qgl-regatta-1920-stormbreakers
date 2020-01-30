@@ -13,7 +13,10 @@ public class Position {
     	this.x=x;
     	this.y=y;
         this.orientation=orientation;
-        
+    }
+
+    public Position(double x, double y) {
+        this(x,y,0);
     }
     
     @JsonProperty("x")
@@ -39,4 +42,14 @@ public class Position {
 		return this.orientation;
 	}
 
+    public Position getRotatedBy(double theta) {
+        double r = getDistFromOrigin();
+        x = r * Math.cos(theta);
+        y = r * Math.sin(theta);
+        return new Position(x,y,orientation + theta);
+    }
+
+    private double getDistFromOrigin() {
+        return distanceTo(new Position(0,0));
+    }
 }

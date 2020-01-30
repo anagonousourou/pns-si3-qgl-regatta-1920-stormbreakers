@@ -5,6 +5,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
+/**
+ * Classe representant une forme geometrique
+ */
+
 @JsonTypeInfo(use=JsonTypeInfo.Id.NAME,
         include = JsonTypeInfo.As.PROPERTY,
         property="type")
@@ -23,4 +27,12 @@ public abstract class Shape {
 	public String getType() {
 		return type;
 	}
+
+    /**
+     * Renvoie si oui ou non, les coordonnees passees en paramettre
+     * sont a l'interieur de la forme
+     * NB : Les coordonnees doivent etre données par rapport au CENTRE de la forme
+     * @return true if (x,y) is inside this shape, false if not
+     */
+    public abstract boolean isPosInside(double x, double y);
 }
