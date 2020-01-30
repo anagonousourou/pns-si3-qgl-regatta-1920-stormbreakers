@@ -58,4 +58,13 @@ public class PositionTest {
 
         assertTrue(expected.distanceTo(result) < epsilon);
     }
+
+    @Test
+    void testGetRotatedBySixthOfPi() {
+        Position pos = new Position(1,0);
+        Position expected = new Position(Math.sqrt(3)/2,0.5);
+        Position result = pos.getRotatedBy(Math.PI/6);
+
+        assertTrue(expected.distanceTo(result) < epsilon);
+    }
 }

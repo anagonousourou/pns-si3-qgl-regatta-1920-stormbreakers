@@ -48,21 +48,21 @@ public class Rectangle extends Shape {
 
         boolean xOk = between(x,-height/2,height/2,eps);
         boolean yOk = between(y,-width/2,width/2,eps);
-        return xOk || yOk;
+        return xOk && yOk;
     }
 
     /**
-     * true if min <= x <= max, false if not
-     * @param x value to test
+     * true if min <= value <= max, false if not
+     * @param value value to test
      * @param min minimum value
      * @param max maximum value
      * @param epsilon error correction
-     * @return true if min <= x <= max, false if not
+     * @return true if min <= value <= max, false if not
      */
-    private boolean between(double x,double min,double max, double epsilon) {
-        return simpleBetween(x,min,max)
-                || simpleBetween(x-epsilon, min, max)
-                || simpleBetween(x+epsilon, min, max)
+    private boolean between(double value,double min,double max, double epsilon) {
+        return simpleBetween(value,min,max)
+                || simpleBetween(value-epsilon, min, max)
+                || simpleBetween(value+epsilon, min, max)
                 ;
     }
 

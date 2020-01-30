@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 /**
  * Classe representant une forme geometrique
+ * Prend son centre comme origine (0,0) dans ses operations
  */
 
 @JsonTypeInfo(use=JsonTypeInfo.Id.NAME,

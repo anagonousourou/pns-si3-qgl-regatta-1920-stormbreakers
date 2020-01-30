@@ -2,6 +2,8 @@ package fr.unice.polytech.si3.qgl.stormbreakers.data.metrics;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.complex.Cartesian;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.complex.Polar;
 
 public class Position {
     private double x;
@@ -43,13 +45,8 @@ public class Position {
 	}
 
     public Position getRotatedBy(double theta) {
-        double r = getDistFromOrigin();
-        x = r * Math.cos(theta);
-        y = r * Math.sin(theta);
-        return new Position(x,y,orientation + theta);
-    }
-
-    private double getDistFromOrigin() {
-        return distanceTo(new Position(0,0));
+        Polar oldPolar = new Cartesian(x,y).toPolar();
+        Cartesian rotatedCartesian = new Polar(oldPolar.getR(),oldPolar.getTheta() + theta).toCartesian();
+        return new Position(rotatedCartesian.getX(),rotatedCartesian.getY(),oldPolar.getTheta() + theta);
     }
 }

@@ -38,19 +38,19 @@ class RectangleTest {
 
     @Test
     void testIsInsideWhenNotRotatedAndTrue() {
-        Rectangle rect = new Rectangle(5,20,0);
+        Rectangle rect = new Rectangle(10,20,0);
         assertTrue(rect.isPosInside(10,0));
     }
 
-    @Test @Disabled
+    @Test
     void testIsInsideWhenRotatedAndFalse() {
-        Rectangle rect = new Rectangle(5,20,Math.PI/2);
+        Rectangle rect = new Rectangle(10,20,Math.PI/2);
         assertFalse(rect.isPosInside(10,0));
     }
 
     @Test
     void testIsInsideWhenRotatedAndTrue() {
-        Rectangle rect = new Rectangle(5,20,Math.PI/2);
+        Rectangle rect = new Rectangle(10,20,Math.PI/2);
         assertTrue(rect.isPosInside(0,10));
     }
 
