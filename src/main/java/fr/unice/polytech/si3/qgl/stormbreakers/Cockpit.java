@@ -1,6 +1,7 @@
 package fr.unice.polytech.si3.qgl.stormbreakers;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -8,6 +9,7 @@ import fr.unice.polytech.si3.qgl.regatta.cockpit.ICockpit;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.Oar;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.SailorAction;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.game.InitGame;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Equipment;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Marin;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Checkpoint;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.RegattaGoal;
@@ -40,6 +42,19 @@ public class Cockpit implements ICockpit {
 	public String nextRound(String round) {
 		OutputBuilder outputBuilder = new OutputBuilder();
 		return outputBuilder.writeActions(this.actions());
+	}
+
+	public HashMap<Marin,List<Equipment>> ramesAccessibles(List<Equipment> equipments,List<Marin> marins){
+		HashMap<Marin,List<Equipment>> results=new HashMap<>();
+		marins.forEach(m->{
+			results.put(m, equipments.stream()
+										.filter(e-> (Math.abs(e.getX()-m.getX())+Math.abs(e.getY()-m.getY())) <=5 )
+										.collect(Collectors.toList())
+
+			);
+		});
+
+		return results;
 	}
 
 	@Override

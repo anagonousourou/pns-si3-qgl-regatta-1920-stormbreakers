@@ -3,9 +3,14 @@ package fr.unice.polytech.si3.qgl.stormbreakers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Equipment;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Marin;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Rame;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.IOException;
+import java.util.List;
 
 class CockpitTest {
 
@@ -53,5 +58,26 @@ class CockpitTest {
         "Un seul des rameurs à droite rame" );
         assertFalse(result.contains("2") && result.contains("3"),
         "Un seul des rameurs à droite rame" );
+    }
+
+    @Test
+    void ramesAccessiblesTest(){
+        var m1=new Marin(1,2,2,"Peter");
+        List<Marin> marins=List.of(
+            m1,
+            new Marin(3,1,1,"Pan"),
+            new Marin(2,5,3,"Robin")
+            
+        );
+        var r1=new Rame(0,0);
+        var r2=new Rame(10, 4);
+        List<Equipment> equipments =List.of(r1,r2);
+
+        var result=this.cockpit.ramesAccessibles(equipments, marins);
+        assertNotEquals(null, result, "Pas null");
+        assertTrue(result.get(m1).contains(r1));
+        assertFalse(result.get(m1).contains(r2));
+
+
     }
 }
