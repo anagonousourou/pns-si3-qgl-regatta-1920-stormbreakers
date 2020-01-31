@@ -1,20 +1,12 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.data.game;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.Moving;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Circle;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Shape;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Marin;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Checkpoint;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Goal;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.RegattaGoal;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Bateau;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Vent;
 import fr.unice.polytech.si3.qgl.stormbreakers.processing.communication.InputParser;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import javax.print.DocFlavor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,8 +33,6 @@ class GameStateTest {
         initGameSample = inputParser.fetchInitGameState(initGameExample);
         nextRoundSample = inputParser.fetchNextRoundState(nextRoundExample);
 
-
-
         gameState = new GameState(initGameSample);
 
         goal = (RegattaGoal) initGameSample.getGoal();
@@ -50,17 +40,16 @@ class GameStateTest {
 
     @Test
     void testConstructorWithInitGame() {
-        GameState gameState = new GameState(initGameSample);
-        assertEquals(initGameSample.getShip().getPosition(),gameState.getPositionBateau());
-        assertEquals(initGameSample.getShip().getLife(),gameState.getVieBateau());
-        assertEquals(initGameSample.getSailors(),gameState.getOrgaMarins());
-        assertEquals(initGameSample.getShip().getEquipments(),gameState.getEquipmentState());
+        GameState gState = new GameState(initGameSample);
+        assertEquals(initGameSample.getShip().getPosition(),gState.getPositionBateau());
+        assertEquals(initGameSample.getShip().getLife(),gState.getVieBateau());
+        assertEquals(initGameSample.getSailors(),gState.getOrgaMarins());
+        assertEquals(initGameSample.getShip().getEquipments(),gState.getEquipmentState());
 
-        assertEquals(0.0,gameState.getWind().getOrientation());
-        assertEquals(0.0, gameState.getWind().getStrength());
+        assertEquals(0.0,gState.getWind().getOrientation());
+        assertEquals(0.0, gState.getWind().getStrength());
 
-
-        assertEquals(goal.getCheckpoints().get(0), gameState.getNextCheckpoint());
+        assertEquals(goal.getCheckpoints().get(0), gState.getNextCheckpoint());
     }
 
 
@@ -75,8 +64,18 @@ class GameStateTest {
 
     @Test
     void testActualiserCheckpointsWhenOut() {
-        gameState.actualiserTour(nextRoundSample);
-        assertEquals(gameState.getNextCheckpoint(),goal.getCheckpoints().get(0));
+        Checkpoint mockedCheckpoint = mock(Checkpoint.class);
+        when(mockedCheckpoint.isPosInside(anyDouble(),anyDouble())).thenReturn(false);
+
+        List<Checkpoint> checkpoints = new ArrayList<>();
+        checkpoints.add(mockedCheckpoint);
+        checkpoints.addAll(goal.getCheckpoints());
+
+        GameState gState = new GameState(gameState.getPositionBateau(),gameState.getVieBateau(),gameState.getOrgaMarins(),
+                gameState.getEquipmentState(), checkpoints);
+
+        gState.actualiserCheckpoints();
+        assertEquals(mockedCheckpoint,gState.getNextCheckpoint());
     }
 
     @Test
@@ -91,9 +90,8 @@ class GameStateTest {
         GameState gState = new GameState(gameState.getPositionBateau(),gameState.getVieBateau(),gameState.getOrgaMarins(),
                 gameState.getEquipmentState(), checkpoints);
 
-
-        gState.actualiserTour(nextRoundSample);
-        assertEquals(gameState.getNextCheckpoint(),goal.getCheckpoints().get(0));
+        gState.actualiserCheckpoints();
+        assertEquals(goal.getCheckpoints().get(0),gState.getNextCheckpoint());
     }
 
     @Test

@@ -113,7 +113,7 @@ public class GameState {
     }
 
     private void validateCheckpoint() {
-        checkpoints.remove(0);
+        if (checkpoints.size() > 0) checkpoints.remove(0);
     }
 
     private boolean isCheckpointOk(Checkpoint checkPt) {
