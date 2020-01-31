@@ -28,11 +28,12 @@ public class GameState {
     private Vent wind;
 
 
-    GameState(Position positionBateau, int vieBateau, List<Marin> orgaMarins, List<Equipment> equipmentState) {
+    GameState(Position positionBateau, int vieBateau, List<Marin> orgaMarins, List<Equipment> equipmentState, List<Checkpoint> checkpoints) {
         this.positionBateau = positionBateau;
         this.vieBateau = vieBateau;
         this.orgaMarins = orgaMarins;
         this.equipmentState = equipmentState;
+        this.checkpoints = checkpoints;
         this.wind = null;
     }
 
@@ -107,7 +108,7 @@ public class GameState {
 
 
     public Checkpoint getNextCheckpoint() {
-        if (checkpoints.size()==0) return null;
+        if (checkpoints==null || checkpoints.size()==0) return null;
         return checkpoints.get(0);
     }
 
@@ -120,7 +121,7 @@ public class GameState {
 
     }
 
-
-
-
+    public List<Marin> getOrgaMarins() {
+        return orgaMarins;
+    }
 }

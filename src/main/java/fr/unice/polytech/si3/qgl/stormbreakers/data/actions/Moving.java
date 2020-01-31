@@ -9,7 +9,7 @@ public class Moving extends SailorAction {
     private int ydistance;
 
     @JsonCreator
-    Moving(
+    public Moving(
             @JsonProperty("sailorId") int sailorId,
             @JsonProperty("xdistance") int xdistance,
             @JsonProperty("ydistance") int ydistance) {
