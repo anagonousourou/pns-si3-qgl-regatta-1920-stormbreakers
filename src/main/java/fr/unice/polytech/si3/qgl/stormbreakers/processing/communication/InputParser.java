@@ -31,6 +31,16 @@ public class InputParser {
 	 * @return InitGame
 	 */
 	public InitGame fetchInitGameState(String jsonInput) {
+		ObjectMapper objectMapper = new ObjectMapper();
+		try {
+			return objectMapper.readValue(jsonInput, InitGame.class);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	/*
+	public InitGame fetchInitGameState(String jsonInput) {
 		
 		ObjectMapper objectMapper = new ObjectMapper();
 		JsonNode result;
@@ -47,6 +57,7 @@ public class InputParser {
 		}
 		return null;
 	}
+	*/
 
 	public NextRound fetchNextRoundState(String jsonInput) {
 		ObjectMapper objectMapper = new ObjectMapper();
@@ -58,6 +69,7 @@ public class InputParser {
 		return null;
 	}
 
+	/*
 	// TODO: 23/01/2020 Enlever le throws -> try/catch 
 	public List<Marin> fetchMarinsEntities(String jsonInput) throws  JsonProcessingException {
 		ObjectMapper objectMapper = new ObjectMapper();
@@ -78,11 +90,13 @@ public class InputParser {
 		return marins;
 
 	}
+	*/
 
 
 
 	/** object Creator **/
 
+	/*
 	private Bateau createBateau(JsonNode result, ObjectMapper objectMapper) {
 		try {
 			return objectMapper.readValue(result.get("ship").toPrettyString(), Bateau.class);
@@ -129,4 +143,6 @@ public class InputParser {
 			return new ArrayList<>();
 		}
 	}
+	*/
+
 }
