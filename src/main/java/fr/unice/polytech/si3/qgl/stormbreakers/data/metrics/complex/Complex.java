@@ -9,14 +9,15 @@ public class Complex {
         im = b;
     }
 
-    public double getRe() {
+    double getRe() {
         return re;
     }
 
-    public double getIm() {
+    double getIm() {
         return im;
     }
 
+    /*
     public Complex add(Complex c) {
         return new Complex(re+c.re,im+c.im);
     }
@@ -26,6 +27,7 @@ public class Complex {
         double imag = re*c.im + im*c.re;
         return new Complex(real,imag);
     }
+     */
 
     @Override
     public String toString() {
