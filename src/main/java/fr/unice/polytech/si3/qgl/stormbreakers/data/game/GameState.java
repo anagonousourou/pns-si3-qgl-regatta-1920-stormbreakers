@@ -59,7 +59,7 @@ public class GameState {
      * NB : ne prend pas en compte les actions realisees
      * @param nextRound contient les donnees actualisees
      */
-    void actualiserDeplacements(NextRound nextRound) {
+    void actualiserTour(NextRound nextRound) {
         positionBateau = nextRound.getShip().getPosition();
         vieBateau = nextRound.getShip().getLife();
         equipmentState = nextRound.getShip().getEquipments();
