@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class Rame extends Equipment {
 
     @JsonCreator
-    Rame(
+    public Rame(
             @JsonProperty("x") int x,
             @JsonProperty("y") int y
     ) {
