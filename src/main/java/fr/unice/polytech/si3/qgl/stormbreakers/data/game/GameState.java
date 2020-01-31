@@ -5,6 +5,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Equipment;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Marin;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Checkpoint;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.RegattaGoal;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Vent;
 
 import java.util.List;
@@ -46,6 +47,11 @@ public class GameState {
         this.orgaMarins = initGame.getSailors();
         this.equipmentState = initGame.getShip().getEquipments();
         this.wind = new Vent(0.0,0.0);
+
+        if (initGame.getGoal().getMode().equals("REGATTA")) {
+            RegattaGoal regattaGoal = (RegattaGoal) initGame.getGoal();
+            checkpoints = regattaGoal.getCheckpoints();
+        }
     }
 
     /**
@@ -53,12 +59,12 @@ public class GameState {
      * NB : ne prend pas en compte les actions realisees
      * @param nextRound contient les donnees actualisees
      */
-    void actualiser(NextRound nextRound) {
+    void actualiserDeplacements(NextRound nextRound) {
         positionBateau = nextRound.getShip().getPosition();
         vieBateau = nextRound.getShip().getLife();
         equipmentState = nextRound.getShip().getEquipments();
         wind = nextRound.getWind();
-        actualiserCheckpoints();
+        if (checkpoints!=null) actualiserCheckpoints();
     }
 
     void actualiserCheckpoints() {
@@ -69,7 +75,7 @@ public class GameState {
      * Actualise l'etat du jeu, a partir d'une liste de deplacement
      * @param moves liste de deplacement des marins
      */
-    void actualiser(List<Moving> moves) {
+    void actualiserDeplacements(List<Moving> moves) {
         for (Moving move : moves) {
             Marin sailor = findSailorById(move.getSailorId());
             move.applyTo(sailor);
