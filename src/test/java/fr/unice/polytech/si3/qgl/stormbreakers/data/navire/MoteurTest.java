@@ -21,6 +21,7 @@ public class MoteurTest {
         this.inputInit1 = new String(this.getClass().getResourceAsStream("/init1.json").readAllBytes());
         this.inputInit2 = new String(this.getClass().getResourceAsStream("/init2.json").readAllBytes());
         this.inputInit3 = new String(this.getClass().getResourceAsStream("/init3.json").readAllBytes());
+        this.inputInit4 = new String(this.getClass().getResourceAsStream("/init4.json").readAllBytes());
         
         moteur=new Moteur(new GameState(p.fetchInitGameState(inputInit1)));
     }
@@ -50,6 +51,14 @@ public class MoteurTest {
     @Test
     void actionsTestInput3(){
         this.moteur=new Moteur(new GameState(p.fetchInitGameState(inputInit3)));
+        var r=this.moteur.actions();
+        System.out.println(r);
+        assertNotNull(r);
+    }
+
+    @Test
+    void actionsTestInput4(){
+        this.moteur=new Moteur(new GameState(p.fetchInitGameState(inputInit4)));
         var r=this.moteur.actions();
         System.out.println(r);
         assertNotNull(r);

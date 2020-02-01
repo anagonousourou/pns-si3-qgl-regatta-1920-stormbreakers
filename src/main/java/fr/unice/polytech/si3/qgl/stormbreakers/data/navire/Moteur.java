@@ -81,14 +81,18 @@ public class Moteur {
 	public List<SailorAction> dispatchSailors(Checkpoint target) {
 		Set<Double> oarsAngles = this.possibleOrientations();
 		double angle = this.orientationNeeded(target);
+		System.out.println("Angle needed: "+angle);
 
 		if (Math.abs(angle) <= Moteur.EPS
-				|| oarsAngles.stream().filter(a -> Math.abs(a - angle) <= Moteur.EPS).count() == 0) {
+				) {
 					System.out.println("Tout droit");
 			return this.accelerate();
 		} else {
+			
 			double approachingAngle = oarsAngles.stream().filter(a -> a * angle > 0.0)
-					.min((a, b) -> Double.compare(a - angle, b - angle)).get();
+					.min((a, b) -> Double.compare(Math.abs(a- angle), Math.abs(b - angle))).get();
+			System.out.println("Angle approching: "+approachingAngle);
+			System.out.println("Possibles angles: "+oarsAngles);
 
 			return this.minRepartition(this.angleToDiff(approachingAngle));
 		}
