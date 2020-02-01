@@ -30,7 +30,8 @@ public class Checkpoint {
         return isPosInside(pos.getX(),pos.getY());
     }
 
-    public boolean isPosInside(double x, double y) {
-        return shape.isPosInside(x,y);
+    private boolean isPosInside(double x, double y) {
+        // On se replace par rapport au centre de la forme
+        return shape.isPosInside(x-position.getX(),y-position.getY());
     }
 }

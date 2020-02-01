@@ -9,7 +9,7 @@ public class Rectangle extends Shape {
     private double orientation;
 
     @JsonCreator
-    Rectangle(
+    public Rectangle(
             @JsonProperty("width") double width,
             @JsonProperty("height") double height,
             @JsonProperty("orientation") double orientation) {

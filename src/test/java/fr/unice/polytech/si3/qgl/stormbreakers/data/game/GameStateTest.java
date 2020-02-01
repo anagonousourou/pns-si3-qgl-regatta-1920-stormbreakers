@@ -67,7 +67,6 @@ class GameStateTest {
     @Test
     void testActualiserCheckpointsWhenOut() {
         Checkpoint mockedCheckpoint = mock(Checkpoint.class);
-        when(mockedCheckpoint.isPosInside(anyDouble(),anyDouble())).thenReturn(false);
         when(mockedCheckpoint.isPosInside(any(Position.class))).thenReturn(false);
 
         List<Checkpoint> checkpoints = new ArrayList<>();
@@ -83,7 +82,6 @@ class GameStateTest {
     @Test
     void testActualiserCheckpointsWhenIn() {
         Checkpoint mockedCheckpoint = mock(Checkpoint.class);
-        when(mockedCheckpoint.isPosInside(anyDouble(),anyDouble())).thenReturn(true);
         when(mockedCheckpoint.isPosInside(any(Position.class))).thenReturn(true);
 
         List<Checkpoint> checkpoints = new ArrayList<>();
