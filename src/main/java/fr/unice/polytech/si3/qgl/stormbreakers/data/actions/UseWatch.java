@@ -7,7 +7,7 @@ public class UseWatch extends SailorAction {
 
     @JsonCreator
     UseWatch(@JsonProperty("sailorId")  int sailorId) {
-        super(sailorId,"USE_WATCH");
+        super(sailorId,ActionType.USEWATCH.actionCode);
     }
 
 }

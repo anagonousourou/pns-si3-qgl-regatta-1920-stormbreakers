@@ -10,7 +10,7 @@ public class Turn extends SailorAction {
     Turn(
             @JsonProperty("sailorId") int sailorId,
             @JsonProperty("rotation") double rotation) {
-        super(sailorId,"TURN");
+        super(sailorId,ActionType.TURN.actionCode);
         this.rotation = rotation;
     }
 

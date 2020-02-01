@@ -7,7 +7,7 @@ public class Oar extends SailorAction {
 
     @JsonCreator
     public Oar(@JsonProperty("sailorId") int sailorId) {
-        super(sailorId,"OAR");
+        super(sailorId,ActionType.OAR.actionCode);
     }
 
     @Override

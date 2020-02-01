@@ -11,8 +11,8 @@ import org.junit.jupiter.api.Test;
 
 class CockpitTest {
 
-    Cockpit cockpit;
-    String inputInit1, inputInit2, inputInit3, inputInit4;
+    private Cockpit cockpit;
+    private String inputInit1, inputInit2, inputInit3, inputInit4;
 
     @BeforeEach
     void setUp() throws IOException {

@@ -10,7 +10,7 @@ public class Rame extends Equipment {
             @JsonProperty("x") int x,
             @JsonProperty("y") int y
     ) {
-        super("oar",x,y);
+        super(EquipmentType.OAR.code,x,y);
     }
 
 }

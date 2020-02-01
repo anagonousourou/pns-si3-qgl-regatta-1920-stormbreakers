@@ -1,6 +1,7 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.processing.communication;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -26,7 +27,8 @@ public class OutputBuilder {
             jsonOutput = objectMapper.writeValueAsString(actions);
 
         } catch (IOException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
+			Logger.getInstance().log(Arrays.toString(e.getStackTrace()));
         }
 
         return jsonOutput;

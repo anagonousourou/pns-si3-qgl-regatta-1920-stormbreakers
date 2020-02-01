@@ -2,6 +2,7 @@ package fr.unice.polytech.si3.qgl.stormbreakers.processing.communication;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -35,7 +36,8 @@ public class InputParser {
 		try {
 			return objectMapper.readValue(jsonInput, InitGame.class);
 		} catch (JsonProcessingException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
+			Logger.getInstance().log(Arrays.toString(e.getStackTrace()));
 		}
 		return null;
 	}
@@ -64,7 +66,8 @@ public class InputParser {
 		try {
 			return objectMapper.readValue(jsonInput, NextRound.class);
 		} catch (JsonProcessingException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
+			Logger.getInstance().log(Arrays.toString(e.getStackTrace()));
 		}
 		return null;
 	}
