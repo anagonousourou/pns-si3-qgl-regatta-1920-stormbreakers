@@ -1,11 +1,8 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.data.navire;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -34,7 +31,7 @@ public class Moteur {
 	
 	public List<SailorAction> sendActions(Checkpoint target) {
 		dispatchSailors(target);
-		return null;
+		return new ArrayList<>();
 	}
 
 	/**
