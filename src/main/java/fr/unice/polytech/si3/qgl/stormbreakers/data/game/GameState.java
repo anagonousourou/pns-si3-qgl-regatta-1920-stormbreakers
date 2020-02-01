@@ -108,12 +108,12 @@ public class GameState {
 
 
     public Checkpoint getNextCheckpoint() {
-        if (checkpoints==null || checkpoints.size()==0) return null;
+        if (checkpoints==null || checkpoints.isEmpty()) return null;
         return checkpoints.get(0);
     }
 
     private void validateCheckpoint() {
-        if (checkpoints.size() > 0) checkpoints.remove(0);
+        if (!checkpoints.isEmpty()) checkpoints.remove(0);
     }
 
     private boolean isCheckpointOk(Checkpoint checkPt) {

@@ -1,18 +1,11 @@
 package fr.unice.polytech.si3.qgl.stormbreakers;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import fr.unice.polytech.si3.qgl.regatta.cockpit.ICockpit;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.Oar;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.SailorAction;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.game.InitGame;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Equipment;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Marin;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Moteur;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Checkpoint;
