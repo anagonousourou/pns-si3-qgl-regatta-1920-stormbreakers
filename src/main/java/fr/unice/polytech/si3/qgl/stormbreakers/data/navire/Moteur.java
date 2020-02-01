@@ -19,8 +19,8 @@ public class Moteur {
 	private Bateau ship;
 	private List<Marin> sailors;
 
-	private List<Equipment> rightOars = new ArrayList<>();
-	private List<Equipment> leftOars = new ArrayList<>();
+	private List<Equipment> rightOars;
+	private List<Equipment> leftOars;
 	
 	private static final double PI = Math.PI;
 	
@@ -54,7 +54,7 @@ public class Moteur {
 	 * Methode servant a verifier si l'angle vers le checkpoint est valide ou pas.
 	 * Creation des SailorAction en conséquence.
 	 * 
-	 * @param le Checkpoint cible
+	 * @param target le Checkpoint cible
 	 * @return les SailorAction finales
 	 */
 	public List<SailorAction> dispatchSailors(Checkpoint target) {
@@ -86,9 +86,9 @@ public class Moteur {
 			results.addAll(leftOars);
 		}
 		
-		List<Marin> sailorsInAction;
+		List<Marin> sailorsInAction = new ArrayList<>();
 		//TODO Répartition des marins vers les rames nécessaires contenues dans "results"
-		return sailorsInAction.stream().map(marin -> new Oar(marin.getId())).collect(Collectors.toList());;
+		return sailorsInAction.stream().map(marin -> new Oar(marin.getId())).collect(Collectors.toList());
 	}
 	
 	/**
@@ -109,9 +109,9 @@ public class Moteur {
 			results.addAll(leftOars);
 		}
 		
-		List<Marin> sailorsInAction;
+		List<Marin> sailorsInAction = new ArrayList<>();
 		//TODO Répartition des marins vers les rames nécessaires contenues dans "results"
-		return sailorsInAction.stream().map(marin -> new Oar(marin.getId())).collect(Collectors.toList());;
+		return sailorsInAction.stream().map(marin -> new Oar(marin.getId())).collect(Collectors.toList());
 	}
 
 	/**

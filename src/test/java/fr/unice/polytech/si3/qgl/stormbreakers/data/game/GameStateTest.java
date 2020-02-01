@@ -71,8 +71,7 @@ class GameStateTest {
         checkpoints.add(mockedCheckpoint);
         checkpoints.addAll(goal.getCheckpoints());
 
-        GameState gState = new GameState(gameState.getPositionBateau(),gameState.getVieBateau(),gameState.getOrgaMarins(),
-                gameState.getEquipmentState(), checkpoints);
+        GameState gState = new GameState(gameState.getShip(),gameState.getOrgaMarins(), checkpoints);
 
         gState.actualiserCheckpoints();
         assertEquals(mockedCheckpoint,gState.getNextCheckpoint());
@@ -87,8 +86,7 @@ class GameStateTest {
         checkpoints.add(mockedCheckpoint);
         checkpoints.addAll(goal.getCheckpoints());
 
-        GameState gState = new GameState(gameState.getPositionBateau(),gameState.getVieBateau(),gameState.getOrgaMarins(),
-                gameState.getEquipmentState(), checkpoints);
+        GameState gState = new GameState(gameState.getShip(),gameState.getOrgaMarins(), checkpoints);
 
         gState.actualiserCheckpoints();
         assertEquals(goal.getCheckpoints().get(0),gState.getNextCheckpoint());

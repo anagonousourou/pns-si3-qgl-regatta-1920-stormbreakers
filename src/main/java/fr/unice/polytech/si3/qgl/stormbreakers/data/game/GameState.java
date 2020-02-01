@@ -1,14 +1,18 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.data.game;
 
+import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.ActionType;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.Moving;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.SailorAction;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Equipment;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Marin;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Checkpoint;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.RegattaGoal;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Bateau;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Vent;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Classe representant l'etat du jeu au debut du tour courrant
@@ -18,21 +22,15 @@ import java.util.List;
 
 public class GameState {
 
-    private Position positionBateau;
-    private int vieBateau;
+    private Bateau ship;
     private List<Marin> orgaMarins;
-    private List<Equipment> equipmentState;
-
     private List<Checkpoint> checkpoints;
-
     private Vent wind;
 
 
-    GameState(Position positionBateau, int vieBateau, List<Marin> orgaMarins, List<Equipment> equipmentState, List<Checkpoint> checkpoints) {
-        this.positionBateau = positionBateau;
-        this.vieBateau = vieBateau;
+    GameState(Bateau ship, List<Marin> orgaMarins, List<Checkpoint> checkpoints) {
+        this.ship = ship;
         this.orgaMarins = orgaMarins;
-        this.equipmentState = equipmentState;
         this.checkpoints = checkpoints;
         this.wind = null;
     }
@@ -42,11 +40,9 @@ public class GameState {
      * Constructeur qui recupere l'etat initial du jeu
      * @param initGame contient les donnees d'initialisation
      */
-    GameState(InitGame initGame) {
-        this.positionBateau = initGame.getShip().getPosition();
-        this.vieBateau = initGame.getShip().getLife();
+    public GameState(InitGame initGame) {
+        this.ship = initGame.getShip();
         this.orgaMarins = initGame.getSailors();
-        this.equipmentState = initGame.getShip().getEquipments();
         this.wind = new Vent(0.0,0.0);
 
         if (initGame.getGoal().getMode().equals("REGATTA")) {
@@ -60,15 +56,13 @@ public class GameState {
      * NB : ne prend pas en compte les actions realisees
      * @param nextRound contient les donnees actualisees
      */
-    void actualiserTour(NextRound nextRound) {
-        positionBateau = nextRound.getShip().getPosition();
-        vieBateau = nextRound.getShip().getLife();
-        equipmentState = nextRound.getShip().getEquipments();
+    public void actualiserTour(NextRound nextRound) {
+        ship = nextRound.getShip();
         wind = nextRound.getWind();
         if (checkpoints!=null) actualiserCheckpoints();
     }
 
-    void actualiserCheckpoints() {
+    public void actualiserCheckpoints() {
         if (isCheckpointOk(getNextCheckpoint())) validateCheckpoint();
     }
 
@@ -83,6 +77,17 @@ public class GameState {
         }
     }
 
+    /**
+     * Actualise l'etat du jeu, a partir d'une liste d'actions
+     * @param actions liste d'actions
+     */
+    public void actualiserActions(List<SailorAction> actions) {
+        // Traitement des deplacements
+        List<SailorAction> movingList = actions.stream().filter(act-> act.getType().equals(ActionType.MOVING.actionCode)).collect(Collectors.toList());
+        List<Moving> movings = movingList.stream().map(x -> (Moving)x).collect(Collectors.toList());
+        actualiserDeplacements(movings);
+    }
+
     private Marin findSailorById(int sailorId) {
         for (Marin sailor : orgaMarins) {
             if (sailor.getId() == sailorId) return sailor;
@@ -90,17 +95,25 @@ public class GameState {
         return null;
     }
 
+    public Bateau getShip() {
+        return ship;
+    }
+
 	public Position getPositionBateau() {
-		return positionBateau;
+		return ship.getPosition();
 	}
 
 	public int getVieBateau() {
-		return vieBateau;
+		return ship.getLife();
 	}
 
 	public List<Equipment> getEquipmentState() {
-		return equipmentState;
+		return ship.getEquipments();
 	}
+
+    public List<Marin> getOrgaMarins() {
+        return orgaMarins;
+    }
 
 	public Vent getWind() {
 		return wind;
@@ -117,11 +130,6 @@ public class GameState {
     }
 
     private boolean isCheckpointOk(Checkpoint checkPt) {
-        return checkPt.isPosInside(positionBateau.getX(),positionBateau.getY());
-
-    }
-
-    public List<Marin> getOrgaMarins() {
-        return orgaMarins;
+        return checkPt.isPosInside(getPositionBateau());
     }
 }
