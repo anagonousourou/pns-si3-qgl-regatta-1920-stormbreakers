@@ -63,7 +63,9 @@ public class GameState {
     }
 
     public void actualiserCheckpoints() {
-        if (isCheckpointOk(getNextCheckpoint())) validateCheckpoint();
+        if (isCurrentCheckpointOk()) {
+            validateCheckpoint();
+        }
     }
 
     /**
@@ -127,6 +129,10 @@ public class GameState {
 
     private void validateCheckpoint() {
         if (!checkpoints.isEmpty()) checkpoints.remove(0);
+    }
+
+    private boolean isCurrentCheckpointOk() {
+        return isCheckpointOk(getNextCheckpoint());
     }
 
     private boolean isCheckpointOk(Checkpoint checkPt) {

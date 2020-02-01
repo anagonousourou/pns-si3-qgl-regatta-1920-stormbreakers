@@ -1,6 +1,7 @@
 package fr.unice.polytech.si3.qgl.stormbreakers;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Equipment;
@@ -14,8 +15,8 @@ import java.util.List;
 
 class CockpitTest {
 
-    Cockpit cockpit;
-    String inputInit1, inputInit2, inputInit3, inputInit4;
+    private Cockpit cockpit;
+    private String inputInit1, inputInit2, inputInit3, inputInit4;
 
     @BeforeEach
     void setUp() throws IOException {
@@ -60,7 +61,7 @@ class CockpitTest {
         "Un seul des rameurs à droite rame" );
     }
 
-    @Test
+    @Test @Disabled
     void ramesAccessiblesTest(){
         var m1=new Marin(1,2,2,"Peter");
         List<Marin> marins=List.of(
@@ -73,11 +74,12 @@ class CockpitTest {
         var r2=new Rame(10, 4);
         List<Equipment> equipments =List.of(r1,r2);
 
-     //   var result=this.cockpit.ramesAccessibles(equipments, marins);
-     //   assertNotEquals(null, result, "Pas null");
-      //  assertTrue(result.get(m1).contains(r1));
-       // assertFalse(result.get(m1).contains(r2));
-
+        /*
+        var result=this.cockpit.ramesAccessibles(equipments, marins);
+        assertNotEquals(null, result, "Pas null");
+        assertTrue(result.get(m1).contains(r1));
+        assertFalse(result.get(m1).contains(r2));
+        */
 
     }
 }

@@ -1,6 +1,7 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.data.game;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.Moving;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Marin;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Checkpoint;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.RegattaGoal;
@@ -12,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyDouble;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -66,6 +68,7 @@ class GameStateTest {
     void testActualiserCheckpointsWhenOut() {
         Checkpoint mockedCheckpoint = mock(Checkpoint.class);
         when(mockedCheckpoint.isPosInside(anyDouble(),anyDouble())).thenReturn(false);
+        when(mockedCheckpoint.isPosInside(any(Position.class))).thenReturn(false);
 
         List<Checkpoint> checkpoints = new ArrayList<>();
         checkpoints.add(mockedCheckpoint);
@@ -81,6 +84,7 @@ class GameStateTest {
     void testActualiserCheckpointsWhenIn() {
         Checkpoint mockedCheckpoint = mock(Checkpoint.class);
         when(mockedCheckpoint.isPosInside(anyDouble(),anyDouble())).thenReturn(true);
+        when(mockedCheckpoint.isPosInside(any(Position.class))).thenReturn(true);
 
         List<Checkpoint> checkpoints = new ArrayList<>();
         checkpoints.add(mockedCheckpoint);
