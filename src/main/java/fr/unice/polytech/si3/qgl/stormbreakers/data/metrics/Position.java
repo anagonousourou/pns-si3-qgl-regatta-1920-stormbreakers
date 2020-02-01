@@ -49,4 +49,9 @@ public class Position {
         Cartesian rotatedCartesian = new Polar(oldPolar.getR(),oldPolar.getTheta() + theta).toCartesian();
         return new Position(rotatedCartesian.getX(),rotatedCartesian.getY(),oldPolar.getTheta() + theta);
     }
+
+    @Override
+    public String toString() {
+        return "Position ( "+this.x+" , "+this.y+" )";
+    }
 }

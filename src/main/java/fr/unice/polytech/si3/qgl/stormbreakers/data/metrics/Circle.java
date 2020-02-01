@@ -19,10 +19,10 @@ public class Circle extends Shape {
 
     @Override
     public boolean isPosInside(double x, double y) {
-        return distFromCenter(x,y)<=radius;
+        return distFromCenter(x, y) <= radius;
     }
 
     private double distFromCenter(double x, double y) {
-        return new Position(0,0).distanceTo(new Position(x,y));
+        return new Position(0, 0).distanceTo(new Position(x, y));
     }
 }

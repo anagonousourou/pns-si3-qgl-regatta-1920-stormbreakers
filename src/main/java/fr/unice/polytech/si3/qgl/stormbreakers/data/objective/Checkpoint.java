@@ -27,6 +27,6 @@ public class Checkpoint {
     }
 
     public boolean isPosInside(double x, double y) {
-        return shape.isPosInside(x,y);
+        return shape.isPosInside(x-position.getX(),y-position.getY());
     }
 }

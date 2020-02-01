@@ -31,4 +31,11 @@ public class Moving extends SailorAction {
     public void applyTo(Marin sailor) {
         if (sailor!=null) sailor.move(xdistance,ydistance);
     }
+
+    @Override
+    public String toString() {
+        return "Moving( idsailor: "+this.getSailorId()+", xdistance: "
+        +this.xdistance+ ", ydistance: "+this.ydistance
+        +" )";
+    }
 }

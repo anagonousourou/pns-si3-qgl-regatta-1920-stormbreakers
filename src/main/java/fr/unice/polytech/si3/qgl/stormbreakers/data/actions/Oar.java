@@ -10,4 +10,9 @@ public class Oar extends SailorAction {
         super(sailorId,"OAR");
     }
 
+    @Override
+    public String toString() {
+        return "Oar( idsailor:"+this.getSailorId()+" )";
+    }
+
 }

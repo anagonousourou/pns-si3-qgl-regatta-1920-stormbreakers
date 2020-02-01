@@ -89,7 +89,7 @@
 	
 	<profiles>
 		<profile>
-			<id>covrage</id>
+			<id>coverage</id>
 			<build>
 				<plugins>
 					<plugin>

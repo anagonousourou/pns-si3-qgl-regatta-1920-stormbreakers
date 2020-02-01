@@ -24,6 +24,7 @@ public class GameState {
     private List<Equipment> equipmentState;
 
     private List<Checkpoint> checkpoints;
+    private InitGame stateInit;
 
     private Vent wind;
 
@@ -37,21 +38,21 @@ public class GameState {
         this.wind = null;
     }
 
-    // TODO: 23/01/2020 Recup gameSate depuis InitGame ???
     /**
      * Constructeur qui recupere l'etat initial du jeu
      * @param initGame contient les donnees d'initialisation
      */
-    GameState(InitGame initGame) {
+    public GameState(InitGame initGame) {
         this.positionBateau = initGame.getShip().getPosition();
         this.vieBateau = initGame.getShip().getLife();
         this.orgaMarins = initGame.getSailors();
         this.equipmentState = initGame.getShip().getEquipments();
         this.wind = new Vent(0.0,0.0);
+        this.stateInit=initGame;
 
         if (initGame.getGoal().getMode().equals("REGATTA")) {
             RegattaGoal regattaGoal = (RegattaGoal) initGame.getGoal();
-            checkpoints = regattaGoal.getCheckpoints();
+            this.checkpoints = regattaGoal.getCheckpoints();
         }
     }
 
@@ -60,7 +61,7 @@ public class GameState {
      * NB : ne prend pas en compte les actions realisees
      * @param nextRound contient les donnees actualisees
      */
-    void actualiserTour(NextRound nextRound) {
+    public void updateTurn(NextRound nextRound) {
         positionBateau = nextRound.getShip().getPosition();
         vieBateau = nextRound.getShip().getLife();
         equipmentState = nextRound.getShip().getEquipments();
@@ -68,8 +69,10 @@ public class GameState {
         if (checkpoints!=null) actualiserCheckpoints();
     }
 
-    void actualiserCheckpoints() {
-        if (isCheckpointOk(getNextCheckpoint())) validateCheckpoint();
+    public void actualiserCheckpoints() {
+        if (isCheckpointOk(getNextCheckpoint())){
+            validateCheckpoint();
+        } 
     }
 
     /**
@@ -117,11 +120,19 @@ public class GameState {
     }
 
     private boolean isCheckpointOk(Checkpoint checkPt) {
-        return checkPt.isPosInside(positionBateau.getX(),positionBateau.getY());
+        if(checkPt!=null){
+            return checkPt.isPosInside(positionBateau.getX(),positionBateau.getY());
+        }
+        return true;
+        
 
     }
 
     public List<Marin> getOrgaMarins() {
         return orgaMarins;
+    }
+
+    public InitGame getStateInit() {
+        return stateInit;
     }
 }

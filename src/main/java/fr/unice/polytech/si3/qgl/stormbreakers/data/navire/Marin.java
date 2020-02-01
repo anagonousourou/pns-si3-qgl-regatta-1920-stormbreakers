@@ -3,6 +3,8 @@ package fr.unice.polytech.si3.qgl.stormbreakers.data.navire;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.Moving;
+
 public class Marin implements Deckable {
 	private static final int MAX_DIST = 5;
 
@@ -56,5 +58,9 @@ public class Marin implements Deckable {
 			x += xdistance;
 			y += ydistance;
 		}
-    }
+	}
+	
+	public Moving howToGoTo(int xpos,int ypos){
+		return new Moving(this.id, xpos-this.x, ypos-this.y);
+	}
 }
