@@ -13,7 +13,7 @@ public class Moving extends SailorAction {
             @JsonProperty("sailorId") int sailorId,
             @JsonProperty("xdistance") int xdistance,
             @JsonProperty("ydistance") int ydistance) {
-        super(sailorId,"MOVING");
+        super(sailorId,ActionType.MOVING.actionCode);
         this.xdistance = xdistance;
         this.ydistance = ydistance;
     }

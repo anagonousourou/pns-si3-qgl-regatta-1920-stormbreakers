@@ -7,7 +7,7 @@ public class LiftSail extends SailorAction {
 
     @JsonCreator
     LiftSail( @JsonProperty("sailorId") int sailorId) {
-        super(sailorId,"LIFT_SAIL");
+        super(sailorId,ActionType.LIFTSAIL.actionCode);
     }
 
 }
