@@ -27,24 +27,6 @@ public class Moteur {
 	private static final double EPS = 0.01;
 	private GameState gState;
 
-	@Deprecated
-	public Moteur(Bateau b, List<Marin> s) {
-		ship = b;
-		sailors = s;
-		rightOars = new ArrayList<>();
-		leftOars = new ArrayList<>();
-		separateEntities();
-	}
-	@Deprecated
-	public Moteur(InitGame initGame) {
-		this.sailors = initGame.getSailors();
-		this.oars = initGame.getShip().getRames();
-		this.ship = initGame.getShip();
-		this.leftOars = this.oars.stream().filter(oar -> oar.getY() == 0).collect(Collectors.toList());
-		this.rightOars = this.oars.stream().filter(oar -> oar.getY() != 0).collect(Collectors.toList());
-
-	}
-
 	public Moteur(GameState gameState){
 		this.gState=gameState;
 		this.sailors=gameState.getStateInit().getSailors();
@@ -86,7 +68,8 @@ public class Moteur {
 		if (Math.abs(angle) <= Moteur.EPS
 				) {
 					System.out.println("Tout droit");
-			return this.accelerate();
+					
+			return this.toActivate(leftOars, rightOars);
 		} else {
 			
 			double approachingAngle = oarsAngles.stream().filter(a -> a * angle > 0.0)
@@ -132,7 +115,7 @@ public class Moteur {
 		
 
 	}
-
+/*
 	public List<SailorAction> accelerate(){
 		List<SailorAction> result = new ArrayList<>();
 		List<Marin> yetBusy =new ArrayList<>();
@@ -179,7 +162,7 @@ public class Moteur {
 		}
 		return result;
 	}
-
+*/
 	/**
 	 * Repartition des rames et marins pour avancer en deviant.
 	 * 
@@ -222,7 +205,7 @@ public class Moteur {
 		List<SailorAction> result = new ArrayList<>();
 		List<Marin> yetBusy =new ArrayList<>();
 		int compteur=0;
-		var correspondances = this.marinsDisponibles(oars,this.sailors);
+		HashMap<Equipment,List<Marin>> correspondances = this.marinsDisponibles(oars,this.sailors);
 		for (Equipment oar: oars){
 			if (correspondances.get(oar) != null) {
 				for (Marin m : correspondances.get(oar)) {
@@ -242,7 +225,31 @@ public class Moteur {
 		}
 		return result;
 	}
-
+	/**
+	 * méthode pour permettre le deplacement en ligne droite
+	 * @param oars
+	 * @return
+	 */
+	public List<SailorAction> toActivate(List<Equipment> oarsLeft,List<Equipment> oarsRight) {
+		int sizeListMin=Math.min(oarsLeft.size(), oarsRight.size());
+		List<SailorAction> result= new ArrayList<>();
+		List<SailorAction> leftOarsActivated =toActivate(oarsLeft,sizeListMin);
+		List<SailorAction> rightOarsActivated =toActivate(oarsLeft,sizeListMin);
+		if(leftOarsActivated.size()==rightOarsActivated.size()) {
+			result.addAll(leftOarsActivated);
+			result.addAll(rightOarsActivated);
+			return result;
+		}else if(leftOarsActivated.size()>rightOarsActivated.size()){
+			result.addAll(leftOarsActivated.subList(0, rightOarsActivated.size()));
+			result.addAll(rightOarsActivated);
+			return result;
+		}else {
+			result.addAll(leftOarsActivated);
+			result.addAll(rightOarsActivated.subList(0, leftOarsActivated.size()));
+			return result;
+		}
+	
+	}	
 	/**
 	 * Methode servant a retirer les rames qui ne serviront pas
 	 * 
