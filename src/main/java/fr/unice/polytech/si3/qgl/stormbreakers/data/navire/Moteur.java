@@ -55,7 +55,7 @@ public class Moteur {
 
 	/**
 	 * Methode servant a verifier si l'angle vers le checkpoint est valide ou pas.
-	 * Creation des SailorAction en conséquence.
+	 * Creation des SailorAction en consequence.
 	 * 
 	 * @param target Checkpoint cible
 	 * @return les SailorAction finales
@@ -64,12 +64,12 @@ public class Moteur {
 		Set<Double> oarsAngles = this.possibleOrientations();
 		double angle = this.orientationNeeded(target);
 		System.out.println("Angle needed: "+angle);
-
+		List<Marin> marinUtilise=new ArrayList<>();
 		if (Math.abs(angle) <= Moteur.EPS
 				) {
 					System.out.println("Tout droit");
 					
-			return this.toActivate(leftOars, rightOars);
+			return this.toActivate(leftOars, rightOars,marinUtilise);
 		} else {
 			
 			double approachingAngle = oarsAngles.stream().filter(a -> a * angle > 0.0)
@@ -77,7 +77,7 @@ public class Moteur {
 			System.out.println("Angle approching: "+approachingAngle);
 			System.out.println("Possibles angles: "+oarsAngles);
 
-			return this.minRepartition(this.angleToDiff(approachingAngle));
+			return this.minRepartition(this.angleToDiff(approachingAngle),marinUtilise);
 		}
 	}
 
@@ -107,7 +107,7 @@ public class Moteur {
 		}
 
 		List<Marin> sailorsInAction;
-		// TODO Répartition des marins vers les rames nécessaires contenues dans
+		// TODO Repartition des marins vers les rames necessaires contenues dans
 		// "results"
 		return null;
 		// return sailorsInAction.stream().map(marin -> new
@@ -183,7 +183,7 @@ public class Moteur {
 		}
 
 		List<Marin> sailorsInAction;
-		// TODO Répartition des marins vers les rames nécessaires contenues dans
+		// TODO Repartition des marins vers les rames necessaires contenues dans
 		// "results"
 		return null;
 		// return sailorsInAction.stream().map(marin -> new
@@ -191,19 +191,19 @@ public class Moteur {
 
 	}
 
-	public List<SailorAction> minRepartition(int diffToCatch) {
+	public List<SailorAction> minRepartition(int diffToCatch,List<Marin> marinUtilise) {
 		if (diffToCatch < 0) {
-			return this.toActivate(this.rightOars, -diffToCatch);
+			return this.toActivate(this.rightOars, -diffToCatch, marinUtilise);
 		}
 		else{
-			return this.toActivate(this.leftOars, diffToCatch);
+			return this.toActivate(this.leftOars, diffToCatch, marinUtilise);
 		}
 
 	}
 
-	public List<SailorAction> toActivate(List<Equipment> oars, int nbToActivate) {
+	public List<SailorAction> toActivate(List<Equipment> oars, int nbToActivate, List<Marin> marinUtilise) {
 		List<SailorAction> result = new ArrayList<>();
-		List<Marin> yetBusy =new ArrayList<>();
+		List<Marin> yetBusy =marinUtilise;
 		int compteur=0;
 		HashMap<Equipment,List<Marin>> correspondances = this.marinsDisponibles(oars,this.sailors);
 		for (Equipment oar: oars){
@@ -226,15 +226,16 @@ public class Moteur {
 		return result;
 	}
 	/**
-	 * méthode pour permettre le deplacement en ligne droite
+	 * methode pour permettre le deplacement en ligne droite
 	 * @param oars
 	 * @return
 	 */
-	public List<SailorAction> toActivate(List<Equipment> oarsLeft,List<Equipment> oarsRight) {
+	public List<SailorAction> toActivate(List<Equipment> oarsLeft,List<Equipment> oarsRight,List<Marin> marinUtilise) {
 		int sizeListMin=Math.min(oarsLeft.size(), oarsRight.size());
 		List<SailorAction> result= new ArrayList<>();
-		List<SailorAction> leftOarsActivated =toActivate(oarsLeft,sizeListMin);
-		List<SailorAction> rightOarsActivated =toActivate(oarsLeft,sizeListMin);
+		List<Marin> areBusyList= marinUtilise;
+		List<SailorAction> leftOarsActivated =toActivate(oarsLeft,sizeListMin,areBusyList);
+		List<SailorAction> rightOarsActivated =toActivate(oarsLeft,leftOarsActivated.size(),areBusyList);
 		if(leftOarsActivated.size()==rightOarsActivated.size()) {
 			result.addAll(leftOarsActivated);
 			result.addAll(rightOarsActivated);
@@ -263,8 +264,8 @@ public class Moteur {
 
 	/**
 	 * Methode servant a retourner les angles possibles du navire, ainsi que la
-	 * différence entre le nombre de rames a babord et le nombre de rames a tribord
-	 * nécessaire pour chaque angle
+	 * difference entre le nombre de rames a babord et le nombre de rames a tribord
+	 * necessaire pour chaque angle
 	 * 
 	 * @return une HashMap donc la key est l'angle, la value etant la difference
 	 *         mentionnee au-dessus.
