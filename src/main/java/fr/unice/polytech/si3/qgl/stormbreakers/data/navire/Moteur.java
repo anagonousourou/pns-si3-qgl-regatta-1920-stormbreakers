@@ -88,49 +88,28 @@ public class Moteur {
 					System.out.println("Tout droit");
 			return this.accelerate();
 		} else {
-			
-			double approachingAngle = oarsAngles.stream().filter(a -> a * angle > 0.0)
-					.min((a, b) -> Double.compare(Math.abs(a- angle), Math.abs(b - angle))).get();
-			System.out.println("Angle approching: "+approachingAngle);
-			System.out.println("Possibles angles: "+oarsAngles);
 
-			return this.minRepartition(this.angleToDiff(approachingAngle));
+			var angleOpt=oarsAngles.stream().filter(a -> a * angle > 0.0)
+			.min((a, b) -> Double.compare(Math.abs(a- angle), Math.abs(b - angle)));
+			if(angleOpt.isPresent()){
+				double approachingAngle = angleOpt.get();
+				System.out.println("Angle approching: "+approachingAngle);
+				System.out.println("Possibles angles: "+oarsAngles);
+
+				return this.minRepartition(this.angleToDiff(approachingAngle));
+			}
+
+			else{
+				return new ArrayList<>();
+			}
+			
+			
 		}
 	}
 
 	public List<SailorAction> actions() {
 		gState.actualiserCheckpoints();
 		return this.dispatchSailors(gState.getNextCheckpoint());
-	}
-
-
-	/**
-	 * Repartition des rames et marins pour aller tout droit.
-	 * 
-	 * @return les SailorAction finales
-	 */
-	private List<SailorAction> goesStraight() {
-		List<Equipment> results;
-		int leftOarsCount = leftOars.size();
-		int rightOarsCount = rightOars.size();
-		if (leftOarsCount == rightOarsCount) {
-			results = ship.getRames();
-		} else if (leftOarsCount > rightOarsCount) {
-			results = dismissOars(leftOars, leftOarsCount - rightOarsCount);
-			results.addAll(rightOars);
-		} else {
-			results = dismissOars(rightOars, rightOarsCount - leftOarsCount);
-			results.addAll(leftOars);
-		}
-
-		List<Marin> sailorsInAction;
-		// TODO Répartition des marins vers les rames nécessaires contenues dans
-		// "results"
-		return null;
-		// return sailorsInAction.stream().map(marin -> new
-		// Oar(marin.getId())).collect(Collectors.toList());
-		
-
 	}
 
 	public List<SailorAction> accelerate(){
@@ -178,34 +157,6 @@ public class Moteur {
 			
 		}
 		return result;
-	}
-
-	/**
-	 * Repartition des rames et marins pour avancer en deviant.
-	 * 
-	 * @param diffToCatch - difference entre le nombre de rames a babord et a
-	 *                    babord. Peut etre negatif.
-	 * @return les SailorAction finales
-	 */
-	private List<SailorAction> changeDirection(int diffToCatch) {
-		List<Equipment> results;
-		int leftOarsCount = leftOars.size();
-		int rightOarsCount = rightOars.size();
-		if (diffToCatch > 0) {
-			results = dismissOars(leftOars, diffToCatch);
-			results.addAll(rightOars);
-		} else {
-			results = dismissOars(rightOars, -diffToCatch);
-			results.addAll(leftOars);
-		}
-
-		List<Marin> sailorsInAction;
-		// TODO Répartition des marins vers les rames nécessaires contenues dans
-		// "results"
-		return null;
-		// return sailorsInAction.stream().map(marin -> new
-		// Oar(marin.getId())).collect(Collectors.toList());
-
 	}
 
 	public List<SailorAction> minRepartition(int diffToCatch) {
