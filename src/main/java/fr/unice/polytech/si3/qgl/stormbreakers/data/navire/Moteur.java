@@ -206,8 +206,8 @@ public class Moteur {
 		double nbOars = ship.getRames().size();
 		HashMap<Double, Integer> results = new HashMap<>();
 		results.put(0.0, 0);
-		for (int i = 0; i < leftOars.size(); i++) {
-			for (int j = 0; j < rightOars.size(); j++) {
+		for (int i = 0; i <= leftOars.size(); i++) {
+			for (int j = 0; j <= rightOars.size(); j++) {
 				if (i != j) {
 					results.put(PI / (nbOars / (j - i)), j - i);
 				}
