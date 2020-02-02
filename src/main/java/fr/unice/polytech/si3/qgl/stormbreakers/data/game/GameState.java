@@ -89,7 +89,7 @@ public class GameState {
         // Traitement des deplacements
         List<SailorAction> movingList = actions.stream().filter(act-> act.getType().equals(ActionType.MOVING.actionCode)).collect(Collectors.toList());
         List<Moving> movings = movingList.stream().map(x -> (Moving)x).collect(Collectors.toList());
-        actualiserDeplacements(movings);
+        this.actualiserDeplacements(movings);
     }
 
     private Marin findSailorById(int sailorId) {

@@ -4,13 +4,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.Oar;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.SailorAction;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.game.GameState;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.game.InitGame;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Checkpoint;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Bateau;
 
@@ -27,27 +28,9 @@ public class Moteur {
 	private static final double EPS = 0.01;
 	private GameState gState;
 
-	@Deprecated
-	public Moteur(Bateau b, List<Marin> s) {
-		ship = b;
-		sailors = s;
-		rightOars = new ArrayList<>();
-		leftOars = new ArrayList<>();
-		separateEntities();
-	}
-	@Deprecated
-	public Moteur(InitGame initGame) {
-		this.sailors = initGame.getSailors();
-		this.oars = initGame.getShip().getRames();
-		this.ship = initGame.getShip();
-		this.leftOars = this.oars.stream().filter(oar -> oar.getY() == 0).collect(Collectors.toList());
-		this.rightOars = this.oars.stream().filter(oar -> oar.getY() != 0).collect(Collectors.toList());
-
-	}
-
-	public Moteur(GameState gameState){
-		this.gState=gameState;
-		this.sailors=gameState.getStateInit().getSailors();
+	public Moteur(GameState gameState) {
+		this.gState = gameState;
+		this.sailors = gameState.getStateInit().getSailors();
 		this.oars = gameState.getStateInit().getShip().getRames();
 		this.ship = gameState.getStateInit().getShip();
 		this.leftOars = this.oars.stream().filter(oar -> oar.getY() == 0).collect(Collectors.toList());
@@ -59,21 +42,8 @@ public class Moteur {
 	}
 
 	/**
-	 * Initialisation des elements situes tout a babord, et ceux a tribord
-	 */
-	private void separateEntities() {
-		ship.getRames().forEach(oar -> {
-			if (oar.getY() == 0) {
-				leftOars.add(oar);
-			} else {
-				rightOars.add(oar);
-			}
-		});
-	}
-
-	/**
 	 * Methode servant a verifier si l'angle vers le checkpoint est valide ou pas.
-	 * Creation des SailorAction en conséquence.
+	 * Creation des SailorAction en consequence.
 	 * 
 	 * @param target Checkpoint cible
 	 * @return les SailorAction finales
@@ -81,29 +51,25 @@ public class Moteur {
 	public List<SailorAction> dispatchSailors(Checkpoint target) {
 		Set<Double> oarsAngles = this.possibleOrientations();
 		double angle = this.orientationNeeded(target);
-		System.out.println("Angle needed: "+angle);
+		System.out.println("Angle needed: " + angle);
+		List<Marin> marinUtilise = new ArrayList<>();
+		if (Math.abs(angle) <= Moteur.EPS) {
+			System.out.println("Tout droit");
 
-		if (Math.abs(angle) <= Moteur.EPS
-				) {
-					System.out.println("Tout droit");
-			return this.accelerate();
+			return this.toActivate(leftOars, rightOars, marinUtilise);
 		} else {
+			Optional<Double> optAngle = oarsAngles.stream().filter(a -> a * angle > 0.0)
 
-			var angleOpt=oarsAngles.stream().filter(a -> a * angle > 0.0)
-			.min((a, b) -> Double.compare(Math.abs(a- angle), Math.abs(b - angle)));
-			if(angleOpt.isPresent()){
-				double approachingAngle = angleOpt.get();
-				System.out.println("Angle approching: "+approachingAngle);
-				System.out.println("Possibles angles: "+oarsAngles);
-
-				return this.minRepartition(this.angleToDiff(approachingAngle));
-			}
-
-			else{
+					.min((a, b) -> Double.compare(Math.abs(a - angle), Math.abs(b - angle)));
+			if (optAngle.isPresent()) {
+				double approachingAngle = optAngle.get();
+				System.out.println("Angle approching: " + approachingAngle);
+				System.out.println("Possibles angles: " + oarsAngles);
+				return this.minRepartition(this.angleToDiff(approachingAngle), marinUtilise);
+			} else {
 				return new ArrayList<>();
 			}
-			
-			
+
 		}
 	}
 
@@ -112,108 +78,131 @@ public class Moteur {
 		return this.dispatchSailors(gState.getNextCheckpoint());
 	}
 
-	public List<SailorAction> accelerate(){
+	/**
+	 * Cette méthode fait avancer le bateau en utilisant un marin de chaque coté
+	 * 
+	 * @return la liste des actions
+	 */
+
+	public List<SailorAction> accelerate() {
 		List<SailorAction> result = new ArrayList<>();
-		List<Marin> yetBusy =new ArrayList<>();
-		
-		var correspondances = this.marinsDisponibles(this.oars,this.sailors);
-		
-		for (Equipment oar: this.leftOars){
-			boolean breaking=false;
+		List<Marin> yetBusy = new ArrayList<>();
+
+		var correspondances = this.marinsDisponibles(this.oars, this.sailors);
+
+		for (Equipment oar : this.leftOars) {
+			boolean breaking = false;
 			if (correspondances.get(oar) != null) {
 				for (Marin m : correspondances.get(oar)) {
-					if(!yetBusy.contains(m)){
+					if (!yetBusy.contains(m)) {
 						yetBusy.add(m);
 						result.add(new Oar(m.getId()));
-						result.add(m.howToGoTo(oar.getX(),oar.getY()));
-						breaking=true;
+						result.add(m.howToGoTo(oar.getX(), oar.getY()));
+						breaking = true;
 						break;
 					}
 				}
 			}
-			if(breaking){
+			if (breaking) {
 				break;
 			}
-			
+
 		}
 
-		for (Equipment oar: this.rightOars){
-			boolean breaking=false;
+		for (Equipment oar : this.rightOars) {
+			boolean breaking = false;
 			if (correspondances.get(oar) != null) {
 				for (Marin m : correspondances.get(oar)) {
-					if(!yetBusy.contains(m)){
+					if (!yetBusy.contains(m)) {
 						yetBusy.add(m);
 						result.add(new Oar(m.getId()));
-						result.add(m.howToGoTo(oar.getX(),oar.getY()));
-						breaking=true;
-						
+						result.add(m.howToGoTo(oar.getX(), oar.getY()));
+						breaking = true;
+
 						break;
 					}
 				}
 			}
-			if(breaking){
+			if (breaking) {
 				break;
 			}
-			
+
 		}
 		return result;
 	}
 
-	public List<SailorAction> minRepartition(int diffToCatch) {
+	public List<SailorAction> minRepartition(int diffToCatch, List<Marin> marinUtilise) {
 		if (diffToCatch < 0) {
-			return this.toActivate(this.rightOars, -diffToCatch);
-		}
-		else{
-			return this.toActivate(this.leftOars, diffToCatch);
+			return this.toActivate(this.rightOars, -diffToCatch, marinUtilise);
+		} else {
+			return this.toActivate(this.leftOars, diffToCatch, marinUtilise);
 		}
 
 	}
 
-	public List<SailorAction> toActivate(List<Equipment> oars, int nbToActivate) {
+	public List<SailorAction> toActivate(List<Equipment> oars, int nbToActivate, List<Marin> marinUtilise) {
 		List<SailorAction> result = new ArrayList<>();
-		List<Marin> yetBusy =new ArrayList<>();
-		int compteur=0;
-		var correspondances = this.marinsDisponibles(oars,this.sailors);
-		for (Equipment oar: oars){
+		List<Marin> yetBusy = marinUtilise;
+		int compteur = 0;
+		Map<Equipment, List<Marin>> correspondances = this.marinsDisponibles(oars, this.sailors);
+		for (Equipment oar : oars) {
 			if (correspondances.get(oar) != null) {
 				for (Marin m : correspondances.get(oar)) {
-					if(!yetBusy.contains(m)){
+					if (!yetBusy.contains(m)) {
 						yetBusy.add(m);
 						result.add(new Oar(m.getId()));
-						result.add(m.howToGoTo(oar.getX(),oar.getY()));
+						result.add(m.howToGoTo(oar.getX(), oar.getY()));
 						compteur++;
 						break;
 					}
 				}
 			}
-			if(compteur==nbToActivate){
+			if (compteur == nbToActivate) {
 				break;
 			}
-			
+
 		}
 		return result;
 	}
 
 	/**
-	 * Methode servant a retirer les rames qui ne serviront pas
+	 * methode pour permettre le deplacement en ligne droite
 	 * 
-	 * @param sideOars - le side du bateau qui a des rames en trop
-	 * @param nb       - nombre de rames en trop
-	 * @return List des rames qui seront utilisees
+	 * @param oars
+	 * @return
 	 */
-	private List<Equipment> dismissOars(List<Equipment> sideOars, int nb) {
-		return sideOars.stream().limit(sideOars.size() - nb).collect(Collectors.toList());
+	public List<SailorAction> toActivate(List<Equipment> oarsLeft, List<Equipment> oarsRight,
+			List<Marin> marinUtilise) {
+		int sizeListMin = Math.min(oarsLeft.size(), oarsRight.size());
+		List<SailorAction> result = new ArrayList<>();
+		List<Marin> areBusyList = marinUtilise;
+		List<SailorAction> leftOarsActivated = toActivate(oarsLeft, sizeListMin, areBusyList);
+		List<SailorAction> rightOarsActivated = toActivate(oarsLeft, leftOarsActivated.size(), areBusyList);
+		if (leftOarsActivated.size() == rightOarsActivated.size()) {
+			result.addAll(leftOarsActivated);
+			result.addAll(rightOarsActivated);
+			return result;
+		} else if (leftOarsActivated.size() > rightOarsActivated.size()) {
+			result.addAll(leftOarsActivated.subList(0, rightOarsActivated.size()));
+			result.addAll(rightOarsActivated);
+			return result;
+		} else {
+			result.addAll(leftOarsActivated);
+			result.addAll(rightOarsActivated.subList(0, leftOarsActivated.size()));
+			return result;
+		}
+
 	}
 
 	/**
 	 * Methode servant a retourner les angles possibles du navire, ainsi que la
-	 * différence entre le nombre de rames a babord et le nombre de rames a tribord
-	 * nécessaire pour chaque angle
+	 * difference entre le nombre de rames a babord et le nombre de rames a tribord
+	 * necessaire pour chaque angle
 	 * 
 	 * @return une HashMap donc la key est l'angle, la value etant la difference
 	 *         mentionnee au-dessus.
 	 */
-	private HashMap<Double, Integer> possibleAngles() {
+	private Map<Double, Integer> possibleAngles() {
 		double nbOars = ship.getRames().size();
 		HashMap<Double, Integer> results = new HashMap<>();
 		results.put(0.0, 0);
@@ -228,50 +217,36 @@ public class Moteur {
 	}
 
 	private int angleToDiff(double angle) {
-		var oarsAngles = possibleAngles();
-		if (oarsAngles.get(angle) == null) {
-			double mapAngle = oarsAngles.keySet().stream().filter(a -> a * angle > 0.0)
-					.min((a, b) -> Double.compare(a - angle, b - angle)).get();
-			return oarsAngles.get(mapAngle);
-		} else {
-			return oarsAngles.get(angle);
-		}
+		return possibleAngles().get(angle);
 
 	}
 
-	private Set<Double> possibleOrientations() {
-		double nbOars = ship.getRames().size();
+	public Set<Double> possibleOrientations() {
+		int nbOars = ship.getRames().size();
 		Set<Double> result = new HashSet<>();
-		for (int i = 0; i < leftOars.size(); i++) {
-			for (int j = 0; j < rightOars.size(); j++) {
-				if (i != j) {
-					result.add(PI / (nbOars / (j - i)));
-				}
-			}
+
+		double step = PI / nbOars;
+		for (int i = 0; i <= nbOars; i++) {
+			result.add((-PI / 2) + (i * step));
 		}
 
 		return result;
 	}
 
-	public HashMap<Marin, List<Equipment>> ramesAccessibles() {
+	public Map<Marin, List<Equipment>> ramesAccessibles() {
 		HashMap<Marin, List<Equipment>> results = new HashMap<>();
-		sailors.forEach(m -> {
-			results.put(m,
-					ship.getEquipments().stream()
-							.filter(e -> (Math.abs(e.getX() - m.getX()) + Math.abs(e.getY() - m.getY())) <= 5)
-							.collect(Collectors.toList()));
-		});
+		sailors.forEach(m -> results.put(m,
+				ship.getEquipments().stream()
+						.filter(e -> (Math.abs(e.getX() - m.getX()) + Math.abs(e.getY() - m.getY())) <= 5)
+						.collect(Collectors.toList())));
 		return results;
 	}
 
-	public HashMap<Equipment, List<Marin>> marinsDisponibles(List<Equipment> rames,List<Marin> marins) {
+	public Map<Equipment, List<Marin>> marinsDisponibles(List<Equipment> rames, List<Marin> marins) {
 		HashMap<Equipment, List<Marin>> results = new HashMap<>();
-		rames.forEach(oar -> {
-			results.put(oar,
-					marins.stream()
-							.filter(e -> (Math.abs(e.getX() - oar.getX()) + Math.abs(e.getY() - oar.getY())) <= 5)
-							.collect(Collectors.toList()));
-		});
+		rames.forEach(oar -> results.put(oar,
+				marins.stream().filter(e -> (Math.abs(e.getX() - oar.getX()) + Math.abs(e.getY() - oar.getY())) <= 5)
+						.collect(Collectors.toList())));
 		return results;
 	}
 

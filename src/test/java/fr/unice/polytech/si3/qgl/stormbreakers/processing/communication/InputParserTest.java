@@ -1,15 +1,16 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.processing.communication;
 
-import fr.unice.polytech.si3.qgl.stormbreakers.data.game.InitGame;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.game.NextRound;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Goal;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.RegattaGoal;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Bateau;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.game.InitGame;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.game.NextRound;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.RegattaGoal;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Bateau;
 
 class InputParserTest {
 

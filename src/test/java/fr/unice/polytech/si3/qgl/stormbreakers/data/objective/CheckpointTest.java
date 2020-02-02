@@ -1,19 +1,21 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.data.objective;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Circle;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Rectangle;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Shape;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class CheckpointTest {
-    private Shape rectangle;
-    private Shape circle;
-    private Position offset;
-    private Position origin;
+    Shape rectangle;
+    Shape circle;
+    Position offset;
+    Position origin;
 
     @BeforeEach
     void setUp() {

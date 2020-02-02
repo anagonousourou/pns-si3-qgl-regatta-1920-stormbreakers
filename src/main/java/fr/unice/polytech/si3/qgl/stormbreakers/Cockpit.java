@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.unice.polytech.si3.qgl.regatta.cockpit.ICockpit;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.SailorAction;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.game.GameState;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Moteur;
 import fr.unice.polytech.si3.qgl.stormbreakers.processing.communication.InputParser;
@@ -21,12 +22,11 @@ public class Cockpit implements ICockpit {
 	}
 
 	public String nextRound(String round) {
-		
 		this.gState.updateTurn(this.parser.fetchNextRoundState(round));
-
-		
 		OutputBuilder outputBuilder = new OutputBuilder();
-		return outputBuilder.writeActions(this.engine.actions());
+		List<SailorAction> actions=this.engine.actions();
+		gState.actualiserActions(actions);
+		return outputBuilder.writeActions(actions);
 	}
 
 	@Override

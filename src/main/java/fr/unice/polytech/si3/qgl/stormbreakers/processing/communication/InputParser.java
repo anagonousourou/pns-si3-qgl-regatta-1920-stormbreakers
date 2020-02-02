@@ -1,23 +1,12 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.processing.communication;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.game.InitGame;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.game.NextRound;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Marin;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Checkpoint;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Goal;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.RegattaGoal;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Bateau;
 
 /**
  * This class is used to parse the JSON formatted String
@@ -72,29 +61,7 @@ public class InputParser {
 		return null;
 	}
 
-	/*
-	// TODO: 23/01/2020 Enlever le throws -> try/catch 
-	public List<Marin> fetchMarinsEntities(String jsonInput) throws  JsonProcessingException {
-		ObjectMapper objectMapper = new ObjectMapper();
-		List<Marin> marins =new ArrayList<>();
-		objectMapper.readTree(jsonInput).get("sailors").forEach(sailor -> 
-			marins.add(new Marin(
-							sailor.get("id").asInt(),
-							sailor.get("x").asInt(),
-							sailor.get("y").asInt(),
-							sailor.get("name").asText()
-
-					)
-				)
-
-		);
-		
-		System.out.println(marins);
-		return marins;
-
-	}
-	*/
-
+	
 
 
 	/** object Creator **/

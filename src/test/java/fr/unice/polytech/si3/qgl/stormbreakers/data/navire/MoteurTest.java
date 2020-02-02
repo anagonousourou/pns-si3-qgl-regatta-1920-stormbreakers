@@ -1,6 +1,8 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.data.navire;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 
@@ -62,5 +64,18 @@ public class MoteurTest {
         var r=this.moteur.actions();
         System.out.println(r);
         assertNotNull(r);
+    }
+    @Test
+    void possibleOrientationsTest(){
+        var result=this.moteur.possibleOrientations();
+        assertEquals(3,result.size());
+        assertTrue(result.contains(0.0));
+    }
+    @Test
+    void possibleOrientationsTestInput4(){
+        this.moteur=new Moteur(new GameState(p.fetchInitGameState(inputInit4)));
+        var result=this.moteur.possibleOrientations();
+        assertEquals(7,result.size());
+        assertTrue(result.contains(0.0));
     }
 }
