@@ -1,12 +1,12 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.data.metrics;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 public class PositionTest {
     private Position a;
@@ -67,4 +67,41 @@ public class PositionTest {
 
         assertTrue(expected.distanceTo(result) < epsilon);
     }
+
+    /*
+     * Tests for equals
+     */
+
+    @Test void testEqualsWhenWrongObject() {
+        Position position = new Position(0,0);
+        Integer other = 0;
+        assertNotEquals(position,other);
+    }
+
+    @Test void testEqualsWhenNullObject() {
+        Position position = new Position(0,0);
+        Fraction other = null;
+        assertNotEquals(position,other);
+    }
+
+    @Test void testEqualsWhenSameObject() {
+        Position position = new Position(0,0);
+        assertEquals(position,position);
+    }
+
+    @Test void testEqualsWhenSameValues() {
+        Position pos1 = new Position(0,0);
+        Position pos2 = new Position(0,0);
+        assertEquals(pos1,pos2);
+    }
+
+    @Test void testEqualsWhenDifferent() {
+        Position pos1 = new Position(0,0);
+        Position pos2 = new Position(10,10);
+        assertNotEquals(pos1,pos2);
+    }
+
+    /*
+     * End of tests for equals
+     */
 }

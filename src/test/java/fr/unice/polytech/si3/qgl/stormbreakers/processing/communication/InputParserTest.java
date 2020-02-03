@@ -5,6 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.List;
 
+import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Circle;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Shape;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -39,14 +41,14 @@ class InputParserTest {
                 RegattaGoal goal = (RegattaGoal) init.getGoal();
                 assertAll("goal", () -> assertEquals("REGATTA", init.getGoal().getMode()),
                                 () -> assertEquals(1, goal.getCheckpoints().size()));
+                assertEquals(new Checkpoint(new Position(1000,0,0),new Circle(50)), goal.getCheckpoints().get(0));
+
 
                 Bateau ship = init.getShip();
 
                 assertAll("ship", () -> assertEquals(100, ship.getLife()),
                                 () -> assertEquals("rectangle", ship.getShape().getType()),
-                                () -> assertAll("Position", () -> assertEquals(0, ship.getPosition().getX()),
-                                                () -> assertEquals(0, ship.getPosition().getY()),
-                                                () -> assertEquals(0, ship.getPosition().getOrientation())));
+                                () -> assertEquals(new Position(0,0,0),ship.getPosition()));
 
                 assertAll("personal ship", () -> assertEquals("Les copaings d'abord!", ship.getName()),
                                 () -> assertEquals(1, ship.getDeck().getLength()),
@@ -63,12 +65,7 @@ class InputParserTest {
                 NextRound next = parser.fetchNextRoundState(nextRoundExample);
 
                 assertEquals(100, next.getShip().getLife());
-                Position pos = next.getShip().getPosition();
-                assertAll("Position",
-                                // TODO: 23/01/2020 override equals in Position
-                                () -> assertEquals(10.654, pos.getX()), () -> assertEquals(3, pos.getY()),
-                                () -> assertEquals(2.05, pos.getOrientation()));
-
+                assertEquals(new Position(10.654,3,2.050),next.getShip().getPosition());
                 assertEquals(0, next.getVisibleEntities().size());
 
         }
@@ -78,17 +75,13 @@ class InputParserTest {
                 InitGame init = parser.fetchInitGameState(init2Checkpoints);
 
                 RegattaGoal goal = (RegattaGoal) init.getGoal();
-                assertAll("goal", () -> assertEquals("REGATTA", init.getGoal().getMode()),
-                                () -> assertEquals(2, goal.getCheckpoints().size()));
+                assertAll("goal",
+                        () -> assertEquals("REGATTA", init.getGoal().getMode()),
+                        () -> assertEquals(2, goal.getCheckpoints().size()));
 
                 List<Checkpoint> checkpoints = goal.getCheckpoints();
-                assertAll("checkpoint 1", () -> assertEquals(1000, checkpoints.get(0).getPosition().getX()),
-                                () -> assertEquals(0, checkpoints.get(0).getPosition().getY()),
-                                () -> assertEquals(0, checkpoints.get(0).getPosition().getOrientation()));
-
-                assertAll("checkpoint 2", () -> assertEquals(0, checkpoints.get(1).getPosition().getX()),
-                                () -> assertEquals(0, checkpoints.get(1).getPosition().getY()),
-                                () -> assertEquals(0, checkpoints.get(1).getPosition().getOrientation()));
-
+                Shape shape = new Circle(50);
+                assertEquals(new Checkpoint(new Position(1000,0,0),shape), checkpoints.get(0), "first checkpoint");
+                assertEquals(new Checkpoint(new Position(0,0,0),shape), checkpoints.get(1),"second checkpoint");
         }
 }

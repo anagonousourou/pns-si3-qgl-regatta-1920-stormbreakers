@@ -3,6 +3,8 @@ package fr.unice.polytech.si3.qgl.stormbreakers.data.metrics;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.Objects;
+
 public class Rectangle extends Shape {
     private double width;
     private double height;
@@ -69,4 +71,20 @@ public class Rectangle extends Shape {
     private boolean simpleBetween(double value,double min,double max) {
         return (min<=value)&&(value<=max);
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this==obj) return true;
+        if (!(obj instanceof Rectangle)) return false;
+        Rectangle other = (Rectangle) obj;
+        return other.width == width
+                && other.height == height
+                && other.orientation == orientation;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(width,height,orientation);
+    }
+
 }

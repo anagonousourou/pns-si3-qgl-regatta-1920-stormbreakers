@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.complex.Cartesian;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.complex.Polar;
 
+import java.util.Objects;
+
 public class Position {
     private double x;
     private double y;
@@ -53,5 +55,21 @@ public class Position {
     @Override
     public String toString() {
         return "Position ( " + this.x + " , " + this.y + " )";
+    }
+
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this==obj) return true;
+        if (!(obj instanceof Position)) return false;
+        Position other = (Position) obj;
+        return  other.x==x
+                && other.y==y
+                && other.orientation==orientation;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(x,y,orientation);
     }
 }

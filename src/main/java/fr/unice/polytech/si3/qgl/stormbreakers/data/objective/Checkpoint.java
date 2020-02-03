@@ -6,6 +6,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Shape;
 
+import java.util.Objects;
+
 public class Checkpoint {
     private Position position;
     private Shape shape;
@@ -33,5 +35,19 @@ public class Checkpoint {
     private boolean isPosInside(double x, double y) {
         // On se replace par rapport au centre de la forme
         return shape.isPosInside(x - position.getX(), y - position.getY());
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this==obj) return true;
+        if (!(obj instanceof Checkpoint)) return false;
+        Checkpoint other = (Checkpoint) obj;
+        return position.equals(other.position)
+                && shape.equals(other.shape);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(position,shape);
     }
 }

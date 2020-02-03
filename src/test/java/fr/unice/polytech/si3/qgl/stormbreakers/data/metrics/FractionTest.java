@@ -34,6 +34,10 @@ class FractionTest {
         assertEquals(2.5,fraction.eval());
     }
 
+    /*
+     * Tests for equals
+     */
+
     @Test void testEqualsWhenWrongObject() {
         Fraction fraction = new Fraction(1,1);
         Integer other = 0;
@@ -68,5 +72,9 @@ class FractionTest {
         Fraction fraction2 = new Fraction(42,10);
         assertNotEquals(fraction1,fraction2);
     }
+
+    /*
+     * End of tests for equals
+     */
 
 }

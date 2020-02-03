@@ -18,7 +18,7 @@ public class Fraction {
 
     @Override
     public boolean equals(Object obj) {
-        if (super.equals(obj)) return true;
+        if (this==obj) return true;
         if (!(obj instanceof Fraction)) return false;
         Fraction other = (Fraction) obj;
         if (eval()==other.eval()) return true;

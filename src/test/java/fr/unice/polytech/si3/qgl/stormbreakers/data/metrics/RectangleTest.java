@@ -1,10 +1,9 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.data.metrics;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 class RectangleTest {
 
@@ -58,5 +57,42 @@ class RectangleTest {
     void testIsInsideWhenFalse() {
         assertFalse(rectangle.isPosInside(100, 100));
     }
+
+    /*
+     * Tests for equals
+     */
+
+    @Test void testEqualsWhenWrongObject() {
+        Rectangle rectangle = new Rectangle(0,0,0);
+        Integer other = 0;
+        assertNotEquals(rectangle,other);
+    }
+
+    @Test void testEqualsWhenNullObject() {
+        Rectangle rectangle = new Rectangle(0,0,0);
+        Fraction other = null;
+        assertNotEquals(rectangle,other);
+    }
+
+    @Test void testEqualsWhenSameObject() {
+        Rectangle rectangle = new Rectangle(0,0,0);
+        assertEquals(rectangle,rectangle);
+    }
+
+    @Test void testEqualsWhenSameValues() {
+        Rectangle rect1 = new Rectangle(0,0,0);
+        Rectangle rect2 = new Rectangle(0,0,0);
+        assertEquals(rect1,rect2);
+    }
+
+    @Test void testEqualsWhenDifferent() {
+        Rectangle rect1 = new Rectangle(0,0,0);
+        Rectangle rect2 = new Rectangle(10,10,10);
+        assertNotEquals(rect1,rect2);
+    }
+
+    /*
+     * End of tests for equals
+     */
 
 }

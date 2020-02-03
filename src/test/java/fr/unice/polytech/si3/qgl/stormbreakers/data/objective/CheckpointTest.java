@@ -1,7 +1,7 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.data.objective;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,10 +12,10 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Rectangle;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Shape;
 
 class CheckpointTest {
-    Shape rectangle;
-    Shape circle;
-    Position offset;
-    Position origin;
+    private Shape rectangle;
+    private Shape circle;
+    private Position offset;
+    private Position origin;
 
     @BeforeEach
     void setUp() {
@@ -42,4 +42,42 @@ class CheckpointTest {
         Checkpoint checkpoint = new Checkpoint(offset,rectangle);
         assertTrue(checkpoint.isPosInside(offset));
     }
+
+    /*
+     * Tests for equals
+     */
+
+    @Test
+    void testEqualsWhenWrongObject() {
+        Checkpoint checkpoint = new Checkpoint(new Position(0,0),rectangle);
+        Integer other = 0;
+        assertNotEquals(checkpoint,other);
+    }
+
+    @Test void testEqualsWhenNullObject() {
+        Checkpoint checkpoint = new Checkpoint(new Position(0,0),rectangle);
+        Checkpoint other = null;
+        assertNotEquals(checkpoint,other);
+    }
+
+    @Test void testEqualsWhenSameObject() {
+        Checkpoint checkpoint1 = new Checkpoint(new Position(0,0),rectangle);
+        assertEquals(checkpoint1,checkpoint1);
+    }
+
+    @Test void testEqualsWhenSameValues() {
+        Checkpoint checkpoint1 = new Checkpoint(new Position(0,0),new Circle(42));
+        Checkpoint checkpoint2 = new Checkpoint(new Position(0,0),new Circle(42));
+        assertEquals(checkpoint1,checkpoint2);
+    }
+
+    @Test void testEqualsWhenDifferent() {
+        Checkpoint checkpoint1 = new Checkpoint(new Position(0,0),new Circle(42));
+        Checkpoint checkpoint2 = new Checkpoint(new Position(10,10),new Circle(10));
+        assertNotEquals(checkpoint1,checkpoint2);
+    }
+
+    /*
+     * End of tests for equals
+     */
 }

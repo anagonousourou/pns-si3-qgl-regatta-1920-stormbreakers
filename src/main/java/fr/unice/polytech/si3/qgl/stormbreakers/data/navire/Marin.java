@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.Moving;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Rectangle;
+
+import java.util.Objects;
 
 public class Marin implements Deckable {
 	private static final int MAX_DIST = 5;
@@ -67,5 +70,21 @@ public class Marin implements Deckable {
 	
 	public Moving howToGoTo(int xpos,int ypos){
 		return new Moving(this.id, xpos-this.x, ypos-this.y);
+	}
+
+
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this==obj) return true;
+		if (!(obj instanceof Marin)) return false;
+		Marin other = (Marin) obj;
+		return other.id == id
+				&& other.name.equals(name);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id,name);
 	}
 }
