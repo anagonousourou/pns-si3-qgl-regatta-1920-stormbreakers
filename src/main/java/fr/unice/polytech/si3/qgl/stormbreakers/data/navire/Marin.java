@@ -59,6 +59,11 @@ public class Marin implements Deckable {
 			y += ydistance;
 		}
 	}
+
+	public void move(Moving mvt){
+		x+=mvt.getXdistance();
+		y+=mvt.getYdistance();
+	}
 	
 	public Moving howToGoTo(int xpos,int ypos){
 		return new Moving(this.id, xpos-this.x, ypos-this.y);

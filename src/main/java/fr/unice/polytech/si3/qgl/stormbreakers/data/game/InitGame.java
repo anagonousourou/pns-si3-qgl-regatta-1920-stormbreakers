@@ -36,43 +36,19 @@ public class InitGame {
         return goal;
     }
 
-    /*
-    public void setGoal(Goal goal) {
-        this.goal = goal;
-    }
-    */
-
     @JsonProperty("ship")
     public Bateau getShip() {
         return ship;
     }
-
-    /*
-    public void setShip(Bateau ship) {
-        this.ship = ship;
-    }
-    */
 
     @JsonProperty("sailors")
     public List<Marin> getSailors() {
         return sailors;
     }
 
-    /*
-    public void setSailors(List<Marin> sailors) {
-        this.sailors = sailors;
-    }
-    */
-
     @JsonProperty("shipCount")
     public int getShipCount() {
         return shipCount;
     }
-
-    /*
-    public void setShipCount(int shipCount) {
-        this.shipCount = shipCount;
-    }
-    */
 
 }

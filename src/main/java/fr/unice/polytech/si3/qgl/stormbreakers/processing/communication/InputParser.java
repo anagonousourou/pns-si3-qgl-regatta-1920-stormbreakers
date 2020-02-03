@@ -14,9 +14,9 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.game.NextRound;
 
 public class InputParser {
 
-
 	/**
 	 * Cree un objet contenant les donnees d'initialisation de la partie
+	 * 
 	 * @param jsonInput donnes d'initialisation au format JSON
 	 * @return InitGame
 	 */
@@ -25,94 +25,21 @@ public class InputParser {
 		try {
 			return objectMapper.readValue(jsonInput, InitGame.class);
 		} catch (JsonProcessingException e) {
-			//e.printStackTrace();
+
 			Logger.getInstance().log(Arrays.toString(e.getStackTrace()));
 		}
 		return null;
 	}
-	/*
-	public InitGame fetchInitGameState(String jsonInput) {
-		
-		ObjectMapper objectMapper = new ObjectMapper();
-		JsonNode result;
-		try {
-			result = objectMapper.readTree(jsonInput);
-
-			List<Marin> marins = createListeMarin(result, objectMapper);
-			Goal goal = createGoal(result, objectMapper);
-			int shipCount = objectMapper.readValue(result.get("shipCount").toPrettyString(), Integer.class);
-			Bateau bateau = createBateau(result, objectMapper);
-			return new InitGame(goal, bateau, marins, shipCount);
-		}  catch (JsonProcessingException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-	*/
 
 	public NextRound fetchNextRoundState(String jsonInput) {
 		ObjectMapper objectMapper = new ObjectMapper();
 		try {
 			return objectMapper.readValue(jsonInput, NextRound.class);
 		} catch (JsonProcessingException e) {
-			//e.printStackTrace();
 			Logger.getInstance().log(Arrays.toString(e.getStackTrace()));
+			
 		}
 		return null;
 	}
-
-	
-
-
-	/** object Creator **/
-
-	/*
-	private Bateau createBateau(JsonNode result, ObjectMapper objectMapper) {
-		try {
-			return objectMapper.readValue(result.get("ship").toPrettyString(), Bateau.class);
-		} catch (JsonProcessingException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-
-	private Goal createGoal(JsonNode result, ObjectMapper objectMapper) {
-
-		Goal goal;
-		try {
-			goal = objectMapper.readValue(result.get("goal").toPrettyString(), Goal.class);
-			List<Checkpoint> checkpoints = new ArrayList<>();
-			if (goal.getMode().equals("REGATA")) {
-
-				result.get("checkpoints").forEach(r -> {
-					try {
-						Checkpoint checkpoint = objectMapper.readValue(r.toPrettyString(), Checkpoint.class);
-						checkpoints.add(checkpoint);
-					} catch (JsonProcessingException e) {
-						e.printStackTrace();
-					}
-				});
-				goal = new RegattaGoal(checkpoints);
-			}
-			return goal;
-		} catch (JsonProcessingException e1) {
-			e1.printStackTrace();
-			return null;
-		}
-	}
-
-	public String getInputExample() throws IOException {
-		return new String(this.getClass().getResourceAsStream("/init.json").readAllBytes());
-	}
-	private List<Marin> createListeMarin(JsonNode result, ObjectMapper objectMapper) {
-		try {
-			return objectMapper.readValue(result.get("sailors").toPrettyString(), new TypeReference<List<Marin>>() {
-			});
-		} catch (JsonProcessingException e) {
-			e.printStackTrace();
-			return new ArrayList<>();
-		}
-	}
-	*/
 
 }

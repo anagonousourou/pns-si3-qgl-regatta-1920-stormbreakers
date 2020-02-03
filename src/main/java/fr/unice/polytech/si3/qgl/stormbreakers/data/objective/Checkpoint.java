@@ -9,11 +9,11 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Shape;
 public class Checkpoint {
     private Position position;
     private Shape shape;
-    
+
     @JsonCreator
     public Checkpoint(@JsonProperty("position") Position pos, @JsonProperty("shape") Shape shape) {
-    	this.position=pos;
-    	this.shape=shape;
+        this.position = pos;
+        this.shape = shape;
     }
 
     @JsonProperty("position")
@@ -27,11 +27,11 @@ public class Checkpoint {
     }
 
     public boolean isPosInside(Position pos) {
-        return this.isPosInside(pos.getX(),pos.getY());
+        return this.isPosInside(pos.getX(), pos.getY());
     }
 
     private boolean isPosInside(double x, double y) {
         // On se replace par rapport au centre de la forme
-        return shape.isPosInside(x-position.getX(),y-position.getY());
+        return shape.isPosInside(x - position.getX(), y - position.getY());
     }
 }

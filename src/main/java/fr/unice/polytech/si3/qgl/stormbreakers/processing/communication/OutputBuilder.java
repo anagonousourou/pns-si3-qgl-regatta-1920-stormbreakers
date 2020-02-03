@@ -16,6 +16,7 @@ public class OutputBuilder {
 
     /**
      * Genere la chaine JSON a partir d'une liste d'action
+     * 
      * @param actions liste d'actions a traduire
      * @return la chaine formattee en JSON
      */
@@ -27,8 +28,7 @@ public class OutputBuilder {
             jsonOutput = objectMapper.writeValueAsString(actions);
 
         } catch (IOException e) {
-            //e.printStackTrace();
-			Logger.getInstance().log(Arrays.toString(e.getStackTrace()));
+            Logger.getInstance().log(Arrays.toString(e.getStackTrace()));
         }
 
         return jsonOutput;

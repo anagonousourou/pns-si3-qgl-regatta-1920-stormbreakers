@@ -9,11 +9,9 @@ public class Moving extends SailorAction {
     private int ydistance;
 
     @JsonCreator
-    public Moving(
-            @JsonProperty("sailorId") int sailorId,
-            @JsonProperty("xdistance") int xdistance,
+    public Moving(@JsonProperty("sailorId") int sailorId, @JsonProperty("xdistance") int xdistance,
             @JsonProperty("ydistance") int ydistance) {
-        super(sailorId,ActionType.MOVING.actionCode);
+        super(sailorId, ActionType.MOVING.actionCode);
         this.xdistance = xdistance;
         this.ydistance = ydistance;
     }
@@ -29,13 +27,13 @@ public class Moving extends SailorAction {
     }
 
     public void applyTo(Marin sailor) {
-        if (sailor!=null) sailor.move(xdistance,ydistance);
+        if (sailor != null)
+            sailor.move(xdistance, ydistance);
     }
 
     @Override
     public String toString() {
-        return "Moving( idsailor: "+this.getSailorId()+", xdistance: "
-        +this.xdistance+ ", ydistance: "+this.ydistance
-        +" )";
+        return "Moving( idsailor: " + this.getSailorId() + ", xdistance: " + this.xdistance + ", ydistance: "
+                + this.ydistance + " )";
     }
 }

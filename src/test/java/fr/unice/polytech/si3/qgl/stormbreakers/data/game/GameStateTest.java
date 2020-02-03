@@ -43,25 +43,24 @@ class GameStateTest {
     @Test
     void testConstructorWithInitGame() {
         GameState gState = new GameState(initGameSample);
-        assertEquals(initGameSample.getShip().getPosition(),gState.getPositionBateau());
-        assertEquals(initGameSample.getShip().getLife(),gState.getVieBateau());
-        assertEquals(initGameSample.getSailors(),gState.getOrgaMarins());
-        assertEquals(initGameSample.getShip().getEquipments(),gState.getEquipmentState());
+        assertEquals(initGameSample.getShip().getPosition(), gState.getPositionBateau());
+        assertEquals(initGameSample.getShip().getLife(), gState.getVieBateau());
+        assertEquals(initGameSample.getSailors(), gState.getOrgaMarins());
+        assertEquals(initGameSample.getShip().getEquipments(), gState.getEquipmentState());
 
-        assertEquals(0.0,gState.getWind().getOrientation());
+        assertEquals(0.0, gState.getWind().getOrientation());
         assertEquals(0.0, gState.getWind().getStrength());
 
         assertEquals(goal.getCheckpoints().get(0), gState.getNextCheckpoint());
     }
 
-
     @Test
     void testActualiserTour() {
         gameState.updateTurn(nextRoundSample);
-        assertEquals(nextRoundSample.getShip().getPosition(),gameState.getPositionBateau());
-        assertEquals(nextRoundSample.getShip().getLife(),gameState.getVieBateau());
-        assertEquals(nextRoundSample.getShip().getEquipments(),gameState.getEquipmentState());
-        assertEquals(nextRoundSample.getWind(),gameState.getWind());
+        assertEquals(nextRoundSample.getShip().getPosition(), gameState.getPositionBateau());
+        assertEquals(nextRoundSample.getShip().getLife(), gameState.getVieBateau());
+        assertEquals(nextRoundSample.getShip().getEquipments(), gameState.getEquipmentState());
+        assertEquals(nextRoundSample.getWind(), gameState.getWind());
     }
 
     @Test
@@ -73,10 +72,10 @@ class GameStateTest {
         checkpoints.add(mockedCheckpoint);
         checkpoints.addAll(goal.getCheckpoints());
 
-        GameState gState = new GameState(gameState.getShip(),gameState.getOrgaMarins(), checkpoints);
+        GameState gState = new GameState(gameState.getShip(), gameState.getOrgaMarins(), checkpoints);
 
         gState.actualiserCheckpoints();
-        assertEquals(mockedCheckpoint,gState.getNextCheckpoint());
+        assertEquals(mockedCheckpoint, gState.getNextCheckpoint());
     }
 
     @Test
@@ -88,22 +87,22 @@ class GameStateTest {
         checkpoints.add(mockedCheckpoint);
         checkpoints.addAll(goal.getCheckpoints());
 
-        GameState gState = new GameState(gameState.getShip(),gameState.getOrgaMarins(), checkpoints);
+        GameState gState = new GameState(gameState.getShip(), gameState.getOrgaMarins(), checkpoints);
 
         gState.actualiserCheckpoints();
-        assertEquals(goal.getCheckpoints().get(0),gState.getNextCheckpoint());
+        assertEquals(goal.getCheckpoints().get(0), gState.getNextCheckpoint());
     }
 
     @Test
     void testActualiserDeplacementsXY() {
         List<Moving> deplacements = new ArrayList<>();
-        deplacements.add(new Moving(0,1,1));
+        deplacements.add(new Moving(0, 1, 1));
         gameState.actualiserDeplacements(deplacements);
 
         Marin premierMarin = gameState.getOrgaMarins().get(0);
-        assertEquals(0,premierMarin.getId());
-        assertEquals(1,premierMarin.getX());
-        assertEquals(1,premierMarin.getY());
+        assertEquals(0, premierMarin.getId());
+        assertEquals(1, premierMarin.getX());
+        assertEquals(1, premierMarin.getY());
     }
 
 }

@@ -15,7 +15,8 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.SailorAction;
  */
 public class Captain {
 
-    public List<SailorAction> toActivate(List<Equipment> oars, int nbToActivate, List<Marin> marinUtilise,List<Marin> allsailors) {
+    public List<SailorAction> activateNbOars(List<Equipment> oars, int nbToActivate, List<Marin> marinUtilise,
+            List<Marin> allsailors) {
         List<SailorAction> result = new ArrayList<>();
         List<Marin> yetBusy = marinUtilise;
         int compteur = 0;
@@ -46,13 +47,14 @@ public class Captain {
      * @param oars
      * @return
      */
-    public List<SailorAction> toActivate(List<Equipment> oarsLeft, List<Equipment> oarsRight,
-            List<Marin> marinUtilise,List<Marin> allsailors) {
+    public List<SailorAction> toActivate(List<Equipment> oarsLeft, List<Equipment> oarsRight, List<Marin> marinUtilise,
+            List<Marin> allsailors) {
         int sizeListMin = Math.min(oarsLeft.size(), oarsRight.size());
         List<SailorAction> result = new ArrayList<>();
         List<Marin> areBusyList = marinUtilise;
-        List<SailorAction> leftOarsActivated = toActivate(oarsLeft, sizeListMin, areBusyList,allsailors);
-        List<SailorAction> rightOarsActivated = toActivate(oarsLeft, leftOarsActivated.size(), areBusyList,allsailors);
+        List<SailorAction> leftOarsActivated = this.activateNbOars(oarsLeft, sizeListMin, areBusyList, allsailors);
+        List<SailorAction> rightOarsActivated = this.activateNbOars(oarsRight, leftOarsActivated.size(), areBusyList,
+                allsailors);
         if (leftOarsActivated.size() == rightOarsActivated.size()) {
             result.addAll(leftOarsActivated);
             result.addAll(rightOarsActivated);
@@ -70,19 +72,32 @@ public class Captain {
     }
 
     public Map<Equipment, List<Marin>> marinsDisponibles(List<Equipment> rames, List<Marin> marins) {
-		HashMap<Equipment, List<Marin>> results = new HashMap<>();
-		rames.forEach(oar -> results.put(oar,
-				marins.stream().filter(e -> (Math.abs(e.getX() - oar.getX()) + Math.abs(e.getY() - oar.getY())) <= 5)
-						.collect(Collectors.toList())));
-		return results;
+        HashMap<Equipment, List<Marin>> results = new HashMap<>();
+        rames.forEach(oar -> results.put(oar,
+                marins.stream().filter(e -> (Math.abs(e.getX() - oar.getX()) + Math.abs(e.getY() - oar.getY())) <= 5)
+                        .collect(Collectors.toList())));
+        return results;
     }
-    
-    public List<SailorAction> minRepartition(List<Equipment> rightOars,List<Equipment> leftOars, int diffToCatch, List<Marin> marinUtilise,List<Marin> allsailors) {
-		if (diffToCatch < 0) {
-			return this.toActivate(rightOars, -diffToCatch, marinUtilise,allsailors);
-		} else {
-			return this.toActivate(leftOars, diffToCatch, marinUtilise,allsailors);
-		}
 
-	}
+    public List<SailorAction> minRepartition(List<Equipment> rightOars, List<Equipment> leftOars, int diffToCatch,
+            List<Marin> marinUtilise, List<Marin> allsailors) {
+        if (diffToCatch < 0) {
+            return this.activateNbOars(rightOars, -diffToCatch, marinUtilise, allsailors);
+        } else {
+            return this.activateNbOars(leftOars, diffToCatch, marinUtilise, allsailors);
+        }
+
+    }
+
+    /**
+     * @return correspondances marin et rames qui leur sont accessibles
+     */
+    public Map<Marin, List<Equipment>> ramesAccessibles(List<Marin> theSailors, List<Equipment> rames) {
+        HashMap<Marin, List<Equipment>> results = new HashMap<>();
+        theSailors.forEach(m -> results.put(m,
+                rames.stream().filter(e -> (Math.abs(e.getX() - m.getX()) + Math.abs(e.getY() - m.getY())) <= 5)
+                        .collect(Collectors.toList())));
+        return results;
+    }
+
 }

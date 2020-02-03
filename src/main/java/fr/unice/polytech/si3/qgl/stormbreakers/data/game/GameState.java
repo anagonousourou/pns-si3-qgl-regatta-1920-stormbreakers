@@ -18,8 +18,6 @@ import java.util.stream.Collectors;
  * Classe representant l'etat du jeu au debut du tour courrant
  */
 
-
-
 public class GameState {
 
     private Bateau ship;
@@ -28,7 +26,6 @@ public class GameState {
     private InitGame stateInit;
 
     private Vent wind;
-
 
     GameState(Bateau ship, List<Marin> orgaMarins, List<Checkpoint> checkpoints) {
         this.ship = ship;
@@ -39,13 +36,14 @@ public class GameState {
 
     /**
      * Constructeur qui recupere l'etat initial du jeu
+     * 
      * @param initGame contient les donnees d'initialisation
      */
     public GameState(InitGame initGame) {
         this.ship = initGame.getShip();
         this.orgaMarins = initGame.getSailors();
-        this.wind = new Vent(0.0,0.0);
-        this.stateInit=initGame;
+        this.wind = new Vent(0.0, 0.0);
+        this.stateInit = initGame;
 
         if (initGame.getGoal().getMode().equals("REGATTA")) {
             RegattaGoal regattaGoal = (RegattaGoal) initGame.getGoal();
@@ -54,14 +52,15 @@ public class GameState {
     }
 
     /**
-     * Actualise l'etat du jeu
-     * NB : ne prend pas en compte les actions realisees
+     * Actualise l'etat du jeu NB : ne prend pas en compte les actions realisees
+     * 
      * @param nextRound contient les donnees actualisees
      */
     public void updateTurn(NextRound nextRound) {
         ship = nextRound.getShip();
         wind = nextRound.getWind();
-        if (checkpoints!=null) actualiserCheckpoints();
+        if (checkpoints != null)
+            actualiserCheckpoints();
     }
 
     public void actualiserCheckpoints() {
@@ -72,6 +71,7 @@ public class GameState {
 
     /**
      * Actualise l'etat du jeu, a partir d'une liste de deplacement
+     * 
      * @param moves liste de deplacement des marins
      */
     void actualiserDeplacements(List<Moving> moves) {
@@ -83,18 +83,21 @@ public class GameState {
 
     /**
      * Actualise l'etat du jeu, a partir d'une liste d'actions
+     * 
      * @param actions liste d'actions
      */
     public void actualiserActions(List<SailorAction> actions) {
         // Traitement des deplacements
-        List<SailorAction> movingList = actions.stream().filter(act-> act.getType().equals(ActionType.MOVING.actionCode)).collect(Collectors.toList());
-        List<Moving> movings = movingList.stream().map(x -> (Moving)x).collect(Collectors.toList());
+        List<SailorAction> movingList = actions.stream()
+                .filter(act -> act.getType().equals(ActionType.MOVING.actionCode)).collect(Collectors.toList());
+        List<Moving> movings = movingList.stream().map(x -> (Moving) x).collect(Collectors.toList());
         this.actualiserDeplacements(movings);
     }
 
     private Marin findSailorById(int sailorId) {
         for (Marin sailor : orgaMarins) {
-            if (sailor.getId() == sailorId) return sailor;
+            if (sailor.getId() == sailorId)
+                return sailor;
         }
         return null;
     }
@@ -103,34 +106,35 @@ public class GameState {
         return ship;
     }
 
-	public Position getPositionBateau() {
-		return ship.getPosition();
-	}
+    public Position getPositionBateau() {
+        return ship.getPosition();
+    }
 
-	public int getVieBateau() {
-		return ship.getLife();
-	}
+    public int getVieBateau() {
+        return ship.getLife();
+    }
 
-	public List<Equipment> getEquipmentState() {
-		return ship.getEquipments();
-	}
+    public List<Equipment> getEquipmentState() {
+        return ship.getEquipments();
+    }
 
     public List<Marin> getOrgaMarins() {
         return orgaMarins;
     }
 
-	public Vent getWind() {
-		return wind;
-	}
-
+    public Vent getWind() {
+        return wind;
+    }
 
     public Checkpoint getNextCheckpoint() {
-        if (checkpoints==null || checkpoints.isEmpty()) return null;
+        if (checkpoints == null || checkpoints.isEmpty())
+            return null;
         return checkpoints.get(0);
     }
 
     private void validateCheckpoint() {
-        if (!checkpoints.isEmpty()) checkpoints.remove(0);
+        if (!checkpoints.isEmpty())
+            checkpoints.remove(0);
     }
 
     private boolean isCurrentCheckpointOk() {
@@ -138,10 +142,10 @@ public class GameState {
     }
 
     private boolean isCheckpointOk(Checkpoint checkPt) {
-        if(checkPt==null){
+        if (checkPt == null) {
             return true;
         }
-        
+
         return checkPt.isPosInside(getPositionBateau());
     }
 

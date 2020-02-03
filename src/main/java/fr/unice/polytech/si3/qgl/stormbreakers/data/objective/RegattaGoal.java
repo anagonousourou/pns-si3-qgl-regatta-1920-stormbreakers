@@ -11,7 +11,7 @@ public class RegattaGoal extends Goal {
     @JsonCreator
     public RegattaGoal(@JsonProperty("checkpoints") List<Checkpoint> checkpoints) {
         super("REGATTA");
-        this.checkpoints =checkpoints;
+        this.checkpoints = checkpoints;
     }
 
     @JsonProperty("checkpoints")

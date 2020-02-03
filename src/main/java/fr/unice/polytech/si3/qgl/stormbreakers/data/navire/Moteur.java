@@ -28,19 +28,19 @@ public class Moteur {
 	private GameState gState;
 	private Captain captain;
 
-	public Moteur(GameState gameState,Captain captain) {
+	public Moteur(GameState gameState, Captain captain) {
 		this.gState = gameState;
-		this.captain=captain;
+		this.captain = captain;
 		this.sailors = gameState.getStateInit().getSailors();
 		this.oars = gameState.getStateInit().getShip().getRames();
 		this.ship = gameState.getStateInit().getShip();
 		int widthship = gameState.getShip().getDeck().getWidth();
-		if (widthship % 2 == 1) {//impair
-			this.leftOars = this.oars.stream().filter(oar -> oar.getY() < widthship/2).collect(Collectors.toList());
-			this.rightOars = this.oars.stream().filter(oar -> oar.getY() > widthship/2).collect(Collectors.toList());
+		if (widthship % 2 == 1) {// impair
+			this.leftOars = this.oars.stream().filter(oar -> oar.getY() < widthship / 2).collect(Collectors.toList());
+			this.rightOars = this.oars.stream().filter(oar -> oar.getY() > widthship / 2).collect(Collectors.toList());
 		} else {
-			this.leftOars = this.oars.stream().filter(oar -> oar.getY() < widthship/2).collect(Collectors.toList());
-			this.rightOars = this.oars.stream().filter(oar -> oar.getY() >= widthship/2).collect(Collectors.toList());
+			this.leftOars = this.oars.stream().filter(oar -> oar.getY() < widthship / 2).collect(Collectors.toList());
+			this.rightOars = this.oars.stream().filter(oar -> oar.getY() >= widthship / 2).collect(Collectors.toList());
 		}
 
 	}
@@ -59,23 +59,18 @@ public class Moteur {
 	public List<SailorAction> dispatchSailors(Checkpoint target) {
 		Set<Double> oarsAngles = this.possibleOrientations();
 		double angle = this.orientationNeeded(target);
-		double distance =this.travelDistance(target);
-		System.out.println("Angle needed: " + angle);
-		System.out.println("Distance :"+distance);
 		List<Marin> marinUtilise = new ArrayList<>();
 		if (Math.abs(angle) <= Moteur.EPS) {
-			System.out.println("Tout droit");
 
-			return captain.toActivate(this.leftOars, this.rightOars, marinUtilise,this.sailors);
+			return captain.toActivate(this.leftOars, this.rightOars, marinUtilise, this.sailors);
 		} else {
 			Optional<Double> optAngle = oarsAngles.stream().filter(a -> a * angle > 0.0)
 
 					.min((a, b) -> Double.compare(Math.abs(a - angle), Math.abs(b - angle)));
 			if (optAngle.isPresent()) {
 				double approachingAngle = optAngle.get();
-				System.out.println("Angle approching: " + approachingAngle);
-				System.out.println("Possibles angles: " + oarsAngles);
-				return captain.minRepartition(this.rightOars,this.leftOars, this.angleToDiff(approachingAngle), marinUtilise,this.sailors);
+				return captain.minRepartition(this.rightOars, this.leftOars, this.angleToDiff(approachingAngle),
+						marinUtilise, this.sailors);
 			} else {
 				return new ArrayList<>();
 			}
@@ -87,12 +82,6 @@ public class Moteur {
 		gState.actualiserCheckpoints();
 		return this.dispatchSailors(gState.getNextCheckpoint());
 	}
-
-	
-
-	
-
-	
 
 	/**
 	 * Methode servant a retourner les angles possibles du navire, ainsi que la
@@ -132,21 +121,6 @@ public class Moteur {
 
 		return result;
 	}
-
-	/**
-	 * A déplacer 
-	 * @return
-	 */
-	public Map<Marin, List<Equipment>> ramesAccessibles() {
-		HashMap<Marin, List<Equipment>> results = new HashMap<>();
-		sailors.forEach(m -> results.put(m,
-				ship.getEquipments().stream()
-						.filter(e -> (Math.abs(e.getX() - m.getX()) + Math.abs(e.getY() - m.getY())) <= 5)
-						.collect(Collectors.toList())));
-		return results;
-	}
-
-	
 
 	public double travelDistance(Checkpoint target) {
 		return ship.getPosition().distanceTo(target.getPosition());

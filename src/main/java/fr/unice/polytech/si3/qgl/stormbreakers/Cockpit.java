@@ -14,18 +14,17 @@ import fr.unice.polytech.si3.qgl.stormbreakers.processing.communication.OutputBu
 public class Cockpit implements ICockpit {
 	private Moteur engine;
 	private GameState gState;
-	private InputParser parser=new InputParser();
-
+	private InputParser parser = new InputParser();
 
 	public void initGame(String game) {
-		this.gState=new GameState(this.parser.fetchInitGameState(game));
-		this.engine = new Moteur(gState,new Captain());
+		this.gState = new GameState(this.parser.fetchInitGameState(game));
+		this.engine = new Moteur(gState, new Captain());
 	}
 
 	public String nextRound(String round) {
 		this.gState.updateTurn(this.parser.fetchNextRoundState(round));
 		OutputBuilder outputBuilder = new OutputBuilder();
-		List<SailorAction> actions=this.engine.actions();
+		List<SailorAction> actions = this.engine.actions();
 		gState.actualiserActions(actions);
 		return outputBuilder.writeActions(actions);
 	}

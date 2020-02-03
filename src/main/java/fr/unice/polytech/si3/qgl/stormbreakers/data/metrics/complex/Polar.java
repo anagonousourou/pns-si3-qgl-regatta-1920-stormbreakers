@@ -24,7 +24,7 @@ public class Polar implements Coord {
         return this;
     }
 
-    /*
+    
     public Polar add(Coord c) {
         Cartesian other = c.toCartesian();
         return other.add(this).toPolar();
@@ -34,7 +34,7 @@ public class Polar implements Coord {
         Cartesian other = c.toCartesian();
         return other.mult(this).toPolar();
     }
-    */
+    
 
     public double getR() {
         return complex.getRe();

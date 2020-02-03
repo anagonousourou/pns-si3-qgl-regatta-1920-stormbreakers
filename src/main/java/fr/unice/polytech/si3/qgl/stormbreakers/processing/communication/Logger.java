@@ -1,28 +1,25 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.processing.communication;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Logger {
-    private StringBuilder sb;
     private static Logger singleton = new Logger();
+    private List<String> messages = new ArrayList<>();
 
-    private Logger() {
-        reset();
-    }
-
-    static Logger getInstance() {
+    public static Logger getInstance() {
         return singleton;
     }
 
-    void reset() {
-        sb = new StringBuilder();
+    public void log(String msg) {
+        if (msg.length() <= 200 && messages.size() < 100) {
+            this.messages.add(msg);
+        }
+
     }
 
-    void log(String msg) {
-        sb.append(msg);
+    public List<String> getLogs() {
+        return this.messages;
     }
-
-    String getLogs() {
-        return sb.toString();
-    }
-
 
 }

@@ -7,12 +7,12 @@ public class Oar extends SailorAction {
 
     @JsonCreator
     public Oar(@JsonProperty("sailorId") int sailorId) {
-        super(sailorId,ActionType.OAR.actionCode);
+        super(sailorId, ActionType.OAR.actionCode);
     }
 
     @Override
     public String toString() {
-        return "Oar( idsailor:"+this.getSailorId()+" )";
+        return "Oar( idsailor:" + this.getSailorId() + " )";
     }
 
 }

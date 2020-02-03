@@ -5,24 +5,20 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
-@JsonTypeInfo(use=JsonTypeInfo.Id.NAME,
-include = JsonTypeInfo.As.PROPERTY,
-property="mode")
-@JsonSubTypes({
-    @JsonSubTypes.Type(value = RegattaGoal.class, name="REGATTA"),
-    @JsonSubTypes.Type(value = BattleGoal.class, name="BATTLE")
-})
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "mode")
+@JsonSubTypes({ @JsonSubTypes.Type(value = RegattaGoal.class, name = "REGATTA"),
+        @JsonSubTypes.Type(value = BattleGoal.class, name = "BATTLE") })
 
 public abstract class Goal {
     private String mode;
 
     @JsonCreator
     Goal(@JsonProperty("mode") String mode) {
-    	this.mode=mode;
+        this.mode = mode;
     }
 
     @JsonProperty("mode")
     public String getMode() {
-    	return mode;
+        return mode;
     }
 }
