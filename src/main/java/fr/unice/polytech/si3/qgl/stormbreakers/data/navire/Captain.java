@@ -14,7 +14,14 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.SailorAction;
  * navire afin de faciliter les tests des comportements du navire
  */
 public class Captain {
-
+	/**
+	 * 
+	 * @param oars
+	 * @param nbToActivate
+	 * @param marinUtilise
+	 * @param allsailors
+	 * @return List<sailorAction> -une liste des actions marin et rame associé d'un seul côté gauche ou droite
+	 */
     public List<SailorAction> activateNbOars(List<Equipment> oars, int nbToActivate, List<Marin> marinUtilise,
             List<Marin> allsailors) {
         List<SailorAction> result = new ArrayList<>();
@@ -41,13 +48,16 @@ public class Captain {
         return result;
     }
 
+
     /**
      * methode pour activer autant de rames à droite 
      * qu'à gauche pour permettre le deplacement en ligne droite
      * 
-     * 
-     * @param oars
-     * @return une lise des actions à effectuer
+     * @param oarsLeft
+     * @param oarsRight
+     * @param marinUtilise
+     * @param allsailors
+     * @return List<sailorAction> -une liste des actions à rame et marin associé pour aller tout droit
      */
     public List<SailorAction> toActivate(List<Equipment> oarsLeft, List<Equipment> oarsRight, List<Marin> marinUtilise,
             List<Marin> allsailors) {
