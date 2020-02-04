@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.Moving;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Rectangle;
 
 import java.util.Objects;
 

@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class RegattaGoal extends Goal {
-    List<Checkpoint> checkpoints;
+    private List<Checkpoint> checkpoints;
 
     @JsonCreator
     public RegattaGoal(@JsonProperty("checkpoints") List<Checkpoint> checkpoints) {

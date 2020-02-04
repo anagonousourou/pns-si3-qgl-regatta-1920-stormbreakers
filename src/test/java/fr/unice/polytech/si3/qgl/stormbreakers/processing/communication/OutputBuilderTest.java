@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class OutputBuilderTest {
 
-    OutputBuilder outputBuilder;
+    private OutputBuilder outputBuilder;
 
     @BeforeEach
     void setUp() {
@@ -28,7 +28,7 @@ class OutputBuilderTest {
 
     @Test
     void testWriteActionsForSmallBoatExample() {
-        List<SailorAction> actions = new ArrayList<SailorAction>();
+        List<SailorAction> actions = new ArrayList<>();
 
         actions.add(new Oar(0));
         actions.add(new Oar(1));

@@ -3,10 +3,7 @@ package fr.unice.polytech.si3.qgl.stormbreakers.data.metrics;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
-
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 public class PositionTest {
     private Position a;

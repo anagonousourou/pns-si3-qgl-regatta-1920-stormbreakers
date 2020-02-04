@@ -7,11 +7,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class FractionTest {
 
-    @BeforeEach
-    void setUp() {
-
-    }
-
     @Test
     void testInit() {
         assertDoesNotThrow(() -> new Fraction(1,1));

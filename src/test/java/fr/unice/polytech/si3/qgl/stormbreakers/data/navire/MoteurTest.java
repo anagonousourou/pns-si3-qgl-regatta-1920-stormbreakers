@@ -18,9 +18,9 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.game.GameState;
 import fr.unice.polytech.si3.qgl.stormbreakers.processing.communication.InputParser;
 
 public class MoteurTest {
-    Moteur moteur;
-    String inputInit1, inputInit2, inputInit3, inputInit4, inputInit5;
-    InputParser p;
+    private Moteur moteur;
+    private String inputInit1, inputInit2, inputInit3, inputInit4, inputInit5;
+    private InputParser p;
 
     @BeforeEach
     void setUp() throws IOException {

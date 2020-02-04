@@ -45,6 +45,7 @@ public class Moteur {
 
 	}
 
+	// TODO: 04/02/2020 Expliquer utilite
 	public List<SailorAction> reachCheckPoint(Checkpoint target) {
 		return dispatchSailors(target);
 	}
@@ -56,7 +57,7 @@ public class Moteur {
 	 * @param target Checkpoint cible
 	 * @return les SailorAction finales
 	 */
-	public List<SailorAction> dispatchSailors(Checkpoint target) {
+	List<SailorAction> dispatchSailors(Checkpoint target) {
 		Set<Double> oarsAngles = this.possibleOrientations();
 		double angle = this.orientationNeeded(target);
 		List<Marin> marinUtilise = new ArrayList<>();
@@ -126,7 +127,7 @@ public class Moteur {
 		return ship.getPosition().distanceTo(target.getPosition());
 	}
 
-	public double orientationNeeded(Checkpoint target) {
+	double orientationNeeded(Checkpoint target) {
 		return ship.getPosition().thetaTo(target.getPosition());
 	}
 }

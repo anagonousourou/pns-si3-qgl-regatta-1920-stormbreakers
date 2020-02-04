@@ -7,11 +7,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class MarinTest {
 
-    @BeforeEach
-    void setUp() {
-
-    }
-
     /*
      * Tests for equals
      */

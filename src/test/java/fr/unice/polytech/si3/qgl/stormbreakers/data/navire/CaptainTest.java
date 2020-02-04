@@ -13,9 +13,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class CaptainTest {
-    Captain rogers;
-    Rame r1, r2, r3, r4, r5, r6;
-    Marin m1, m2, m3, m4;
+    private Captain rogers;
+    private Rame r1, r2, r3, r4, r5, r6;
+    private Marin m1, m2, m3, m4;
 
     @BeforeEach
     void setUp() {

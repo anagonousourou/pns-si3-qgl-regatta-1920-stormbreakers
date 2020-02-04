@@ -41,6 +41,7 @@ public class Captain {
         return result;
     }
 
+    // TODO: 04/02/2020 Complete java doc
     /**
      * methode pour permettre le deplacement en ligne droite
      * 
