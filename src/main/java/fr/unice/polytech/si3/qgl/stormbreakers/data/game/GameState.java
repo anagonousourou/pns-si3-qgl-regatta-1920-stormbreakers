@@ -10,6 +10,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Checkpoint;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.RegattaGoal;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Bateau;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Vent;
+import fr.unice.polytech.si3.qgl.stormbreakers.processing.communication.Logger;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -57,6 +58,7 @@ public class GameState {
      * @param nextRound contient les donnees actualisees
      */
     public void updateTurn(NextRound nextRound) {
+        Logger.getInstance().log(nextRound.getShip().getPosition().toString());
         ship = nextRound.getShip();
         wind = nextRound.getWind();
         if (checkpoints != null)

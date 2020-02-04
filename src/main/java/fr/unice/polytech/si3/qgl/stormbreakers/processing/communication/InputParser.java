@@ -1,7 +1,5 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.processing.communication;
 
-import java.util.Arrays;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 

@@ -1,6 +1,5 @@
 package fr.unice.polytech.si3.qgl.stormbreakers;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import fr.unice.polytech.si3.qgl.regatta.cockpit.ICockpit;
