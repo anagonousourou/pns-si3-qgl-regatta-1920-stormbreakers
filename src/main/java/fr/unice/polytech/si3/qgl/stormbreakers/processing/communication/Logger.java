@@ -15,7 +15,7 @@ public class Logger {
         // Msg truncated if logger 'full'
         if (messages.size() < 100) {
             // Msg truncated if too long
-            this.messages.add(msg.substring(0,200));
+            this.messages.add( (msg.length() <= 200)? msg: msg.substring(0,200));
         }
 
     }
