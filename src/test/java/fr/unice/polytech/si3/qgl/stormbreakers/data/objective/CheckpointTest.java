@@ -24,9 +24,6 @@ class CheckpointTest {
         rectangle = new Rectangle(10,10,0);
         offset = new Position(42,72);
         origin = new Position(0,0);
-
-        logger = Logger.getInstance();
-        logger.reset();
     }
 
     @Test
