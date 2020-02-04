@@ -45,7 +45,11 @@ public class Moteur {
 
 	}
 
-	// TODO: 04/02/2020 Expliquer utilite
+	/**
+	 * Fonction pour donner les actions pour atteindre un checkpoint
+	 * @param target
+	 * @return La liste d'action à effectuer pour se diriger vers le checkpoint
+	 */
 	public List<SailorAction> reachCheckPoint(Checkpoint target) {
 		return dispatchSailors(target);
 	}

@@ -41,12 +41,13 @@ public class Captain {
         return result;
     }
 
-    // TODO: 04/02/2020 Complete java doc
     /**
-     * methode pour permettre le deplacement en ligne droite
+     * methode pour activer autant de rames à droite 
+     * qu'à gauche pour permettre le deplacement en ligne droite
+     * 
      * 
      * @param oars
-     * @return
+     * @return une lise des actions à effectuer
      */
     public List<SailorAction> toActivate(List<Equipment> oarsLeft, List<Equipment> oarsRight, List<Marin> marinUtilise,
             List<Marin> allsailors) {

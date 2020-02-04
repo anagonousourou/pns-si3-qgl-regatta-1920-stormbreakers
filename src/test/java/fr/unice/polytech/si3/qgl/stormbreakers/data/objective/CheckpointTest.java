@@ -13,14 +13,12 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Shape;
 
 class CheckpointTest {
     private Shape rectangle;
-    private Shape circle;
     private Position offset;
     private Position origin;
 
     @BeforeEach
     void setUp() {
         rectangle = new Rectangle(10,10,0);
-        circle = new Circle(10);
         offset = new Position(42,72);
         origin = new Position(0,0);
     }

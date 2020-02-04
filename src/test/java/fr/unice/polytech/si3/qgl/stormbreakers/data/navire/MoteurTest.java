@@ -19,7 +19,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.processing.communication.InputPar
 
 public class MoteurTest {
     private Moteur moteur;
-    private String inputInit1, inputInit2, inputInit3, inputInit4, inputInit5;
+    private String inputInit1, inputInit2, inputInit3, inputInit4;
     private InputParser p;
 
     @BeforeEach
@@ -29,7 +29,6 @@ public class MoteurTest {
         this.inputInit2 = new String(this.getClass().getResourceAsStream("/init2.json").readAllBytes());
         this.inputInit3 = new String(this.getClass().getResourceAsStream("/init3.json").readAllBytes());
         this.inputInit4 = new String(this.getClass().getResourceAsStream("/init4.json").readAllBytes());
-        this.inputInit5 = new String(this.getClass().getResourceAsStream("/init5.json").readAllBytes());
 
         moteur = new Moteur(new GameState(p.fetchInitGameState(inputInit1)), new Captain());
     }
