@@ -36,4 +36,9 @@ public abstract class Shape {
      * @return true if (x,y) is inside this shape, false if not
      */
     public abstract boolean isPosInside(double x, double y);
+
+    @Override
+    public String toString() {
+        return getType();
+    }
 }

@@ -3,6 +3,7 @@ package fr.unice.polytech.si3.qgl.stormbreakers.data.objective;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.*;
 
+import fr.unice.polytech.si3.qgl.stormbreakers.processing.communication.Logger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -16,11 +17,16 @@ class CheckpointTest {
     private Position offset;
     private Position origin;
 
+    private Logger logger;
+
     @BeforeEach
     void setUp() {
         rectangle = new Rectangle(10,10,0);
         offset = new Position(42,72);
         origin = new Position(0,0);
+
+        logger = Logger.getInstance();
+        logger.reset();
     }
 
     @Test
@@ -78,4 +84,11 @@ class CheckpointTest {
     /*
      * End of tests for equals
      */
+
+    @Test
+    void toStringNotTooLong() {
+        Checkpoint checkpoint = new Checkpoint(new Position(10,10),new Circle(10));
+        assertFalse(checkpoint.toString().length() > 200);
+    }
+
 }

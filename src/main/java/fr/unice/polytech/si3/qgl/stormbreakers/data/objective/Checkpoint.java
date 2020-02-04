@@ -50,4 +50,9 @@ public class Checkpoint {
     public int hashCode() {
         return Objects.hash(position,shape);
     }
+
+    @Override
+    public String toString() {
+        return "CP "+position.toString()+" "+shape.toString();
+    }
 }

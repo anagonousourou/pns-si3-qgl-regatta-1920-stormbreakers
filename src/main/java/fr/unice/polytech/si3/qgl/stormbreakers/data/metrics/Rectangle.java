@@ -87,4 +87,8 @@ public class Rectangle extends Shape {
         return Objects.hash(width,height,orientation);
     }
 
+    @Override
+    public String toString() {
+        return getType()+": ("+width+" "+height+" "+orientation+")";
+    }
 }

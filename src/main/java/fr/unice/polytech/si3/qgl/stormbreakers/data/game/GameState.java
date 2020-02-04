@@ -135,8 +135,11 @@ public class GameState {
     }
 
     private void validateCheckpoint() {
-        if (!checkpoints.isEmpty())
+        if (!checkpoints.isEmpty()) {
             checkpoints.remove(0);
+            Logger.getInstance().log("Passed by :" + checkpoints.toString());
+        }
+
     }
 
     private boolean isCurrentCheckpointOk() {
