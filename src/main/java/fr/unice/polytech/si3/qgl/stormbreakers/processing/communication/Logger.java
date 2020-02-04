@@ -12,14 +12,20 @@ public class Logger {
     }
 
     public void log(String msg) {
-        if (msg.length() <= 200 && messages.size() < 100) {
-            this.messages.add(msg);
+        // Msg truncated if logger 'full'
+        if (messages.size() < 100) {
+            // Msg truncated if too long
+            this.messages.add(msg.substring(0,200));
         }
 
     }
 
     public List<String> getLogs() {
         return this.messages;
+    }
+
+    public void reset() {
+        messages.clear();
     }
 
 }

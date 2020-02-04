@@ -9,6 +9,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.game.GameState;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Captain;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Moteur;
 import fr.unice.polytech.si3.qgl.stormbreakers.processing.communication.InputParser;
+import fr.unice.polytech.si3.qgl.stormbreakers.processing.communication.Logger;
 import fr.unice.polytech.si3.qgl.stormbreakers.processing.communication.OutputBuilder;
 
 public class Cockpit implements ICockpit {
@@ -31,7 +32,7 @@ public class Cockpit implements ICockpit {
 
 	@Override
 	public List<String> getLogs() {
-		return new ArrayList<>();
+		return Logger.getInstance().getLogs();
 	}
 
 }

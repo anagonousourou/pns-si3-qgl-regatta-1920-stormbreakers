@@ -26,7 +26,7 @@ public class InputParser {
 			return objectMapper.readValue(jsonInput, InitGame.class);
 		} catch (JsonProcessingException e) {
 
-			Logger.getInstance().log(Arrays.toString(e.getStackTrace()));
+			Logger.getInstance().log(e.getMessage());
 		}
 		return null;
 	}
@@ -36,7 +36,7 @@ public class InputParser {
 		try {
 			return objectMapper.readValue(jsonInput, NextRound.class);
 		} catch (JsonProcessingException e) {
-			Logger.getInstance().log(Arrays.toString(e.getStackTrace()));
+			Logger.getInstance().log(e.getMessage());
 			
 		}
 		return null;
