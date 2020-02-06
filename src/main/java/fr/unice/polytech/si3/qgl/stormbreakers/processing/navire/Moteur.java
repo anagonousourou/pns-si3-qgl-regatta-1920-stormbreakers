@@ -137,7 +137,7 @@ public class Moteur {
 	double orientationNeeded(Checkpoint target) {
 		// TODO: 06/02/2020 Vector.createUnitVector(double angle)
 		double orientationShip = ship.getPosition().getOrientation();
-		Vector orientationUnit = new Vector( Math.cos(orientationShip) , Math.sin(orientationShip));
+		Vector orientationUnit = Vector.createUnitVector(orientationShip);
 
 		Vector ShipToTarget = new Vector(ship.getPosition(),target.getPosition());
 		

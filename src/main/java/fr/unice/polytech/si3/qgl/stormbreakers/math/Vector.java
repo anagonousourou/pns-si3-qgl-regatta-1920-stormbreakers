@@ -12,7 +12,7 @@ public class Vector {
         this.y = y;
     }
 
-    Vector(Cartesian start, Cartesian end) {
+    public Vector(Cartesian start, Cartesian end) {
         this.x = end.getX() - start.getX();
         this.y = end.getY() - start.getY();
     }
@@ -28,12 +28,16 @@ public class Vector {
         return Math.sqrt(x*x+y*y);
     }
 
-    double scal(Vector other) {
+    public double scal(Vector other) {
         return this.x*other.x+this.y*other.y;
     }
 
     public double angleBetween(Vector other) {
         return Math.acos( this.scal(other) / (this.norm() * other.norm()) );
+    }
+
+    public static Vector createUnitVector(double angle) {
+        return new Vector( Math.cos(angle) , Math.sin(angle) );
     }
 
 
