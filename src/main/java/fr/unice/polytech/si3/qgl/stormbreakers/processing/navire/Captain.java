@@ -1,4 +1,4 @@
-package fr.unice.polytech.si3.qgl.stormbreakers.data.navire;
+package fr.unice.polytech.si3.qgl.stormbreakers.processing.navire;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,6 +8,8 @@ import java.util.stream.Collectors;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.Oar;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.SailorAction;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Equipment;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Marin;
 
 /**
  * Classe pour contenir les fonctions purement algorithmique de la direction du
@@ -23,7 +25,7 @@ public class Captain {
 	 * @return List<sailorAction> -une liste des actions marin et rame associé d'un seul côté gauche ou droite
 	 */
     public List<SailorAction> activateNbOars(List<Equipment> oars, int nbToActivate, List<Marin> marinUtilise,
-            List<Marin> allsailors) {
+                                             List<Marin> allsailors) {
         List<SailorAction> result = new ArrayList<>();
         List<Marin> yetBusy = marinUtilise;
         int compteur = 0;
