@@ -1,4 +1,4 @@
-package fr.unice.polytech.si3.qgl.stormbreakers.data.navire;
+package fr.unice.polytech.si3.qgl.stormbreakers.processing.navire;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,8 +11,11 @@ import java.util.stream.Collectors;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.SailorAction;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.game.GameState;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Equipment;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Marin;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Checkpoint;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Bateau;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.Vector;
 
 public class Moteur {
 
@@ -132,6 +135,13 @@ public class Moteur {
 	}
 
 	double orientationNeeded(Checkpoint target) {
-		return ship.getPosition().thetaTo(target.getPosition());
+		// TODO: 06/02/2020 Vector.createUnitVector(double angle)
+		double orientationShip = ship.getPosition().getOrientation();
+		Vector orientationUnit = Vector.createUnitVector(orientationShip);
+
+		Vector ShipToTarget = new Vector(ship.getPosition(),target.getPosition());
+		
+		return (ShipToTarget.norm()>0)?
+			orientationUnit.angleBetween(ShipToTarget):0;
 	}
 }

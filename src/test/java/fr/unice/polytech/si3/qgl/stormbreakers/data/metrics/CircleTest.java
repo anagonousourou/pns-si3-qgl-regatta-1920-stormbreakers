@@ -3,6 +3,8 @@ package fr.unice.polytech.si3.qgl.stormbreakers.data.metrics;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import fr.unice.polytech.si3.qgl.stormbreakers.math.Fraction;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class CircleTest {
