@@ -2,8 +2,9 @@ package fr.unice.polytech.si3.qgl.stormbreakers.data.metrics;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.complex.Cartesian;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.complex.Polar;
+
+import fr.unice.polytech.si3.qgl.stormbreakers.math.Cartesian;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.Polar;
 
 import java.util.Objects;
 

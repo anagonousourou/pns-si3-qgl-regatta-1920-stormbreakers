@@ -9,10 +9,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Equipment;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Marin;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Rame;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.Oar;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.SailorAction;
 
 class CaptainTest {
     private Captain rogers;
@@ -68,5 +72,33 @@ class CaptainTest {
         assertFalse(idsUsed.contains(m3.getId()), "N'utilise pas les marins dits indisponibles");
         assertFalse(idsUsed.contains(m4.getId()), "N'utilise pas les marins dits indisponibles");
 
+    }
+    @Test
+    void toActivateTest() {
+		int widthship = 2;
+		List<Equipment> leftOars;
+		List<Equipment> rightOars;
+		List<Equipment> oars=new ArrayList<>();
+		oars.addAll(List.of(r1,r2,r3,r4));
+		if (widthship % 2 == 1) {// impair
+			leftOars = oars.stream().filter(oar -> oar.getY() < widthship / 2).collect(Collectors.toList());
+			rightOars = oars.stream().filter(oar -> oar.getY() > widthship / 2).collect(Collectors.toList());
+		} else {
+			leftOars = oars.stream().filter(oar -> oar.getY() < widthship / 2).collect(Collectors.toList());
+			rightOars = oars.stream().filter(oar -> oar.getY() >= widthship / 2).collect(Collectors.toList());
+		}
+		int rameGauche=0;
+		int rameDroite=0;
+		
+		List<Marin> allsailors= new ArrayList<>();
+		System.out.println();
+		allsailors.addAll(List.of(m1,m2,m3,m4));
+    	var listAction= rogers.toActivate(leftOars, rightOars, new ArrayList<Marin>(), allsailors);
+    	System.out.println(listAction);
+    	for(SailorAction action: listAction) {
+    		for(SailorAction action2: listAction) {
+    			assertFalse(action.getSailorId()==action2.getSailorId());
+    		}
+    	}
     }
 }

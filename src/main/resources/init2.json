@@ -6,7 +6,7 @@
                 "position": {
                     "x": 1000,
                     "y": 0,
-                    "orientation": 0
+                    "orientation": 1.57079632679
                 },
                 "shape": {
                     "type": "circle",

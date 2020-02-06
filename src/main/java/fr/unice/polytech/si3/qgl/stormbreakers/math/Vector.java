@@ -1,7 +1,6 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.math;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.complex.Cartesian;
 
 public class Vector {
 
@@ -25,7 +24,7 @@ public class Vector {
         );
     }
 
-    double norm() {
+    public double norm() {
         return Math.sqrt(x*x+y*y);
     }
 

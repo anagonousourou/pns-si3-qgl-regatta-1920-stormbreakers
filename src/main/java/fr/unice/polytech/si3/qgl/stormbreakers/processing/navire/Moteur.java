@@ -140,7 +140,8 @@ public class Moteur {
 		Vector orientationUnit = new Vector( Math.cos(orientationShip) , Math.sin(orientationShip));
 
 		Vector ShipToTarget = new Vector(ship.getPosition(),target.getPosition());
-
-		return orientationUnit.angleBetween(ShipToTarget);
+		
+		return (ShipToTarget.norm()>0)?
+			orientationUnit.angleBetween(ShipToTarget):0;
 	}
 }

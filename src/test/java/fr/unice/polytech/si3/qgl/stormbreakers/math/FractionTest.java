@@ -1,4 +1,4 @@
-package fr.unice.polytech.si3.qgl.stormbreakers.data.metrics;
+package fr.unice.polytech.si3.qgl.stormbreakers.math;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -6,6 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
+
+import fr.unice.polytech.si3.qgl.stormbreakers.math.Fraction;
 
 class FractionTest {
 

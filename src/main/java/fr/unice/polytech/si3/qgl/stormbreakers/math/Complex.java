@@ -1,4 +1,4 @@
-package fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.complex;
+package fr.unice.polytech.si3.qgl.stormbreakers.math;
 
 public class Complex {
     private final double re;
