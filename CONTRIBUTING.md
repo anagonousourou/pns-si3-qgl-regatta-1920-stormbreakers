@@ -29,7 +29,7 @@ Convention de nommage des branches features : **feature/...**
 - Peut engendrer une pull request à n'importe quel moment vers la release correspondante.
 - Avant le merge vers une release, attendre que les autres contributeurs acceptent la pull request.
 
-### Hotfix
+#### Hotfix
 Convention de nommage des branches correctifs : **hotfix/...**
 <br>"..." étant le nom du correctif à corriger.
 
