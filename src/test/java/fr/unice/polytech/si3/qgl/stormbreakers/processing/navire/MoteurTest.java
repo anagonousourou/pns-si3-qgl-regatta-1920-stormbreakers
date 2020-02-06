@@ -78,4 +78,11 @@ public class MoteurTest {
         assertEquals(7, result.size());
         assertTrue(result.contains(0.0));
     }
+
+    @Test
+    void testOrientationNeededWhenInFront() {
+        // TODO: 06/02/2020
+        double result = 0;
+        assertEquals(0,result);
+    }
 }

@@ -15,6 +15,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Equipment;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Marin;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Checkpoint;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Bateau;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.Vector;
 
 public class Moteur {
 
@@ -134,6 +135,12 @@ public class Moteur {
 	}
 
 	double orientationNeeded(Checkpoint target) {
-		return ship.getPosition().thetaTo(target.getPosition());
+		// TODO: 06/02/2020 Vector.createUnitVector(double angle)
+		double orientationShip = ship.getPosition().getOrientation();
+		Vector orientationUnit = new Vector( Math.cos(orientationShip) , Math.sin(orientationShip));
+
+		Vector ShipToTarget = new Vector(ship.getPosition(),target.getPosition());
+
+		return orientationUnit.angleBetween(ShipToTarget);
 	}
 }
