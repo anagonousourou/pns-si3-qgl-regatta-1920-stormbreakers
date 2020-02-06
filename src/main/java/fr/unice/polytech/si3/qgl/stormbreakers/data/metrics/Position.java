@@ -55,7 +55,7 @@ public class Position {
 
     @Override
     public String toString() {
-        return "Position ( " + this.x + " , " + this.y + " , " + this.orientation +  " )";
+        return "P(" + this.x + "|" + this.y + "|" + this.orientation +  ")";
     }
 
 

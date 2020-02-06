@@ -33,7 +33,6 @@ public class Moving extends SailorAction {
 
     @Override
     public String toString() {
-        return "Moving( idsailor: " + this.getSailorId() + ", xdistance: " + this.xdistance + ", ydistance: "
-                + this.ydistance + " )";
+        return "M(" + this.getSailorId() + "|" + this.xdistance + "|" + this.ydistance + " )";
     }
 }

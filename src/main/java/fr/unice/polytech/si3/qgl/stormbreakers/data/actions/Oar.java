@@ -12,7 +12,7 @@ public class Oar extends SailorAction {
 
     @Override
     public String toString() {
-        return "Oar( idsailor:" + this.getSailorId() + " )";
+        return "O" + this.getSailorId();
     }
 
 }

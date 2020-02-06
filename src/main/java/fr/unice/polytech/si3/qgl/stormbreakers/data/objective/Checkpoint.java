@@ -53,6 +53,6 @@ public class Checkpoint {
 
     @Override
     public String toString() {
-        return "CP "+position.toString()+" "+shape.toString();
+        return "CP{"+position.toString()+","+shape.toString()+"}";
     }
 }

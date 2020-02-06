@@ -45,8 +45,7 @@ public class Marin implements Deckable {
 	}
 	
 	public String toString() {
-		return "le marin "+name+" d'ID "+id+" est de position ("+x+","+y+")";
-		
+		return "S("+id+"|"+x+","+y+")";
 	}
 
 	/**
