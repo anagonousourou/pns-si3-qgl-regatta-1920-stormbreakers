@@ -19,7 +19,7 @@ Convention de nommage des branches releases : **release/...**
 - Une branche de type release peut être modifiée à n'importe quel moment.
 - Avant le merge vers master, attendre que les autres contributeurs acceptent la pull request.
 	- :exclamation: Ne sera mergée à master que lorsqu'elle sera finie, documentée, et complétement testée.
-	- 
+	- Le commit qui déclenchera le merge doit être taggé avec le bon nom de version.  
 
 #### Feature
 Convention de nommage des branches features : **feature/...**
