@@ -6,7 +6,7 @@
                 "position": {
                     "x": 1000,
                     "y": 0,
-                    "orientation": 1.57079632679
+                    "orientation": 0
                 },
                 "shape": {
                     "type": "circle",
@@ -22,7 +22,7 @@
         "position": {
             "x": 0,
             "y": 0,
-            "orientation": 0
+            "orientation": 1.57079632679
         },
         "name": "Les copaings d'abord!",
         "deck": {

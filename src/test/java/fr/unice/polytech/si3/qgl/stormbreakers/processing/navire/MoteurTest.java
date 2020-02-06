@@ -95,8 +95,9 @@ public class MoteurTest {
         assertEquals(0,this.moteur.orientationNeeded(c1));
         //checkpoint a pi/4 par rapport a bateau
         Mockito.when(c1.getPosition()).thenReturn(new Position(1,1));
-        assertTrue((Math.PI/4-this.moteur.orientationNeeded(c1))<0.001);
+        assertTrue((Math.PI/4-this.moteur.orientationNeeded(c1))<EPSILON);
     }
+    
     
     @Test
     void testOrientationNeededWhenInFrontAngleBoatPiBy2() {
@@ -105,9 +106,9 @@ public class MoteurTest {
         assertEquals(0,this.moteur2.orientationNeeded(c1));
         //checkpoint a 1,0  bateau 0,0 orienté pi/2
         Mockito.when(c1.getPosition()).thenReturn(new Position(1,0));
-        assertTrue(Math.PI/2-this.moteur.orientationNeeded(c1)<0.001);
+        assertTrue(Math.PI/2-this.moteur2.orientationNeeded(c1)<EPSILON);
         //checkpoint a 1,1  bateau 0,0 orienté pi/2
         Mockito.when(c1.getPosition()).thenReturn(new Position(1,1));
-        assertTrue((-Math.PI/4-this.moteur.orientationNeeded(c1))<0.001);
+        assertTrue((-Math.PI/4-this.moteur2.orientationNeeded(c1))<EPSILON);
     }
 }
