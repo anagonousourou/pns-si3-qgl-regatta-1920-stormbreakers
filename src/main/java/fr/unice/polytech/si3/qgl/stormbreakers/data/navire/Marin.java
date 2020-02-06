@@ -3,11 +3,12 @@ package fr.unice.polytech.si3.qgl.stormbreakers.data.navire;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import fr.unice.polytech.si3.qgl.stormbreakers.Logable;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.Moving;
 
 import java.util.Objects;
 
-public class Marin implements Deckable {
+public class Marin implements Deckable, Logable {
 	private static final int MAX_DIST = 5;
 
     private int id;
@@ -42,10 +43,6 @@ public class Marin implements Deckable {
     
 	public int getY() {
 		return y;
-	}
-	
-	public String toString() {
-		return "S("+id+"|"+x+","+y+")";
 	}
 
 	/**
@@ -84,5 +81,14 @@ public class Marin implements Deckable {
 	@Override
 	public int hashCode() {
 		return Objects.hash(id,name);
+	}
+
+	public String toString() {
+		return "le marin "+name+" d'ID "+id+" est de position ("+x+","+y+")";
+	}
+
+	@Override
+	public String toLogs() {
+		return "S("+id+"|"+x+","+y+")";
 	}
 }

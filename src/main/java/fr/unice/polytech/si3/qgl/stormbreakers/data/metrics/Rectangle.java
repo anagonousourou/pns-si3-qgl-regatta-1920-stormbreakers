@@ -89,6 +89,13 @@ public class Rectangle extends Shape {
 
     @Override
     public String toString() {
+        return getType()+": ("+width+" "+height+" "+orientation+")";
+    }
+
+    @Override
+    public String toLogs() {
         return "R"+"("+width+"|"+height+"|"+orientation+")";
     }
+
+
 }
