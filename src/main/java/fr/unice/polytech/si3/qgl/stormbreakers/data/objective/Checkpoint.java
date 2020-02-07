@@ -3,12 +3,13 @@ package fr.unice.polytech.si3.qgl.stormbreakers.data.objective;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import fr.unice.polytech.si3.qgl.stormbreakers.Logable;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Shape;
 
 import java.util.Objects;
 
-public class Checkpoint {
+public class Checkpoint implements Logable {
     private Position position;
     private Shape shape;
 
@@ -54,5 +55,10 @@ public class Checkpoint {
     @Override
     public String toString() {
         return "CP "+position.toString()+" "+shape.toString();
+    }
+
+    @Override
+    public String toLogs() {
+        return position.toLogs()+","+shape.toLogs();
     }
 }

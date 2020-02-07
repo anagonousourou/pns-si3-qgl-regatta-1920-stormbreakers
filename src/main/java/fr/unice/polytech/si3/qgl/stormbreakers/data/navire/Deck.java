@@ -2,8 +2,9 @@ package fr.unice.polytech.si3.qgl.stormbreakers.data.navire;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import fr.unice.polytech.si3.qgl.stormbreakers.Logable;
 
-public class Deck {
+public class Deck implements Logable {
     private int width;
     private int length;
 
@@ -24,5 +25,10 @@ public class Deck {
     @JsonProperty("length")
     public int getLength() {
         return length;
+    }
+
+    @Override
+    public String toLogs() {
+        return "d:"+length+width;
     }
 }

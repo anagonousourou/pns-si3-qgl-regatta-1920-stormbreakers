@@ -38,11 +38,4 @@ public abstract class Shape implements Logable {
      */
     public abstract boolean isPosInside(double x, double y);
 
-    @Override
-    public String toString() {
-        return getType();
-    }
-
-    @Override
-    public abstract String toLogs();
 }

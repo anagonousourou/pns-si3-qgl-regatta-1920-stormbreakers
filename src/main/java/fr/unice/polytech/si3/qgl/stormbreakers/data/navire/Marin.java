@@ -89,6 +89,6 @@ public class Marin implements Deckable, Logable {
 
 	@Override
 	public String toLogs() {
-		return "S("+id+"|"+x+","+y+")";
+		return id+","+x+y;
 	}
 }

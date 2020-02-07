@@ -6,4 +6,8 @@ public class Vigie extends Equipment {
         super(EquipmentType.WATCH.code,x,y);
     }
 
+    @Override
+    public String toLogs() {
+        return "w"+getX()+getY();
+    }
 }

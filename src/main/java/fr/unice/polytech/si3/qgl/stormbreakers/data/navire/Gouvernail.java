@@ -6,4 +6,8 @@ public class Gouvernail extends Equipment {
         super(EquipmentType.RUDDER.code,x,y);
     }
 
+    @Override
+    public String toLogs() {
+        return "r"+ getX() + getY();
+    }
 }

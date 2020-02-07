@@ -6,12 +6,16 @@ import java.util.stream.Collectors;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import fr.unice.polytech.si3.qgl.stormbreakers.Logable;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Shape;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Deck;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Equipment;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Marin;
 
-public class Bateau extends AutreBateau {
+import javax.swing.text.html.parser.Entity;
+
+public class Bateau extends AutreBateau implements Logable {
     private String name;
     private Deck deck;
     private List<Equipment> entities;
@@ -46,6 +50,16 @@ public class Bateau extends AutreBateau {
     public Deck getDeck() {
 		return deck;
 	}
-   
+
+
+    @Override
+    public String toLogs() {
+        return deck.toLogs() + ",E:" + entitiesToString();
+    }
+
+    private String entitiesToString() {
+        List<Logable> logables = entities.stream().map((Equipment ent)->(Logable) ent).collect(Collectors.toList());
+        return Logable.listToLogs(logables,"|", "[", "]");
+    }
 
 }
