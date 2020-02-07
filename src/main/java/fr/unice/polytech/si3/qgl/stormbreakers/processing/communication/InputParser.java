@@ -39,5 +39,4 @@ public class InputParser {
 		}
 		return null;
 	}
-
 }
