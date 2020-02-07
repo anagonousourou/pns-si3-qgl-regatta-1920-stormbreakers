@@ -95,10 +95,21 @@ class CaptainTest {
 		allsailors.addAll(List.of(m1,m2,m3,m4));
     	var listAction= rogers.toActivate(leftOars, rightOars, new ArrayList<Marin>(), allsailors);
     	System.out.println(listAction);
-    	for(SailorAction action: listAction) {
-    		for(SailorAction action2: listAction) {
-    			assertFalse(action.getSailorId()==action2.getSailorId());
+		var usedSailors= new ArrayList<Marin>();
+    	List<SailorAction> listActionDroite=rogers.activateNbOars(rightOars, 4, usedSailors, allsailors);
+    	List<SailorAction> listActionGauche=rogers.activateNbOars(rightOars, 4, usedSailors, allsailors);
+    	for(SailorAction actionLeft:listActionGauche) {
+    		if(listAction.contains(actionLeft)) {
+    			rameGauche++;
     		}
     	}
+    	for(SailorAction actionRight:listActionDroite) {
+    		if(listAction.contains(actionRight)) {
+    			rameDroite++;
+    		}
+    	}
+    	assertEquals(rameDroite, rameGauche);
     }
+    
+    
 }
