@@ -110,6 +110,5 @@ class CaptainTest {
     	}
     	assertEquals(rameDroite, rameGauche);
     }
-    
-    
+
 }
