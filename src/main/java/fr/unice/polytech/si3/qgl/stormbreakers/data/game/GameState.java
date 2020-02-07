@@ -1,5 +1,6 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.data.game;
 
+import fr.unice.polytech.si3.qgl.stormbreakers.Logable;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.ActionType;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.Moving;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.SailorAction;
@@ -58,11 +59,12 @@ public class GameState {
      * @param nextRound contient les donnees actualisees
      */
     public void updateTurn(NextRound nextRound) {
-        Logger.getInstance().log(nextRound.getShip().getPosition().toString());
         ship = nextRound.getShip();
         wind = nextRound.getWind();
         if (checkpoints != null)
             actualiserCheckpoints();
+
+        Logger.getInstance().log("cc"+ getNextCheckpoint().toLogs());
     }
 
     public void actualiserCheckpoints() {
@@ -137,7 +139,6 @@ public class GameState {
     private void validateCheckpoint() {
         if (!checkpoints.isEmpty()) {
             checkpoints.remove(0);
-            Logger.getInstance().log("Passed by :" + checkpoints.toString());
         }
 
     }

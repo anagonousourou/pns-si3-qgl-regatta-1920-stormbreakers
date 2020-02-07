@@ -27,7 +27,7 @@ public class OutputBuilder {
             jsonOutput = objectMapper.writeValueAsString(actions);
 
         } catch (IOException e) {
-            Logger.getInstance().log(e.getMessage());
+            Logger.getInstance().logLine(e.getMessage());
         }
 
         return jsonOutput;

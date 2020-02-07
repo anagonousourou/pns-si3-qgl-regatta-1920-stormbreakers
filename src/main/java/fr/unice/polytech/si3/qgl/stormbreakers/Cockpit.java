@@ -5,6 +5,7 @@ import java.util.List;
 import fr.unice.polytech.si3.qgl.regatta.cockpit.ICockpit;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.SailorAction;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.game.GameState;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.game.InitGame;
 import fr.unice.polytech.si3.qgl.stormbreakers.processing.navire.Captain;
 import fr.unice.polytech.si3.qgl.stormbreakers.processing.navire.Moteur;
 import fr.unice.polytech.si3.qgl.stormbreakers.processing.communication.InputParser;
@@ -17,7 +18,8 @@ public class Cockpit implements ICockpit {
 	private InputParser parser = new InputParser();
 
 	public void initGame(String game) {
-		this.gState = new GameState(this.parser.fetchInitGameState(game));
+		InitGame initGame = this.parser.fetchInitGameState(game);
+		this.gState = new GameState(initGame);
 		this.engine = new Moteur(gState, new Captain());
 	}
 

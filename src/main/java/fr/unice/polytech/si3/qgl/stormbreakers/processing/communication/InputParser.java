@@ -24,7 +24,7 @@ public class InputParser {
 			return objectMapper.readValue(jsonInput, InitGame.class);
 		} catch (JsonProcessingException e) {
 
-			Logger.getInstance().log(e.getMessage());
+			Logger.getInstance().logLine(e.getMessage());
 		}
 		return null;
 	}
@@ -34,7 +34,7 @@ public class InputParser {
 		try {
 			return objectMapper.readValue(jsonInput, NextRound.class);
 		} catch (JsonProcessingException e) {
-			Logger.getInstance().log(e.getMessage());
+			Logger.getInstance().logLine(e.getMessage());
 			
 		}
 		return null;
