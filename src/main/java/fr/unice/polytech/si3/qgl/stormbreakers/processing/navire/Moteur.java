@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.SailorAction;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.game.GameState;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Equipment;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Marin;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Checkpoint;
@@ -140,8 +141,21 @@ public class Moteur {
 		Vector orientationUnit = Vector.createUnitVector(orientationShip);
 
 		Vector ShipToTarget = new Vector(ship.getPosition(),target.getPosition());
-		
-		return (ShipToTarget.norm()>0)?
-			orientationUnit.angleBetween(ShipToTarget):0;
+
+		int angleSign = getAngleSign(target.getPosition(),ship.getPosition(), orientationShip);
+
+		// Si le bateau est sur le point même du checkpoint, l'angle duquel tourner est definit a 0
+		Double angleValue = (ShipToTarget.norm()>0)?orientationUnit.angleBetween(ShipToTarget):0;
+		return (double) ((angleValue != 0)?angleSign:1) * angleValue;
+	}
+
+	// TODO: 08/02/2020 Use Coords instead of pos
+	private int getAngleSign(Position target, Position shipPos, Double shipOrientation) {
+		// On bouge le plan pour ramener le bateau en 0,0
+		Position target2 = new Position(target.getX()-shipPos.getX(),target.getY()-shipPos.getY(),0);
+		// On tourne le plan pour faire pointer le bateau selon l'axe x
+		Position target3 = target2.getRotatedBy(-shipOrientation);
+		// Si y positif on tourne en sens trigo
+		return (target3.getY()>0)?1:-1;
 	}
 }
