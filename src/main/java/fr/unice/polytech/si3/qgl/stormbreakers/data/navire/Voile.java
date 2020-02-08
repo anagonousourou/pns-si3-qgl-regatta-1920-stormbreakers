@@ -12,6 +12,6 @@ public class Voile extends Equipment {
 
     @Override
     public String toLogs() {
-        return EquipmentType.SAIL.shortCode + ((openned)?"O":"C") + getX() + getY();
+        return EquipmentType.SAIL.shortCode + ((openned)?"O":"C") + getPosLog();
     }
 }

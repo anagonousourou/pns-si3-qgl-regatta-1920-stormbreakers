@@ -39,4 +39,9 @@ public abstract class Equipment implements Deckable, Logable {
     public int getY() {
         return y;
     }
+
+    public String getPosLog() {
+        return x+"."+y;
+    }
+
 }

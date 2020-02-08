@@ -15,6 +15,6 @@ public class Rame extends Equipment {
 
     @Override
     public String toLogs() {
-        return EquipmentType.OAR.shortCode+getX()+getY();
+        return EquipmentType.OAR.shortCode+ getPosLog();
     }
 }

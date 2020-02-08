@@ -8,6 +8,6 @@ public class Gouvernail extends Equipment {
 
     @Override
     public String toLogs() {
-        return EquipmentType.RUDDER.shortCode+ getX() + getY();
+        return EquipmentType.RUDDER.shortCode+ getPosLog();
     }
 }
