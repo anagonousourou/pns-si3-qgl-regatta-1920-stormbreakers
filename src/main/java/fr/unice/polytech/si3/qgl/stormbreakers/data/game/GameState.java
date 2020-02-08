@@ -63,8 +63,6 @@ public class GameState {
         wind = nextRound.getWind();
         if (checkpoints != null)
             actualiserCheckpoints();
-
-        Logger.getInstance().log("cc"+ getNextCheckpoint().toLogs());
     }
 
     public void actualiserCheckpoints() {

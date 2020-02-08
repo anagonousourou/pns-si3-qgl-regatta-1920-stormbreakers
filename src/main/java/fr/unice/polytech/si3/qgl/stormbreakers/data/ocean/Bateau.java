@@ -1,5 +1,6 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.data.ocean;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,13 +22,13 @@ public class Bateau extends AutreBateau implements Logable {
     private List<Equipment> entities;
 
 
-    @JsonCreator 
-    Bateau(
-        @JsonProperty("position")Position position,
-        @JsonProperty("shape") Shape shape,
-        @JsonProperty("life") int life,
-        @JsonProperty("deck") Deck deck,
-        @JsonProperty("entities") List<Equipment> entities
+    @JsonCreator
+    public Bateau(
+            @JsonProperty("position") Position position,
+            @JsonProperty("shape") Shape shape,
+            @JsonProperty("life") int life,
+            @JsonProperty("deck") Deck deck,
+            @JsonProperty("entities") List<Equipment> entities
     ){
     	super(position,shape,life);
     	this.deck=deck;
@@ -58,7 +59,7 @@ public class Bateau extends AutreBateau implements Logable {
     }
 
     private String entitiesToString() {
-        List<Logable> logables = entities.stream().map((Equipment ent)->(Logable) ent).collect(Collectors.toList());
+        List<Logable> logables = new ArrayList<>(entities);
         return Logable.listToLogs(logables,"|", "[", "]");
     }
 

@@ -54,11 +54,11 @@ public class Checkpoint implements Logable {
 
     @Override
     public String toString() {
-        return "CP "+position.toString()+" "+shape.toString();
+        return position.toString()+" "+shape.toString();
     }
 
     @Override
     public String toLogs() {
-        return position.toLogs()+","+shape.toLogs();
+        return "{"+ position.toLogs()+","+shape.toLogs()+"}";
     }
 }

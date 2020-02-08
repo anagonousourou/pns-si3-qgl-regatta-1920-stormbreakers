@@ -23,12 +23,8 @@ public class RegattaGoal extends Goal {
 
     @Override
     public String toLogs() {
-        return getMode()+" "+checkpointsToString();
+        return "CP"+checkpoints.size()+" "+checkpoints.get(0).toLogs();
     }
 
-    private String checkpointsToString() {
-        List<Logable> logables = checkpoints.stream().map((Checkpoint cp)->(Logable) cp).collect(Collectors.toList());
-        String result = Logable.listToLogs(logables,"|", "[", "]");
-        return "CP" + result;
-    }
+
 }

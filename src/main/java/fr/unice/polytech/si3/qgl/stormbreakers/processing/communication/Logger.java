@@ -51,4 +51,9 @@ public class Logger {
         return allLogs;
     }
 
+    void reset() {
+        clearCurrentLogLine();
+        allLogs.clear();
+    }
+
 }

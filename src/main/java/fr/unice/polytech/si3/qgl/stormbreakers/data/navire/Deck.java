@@ -9,7 +9,7 @@ public class Deck implements Logable {
     private int length;
 
     @JsonCreator
-    Deck(
+    public Deck(
             @JsonProperty("width") int width,
             @JsonProperty("length") int length
     ) {
