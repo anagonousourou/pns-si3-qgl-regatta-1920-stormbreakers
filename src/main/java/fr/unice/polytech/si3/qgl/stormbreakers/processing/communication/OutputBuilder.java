@@ -27,7 +27,8 @@ public class OutputBuilder {
             jsonOutput = objectMapper.writeValueAsString(actions);
 
         } catch (IOException e) {
-            Logger.getInstance().logLine(e.getMessage());
+            System.out.println("Error writing actions");
+            System.out.println(e.getMessage());
         }
 
         return jsonOutput;
