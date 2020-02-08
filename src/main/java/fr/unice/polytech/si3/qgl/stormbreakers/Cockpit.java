@@ -33,7 +33,7 @@ public class Cockpit implements ICockpit {
 
 	@Override
 	public List<String> getLogs() {
-		return Logger.getInstance().getLogs();
+		return Logger.getInstance().getSavedData();
 	}
 
 }
