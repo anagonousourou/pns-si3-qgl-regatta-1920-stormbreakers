@@ -3,6 +3,7 @@ package fr.unice.polytech.si3.qgl.stormbreakers.simulation;
 class Oar {
     int x, y;
     Marine marin;
+    boolean used = false;
 
     Oar(int x, int y) {
         this.x = x;
@@ -22,12 +23,24 @@ class Oar {
         return y;
     }
 
-    void setMarin(Marine m){
-        this.marin=m;
+    void setMarin(Marine m) {
+        this.marin = m;
     }
 
     @Override
     public String toString() {
-        return "Oar(x: "+x+", "+"y: "+y+" )";
+        return "Oar(x: " + x + ", " + "y: " + y + " )";
+    }
+
+    boolean isUsed() {
+        return this.used;
+    }
+
+    void setUsed(boolean b) {
+        this.used = b;
+    }
+
+    void resetUsed() {
+        this.used = false;
     }
 }

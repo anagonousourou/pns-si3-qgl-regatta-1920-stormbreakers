@@ -18,5 +18,22 @@ public class Crew {
     List<Marine> toList(){
         return marins;
     }
+
+    public void executeMoves(List<MoveAction> moves){
+        for(MoveAction m:moves){
+            var optMarin=this.getMarinById(m.getId());
+            if(optMarin.isPresent()){
+                optMarin.get().requestMove(m);
+            }
+        }
+    }
+    public void executeActions(List<OarAction> actions){
+        for(OarAction oa:actions){
+            var optMarin=this.getMarinById(oa.getId());
+            if(optMarin.isPresent()){
+                optMarin.get().requestOarAction(oa);
+            }
+        }
+    }
     
 }

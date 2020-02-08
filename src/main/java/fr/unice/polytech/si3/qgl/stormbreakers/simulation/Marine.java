@@ -9,6 +9,8 @@ import java.beans.PropertyChangeSupport;
 class Marine {
     private final int id;
     private IntPosition position;
+    private boolean onEquipment=false;
+
 
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
@@ -26,19 +28,23 @@ class Marine {
      }
 
 
-    public void requestMove(Move mvt){
+    public void requestMove(MoveAction mvt){
         this.pcs.firePropertyChange("moving", null, mvt);
 
     }
 
-    public void executeMove(Move mvt){
+    public void executeMove(MoveAction mvt){
         // TODO completer
-        this.position.makeMove(mvt);
+        this.position.makeMove(new Move(mvt.getXdistance(), mvt.getYdistance()));
     }
 
     public boolean onEquipment(){
         // TODO completer
-        return false;
+        return this.onEquipment;
+    }
+
+    public void setOnEquipment(boolean b){
+        this.onEquipment=b;
     }
 
     public int getId() {
@@ -49,6 +55,18 @@ class Marine {
     public String toString() {
         return "Marine(id: "+id+", \n"+"position:"+position+" ) ";
     }
+
+    public IntPosition getPosition() {
+        return position;
+    }
+
+    public void setPosition(IntPosition position) {
+        this.position = position;
+    }
+
+	public void requestOarAction(OarAction oa) {
+        this.pcs.firePropertyChange("OarAction", null, oa);
+	}
 
     
 }

@@ -22,5 +22,14 @@ public class MoveAction {
         return Math.abs(this.xdistance)+Math.abs(this.ydistance) > distance;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    @Override
+    public String toString() {
+        return "MoveAction(id: "+id+", "+"xd: "+xdistance+", "+"yd: "+ydistance+")";
+    }
+
 
 }

@@ -56,4 +56,16 @@ class InputParser {
 		return moves;
 	}
 
+	List<OarAction> fetchOarActions(String jString) throws JsonMappingException, JsonProcessingException {
+		var mapper=new ObjectMapper();
+		List<OarAction> actions =new ArrayList<>();
+		mapper.readTree(jString).forEach(action->{
+			if(action.get("type").asText().equals("OAR") ){
+				actions.add(new OarAction(action.get("sailorId").asInt()));
+			}
+		});
+
+		return actions;
+	}
+
 }

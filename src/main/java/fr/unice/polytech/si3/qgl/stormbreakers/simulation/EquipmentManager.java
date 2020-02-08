@@ -2,6 +2,7 @@ package fr.unice.polytech.si3.qgl.stormbreakers.simulation;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 class EquimentManager {
@@ -39,6 +40,14 @@ class EquimentManager {
 
     List<Oar> toList() {
         return oars;
+    }
+
+    boolean oarPresentAt(IntPosition pos){
+        return this.oars.stream().filter(oar-> oar.x==pos.getX() && oar.y==pos.getY()).findFirst().isPresent();
+    }
+
+    Optional<Oar> oarAt(IntPosition pos){
+        return this.oars.stream().filter(oar-> oar.x==pos.getX() && oar.y==pos.getY()).findFirst();
     }
 
 }

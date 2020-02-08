@@ -20,6 +20,7 @@ class Simulator {
     public static void main(String[] args) throws IOException {
 
         Simulator sim = new Simulator();
+        sim.setUpSimulation();
         sim.startSimulation();
         /*
 
@@ -33,28 +34,36 @@ class Simulator {
         this.round1=new String(this.getClass().getResourceAsStream("/simul/round1.json").readAllBytes());
     }
 
+    /**
+     * Fonction pour créer le Boat 'virtuel' pour executer les actions des marins 
+     * @throws JsonMappingException
+     * @throws JsonProcessingException
+     * @throws IOException
+     */
+
     void setUpSimulation() throws JsonMappingException, JsonProcessingException, IOException {
-       
-
         this.crew= new Crew( ip.fetchAllSailors(init));
-
         this.equimentManager = new EquimentManager(ip.fetchAllOars(init), ip.fetchWidth(init));
         boat=new Boat();
         this.boat.setCrew(this.crew);
-        System.out.println(this.crew.toList());
-        System.out.println(this.equimentManager.toList());
+        System.out.println("Crew 0:" +this.crew.toList());
 
     }
-
+    /**
+     * fonction pour créer le cokpit lui passer les données d'initialisation et lui renvoyer les nextRound
+     * @throws JsonMappingException
+     * @throws JsonProcessingException
+     */
     void startSimulation() throws JsonMappingException, JsonProcessingException {
         Cockpit c = new Cockpit();
         launchGame(c);
         String actions= firstNextRound(c);
         List<MoveAction> moves=ip.fetchMoves(actions);
-
-
-
-
+        List<OarAction> oarActions=ip.fetchOarActions(actions);
+        System.out.println(moves);
+        this.crew.executeMoves(moves);
+        this.crew.executeActions(oarActions);
+        System.out.println("\n Crew 1:" +this.crew.toList());
     }
 
     void launchGame(ICockpit ic){
