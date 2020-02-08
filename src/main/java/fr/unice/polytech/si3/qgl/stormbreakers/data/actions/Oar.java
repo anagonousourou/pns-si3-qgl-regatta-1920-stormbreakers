@@ -18,6 +18,6 @@ public class Oar extends SailorAction implements Logable {
 
     @Override
     public String toLogs() {
-        return "O" + this.getSailorId();
+        return ActionType.OAR.shortCode + this.getSailorId();
     }
 }

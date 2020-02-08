@@ -40,6 +40,6 @@ public class Moving extends SailorAction implements Logable {
 
     @Override
     public String toLogs() {
-        return "M(" + this.getSailorId() + "|" + this.xdistance + "|" + this.ydistance + " )";
+        return ActionType.MOVING.shortCode + "(" + this.getSailorId() + "|" + this.xdistance + "," + this.ydistance + " )";
     }
 }

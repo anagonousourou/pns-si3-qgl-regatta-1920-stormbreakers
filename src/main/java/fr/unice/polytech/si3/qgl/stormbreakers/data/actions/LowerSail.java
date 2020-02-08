@@ -10,4 +10,8 @@ public class LowerSail extends SailorAction {
         super(sailorId,ActionType.LOWERSAIL.actionCode);
     }
 
+    @Override
+    public String toLogs() {
+        return ActionType.LOWERSAIL.shortCode + this.getSailorId();
+    }
 }
