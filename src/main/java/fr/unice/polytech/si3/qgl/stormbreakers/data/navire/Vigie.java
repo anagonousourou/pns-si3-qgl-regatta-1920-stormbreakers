@@ -8,6 +8,6 @@ public class Vigie extends Equipment {
 
     @Override
     public String toLogs() {
-        return "w"+getX()+getY();
+        return EquipmentType.WATCH.shortCode+getX()+getY();
     }
 }
