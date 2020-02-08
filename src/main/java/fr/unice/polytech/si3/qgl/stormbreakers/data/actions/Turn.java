@@ -18,4 +18,9 @@ public class Turn extends SailorAction {
     public double getRotation() {
         return rotation;
     }
+
+    @Override
+    public String toLogs() {
+        return ActionType.TURN.shortCode + this.getSailorId();
+    }
 }
