@@ -16,6 +16,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Marin;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Checkpoint;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Bateau;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Vector;
+import fr.unice.polytech.si3.qgl.stormbreakers.processing.communication.Logger;
 
 public class Moteur {
 
@@ -67,6 +68,10 @@ public class Moteur {
 	List<SailorAction> dispatchSailors(Checkpoint target) {
 		Set<Double> oarsAngles = this.possibleOrientations();
 		double angle = this.orientationNeeded(target);
+
+		// Log angle to move by
+		Logger.getInstance().log("a:" + angle + " ");
+
 		List<Marin> marinUtilise = new ArrayList<>();
 		if (Math.abs(angle) <= Moteur.EPS) {
 
@@ -135,7 +140,6 @@ public class Moteur {
 	}
 
 	double orientationNeeded(Checkpoint target) {
-		// TODO: 06/02/2020 Vector.createUnitVector(double angle)
 		double orientationShip = ship.getPosition().getOrientation();
 		Vector orientationUnit = Vector.createUnitVector(orientationShip);
 
