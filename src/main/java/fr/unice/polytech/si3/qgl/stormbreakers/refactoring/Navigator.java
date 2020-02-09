@@ -2,10 +2,9 @@ package fr.unice.polytech.si3.qgl.stormbreakers.refactoring;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
 /**
- * Utilitaire de calcul et d'algorithme si ceux ci sont complexes
- * et risquerait d'entacher la lisibilité de Captain
+ *  Utilitaire de calcul destinés à la navigation
  */
-public class Compas {
+public class Navigator {
 
     /**
      * Renvoie l'orientation nécessaire pour se diriger vers le checkpoint

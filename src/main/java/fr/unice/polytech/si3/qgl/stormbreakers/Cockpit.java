@@ -13,7 +13,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.processing.communication.OutputBu
 import fr.unice.polytech.si3.qgl.stormbreakers.refactoring.Boat;
 import fr.unice.polytech.si3.qgl.stormbreakers.refactoring.Captain;
 import fr.unice.polytech.si3.qgl.stormbreakers.refactoring.CheckpointManager;
-import fr.unice.polytech.si3.qgl.stormbreakers.refactoring.Compas;
+import fr.unice.polytech.si3.qgl.stormbreakers.refactoring.Navigator;
 import fr.unice.polytech.si3.qgl.stormbreakers.refactoring.Crew;
 import fr.unice.polytech.si3.qgl.stormbreakers.refactoring.EquipmentManager;
 import fr.unice.polytech.si3.qgl.stormbreakers.refactoring.InputParser;
@@ -26,7 +26,7 @@ public class Cockpit implements ICockpit {
 	private Captain captain = null;
 	private Boat boat = null;
 	private CheckpointManager checkpointManager = null;
-	private Compas compas = new Compas();
+	private Navigator navigator = new Navigator();
 
 	public void initGame(String game) {
 
@@ -35,7 +35,7 @@ public class Cockpit implements ICockpit {
 			equipmentManager = new EquipmentManager(parser.fetchEquipments(game), parser.fetchWidth(game));
 			boat = this.parser.fetchBoat(game);
 			checkpointManager = new CheckpointManager(parser.fetchCheckpoints(game));
-			captain = new Captain(boat, checkpointManager, equipmentManager, crew, compas);
+			captain = new Captain(boat, checkpointManager, equipmentManager, crew, navigator);
 
 		} catch (JsonMappingException e) {
 			// TODO Auto-generated catch block
