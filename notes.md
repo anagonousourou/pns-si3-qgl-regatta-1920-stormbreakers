@@ -1,5 +1,6 @@
 
 # Environnements
+
     - Influenceurs
         vent
         courant
@@ -7,9 +8,10 @@
         récifs
         autres navires
 
-
 # Navire
-- Rame
+
+- Oar
+
 -
 
 Bateau

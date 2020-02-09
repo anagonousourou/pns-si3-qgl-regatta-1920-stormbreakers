@@ -1,4 +1,4 @@
-package fr.unice.polytech.si3.qgl.stormbreakers.simulation;
+package fr.unice.polytech.si3.qgl.stormbreakers.refactoring;
 
 /**
  * Classe pour représenter un déplacement de xd, yd

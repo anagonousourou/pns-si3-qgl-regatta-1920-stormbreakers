@@ -11,7 +11,7 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.Moving;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.MoveAction;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Marin;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Checkpoint;
@@ -95,8 +95,8 @@ class GameStateTest {
 
     @Test
     void testActualiserDeplacementsXY() {
-        List<Moving> deplacements = new ArrayList<>();
-        deplacements.add(new Moving(0, 1, 1));
+        List<MoveAction> deplacements = new ArrayList<>();
+        deplacements.add(new MoveAction(0, 1, 1));
         gameState.actualiserDeplacements(deplacements);
 
         Marin premierMarin = gameState.getOrgaMarins().get(0);

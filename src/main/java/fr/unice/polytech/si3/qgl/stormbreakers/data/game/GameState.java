@@ -1,8 +1,10 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.data.game;
 
-import fr.unice.polytech.si3.qgl.stormbreakers.Logable;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.ActionType;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.Moving;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.MoveAction;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.SailorAction;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Equipment;
@@ -11,13 +13,9 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Checkpoint;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.RegattaGoal;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Bateau;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Vent;
-import fr.unice.polytech.si3.qgl.stormbreakers.processing.communication.Logger;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
- * Classe representant l'etat du jeu au debut du tour courrant
+ * Classe representant l'etat du jeu au debut du tour courant
  */
 
 public class GameState {
@@ -76,8 +74,8 @@ public class GameState {
      * 
      * @param moves liste de deplacement des marins
      */
-    void actualiserDeplacements(List<Moving> moves) {
-        for (Moving move : moves) {
+    void actualiserDeplacements(List<MoveAction> moves) {
+        for (MoveAction move : moves) {
             Marin sailor = findSailorById(move.getSailorId());
             move.applyTo(sailor);
         }
@@ -92,7 +90,7 @@ public class GameState {
         // Traitement des deplacements
         List<SailorAction> movingList = actions.stream()
                 .filter(act -> act.getType().equals(ActionType.MOVING.actionCode)).collect(Collectors.toList());
-        List<Moving> movings = movingList.stream().map(x -> (Moving) x).collect(Collectors.toList());
+        List<MoveAction> movings = movingList.stream().map(x -> (MoveAction) x).collect(Collectors.toList());
         this.actualiserDeplacements(movings);
     }
 

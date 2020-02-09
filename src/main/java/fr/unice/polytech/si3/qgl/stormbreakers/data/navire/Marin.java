@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.Logable;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.Moving;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.MoveAction;
 
 import java.util.Objects;
 
@@ -58,13 +58,13 @@ public class Marin implements Deckable, Logable {
 		}
 	}
 
-	public void move(Moving mvt){
+	public void move(MoveAction mvt){
 		x+=mvt.getXdistance();
 		y+=mvt.getYdistance();
 	}
 	
-	public Moving howToGoTo(int xpos,int ypos){
-		return new Moving(this.id, xpos-this.x, ypos-this.y);
+	public MoveAction howToGoTo(int xpos,int ypos){
+		return new MoveAction(this.id, xpos-this.x, ypos-this.y);
 	}
 
 

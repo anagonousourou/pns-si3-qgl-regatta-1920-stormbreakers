@@ -8,13 +8,15 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 
 import fr.unice.polytech.si3.qgl.regatta.cockpit.ICockpit;
 import fr.unice.polytech.si3.qgl.stormbreakers.Cockpit;
-
+/**
+ * Classe de gestion de la simulation
+ */
 class Simulator {
 
     Crew crew;
     String init;
     String round1;
-    EquimentManager equimentManager;
+    EquipmentManager equipmentManager;
     Boat boat;
     InputParser ip = new InputParser();
 
@@ -45,11 +47,11 @@ class Simulator {
 
     void setUpSimulation() throws JsonMappingException, JsonProcessingException, IOException {
         this.crew = new Crew(ip.fetchAllSailors(init));
-        this.equimentManager = new EquimentManager(ip.fetchAllOars(init), ip.fetchWidth(init));
+        this.equipmentManager = new EquipmentManager(ip.fetchAllOars(init), ip.fetchWidth(init));
         boat = new Boat();
         this.boat.setCrew(this.crew);
-        this.boat.setEquipmentManager(this.equimentManager);
-        System.out.println("Crew 0:" + this.crew.toList());
+        this.boat.setEquipmentManager(this.equipmentManager);
+        System.out.println("Crew 0:" + this.crew);
 
     }
 
@@ -83,13 +85,13 @@ class Simulator {
 
     double angleRotation() {
         double radialSpeed = 0;
-        double rotationSpeedPerOar = (Math.PI/2) / this.equimentManager.oars.size();
+        double rotationSpeedPerOar = (Math.PI/2)/this.equipmentManager.nbOars();
         // OARS
-        for (Oar oar : this.equimentManager.oars) {
+        for (Oar oar : this.equipmentManager.oars()) {
             if (oar.isUsed()) {
-                if (this.equimentManager.rightOars.contains(oar)) {
+                if (this.equipmentManager.allRightOars().contains(oar)) {
                     radialSpeed += rotationSpeedPerOar;
-                } else if (this.equimentManager.leftOars.contains(oar)) {
+                } else if (this.equipmentManager.allLeftOars().contains(oar)) {
                     radialSpeed -= rotationSpeedPerOar;
                 }
             }

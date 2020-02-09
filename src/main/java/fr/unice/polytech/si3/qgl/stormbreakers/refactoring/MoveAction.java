@@ -1,9 +1,10 @@
-package fr.unice.polytech.si3.qgl.stormbreakers.simulation;
+package fr.unice.polytech.si3.qgl.stormbreakers.refactoring;
 
 /**
  * Classe pour représenter l'action de se déplacer pour un  sur le pont du bateau
  * 
  */
+@Deprecated
 public class MoveAction {
 
     private final int xdistance,ydistance,id;
@@ -22,7 +23,7 @@ public class MoveAction {
         return ydistance;
     }
 
-    boolean longerThan(int distance){
+    public boolean longerThan(int distance){
         return Math.abs(this.xdistance)+Math.abs(this.ydistance) > distance;
     }
 

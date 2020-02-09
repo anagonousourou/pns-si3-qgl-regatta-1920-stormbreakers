@@ -2,48 +2,69 @@ package fr.unice.polytech.si3.qgl.stormbreakers;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 
 import fr.unice.polytech.si3.qgl.regatta.cockpit.ICockpit;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.SailorAction;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.game.GameState;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.game.InitGame;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Marin;
-import fr.unice.polytech.si3.qgl.stormbreakers.processing.navire.Captain;
-import fr.unice.polytech.si3.qgl.stormbreakers.processing.navire.Moteur;
-import fr.unice.polytech.si3.qgl.stormbreakers.processing.communication.InputParser;
 import fr.unice.polytech.si3.qgl.stormbreakers.processing.communication.Logger;
 import fr.unice.polytech.si3.qgl.stormbreakers.processing.communication.OutputBuilder;
+import fr.unice.polytech.si3.qgl.stormbreakers.refactoring.Boat;
+import fr.unice.polytech.si3.qgl.stormbreakers.refactoring.Captain;
+import fr.unice.polytech.si3.qgl.stormbreakers.refactoring.CheckpointManager;
+import fr.unice.polytech.si3.qgl.stormbreakers.refactoring.Compas;
+import fr.unice.polytech.si3.qgl.stormbreakers.refactoring.Crew;
+import fr.unice.polytech.si3.qgl.stormbreakers.refactoring.EquipmentManager;
+import fr.unice.polytech.si3.qgl.stormbreakers.refactoring.InputParser;
 
 public class Cockpit implements ICockpit {
-	private Moteur engine;
-	private GameState gState;
 	private InputParser parser = new InputParser();
+	private OutputBuilder outputBuilder = new OutputBuilder();
+	private Crew crew = null;
+	private EquipmentManager equipmentManager = null;
+	private Captain captain = null;
+	private Boat boat = null;
+	private CheckpointManager checkpointManager = null;
+	private Compas compas = new Compas();
 
 	public void initGame(String game) {
-		InitGame initGame = this.parser.fetchInitGameState(game);
 
-		Logger.getInstance().log(initGame.toLogs());
-		Logger.getInstance().next();
+		try {
+			crew = new Crew(this.parser.fetchAllSailors(game));
+			equipmentManager = new EquipmentManager(parser.fetchAllOars(game), parser.fetchWidth(game));
+			boat = this.parser.fetchBoat(game);
+			checkpointManager = new CheckpointManager(parser.fetchCheckpoints(game));
+			captain = new Captain(boat, checkpointManager, equipmentManager, crew, compas);
 
-		this.gState = new GameState(initGame);
-		this.engine = new Moteur(gState, new Captain());
+		} catch (JsonMappingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public String nextRound(String round) {
-		this.gState.updateTurn(this.parser.fetchNextRoundState(round));
-		OutputBuilder outputBuilder = new OutputBuilder();
+		// TODO Phase d'updates
 
-		// Log current checkpoint
-		Logger.getInstance().log(" CP-" + gState.getNextCheckpoint().toLogs() + " ");
 
-		List<SailorAction> actions = this.engine.actions();
+		//Phase de calcul des actions
+		List<SailorAction> actions=this.captain.nextRoundActions();
+		//Appliquer les actions
+		this.crew.executeMovingsInSailorAction(actions);
+		
+		
+
+		// TODO Log current checkpoint
+		
 
 		// Log actions generated
 		List<Logable> logableActions = new ArrayList<>(actions);
-		Logger.getInstance().log("A:"+Logable.listToLogs(logableActions,",","[","]"));
+		Logger.getInstance().log("A:" + Logable.listToLogs(logableActions, ",", "[", "]"));
 
-		gState.actualiserActions(actions);
+		
 
 		// Save logs and prepare for new instructions
 		Logger.getInstance().next();

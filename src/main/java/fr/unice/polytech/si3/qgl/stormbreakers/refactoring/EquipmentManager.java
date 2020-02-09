@@ -1,9 +1,11 @@
-package fr.unice.polytech.si3.qgl.stormbreakers.simulation;
+package fr.unice.polytech.si3.qgl.stormbreakers.refactoring;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Oar;
 
 public class EquipmentManager {
     // pour le moment seulement les rames

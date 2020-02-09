@@ -139,7 +139,11 @@ public class Moteur {
 	public double travelDistance(Checkpoint target) {
 		return ship.getPosition().distanceTo(target.getPosition());
 	}
-
+	/**
+	 * 
+	 * @param target
+	 * @return
+	 */
 	double orientationNeeded(Checkpoint target) {
 		double orientationShip = ship.getPosition().getOrientation();
 		Vector orientationUnit = Vector.createUnitVector(orientationShip);

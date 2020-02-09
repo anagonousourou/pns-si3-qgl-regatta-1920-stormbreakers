@@ -4,10 +4,10 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import fr.unice.polytech.si3.qgl.stormbreakers.Logable;
 
-public class Oar extends SailorAction implements Logable {
+public class OarAction extends SailorAction implements Logable {
 
     @JsonCreator
-    public Oar(@JsonProperty("sailorId") int sailorId) {
+    public OarAction(@JsonProperty("sailorId") int sailorId) {
         super(sailorId, ActionType.OAR.actionCode);
     }
 

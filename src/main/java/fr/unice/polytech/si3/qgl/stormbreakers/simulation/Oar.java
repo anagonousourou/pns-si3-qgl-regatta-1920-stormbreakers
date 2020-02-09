@@ -1,9 +1,12 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.simulation;
 
+/**
+ * Classe pour représenter une Oar
+ */
 class Oar {
-    int x, y;
-    Marine marin;
-    boolean used = false;
+    private int x, y;
+    private Marine marin;
+    private boolean used = false;
 
     Oar(int x, int y) {
         this.x = x;

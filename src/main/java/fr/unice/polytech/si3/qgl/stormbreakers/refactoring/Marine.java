@@ -1,7 +1,9 @@
-package fr.unice.polytech.si3.qgl.stormbreakers.simulation;
+package fr.unice.polytech.si3.qgl.stormbreakers.refactoring;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+
+import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.MoveAction;
 
 /**
  * classe qui représente un marin
@@ -11,6 +13,7 @@ class Marine {
     private IntPosition position;
     private boolean onEquipment = false;
 
+    //Potentiellement à enlever
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
     Marine(int id, int x, int y) {
@@ -24,11 +27,6 @@ class Marine {
 
     public void removePropertyChangeListener(PropertyChangeListener listener) {
         this.pcs.removePropertyChangeListener(listener);
-    }
-
-    public void requestMove(MoveAction mvt) {
-        this.pcs.firePropertyChange("moving", null, mvt);
-
     }
 
     public void executeMove(MoveAction mvt) {
@@ -61,9 +59,4 @@ class Marine {
     public void setPosition(IntPosition position) {
         this.position = position;
     }
-
-    public void requestOarAction(OarAction oa) {
-        this.pcs.firePropertyChange("OarAction", null, oa);
-    }
-
 }

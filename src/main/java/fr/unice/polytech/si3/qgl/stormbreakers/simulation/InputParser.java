@@ -7,11 +7,13 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Checkpoint;
+
 /**
  * This class is used to parse the JSON formatted String
  */
 
-class InputParser {
+public class InputParser {
 
 	public List<Marine> fetchAllSailors(String jsonInput) throws JsonMappingException, JsonProcessingException {
 		List<Marine> marins=new ArrayList<>();
@@ -39,12 +41,12 @@ class InputParser {
 		return oars;
 	}
 
-	int fetchWidth(String jString) throws JsonMappingException, JsonProcessingException {
+	public int fetchWidth(String jString) throws JsonMappingException, JsonProcessingException {
 		var mapper=new ObjectMapper();
 		return mapper.readTree(jString).get("ship").get("deck").get("width").asInt();
 	}
 
-	List<MoveAction> fetchMoves(String jString) throws JsonMappingException, JsonProcessingException {
+	public List<MoveAction> fetchMoves(String jString) throws JsonMappingException, JsonProcessingException {
 		var mapper=new ObjectMapper();
 		List<MoveAction> moves=new ArrayList<>();
 		mapper.readTree(jString).forEach(action->{
@@ -56,7 +58,7 @@ class InputParser {
 		return moves;
 	}
 
-	List<OarAction> fetchOarActions(String jString) throws JsonMappingException, JsonProcessingException {
+	public List<OarAction> fetchOarActions(String jString) throws JsonMappingException, JsonProcessingException {
 		var mapper=new ObjectMapper();
 		List<OarAction> actions =new ArrayList<>();
 		mapper.readTree(jString).forEach(action->{
@@ -67,5 +69,17 @@ class InputParser {
 
 		return actions;
 	}
+	/**
+	 * Return the list of checkpoint in the json string
+	 * @param jString
+	 * @return
+	 * @throws JsonMappingException
+	 * @throws JsonProcessingException
+	 */
+	public List<Checkpoint> fetchCheckpoints(String jString) throws JsonMappingException, JsonProcessingException {
+		return null;
+	}
+
+
 
 }

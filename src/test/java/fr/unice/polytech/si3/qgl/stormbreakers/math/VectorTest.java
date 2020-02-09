@@ -1,11 +1,10 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.math;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import javax.swing.text.MutableAttributeSet;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class VectorTest {
 

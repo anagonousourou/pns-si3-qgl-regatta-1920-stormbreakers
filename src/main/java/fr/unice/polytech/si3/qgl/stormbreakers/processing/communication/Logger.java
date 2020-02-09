@@ -1,7 +1,5 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.processing.communication;
 
-import fr.unice.polytech.si3.qgl.stormbreakers.Logable;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,11 +22,12 @@ public class Logger {
 
     /**
      * Saves string into current log line
+     * 
      * @param str string to be saved
      */
     public void log(String str) {
         int spaceLeft = MAX_LINE_CHARS - currentLogLine.length();
-        if (str.length()>spaceLeft) {
+        if (str.length() > spaceLeft) {
             str = str.substring(0, spaceLeft);
         }
         currentLogLine.append(str);
@@ -43,7 +42,7 @@ public class Logger {
         clearCurrentLogLine();
     }
 
-    private void clearCurrentLogLine(){
+    private void clearCurrentLogLine() {
         currentLogLine = new StringBuilder();
     }
 

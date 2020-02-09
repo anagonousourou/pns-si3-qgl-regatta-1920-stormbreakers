@@ -31,9 +31,9 @@
         "type": "ship",
         "life": 100,
         "position": {
-            "x": 0,
-            "y": 0,
-            "orientation": 0
+            "x": 0.0,
+            "y": 0.0,
+            "orientation": 0.0
         },
         "name": "Les copaings d'abord!",
         "deck": {
