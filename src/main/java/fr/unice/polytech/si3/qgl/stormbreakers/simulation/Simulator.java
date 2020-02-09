@@ -6,35 +6,48 @@ import java.util.List;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
-import fr.unice.polytech.si3.qgl.regatta.cockpit.ICockpit;
 import fr.unice.polytech.si3.qgl.stormbreakers.Cockpit;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Oar;
+
 /**
  * Classe de gestion de la simulation
  */
 class Simulator {
 
     Crew crew;
-    String init;
-    String round1;
     EquipmentManager equipmentManager;
     Boat boat;
     InputParser ip = new InputParser();
+    private final int NBSTEP = 100;
+    private Cockpit cockpit;
+    private InputProvider inputProvider;
+    private Calculator calculator;
 
     public static void main(String[] args) throws IOException {
 
-        Simulator sim = new Simulator();
+        Simulator sim = new Simulator(new Cockpit(), new InputProvider() {
+
+            @Override
+            public String provideInit() throws IOException {
+                return new String(this.getClass().getResourceAsStream("/simul/fisa_init.json").readAllBytes());
+            }
+
+            @Override
+            public String provideFirstRound() throws IOException {
+                return new String(this.getClass().getResourceAsStream("/simul/fisa_round1.json").readAllBytes());
+            }
+        });
         sim.setUpSimulation();
         sim.startSimulation();
-        /*
-         * 
-         * sim.launchGame(c); System.out.println(sim.firstNextRound(c));
-         */
 
     }
 
-    Simulator() throws IOException {
-        this.init = new String(this.getClass().getResourceAsStream("/simul/init5.json").readAllBytes());
-        this.round1 = new String(this.getClass().getResourceAsStream("/simul/round1.json").readAllBytes());
+    Simulator(Cockpit cockpit, InputProvider inputProvider) throws IOException {
+        this.cockpit = cockpit;
+        this.inputProvider = inputProvider;
+        this.calculator=new Calculator();
+
     }
 
     /**
@@ -46,8 +59,9 @@ class Simulator {
      */
 
     void setUpSimulation() throws JsonMappingException, JsonProcessingException, IOException {
-        this.crew = new Crew(ip.fetchAllSailors(init));
-        this.equipmentManager = new EquipmentManager(ip.fetchAllOars(init), ip.fetchWidth(init));
+        this.crew = new Crew(ip.fetchAllSailors(inputProvider.provideInit()));
+        this.equipmentManager = new EquipmentManager(ip.fetchEquipments(inputProvider.provideInit()),
+                ip.fetchWidth(inputProvider.provideInit()));
         boat = new Boat();
         this.boat.setCrew(this.crew);
         this.boat.setEquipmentManager(this.equipmentManager);
@@ -59,33 +73,26 @@ class Simulator {
      * fonction pour créer le cokpit lui passer les données d'initialisation et lui
      * renvoyer les nextRound
      * 
-     * @throws JsonMappingException
-     * @throws JsonProcessingException
+     * @throws IOException
      */
-    void startSimulation() throws JsonMappingException, JsonProcessingException {
-        Cockpit c = new Cockpit();
-        launchGame(c);
-        String actions = firstNextRound(c);
+    void startSimulation() throws IOException {
+        this.cockpit.initGame(inputProvider.provideInit());
+        String actions = this.cockpit.nextRound(inputProvider.provideFirstRound());
         List<MoveAction> moves = ip.fetchMoves(actions);
         List<OarAction> oarActions = ip.fetchOarActions(actions);
-        System.out.println(moves);
+        Position position=ip.fetchBoatPosition(inputProvider.provideFirstRound());
+        // System.out.println(moves);
         this.crew.executeMoves(moves);
         this.crew.executeActions(oarActions);
-        System.out.println("Rotation: "+this.angleRotation());
-        //System.out.println("\n Crew 1:" + this.crew.toList());
-    }
-
-    void launchGame(ICockpit ic) {
-        ic.initGame(init);
-    }
-
-    String firstNextRound(ICockpit ic) {
-        return ic.nextRound(round1);
+        double rotation=this.angleRotation();
+        System.out.println("Rotation: " + rotation );
+        
+        
     }
 
     double angleRotation() {
         double radialSpeed = 0;
-        double rotationSpeedPerOar = (Math.PI/2)/this.equipmentManager.nbOars();
+        double rotationSpeedPerOar = (Math.PI) / this.equipmentManager.nbOars();
         // OARS
         for (Oar oar : this.equipmentManager.oars()) {
             if (oar.isUsed()) {
@@ -99,5 +106,11 @@ class Simulator {
 
         return radialSpeed;
     }
+
+    double speed(){
+        return (165*this.equipmentManager.nbUsedOars())/this.equipmentManager.nbOars();
+    }
+
+    
 
 }

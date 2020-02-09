@@ -19,7 +19,7 @@ public class Navigator {
 
         // On effectue un translation pour ramener virtuellement
         // Les coordonnées du bateau en (0,0)
-        target.getTranslatedBy(-boatPosition.getX(),-boatPosition.getY());
+        //target.getTranslatedBy(-boatPosition.getX(),-boatPosition.getY());
 
 
 

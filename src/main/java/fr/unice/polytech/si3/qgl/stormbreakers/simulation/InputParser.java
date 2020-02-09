@@ -5,8 +5,12 @@ import java.util.List;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Equipment;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Oar;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Checkpoint;
 
 /**
@@ -15,6 +19,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Checkpoint;
 
 public class InputParser {
 
+	ObjectMapper mapper= new ObjectMapper();
 	public List<Marine> fetchAllSailors(String jsonInput) throws JsonMappingException, JsonProcessingException {
 		List<Marine> marins=new ArrayList<>();
 		var mapper=new ObjectMapper();
@@ -79,7 +84,17 @@ public class InputParser {
 	public List<Checkpoint> fetchCheckpoints(String jString) throws JsonMappingException, JsonProcessingException {
 		return null;
 	}
+	public List<Equipment> fetchEquipments(String jString) throws JsonMappingException, JsonProcessingException {
+		//TODO 
+		return List.of();
+	}
+	public Position fetchBoatPosition(String jString) throws JsonMappingException, JsonProcessingException{
 
+		JsonNode positionNode=mapper.readTree(jString).get("ship").get("position");
+		return new Position(positionNode.get("x").asDouble() , positionNode.get("y").asDouble(),
+		positionNode.get("orientation").asDouble());
+
+	}
 
 
 }

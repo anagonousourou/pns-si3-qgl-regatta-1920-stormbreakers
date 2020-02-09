@@ -1,8 +1,10 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.refactoring;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.SailorAction;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Oar;
 
 public class MediatorCrewEquipment {
     private Crew crew;
@@ -56,27 +58,7 @@ public class MediatorCrewEquipment {
         filter(oar-> this.crew.marineAtPosition(oar.getPosition()).isPresent() ).count();
     }
 
-    /**
-     * Fonction qui renvoie les marins présents sur des rames à gauche
-     * 
-     * @param equimentManager
-     * @return
-     */
-    public List<Marine> leftMarinsOnOars() {
-        return this.crew.leftMarinsOnOars(this.equipmentManager);
-
-    }
-
-    /**
-     * Fonction qui renvoie les marins présents sur des rames à droite
-     * 
-     * @return
-     */
-    public List<Marine> rightMarinsOnOars() {
-        
-        return this.crew.rightMarinsOnOars(this.equipmentManager);
-
-    }
+    
     /**
      * Return sailoractions to activate exactly nb oars on left
      * if it is not possible return empty list
@@ -109,6 +91,41 @@ public class MediatorCrewEquipment {
     
     public Marine getMarinById(int id){
         return this.crew.getMarinById(id).get();
+    }
+
+    /**
+     * Fonction qui renvoie les marins présents sur des rames à gauche
+     * 
+     * @param equimentManager
+     * @return
+     */
+    public List<Marine> leftMarinsOnOars() {
+        List<Marine> marines = new ArrayList<>();
+        for(Oar oar:equipmentManager.allLeftOars()){
+            if(this.crew.marineAtPosition(oar.getPosition()).isPresent()){
+                marines.add(this.crew.marineAtPosition(oar.getPosition()).get());
+            }
+        }
+
+        return marines;
+
+    }
+
+    /**
+     * Fonction qui renvoie les marins présents sur des rames à droite
+     * 
+     * @param equimentManager
+     * @return
+     */
+    public List<Marine> rightMarinsOnOars() {
+        List<Marine> marines = new ArrayList<>();
+        for(Oar oar:equipmentManager.allRightOars()){
+            if(this.crew.marineAtPosition(oar.getPosition()).isPresent()){
+                marines.add(this.crew.marineAtPosition(oar.getPosition()).get());
+            }
+        }
+
+        return marines;
     }
 
     

@@ -7,7 +7,7 @@ public class Move {
 
     private final int xdistance,ydistance;
     
-    Move(int xd,int yd){
+    public Move(int xd,int yd){
         this.xdistance=xd;
         this.ydistance=yd;
     }

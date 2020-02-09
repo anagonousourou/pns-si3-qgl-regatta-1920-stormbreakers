@@ -10,7 +10,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Gouvernail;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Oar;
 
 public class EquipmentManager {
-    // pour le moment seulement les rames
+    // pour le moment seulement les rames et le gouvernail
     private List<Oar> leftOars;
     private List<Oar> rightOars;
     private List<Oar> oars;

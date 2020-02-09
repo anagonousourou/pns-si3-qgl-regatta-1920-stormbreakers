@@ -17,8 +17,8 @@ import fr.unice.polytech.si3.qgl.stormbreakers.refactoring.IntPosition;
 public abstract class Equipment implements Deckable, Logable {
     private String type;
     private boolean used = false;
-    private int x;
-    private int y;
+    protected int x;
+    protected int y;
     private final IntPosition position;
 
     @JsonCreator
@@ -53,6 +53,15 @@ public abstract class Equipment implements Deckable, Logable {
     }
     public IntPosition getPosition() {
         return position;
+    }
+
+    
+    public void setUsed(boolean b) {
+        this.used = b;
+    }
+
+    public void resetUsed() {
+        this.used = false;
     }
 
 }

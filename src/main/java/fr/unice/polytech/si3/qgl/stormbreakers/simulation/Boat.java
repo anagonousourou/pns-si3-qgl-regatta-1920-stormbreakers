@@ -32,6 +32,7 @@ class Boat implements PropertyChangeListener {
             if (marine.onEquipment()) {
                 var optOar = this.equipmentManager.oarAt(marine.getPosition());
                 if (optOar.isPresent()) {
+                    System.out.println("Salut");
                     optOar.get().setUsed(true);
                 }
             }

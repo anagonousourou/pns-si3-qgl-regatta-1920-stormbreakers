@@ -1,9 +1,12 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.simulation;
 
 import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Oar;
 
 public class Crew {
 
@@ -44,6 +47,10 @@ public class Crew {
      * @return
      */
     public List<Marine> leftMarinsOnOars(EquipmentManager equimentManager){
+        List<Marine> actions = new ArrayList<>();
+        for(Oar oar:equimentManager.allLeftOars()){
+            
+        }
         return marins.stream().filter(m->equimentManager.oarPresentAt(m.getPosition())).collect(Collectors.toList());
 
     }
@@ -53,8 +60,8 @@ public class Crew {
      * @return
      */
     public List<Marine> rightMarinsOnOars(EquipmentManager equimentManager){
-        //TODO
-        return null;
+        
+        return marins.stream().filter(m->equimentManager.oarPresentAt(m.getPosition())).collect(Collectors.toList());
     }
 
 
@@ -62,6 +69,8 @@ public class Crew {
     public String toString() {
         return marins.toString();
     }
+
+    
 
     
     
