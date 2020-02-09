@@ -12,6 +12,11 @@ class Marine {
     private final int id;
     private IntPosition position;
     private boolean onEquipment = false;
+    /**
+     * To Know wether a Marine is used or not
+     * alternative to List of busy Marines
+     */
+    private boolean doneTurn = false;
 
     //Potentiellement à enlever
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
@@ -58,5 +63,19 @@ class Marine {
 
     public void setPosition(IntPosition position) {
         this.position = position;
+    }
+    /**
+     * To Know wether a Marine is used or not
+     * alternative to List of busy Marines
+     */
+    public boolean isDoneTurn() {
+        return doneTurn;
+    }
+    /**
+     * To set wether a Marine has been used or not
+     * alternative to List of busy Marines
+     */
+    public void setDoneTurn(boolean doneTurn) {
+        this.doneTurn = doneTurn;
     }
 }

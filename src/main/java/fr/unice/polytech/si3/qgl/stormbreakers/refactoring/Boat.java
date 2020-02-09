@@ -1,17 +1,14 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.refactoring;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
 
-public class Boat{
+public class Boat {
     private final int MAX_DISTANCE = 5;
     private Position position = null;
     private int deckwidth = 0;
     private int decklength = 0;
     private int life = 0;
-    //TODO add a Shape field 
+    // TODO add a Shape field
 
     public Boat(Position position, int decklength, int deckwidth, int life) {
         this.position = position;

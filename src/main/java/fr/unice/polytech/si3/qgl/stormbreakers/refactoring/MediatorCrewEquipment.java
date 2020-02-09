@@ -1,5 +1,9 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.refactoring;
 
+import java.util.List;
+
+import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.SailorAction;
+
 public class MediatorCrewEquipment {
     private Crew crew;
     private EquipmentManager equipmentManager;
@@ -11,6 +15,7 @@ public class MediatorCrewEquipment {
 
 
     public boolean rudderIsAccesible(){
+
         return this.crew.marinAround(this.equipmentManager.rudderPosition());
     }
     /**
@@ -50,4 +55,52 @@ public class MediatorCrewEquipment {
         return (int) this.equipmentManager.allRightOars().stream().
         filter(oar-> this.crew.marineAtPosition(oar.getPosition()).isPresent() ).count();
     }
+
+    /**
+     * Fonction qui renvoie les marins présents sur des rames à gauche
+     * 
+     * @param equimentManager
+     * @return
+     */
+    public List<Marine> leftMarinsOnOars() {
+        return this.crew.leftMarinsOnOars(this.equipmentManager);
+
+    }
+
+    /**
+     * Fonction qui renvoie les marins présents sur des rames à droite
+     * 
+     * @return
+     */
+    public List<Marine> rightMarinsOnOars() {
+        
+        return this.crew.rightMarinsOnOars(this.equipmentManager);
+
+    }
+    /**
+     * Return sailoractions to activate exactly nb oars on left
+     * if it is not possible return empty list
+     * Do not make compromise the size of the list must be equals to nb or 0
+     * sailors actions include OarAction and MoveAction
+     * @param nb
+     * @param idsOfBusySailors
+     * @return
+     */
+    public List<SailorAction> activateOarsOnLeft(int nb){
+        //Use the isDoneTurn method to know if a sailor is available or not
+        //but do not set value doneTurn only methods in Captain will do that
+        return List.of();
+    }
+
+    /**
+     * Similar to activateOarsOnLeft(int nb) but on right
+     * @param nb
+     * @return
+     */
+    public List<SailorAction> activateOarsOnRight(int nb){
+        //Use the isDoneTurn method to know if a sailor has been used or not
+        return List.of();
+    }
+
+    
 }

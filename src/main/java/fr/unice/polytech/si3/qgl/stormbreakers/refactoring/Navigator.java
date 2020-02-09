@@ -18,6 +18,18 @@ public class Navigator {
         return 0;
     }
 
+    /**
+     * Return the difference nbleftoars-nbrightoars needed to get the 
+     * angle
+     * TODO add parameters if needed
+     * @param angle
+     * @return
+     */
+    public int fromAngleToDiff(double angle){
+        //TODO 
+        return 0;
+    }
+
     
     
 }
