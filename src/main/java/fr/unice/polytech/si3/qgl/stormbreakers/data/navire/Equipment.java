@@ -15,6 +15,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.Logable;
 
 public abstract class Equipment implements Deckable, Logable {
     private String type;
+    private boolean used = false;
     private int x;
     private int y;
 
@@ -43,5 +44,9 @@ public abstract class Equipment implements Deckable, Logable {
     public String getPosLog() {
         return x+"."+y;
     }
+
+    public boolean isUsed() {
+		return this.used;
+	}
 
 }

@@ -32,7 +32,7 @@ public class Cockpit implements ICockpit {
 
 		try {
 			crew = new Crew(this.parser.fetchAllSailors(game));
-			equipmentManager = new EquipmentManager(parser.fetchAllOars(game), parser.fetchWidth(game));
+			equipmentManager = new EquipmentManager(parser.fetchEquipments(game), parser.fetchWidth(game));
 			boat = this.parser.fetchBoat(game);
 			checkpointManager = new CheckpointManager(parser.fetchCheckpoints(game));
 			captain = new Captain(boat, checkpointManager, equipmentManager, crew, compas);

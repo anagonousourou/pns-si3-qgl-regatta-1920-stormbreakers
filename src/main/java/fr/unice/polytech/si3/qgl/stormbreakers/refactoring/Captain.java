@@ -14,6 +14,7 @@ public class Captain {
     private CheckpointManager checkpointManager;
     private Compas compas;
     final private double EPS = 0.001;
+    final private double SPEED = 165;
 
     public Captain(Boat boat, CheckpointManager checkpointManager, EquipmentManager equipmentManager, Crew crew,
             Compas compas) {
@@ -26,7 +27,7 @@ public class Captain {
     }
 
     /**
-     * 
+     * Principal point d'entrée de la fonction
      */
     public List<SailorAction> nextRoundActions() {
         this.checkpointManager.updateCheckpoint(boat.getPosition());
@@ -58,7 +59,7 @@ public class Captain {
         if (Math.abs(orientation) < this.EPS) {
             return List.of();
         } else if (true) {
-            // TODO renvyoyer la liste dans le cas où il y a un gouvernail
+            // TODO renvoyer la liste dans le cas où il y a un gouvernail
             /*
              * ne pas oublier qu'on peut subdiviser ie cas où seul le gouvernail suffit et
              * cas où le gouvernail tout seul ne suffit pas
@@ -72,14 +73,26 @@ public class Captain {
     /**
      * Fonction qui envoie des actions pour ajouter des marins pour faire avancer le
      * bateau sans changer l'orientation on doit donc absolument veiller à garder
-     * l'équilibre et aussi à ne pas utiliser les marins  déja dispatchés par la fonction
-     * actionsToOrientate pour régler l'angle
+     * l'équilibre et aussi à ne pas utiliser les marins déja dispatchés par la
+     * fonction actionsToOrientate pour régler l'angle
      * 
      * @param distance
      * @param busy
      * @return
      */
-    List<SailorAction> adjustSpeed(int distance, List<Marine> busy) {
+    List<SailorAction> adjustSpeed(int distance, int currentSpeed, List<Marine> busy) {
+
+        double minAdditionalSpeed = (SPEED * 2) / this.equipmentManager.nbOars();
+        if (distance < currentSpeed) {
+            return List.of();// RIEN A FAIRE
+        } else if (currentSpeed + minAdditionalSpeed <= distance) {
+            // TODO calculer l'accélération qu'on peut appliquer sans dépasser distance
+            //répartir autant de marins des deux cotés pour atteindre l'objectif
+            //procéder par paire (1gauche,1droite) et recommencer si nécessaire
+            //pourrait etre récursif
+
+        }
         return List.of();
+
     }
 }

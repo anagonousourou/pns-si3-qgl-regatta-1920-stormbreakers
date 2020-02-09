@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Equipment;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Gouvernail;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Oar;
 
 public class EquipmentManager {
@@ -12,9 +14,12 @@ public class EquipmentManager {
     private List<Oar> leftOars;
     private List<Oar> rightOars;
     private List<Oar> oars;
+    private Gouvernail rudder=null;
+    private List<Equipment> equipments;
 
-    public EquipmentManager(List<Oar> rames, int widthship) {
-        this.oars = rames;
+    public EquipmentManager(List<Equipment> equipments,int widthship){
+        this.equipments=equipments;
+        this.oars=this.equipments.stream().filter(e->e.getType().equals("oar")).map(e->(Oar)e).collect(Collectors.toList());
         if (widthship % 2 == 1) {// impair
             this.leftOars = this.oars.stream().filter(oar -> oar.getY() < widthship / 2).collect(Collectors.toList());
             this.rightOars = this.oars.stream().filter(oar -> oar.getY() > widthship / 2).collect(Collectors.toList());
@@ -22,6 +27,19 @@ public class EquipmentManager {
             this.leftOars = this.oars.stream().filter(oar -> oar.getY() < widthship / 2).collect(Collectors.toList());
             this.rightOars = this.oars.stream().filter(oar -> oar.getY() >= widthship / 2).collect(Collectors.toList());
         }
+        var optRuddder=this.equipments.stream().filter(e->e.getType().equals("rudder")).map(e->(Gouvernail)e).findFirst();
+        if(optRuddder.isPresent()){
+            this.rudder=optRuddder.get();
+        }
+
+    }
+
+    /**
+     * Méthode qui renvoie si oui ou non il y a un gouvernail
+     * @return
+     */
+    public boolean rudderIsPresent(){
+        return this.rudder!=null;
     }
 
     List<Oar> allLeftOars() {
