@@ -63,9 +63,7 @@ public class Captain {
 			result.add(new Turn(marins.get(0).getId(),-Math.PI/4));
 		}
 		marinsUtilise.add(marins.get(0));
-		return result;
-		// TODO Auto-generated method stub
-		
+		return result;		
 	}
 
     /**

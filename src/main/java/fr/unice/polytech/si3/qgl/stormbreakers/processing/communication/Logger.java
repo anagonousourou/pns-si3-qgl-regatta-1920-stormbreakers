@@ -1,7 +1,5 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.processing.communication;
 
-import fr.unice.polytech.si3.qgl.stormbreakers.Logable;
-
 import java.util.ArrayList;
 import java.util.List;
 

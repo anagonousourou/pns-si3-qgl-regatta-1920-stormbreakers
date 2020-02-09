@@ -10,13 +10,15 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Equipment;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Gouvernail;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Marin;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Rame;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.Oar;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.Moving;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.SailorAction;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.Turn;
 
 class CaptainTest {
     private Captain rogers;
@@ -110,5 +112,31 @@ class CaptainTest {
     	}
     	assertEquals(rameDroite, rameGauche);
     }
+    
+    @Test
+    void activateRudderTest() {
+    	List<SailorAction> toTest1 = rogers.activateRudder(new ArrayList<Marin>(), List.of(m1, m2, m3, m4), new Gouvernail(0, 1), Math.PI/5);
+    	assertEquals(0, toTest1.get(0).getSailorId());
+    	assertEquals(0, toTest1.get(1).getSailorId());
+    	assertTrue(toTest1.get(0) instanceof Moving);
+    	assertTrue(toTest1.get(1) instanceof Turn);
+    	assertEquals(Math.PI/5, ((Turn) toTest1.get(1)).getRotation());
+    	
+    	List<SailorAction> toTest2 = rogers.activateRudder(new ArrayList<Marin>(), List.of(m1, m2), new Gouvernail(0, 1), -Math.PI/2);
+    	assertEquals(-Math.PI/4, ((Turn) toTest2.get(1)).getRotation());
+    	
+    	List<SailorAction> toTest3 = rogers.activateRudder(new ArrayList<Marin>(), List.of(m1), new Gouvernail(0, 1), Math.PI/2);
+    	assertEquals(Math.PI/4, ((Turn) toTest3.get(1)).getRotation());
+    }
 
+    @Test
+    void marinsProcheGouvernailTest() {
+    	List<Marin> toTest1 = rogers.marinsProcheGouvernail(new Gouvernail(4, 5), List.of(m1, m2, m3, m4));
+    	assertTrue(toTest1.contains(m3));
+    	assertTrue(toTest1.contains(m4));
+    	assertEquals(2, toTest1.size());
+    	List<Marin> toTest2 = rogers.marinsProcheGouvernail(new Gouvernail(8, 9), List.of(m1, m2, m3, m4));
+    	assertTrue(toTest2.isEmpty());
+    	
+    }
 }

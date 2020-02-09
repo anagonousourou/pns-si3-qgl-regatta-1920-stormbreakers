@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
-import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -41,9 +40,9 @@ class CockpitTest {
             Cockpit cockpit = new Cockpit();
             cockpit.initGame(inputGameWEEK2B);
 
-            String answer = cockpit.nextRound(nextRoundWEEK2B);
+            cockpit.nextRound(nextRoundWEEK2B);
 
-            List<String> logs = cockpit.getLogs();
+            cockpit.getLogs();
         }  );
     }
 

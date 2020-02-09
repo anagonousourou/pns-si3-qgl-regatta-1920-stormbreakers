@@ -1,6 +1,5 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.data.game;
 
-import fr.unice.polytech.si3.qgl.stormbreakers.Logable;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.ActionType;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.Moving;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.SailorAction;
@@ -11,7 +10,6 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Checkpoint;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.RegattaGoal;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Bateau;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Vent;
-import fr.unice.polytech.si3.qgl.stormbreakers.processing.communication.Logger;
 
 import java.util.List;
 import java.util.stream.Collectors;

@@ -2,13 +2,11 @@ package fr.unice.polytech.si3.qgl.stormbreakers;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import fr.unice.polytech.si3.qgl.regatta.cockpit.ICockpit;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.SailorAction;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.game.GameState;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.game.InitGame;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Marin;
 import fr.unice.polytech.si3.qgl.stormbreakers.processing.navire.Captain;
 import fr.unice.polytech.si3.qgl.stormbreakers.processing.navire.Moteur;
 import fr.unice.polytech.si3.qgl.stormbreakers.processing.communication.InputParser;
