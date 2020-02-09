@@ -78,4 +78,9 @@ public class Crew {
             (a,b)-> Integer.compare(position.distanceTo(a.getPosition()),position.distanceTo(b.getPosition()) ) );
     }
 
+    void resetAvailability(){
+        this.marins.forEach(m->m.setDoneTurn(false));
+    }
+
+
 }

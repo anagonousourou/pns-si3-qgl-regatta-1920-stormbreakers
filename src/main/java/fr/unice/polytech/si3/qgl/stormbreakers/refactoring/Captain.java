@@ -32,11 +32,13 @@ public class Captain {
      * Principal point d'entrée de la fonction
      */
     public List<SailorAction> nextRoundActions() {
+        //On remet le statut doneTurn de tout les marins à false
+        this.mediatorCrewEquipment.resetAvailability();
         this.checkpointManager.updateCheckpoint(boat.getPosition());
         // TODO condition pour le cas où on a fini ie plus de nextCheckpoint
         Checkpoint chpoint = this.checkpointManager.nextCheckpoint();
 
-        double orientation = this.navigator.additionalOrientationNeeded(boat.getPosition(), chpoint.getPosition());
+        double orientation = this.navigator.additionalOrientationNeeded(boat.getPosition(), chpoint.getPosition().getPoint2D());
         double distance = boat.getPosition().distanceTo(chpoint.getPosition());
 
         List<SailorAction> actionsOrientation = this.actionsToOrientate(orientation);
@@ -97,6 +99,9 @@ public class Captain {
                     tmp--;
                 }while(actions.size()==0 && tmp!=0);
             }
+            actions.forEach(action->{
+                this.mediatorCrewEquipment.getMarinById(action.getSailorId()).setDoneTurn(true); 
+            });
             return actions;
         }
     }

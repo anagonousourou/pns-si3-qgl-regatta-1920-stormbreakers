@@ -102,5 +102,14 @@ public class MediatorCrewEquipment {
         return List.of();
     }
 
+
+	public void resetAvailability() {
+        this.crew.resetAvailability();;
+    }
+    
+    public Marine getMarinById(int id){
+        return this.crew.getMarinById(id).get();
+    }
+
     
 }
