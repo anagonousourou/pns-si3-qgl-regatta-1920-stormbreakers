@@ -3,7 +3,6 @@ package fr.unice.polytech.si3.qgl.stormbreakers.data.objective;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.*;
 
-import fr.unice.polytech.si3.qgl.stormbreakers.processing.communication.Logger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -16,8 +15,6 @@ class CheckpointTest {
     private Shape rectangle;
     private Position offset;
     private Position origin;
-
-    private Logger logger;
 
     @BeforeEach
     void setUp() {

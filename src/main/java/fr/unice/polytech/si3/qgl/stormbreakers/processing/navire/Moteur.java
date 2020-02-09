@@ -10,12 +10,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.SailorAction;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.Turn;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.game.GameState;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Equipment;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.EquipmentType;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Gouvernail;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Marin;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Checkpoint;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Bateau;
@@ -72,7 +69,7 @@ public class Moteur {
 	List<SailorAction> dispatchSailors(Checkpoint target) {
 		Set<Double> oarsAngles = this.possibleOrientations();
 		double angle = this.orientationNeeded(target);
-		List<SailorAction> result= new ArrayList<SailorAction>();
+		List<SailorAction> result= new ArrayList<>();
 
 		// Log angle to move by
 		Logger.getInstance().log("a:" + angle + " ");
@@ -175,16 +172,15 @@ public class Moteur {
 		double orientationShip = ship.getPosition().getOrientation();
 		Vector orientationUnit = Vector.createUnitVector(orientationShip);
 
-		Vector ShipToTarget = new Vector(ship.getPosition(),target.getPosition());
+		Vector shipToTarget = new Vector(ship.getPosition(),target.getPosition());
 
 		int angleSign = getAngleSign(target.getPosition(),ship.getPosition(), orientationShip);
 
 		// Si le bateau est sur le point même du checkpoint, l'angle duquel tourner est definit a 0
-		Double angleValue = (ShipToTarget.norm()>0)?orientationUnit.angleBetween(ShipToTarget):0;
+		Double angleValue = (shipToTarget.norm()>0)?orientationUnit.angleBetween(shipToTarget):0;
 		return (double) ((angleValue != 0)?angleSign:1) * angleValue;
 	}
 
-	// TODO: 08/02/2020 Use Coords instead of pos
 	private int getAngleSign(Position target, Position shipPos, Double shipOrientation) {
 		// On bouge le plan pour ramener le bateau en 0,0
 		Position target2 = new Position(target.getX()-shipPos.getX(),target.getY()-shipPos.getY(),0);

@@ -1,0 +1,116 @@
+{
+    "goal": {
+        "mode": "REGATTA",
+        "checkpoints": [
+            {
+                "position": {
+                    "x": 80,
+                    "y": 1000,
+                    "orientation": 0
+                },
+                "shape": {
+                    "type": "circle",
+                    "radius": 50
+                }
+            },
+            {
+                "position": {
+                    "x": 50,
+                    "y": 1500,
+                    "orientation": 0
+                },
+                "shape": {
+                    "type": "rectangle",
+                    "width": 50,
+                    "height":100,
+                    "orientation":0
+                }
+            },
+            {
+                "position": {
+                    "x": 200,
+                    "y": 1800,
+                    "orientation": 0
+                },
+                "shape": {
+                    "type": "circle",
+                    "radius": 50
+                }
+            }
+        ]
+    },
+    "shipCount": 1,
+    "ship": {
+        "type": "ship",
+        "life": 100,
+        "position": {
+            "x": 0,
+            "y": 0,
+            "orientation": 0
+        },
+        "name": "Les copaings d'abord!",
+        "deck": {
+            "width": 3,
+            "length": 3
+        },
+        "entities": [
+            {
+                "x": 0,
+                "y": 0,
+                "type": "oar"
+            },
+            {
+                "x": 1,
+                "y": 0,
+                "type": "oar"
+            },
+            {
+                "x": 2,
+                "y": 0,
+                "type": "oar"
+            },
+            {
+                "x": 0,
+                "y": 2,
+                "type": "oar"
+            },
+      		{
+      			"x": 2,
+      			"y": 2,
+      			"type": "rudder"
+      		}
+        ],
+        "shape": {
+            "type": "rectangle",
+            "width": 4,
+            "height": 3,
+            "orientation": 0
+        }
+    },
+    "sailors": [
+        {
+            "x": 0,
+            "y": 0,
+            "id": 0,
+            "name": "Edward Teach"
+        },
+        {
+            "x": 0,
+            "y": 2,
+            "id": 1,
+            "name": "Tom Pouce"
+        },
+        {
+            "x": 1,
+            "y": 2,
+            "id": 2,
+            "name": "Jack Sparrow"
+        },
+        {
+        	"x": 2,
+            "y": 2,
+            "id": 3,
+            "name": "Monkey D. Luffy"
+        }
+    ]
+}

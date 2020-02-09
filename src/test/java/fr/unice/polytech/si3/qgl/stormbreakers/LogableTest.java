@@ -6,7 +6,6 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.Oar;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.EquipmentType;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Gouvernail;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Rame;
-import fr.unice.polytech.si3.qgl.stormbreakers.processing.communication.Logger;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
