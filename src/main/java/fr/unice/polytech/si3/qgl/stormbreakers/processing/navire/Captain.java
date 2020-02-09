@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.Oar;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.SailorAction;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.Turn;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Equipment;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Marin;
 
@@ -49,7 +50,23 @@ public class Captain {
         }
         return result;
     }
+    
+	public List<SailorAction> activateRudder(List<Marin> marinsUtilise, List<Marin> marins, Equipment gouvernail, double angle) {
 
+        List<SailorAction> result = new ArrayList<>();
+		result.add(marins.get(0).howToGoTo(gouvernail.getX(), gouvernail.getY()));
+		if(angle<=Math.PI/4 && angle>=-Math.PI/4) {
+			result.add(new Turn(marins.get(0).getId(),angle));
+		}else if(angle>Math.PI/4){
+			result.add(new Turn(marins.get(0).getId(),Math.PI/4));
+		}else {
+			result.add(new Turn(marins.get(0).getId(),-Math.PI/4));
+		}
+		marinsUtilise.add(marins.get(0));
+		return result;
+		// TODO Auto-generated method stub
+		
+	}
 
     /**
      * methode pour activer autant de rames à droite 
@@ -84,13 +101,22 @@ public class Captain {
         }
 
     }
-
+    
     public Map<Equipment, List<Marin>> marinsDisponibles(List<Equipment> rames, List<Marin> marins) {
         HashMap<Equipment, List<Marin>> results = new HashMap<>();
         rames.forEach(oar -> results.put(oar,
                 marins.stream().filter(e -> (Math.abs(e.getX() - oar.getX()) + Math.abs(e.getY() - oar.getY())) <= 5)
                         .collect(Collectors.toList())));
         return results;
+    }
+    
+    public List<Marin> marinsProcheGouvernail(Equipment gouvernail,List<Marin> marins){
+    	 ArrayList<Marin> marinsProche= new ArrayList<>();
+    	 marinsProche.addAll(
+    			 marins.stream().filter(e -> (Math.abs(e.getX() - gouvernail.getX()) + Math.abs(e.getY() - gouvernail.getY())) <= 5)  
+                 .collect(Collectors.toList()));
+    	 
+    	 return marinsProche;
     }
 
     public List<SailorAction> minRepartition(List<Equipment> rightOars, List<Equipment> leftOars, int diffToCatch,
@@ -113,5 +139,8 @@ public class Captain {
                         .collect(Collectors.toList())));
         return results;
     }
+
+
+
 
 }

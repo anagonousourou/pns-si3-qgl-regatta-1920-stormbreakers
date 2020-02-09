@@ -10,9 +10,12 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.SailorAction;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.Turn;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.game.GameState;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Equipment;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.EquipmentType;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Gouvernail;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Marin;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Checkpoint;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Bateau;
@@ -69,27 +72,56 @@ public class Moteur {
 	List<SailorAction> dispatchSailors(Checkpoint target) {
 		Set<Double> oarsAngles = this.possibleOrientations();
 		double angle = this.orientationNeeded(target);
+		List<SailorAction> result= new ArrayList<SailorAction>();
 
 		// Log angle to move by
 		Logger.getInstance().log("a:" + angle + " ");
-
 		List<Marin> marinUtilise = new ArrayList<>();
+		
+		if(this.haveGouvernailandIsAccessible()) {
+			
+			List<Marin> marinAccssibles =captain.marinsProcheGouvernail(this.ship.getGouvernail().get(0),this.sailors);
+			result.addAll(captain.activateRudder(marinUtilise,marinAccssibles,this.ship.getGouvernail().get(0),angle));
+			if(angle<=Math.PI/4 && angle>=-Math.PI/4) {
+				angle=0;
+			}else if(angle>Math.PI/4){
+				angle-=Math.PI/4;
+			}else {
+				angle+=Math.PI/4;
+			}
+		}
+
 		if (Math.abs(angle) <= Moteur.EPS) {
-
-			return captain.toActivate(this.leftOars, this.rightOars, marinUtilise, this.sailors);
+			 result.addAll(captain.toActivate(this.leftOars, this.rightOars, marinUtilise, this.sailors));
+       return result;
 		} else {
-			Optional<Double> optAngle = oarsAngles.stream().filter(a -> a * angle > 0.0)
+			final double angleForSailor=angle;
+			Optional<Double> optAngle = oarsAngles.stream().filter(a -> a * angleForSailor > 0.0)
 
-					.min((a, b) -> Double.compare(Math.abs(a - angle), Math.abs(b - angle)));
+					.min((a, b) -> Double.compare(Math.abs(a - angleForSailor), Math.abs(b - angleForSailor)));
 			if (optAngle.isPresent()) {
 				double approachingAngle = optAngle.get();
-				return captain.minRepartition(this.rightOars, this.leftOars, this.angleToDiff(approachingAngle),
-						marinUtilise, this.sailors);
+				result.addAll(captain.minRepartition(this.rightOars, this.leftOars, this.angleToDiff(approachingAngle),
+						marinUtilise, this.sailors));
+        return result;
 			} else {
-				return new ArrayList<>();
+				return result;
 			}
 
 		}
+	}
+	
+	
+	
+
+
+	private boolean haveGouvernailandIsAccessible() {
+		List<Equipment> gouvernail= this.ship.getGouvernail(); 
+			if(!gouvernail.isEmpty()) {
+				List<Marin> marinAccssibles =captain.marinsProcheGouvernail(gouvernail.get(0),this.sailors);
+				return !marinAccssibles.isEmpty();
+			}
+		return false;
 	}
 
 	public List<SailorAction> actions() {
@@ -121,7 +153,6 @@ public class Moteur {
 
 	private int angleToDiff(double angle) {
 		return possibleAngles().get(angle);
-
 	}
 
 	public Set<Double> possibleOrientations() {

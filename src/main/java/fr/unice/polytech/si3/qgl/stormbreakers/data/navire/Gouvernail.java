@@ -1,8 +1,13 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.data.navire;
 
-public class Gouvernail extends Equipment {
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-    public Gouvernail(int x, int y) {
+
+public class Gouvernail extends Equipment {
+	@JsonCreator
+    Gouvernail(@JsonProperty("x") int x, 
+    		@JsonProperty("y") int y) {
         super(EquipmentType.RUDDER.code,x,y);
     }
 
