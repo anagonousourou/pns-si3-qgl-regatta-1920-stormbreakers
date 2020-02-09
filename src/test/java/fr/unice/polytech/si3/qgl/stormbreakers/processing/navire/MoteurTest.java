@@ -86,30 +86,37 @@ public class MoteurTest {
     }
 
     @Test
-    void testOrientationNeededWhenInFrontAngleBoat0() {
+    void testOrientationNeededWhenAngleBoat0() {
         //bateau et checkpoint confondu
         Mockito.when(c1.getPosition()).thenReturn(new Position(0,0));
         assertEquals(0,this.moteur.orientationNeeded(c1));
         //checkpoint au nord du bateau
         Mockito.when(c1.getPosition()).thenReturn(new Position(1,0));
         assertEquals(0,this.moteur.orientationNeeded(c1));
+        //checkpoint a droite du bateau
+        Mockito.when(c1.getPosition()).thenReturn(new Position(0,-1));
+        assertEquals(-Math.PI/2,this.moteur.orientationNeeded(c1));
         //checkpoint a pi/4 par rapport a bateau
         Mockito.when(c1.getPosition()).thenReturn(new Position(1,1));
-        assertTrue((Math.PI/4-this.moteur.orientationNeeded(c1))<EPSILON);
+        assertTrue(almostEqual(Math.PI/4,this.moteur.orientationNeeded(c1),EPSILON));
     }
     
     
     @Test
-    void testOrientationNeededWhenInFrontAngleBoatPiBy2() {
+    void testOrientationNeededWhenAngleBoatPiBy2() {
         //checkpoint a 0,0  bateau 0,0 orienté pi/2
         Mockito.when(c1.getPosition()).thenReturn(new Position(0,0));
         assertEquals(0,this.moteur2.orientationNeeded(c1));
         //checkpoint a 1,0  bateau 0,0 orienté pi/2
         Mockito.when(c1.getPosition()).thenReturn(new Position(1,0));
-        assertTrue(Math.PI/2-this.moteur2.orientationNeeded(c1)<EPSILON);
+        assertTrue(almostEqual(-Math.PI/2,this.moteur2.orientationNeeded(c1),EPSILON));
         //checkpoint a 1,1  bateau 0,0 orienté pi/2
         Mockito.when(c1.getPosition()).thenReturn(new Position(1,1));
-        assertTrue((-Math.PI/4-this.moteur2.orientationNeeded(c1))<EPSILON);
+        assertTrue(almostEqual(-Math.PI/4,this.moteur2.orientationNeeded(c1),EPSILON));
+    }
+
+    private boolean almostEqual(Double expected, Double result, Double epsilon) {
+        return Math.abs(result-expected)<epsilon;
     }
 
 }

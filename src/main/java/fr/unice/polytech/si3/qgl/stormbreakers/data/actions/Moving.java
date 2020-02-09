@@ -2,9 +2,10 @@ package fr.unice.polytech.si3.qgl.stormbreakers.data.actions;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import fr.unice.polytech.si3.qgl.stormbreakers.Logable;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Marin;
 
-public class Moving extends SailorAction {
+public class Moving extends SailorAction implements Logable {
     private int xdistance;
     private int ydistance;
 
@@ -35,5 +36,10 @@ public class Moving extends SailorAction {
     public String toString() {
         return "Moving( idsailor: " + this.getSailorId() + ", xdistance: " + this.xdistance + ", ydistance: "
                 + this.ydistance + " )";
+    }
+
+    @Override
+    public String toLogs() {
+        return ActionType.MOVING.shortCode + "(" + this.getSailorId() + "|" + this.xdistance + "," + this.ydistance + ")";
     }
 }

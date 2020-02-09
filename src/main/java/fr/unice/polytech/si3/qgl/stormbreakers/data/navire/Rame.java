@@ -13,4 +13,8 @@ public class Rame extends Equipment {
         super(EquipmentType.OAR.code,x,y);
     }
 
+    @Override
+    public String toLogs() {
+        return EquipmentType.OAR.shortCode+ getPosLog();
+    }
 }

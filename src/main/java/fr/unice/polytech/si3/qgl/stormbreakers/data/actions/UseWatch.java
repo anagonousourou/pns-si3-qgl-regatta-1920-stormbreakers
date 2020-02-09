@@ -10,4 +10,9 @@ public class UseWatch extends SailorAction {
         super(sailorId,ActionType.USEWATCH.actionCode);
     }
 
+    @Override
+    public String toLogs() {
+        return ActionType.USEWATCH.shortCode + this.getSailorId();
+    }
+
 }
