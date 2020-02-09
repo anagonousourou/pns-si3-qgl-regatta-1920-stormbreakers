@@ -74,7 +74,9 @@ public class Moteur {
 		List<Marin> marinUtilise = new ArrayList<>();
 		
 		if(this.haveGouvernailandIsAccessible()) {
-			result.addAll(captain.activateRudder(marinUtilise,this.sailors,this.ship.getGouvernail().get(0),angle));
+			
+			List<Marin> marinAccssibles =captain.marinsProcheGouvernail(this.ship.getGouvernail().get(0),this.sailors);
+			result.addAll(captain.activateRudder(marinUtilise,marinAccssibles,this.ship.getGouvernail().get(0),angle));
 			if(angle<=Math.PI/4 && angle>=-Math.PI/4) {
 				angle=0;
 			}else if(angle>Math.PI/4){
