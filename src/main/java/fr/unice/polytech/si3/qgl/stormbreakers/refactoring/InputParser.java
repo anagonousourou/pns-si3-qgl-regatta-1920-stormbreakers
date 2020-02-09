@@ -8,9 +8,14 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Circle;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Rectangle;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Shape;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Equipment;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Gouvernail;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Oar;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Voile;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Checkpoint;
 
 /**
@@ -52,13 +57,35 @@ public class InputParser {
 	 * @throws JsonProcessingException
 	 */
 	public List<Checkpoint> fetchCheckpoints(String jString) throws JsonMappingException, JsonProcessingException {
-		//TODO
-		return List.of();
+		List<Checkpoint> checkpoints = new ArrayList<>();
+		mapper.readTree(jString).get("goal").get("checkpoints").forEach(c -> {
+			Shape shape;
+			if(c.get("shape").get("type").asText().equals("circle")) {
+				shape = new Circle(c.get("shape").get("radius").asDouble());
+			} else {
+				shape = new Rectangle(c.get("shape").get("width").asDouble(), c.get("shape").get("height").asDouble(), c.get("shape").get("orientation").asDouble());
+			}
+			checkpoints.add(new Checkpoint(
+						new Position(c.get("position").get("x").asInt(), c.get("position").get("y").asInt()),
+						shape));
+		});
+		return checkpoints;
 	}
 
 	public List<Equipment> fetchEquipments(String jString) throws JsonMappingException, JsonProcessingException {
-		//TODO 
-		return List.of();
+		List<Equipment> equipments = new ArrayList<>();
+		mapper.readTree(jString).get("ship").get("entities").forEach(e -> {
+			Equipment equipment = null;
+			if(e.get("type").asText().equals("oar")) {
+				equipment = new Oar(e.get("x").asInt(), e.get("y").asInt());
+			} else if(e.get("type").asText().equals("rudder")){
+				equipment = new Gouvernail(e.get("x").asInt(), e.get("y").asInt());
+			} else {
+				//TODO Voile/Vigie si besoin
+			}
+			equipments.add(equipment);
+		});
+		return equipments;
 	}
 
 	public Boat fetchBoat(String jString) throws JsonMappingException, JsonProcessingException {
