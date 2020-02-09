@@ -10,6 +10,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Shape;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Deck;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Equipment;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.EquipmentType;
 
 public class Bateau extends AutreBateau {
     private String name;
@@ -41,6 +42,9 @@ public class Bateau extends AutreBateau {
     }
     public List<Equipment> getRames() {
     	return this.entities.stream().filter(e-> e.getType().equals("oar")).collect(Collectors.toList());
+    }
+    public List<Equipment> getGouvernail() {
+    	return this.entities.stream().filter(e-> e.getType().equals("rudder")).collect(Collectors.toList());
     }
     @JsonProperty("deck")
     public Deck getDeck() {
