@@ -61,11 +61,11 @@ public class Captain {
             return List.of();
         } 
         //le gouvernail existe, est accessible et suffit
-        else if (equipmentManager.rudderIsPresent() && mediatorCrewEquipment.rudderIsAccesible() && (Math.abs(orientation) <= Math.PI /4) ) {
+        else if (mediatorCrewEquipment.rudderIsPresent() && mediatorCrewEquipment.rudderIsAccesible() && (Math.abs(orientation) <= Math.PI /4) ) {
             
                 List<SailorAction> actions=new ArrayList<>();
                 Marine rudderMarine=mediatorCrewEquipment.marineForRudder();
-                Move tmpMove=rudderMarine.getPosition().howToMoveTo( equipmentManager.rudderPosition() );
+                Move tmpMove=rudderMarine.getPosition().howToMoveTo( mediatorCrewEquipment.rudderPosition() );
                 actions.add( new MoveAction(rudderMarine.getId(), tmpMove.getXdistance(),tmpMove.getYdistance() ));
                 actions.add( new Turn(rudderMarine.getId(),orientation) );
 
@@ -92,7 +92,7 @@ public class Captain {
      * @return
      */
     List<SailorAction> adjustSpeed(int distance, int currentSpeed, List<Marine> busy) {
-        double minAdditionalSpeed = (SPEED * 2) / this.equipmentManager.nbOars();
+        double minAdditionalSpeed = (SPEED * 2) / this.mediatorCrewEquipment.nbOars();
         if (distance < currentSpeed) {
             return List.of();// RIEN A FAIRE
         } else if (currentSpeed + minAdditionalSpeed <= distance) {

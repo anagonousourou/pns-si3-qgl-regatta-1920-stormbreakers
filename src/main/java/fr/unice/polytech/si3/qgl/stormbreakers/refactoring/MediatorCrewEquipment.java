@@ -27,10 +27,17 @@ public class MediatorCrewEquipment {
         }
         //
         return null;
+    }
 
+    public boolean rudderIsPresent(){
+        return this.equipmentManager.rudderIsPresent();
+    }
 
+    public IntPosition rudderPosition(){
+        return this.equipmentManager.rudderPosition();
+    }
 
-
-
+    public int nbOars(){
+        return this.equipmentManager.nbOars();
     }
 }
