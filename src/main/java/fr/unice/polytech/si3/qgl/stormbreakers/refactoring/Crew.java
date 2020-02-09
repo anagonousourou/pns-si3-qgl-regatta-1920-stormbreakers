@@ -61,4 +61,21 @@ public class Crew {
         return marins.toString();
     }
 
+    public boolean marinAround(IntPosition position){
+        return this.marins.stream().filter(m->m.getPosition().distanceTo(position)<=5 ).findAny().isPresent();
+    }
+
+    public Optional<Marine> marineAtPosition(IntPosition position){
+        return marins.stream().filter(m -> m.getPosition().distanceTo(position) == 0).findFirst();
+    }
+    /**
+     * 
+     * @param position
+     * @return a optional encapsulating the closest Marine to position
+     */
+    public Optional<Marine> marineClosestTo(IntPosition position){
+        return marins.stream().min(
+            (a,b)-> Integer.compare(position.distanceTo(a.getPosition()),position.distanceTo(b.getPosition()) ) );
+    }
+
 }

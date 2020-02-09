@@ -78,4 +78,8 @@ public class EquipmentManager {
         return this.oars.stream().filter(oar-> oar.getX()==pos.getX() && oar.getY()==pos.getY()).findFirst();
     }
 
+    IntPosition rudderPosition(){
+        return new IntPosition(rudder.getX(),rudder.getY());
+    }
+
 }

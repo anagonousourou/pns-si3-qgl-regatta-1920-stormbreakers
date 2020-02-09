@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Oar extends Equipment {
-    private boolean used = false;
+    
     @JsonCreator
     public Oar(
             @JsonProperty("x") int x,
@@ -18,7 +18,5 @@ public class Oar extends Equipment {
         return EquipmentType.OAR.shortCode+ getPosLog();
     }
 
-	public boolean isUsed() {
-		return used;
-	}
+	
 }

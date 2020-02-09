@@ -35,5 +35,9 @@ public class IntPosition {
         return "Position (x: "+x+", "+"y: "+y+")";
     }
 
+    public int distanceTo(IntPosition position){
+        return Math.abs(this.x-position.x)+Math.abs(this.y-position.y);
+    }
+
 
 }

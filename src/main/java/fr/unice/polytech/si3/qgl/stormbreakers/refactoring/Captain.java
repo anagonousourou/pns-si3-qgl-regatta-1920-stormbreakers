@@ -3,7 +3,9 @@ package fr.unice.polytech.si3.qgl.stormbreakers.refactoring;
 import java.util.ArrayList;
 import java.util.List;
 
+import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.MoveAction;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.SailorAction;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.Turn;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Checkpoint;
 
 public class Captain {
@@ -12,6 +14,7 @@ public class Captain {
     private EquipmentManager equipmentManager;
     private Crew crew;
     private CheckpointManager checkpointManager;
+    private DeckManager deckManager;
     private Compas compas;
     final private double EPS = 0.001;
     final private double SPEED = 165;
@@ -23,6 +26,7 @@ public class Captain {
         this.crew = crew;
         this.checkpointManager = checkpointManager;
         this.compas = compas;
+        this.deckManager=new DeckManager(crew, equipmentManager);
 
     }
 
@@ -58,10 +62,20 @@ public class Captain {
     List<SailorAction> actionsToOrientate(double orientation) {
         if (Math.abs(orientation) < this.EPS) {
             return List.of();
-        } else if (true) {
+        } 
+        //le gouvernail existe, est accessible et suffit
+        else if (equipmentManager.rudderIsPresent() && deckManager.rudderIsAccesible() && (Math.abs(orientation) <= Math.PI /4) ) {
+            
+                List<SailorAction> actions=new ArrayList<>();
+                Marine rudderMarine=deckManager.marineForRudder();
+                Move tmpMove=rudderMarine.getPosition().howToMoveTo( equipmentManager.rudderPosition() );
+                actions.add( new MoveAction(rudderMarine.getId(), tmpMove.getXdistance(),tmpMove.getYdistance() ));
+                actions.add( new Turn(rudderMarine.getId(),orientation) );
+
+                return actions;
             // TODO renvoyer la liste dans le cas où il y a un gouvernail
             /*
-             * ne pas oublier qu'on peut subdiviser ie cas où seul le gouvernail suffit et
+             * Reste cas où le gouvernail seul ne suffit pas
              * cas où le gouvernail tout seul ne suffit pas
              */
         } else if (true) {
@@ -81,7 +95,6 @@ public class Captain {
      * @return
      */
     List<SailorAction> adjustSpeed(int distance, int currentSpeed, List<Marine> busy) {
-
         double minAdditionalSpeed = (SPEED * 2) / this.equipmentManager.nbOars();
         if (distance < currentSpeed) {
             return List.of();// RIEN A FAIRE
