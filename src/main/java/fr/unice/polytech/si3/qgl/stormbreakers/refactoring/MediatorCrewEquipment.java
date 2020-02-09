@@ -1,10 +1,10 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.refactoring;
 
-public class DeckManager {
+public class MediatorCrewEquipment {
     private Crew crew;
     private EquipmentManager equipmentManager;
 
-    public DeckManager(Crew crew, EquipmentManager equipmentManager) {
+    public MediatorCrewEquipment(Crew crew, EquipmentManager equipmentManager) {
         this.crew = crew;
         this.equipmentManager=equipmentManager;
     }

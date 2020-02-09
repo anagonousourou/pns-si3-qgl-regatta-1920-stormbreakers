@@ -14,7 +14,7 @@ public class Captain {
     private EquipmentManager equipmentManager;
     private Crew crew;
     private CheckpointManager checkpointManager;
-    private DeckManager deckManager;
+    private MediatorCrewEquipment mediatorCrewEquipment;
     private Compas compas;
     final private double EPS = 0.001;
     final private double SPEED = 165;
@@ -26,7 +26,7 @@ public class Captain {
         this.crew = crew;
         this.checkpointManager = checkpointManager;
         this.compas = compas;
-        this.deckManager=new DeckManager(crew, equipmentManager);
+        this.mediatorCrewEquipment=new MediatorCrewEquipment(crew, equipmentManager);
 
     }
 
@@ -64,10 +64,10 @@ public class Captain {
             return List.of();
         } 
         //le gouvernail existe, est accessible et suffit
-        else if (equipmentManager.rudderIsPresent() && deckManager.rudderIsAccesible() && (Math.abs(orientation) <= Math.PI /4) ) {
+        else if (equipmentManager.rudderIsPresent() && mediatorCrewEquipment.rudderIsAccesible() && (Math.abs(orientation) <= Math.PI /4) ) {
             
                 List<SailorAction> actions=new ArrayList<>();
-                Marine rudderMarine=deckManager.marineForRudder();
+                Marine rudderMarine=mediatorCrewEquipment.marineForRudder();
                 Move tmpMove=rudderMarine.getPosition().howToMoveTo( equipmentManager.rudderPosition() );
                 actions.add( new MoveAction(rudderMarine.getId(), tmpMove.getXdistance(),tmpMove.getYdistance() ));
                 actions.add( new Turn(rudderMarine.getId(),orientation) );
