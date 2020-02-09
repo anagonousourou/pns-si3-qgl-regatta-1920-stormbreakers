@@ -11,8 +11,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Checkpoint;
 public class Captain {
 
     private Boat boat;
-    private EquipmentManager equipmentManager;
-    private Crew crew;
+    
     private CheckpointManager checkpointManager;
     private MediatorCrewEquipment mediatorCrewEquipment;
     private Compas compas;
@@ -22,8 +21,6 @@ public class Captain {
     public Captain(Boat boat, CheckpointManager checkpointManager, EquipmentManager equipmentManager, Crew crew,
             Compas compas) {
         this.boat = boat;
-        this.equipmentManager = equipmentManager;
-        this.crew = crew;
         this.checkpointManager = checkpointManager;
         this.compas = compas;
         this.mediatorCrewEquipment=new MediatorCrewEquipment(crew, equipmentManager);

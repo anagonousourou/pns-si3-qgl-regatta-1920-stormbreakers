@@ -5,7 +5,7 @@ import java.beans.PropertyChangeListener;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
 
-public class Boat implements PropertyChangeListener {
+public class Boat{
     private final int MAX_DISTANCE = 5;
     private Position position = null;
     private int deckwidth = 0;
@@ -18,11 +18,6 @@ public class Boat implements PropertyChangeListener {
         this.decklength = decklength;
         this.deckwidth = deckwidth;
         this.life = life;
-    }
-
-    @Override
-    public void propertyChange(PropertyChangeEvent evt) {
-        // TODO vérifier si on garde ou pas
     }
 
     public Position getPosition() {
