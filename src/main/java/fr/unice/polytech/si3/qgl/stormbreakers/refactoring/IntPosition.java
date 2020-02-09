@@ -4,7 +4,7 @@ public class IntPosition {
     private int x,y;
 
 
-    IntPosition(int x,int y){
+    public IntPosition(int x,int y){
         this.x=x;
         this.y=y;
 

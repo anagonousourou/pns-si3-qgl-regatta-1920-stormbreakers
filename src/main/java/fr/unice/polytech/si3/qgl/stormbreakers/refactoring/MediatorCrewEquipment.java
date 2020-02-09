@@ -40,4 +40,14 @@ public class MediatorCrewEquipment {
     public int nbOars(){
         return this.equipmentManager.nbOars();
     }
+
+    public int nbMarinsOnLeftOars(){
+        return (int) this.equipmentManager.allLeftOars().stream().
+        filter(oar-> this.crew.marineAtPosition(oar.getPosition()).isPresent() ).count();
+    }
+
+    public int nbMarinsOnRightOars(){
+        return (int) this.equipmentManager.allRightOars().stream().
+        filter(oar-> this.crew.marineAtPosition(oar.getPosition()).isPresent() ).count();
+    }
 }

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import fr.unice.polytech.si3.qgl.stormbreakers.Logable;
+import fr.unice.polytech.si3.qgl.stormbreakers.refactoring.IntPosition;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
 @JsonSubTypes({ @JsonSubTypes.Type(value = Oar.class, name = "oar")// ,
@@ -18,12 +19,14 @@ public abstract class Equipment implements Deckable, Logable {
     private boolean used = false;
     private int x;
     private int y;
+    private final IntPosition position;
 
     @JsonCreator
     Equipment(@JsonProperty("type") String type, @JsonProperty("x") int x, @JsonProperty("y") int y) {
         this.type = type;
         this.x = x;
         this.y = y;
+        position=new IntPosition(x,y);
     }
 
     @JsonProperty("type")
@@ -47,6 +50,9 @@ public abstract class Equipment implements Deckable, Logable {
 
     public boolean isUsed() {
 		return this.used;
-	}
+    }
+    public IntPosition getPosition() {
+        return position;
+    }
 
 }
