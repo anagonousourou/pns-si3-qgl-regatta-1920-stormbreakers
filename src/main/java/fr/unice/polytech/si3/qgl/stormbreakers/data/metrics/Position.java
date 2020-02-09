@@ -40,6 +40,10 @@ public class Position implements Logable {
         return Math.atan2(other.getY(), other.getX()) - Math.atan2(this.getY(), this.getX());
     }
 
+    public Point2D getPoint2D() {
+        return new Point2D(getX(),getY());
+    }
+
     public double distanceTo(Position pos) {
         return Math.sqrt((pos.x - this.x) * (pos.x - this.x) + (pos.y - this.y) * (pos.y - this.y));
     }

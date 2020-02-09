@@ -1,6 +1,8 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.refactoring;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
+
 /**
  *  Utilitaire de calcul destinés à la navigation
  */
@@ -13,8 +15,16 @@ public class Navigator {
      * @param checkpointPosition
      * @return
      */
-    public double additionalOrientationNeeded(Position boatPosition,Position checkpointPosition){
-        //TODO complete carefully
+    public double additionalOrientationNeeded(Position boatPosition,Point2D target){
+
+        // On effectue un translation pour ramener virtuellement
+        // Les coordonnées du bateau en (0,0)
+        target.getTranslatedBy(-boatPosition.getX(),-boatPosition.getY());
+
+
+
+
+
         return 0;
     }
 
