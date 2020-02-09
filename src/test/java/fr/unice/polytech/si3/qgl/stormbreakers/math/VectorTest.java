@@ -69,6 +69,7 @@ class VectorTest {
         Vector vectA = new Vector(0,1);
         Vector vectB = new Vector(1,0);
         assertEquals(Math.PI/2,vectA.angleBetween(vectB));
+        assertEquals(Math.PI/2,vectB.angleBetween(vectA));
     }
 
     @Test

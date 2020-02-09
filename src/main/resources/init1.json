@@ -27,11 +27,11 @@
         "name": "Les copaings d'abord!",
         "deck": {
             "width": 2,
-            "length": 1
+            "length": 2
         },
         "entities": [
             {
-                "x": 0,
+                "x": 1,
                 "y": 0,
                 "type": "oar"
             },
