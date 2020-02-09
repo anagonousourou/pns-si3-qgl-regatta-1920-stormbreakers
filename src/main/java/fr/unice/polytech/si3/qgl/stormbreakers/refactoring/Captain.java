@@ -14,15 +14,15 @@ public class Captain {
     
     private CheckpointManager checkpointManager;
     private MediatorCrewEquipment mediatorCrewEquipment;
-    private Compas compas;
+    private Navigator navigator;
     final private double EPS = 0.001;
     final private double SPEED = 165;
 
     public Captain(Boat boat, CheckpointManager checkpointManager, EquipmentManager equipmentManager, Crew crew,
-            Compas compas) {
+            Navigator navigator) {
         this.boat = boat;
         this.checkpointManager = checkpointManager;
-        this.compas = compas;
+        this.navigator = navigator;
         this.mediatorCrewEquipment=new MediatorCrewEquipment(crew, equipmentManager);
 
     }
@@ -35,7 +35,7 @@ public class Captain {
         // TODO condition pour le cas où on a fini ie plus de nextCheckpoint
         Checkpoint chpoint = this.checkpointManager.nextCheckpoint();
 
-        double orientation = this.compas.additionalOrientationNeeded(boat.getPosition(), chpoint.getPosition());
+        double orientation = this.navigator.additionalOrientationNeeded(boat.getPosition(), chpoint.getPosition());
         double distance = boat.getPosition().distanceTo(chpoint.getPosition());
 
         List<SailorAction> actionsOrientation = this.actionsToOrientate(orientation);
