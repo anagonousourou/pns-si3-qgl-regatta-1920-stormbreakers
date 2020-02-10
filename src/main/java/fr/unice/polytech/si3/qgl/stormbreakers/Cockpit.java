@@ -22,8 +22,6 @@ public class Cockpit implements ICockpit {
 		InitGame initGame = this.parser.fetchInitGameState(game);
 
 		Logger.getInstance().log(initGame.toLogs());
-		Logger.getInstance().next();
-
 		this.gState = new GameState(initGame);
 		this.engine = new Moteur(gState, new Captain());
 	}
@@ -42,9 +40,6 @@ public class Cockpit implements ICockpit {
 		Logger.getInstance().log("A:"+Logable.listToLogs(logableActions,",","[","]"));
 
 		gState.actualiserActions(actions);
-
-		// Save logs and prepare for new instructions
-		Logger.getInstance().next();
 
 		return outputBuilder.writeActions(actions);
 
