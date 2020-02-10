@@ -10,9 +10,14 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Gouvernail;
 
 class Boat implements PropertyChangeListener {
     private Crew crew;
-    private final int MAX_DISTANCE = 5;
-    private Position position =null;
+    private static final int MAX_DISTANCE = 5;
+    private Position position = null;
     private EquipmentManager equipmentManager;
+
+    Boat(Crew crew, EquipmentManager equipmentManager) {
+        this.equipmentManager = equipmentManager;
+        this.crew = crew;
+    }
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
@@ -23,12 +28,10 @@ class Boat implements PropertyChangeListener {
                 if (equipmentManager.oarPresentAt(marine.getPosition())) {
                     marine.setOnEquipment(true);
                     marine.setTypeOfEquipment(EquipmentType.OAR.code);
-                } 
-                else if(equipmentManager.rudderPresentAt(marine.getPosition())){
+                } else if (equipmentManager.rudderPresentAt(marine.getPosition())) {
                     marine.setOnEquipment(true);
                     marine.setTypeOfEquipment(EquipmentType.RUDDER.code);
-                }
-                else {
+                } else {
                     marine.setOnEquipment(false);
                 }
             }
@@ -39,11 +42,11 @@ class Boat implements PropertyChangeListener {
             Marine marine = (Marine) evt.getSource();
             if (marine.onEquipment()) {
                 var optOar = this.equipmentManager.equipmentAt(marine.getPosition());
-                if (optOar.isPresent() && optOar.get().getType().equals( marine.getTypeOfEquipment() ) ) {
+                if (optOar.isPresent() && optOar.get().getType().equals(marine.getTypeOfEquipment())) {
                     optOar.get().setUsed(true);
-                    if(optOar.get().getType().equals(EquipmentType.RUDDER.code)){
-                        
-                        ((Gouvernail)optOar.get()).setOrientation( ((Turn)evt.getNewValue()).getRotation()  );
+                    if (optOar.get().getType().equals(EquipmentType.RUDDER.code)) {
+
+                        ((Gouvernail) optOar.get()).setOrientation(((Turn) evt.getNewValue()).getRotation());
                     }
                 }
             }

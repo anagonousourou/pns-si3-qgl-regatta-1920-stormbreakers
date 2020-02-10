@@ -23,88 +23,82 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Checkpoint;
 
 public class InputParser {
 
-	ObjectMapper mapper= new ObjectMapper();
-	public List<Marine> fetchAllSailors(String jsonInput) throws JsonMappingException, JsonProcessingException {
-		List<Marine> marins=new ArrayList<>();
-		var mapper=new ObjectMapper();
-		mapper.readTree(jsonInput).get("sailors").forEach(s->{
-			marins.add(new Marine(
-				s.get("id").asInt(),
-				s.get("x").asInt(),
-				s.get("y").asInt()
-			) );
+	ObjectMapper mapper = new ObjectMapper();
+
+	public List<Marine> fetchAllSailors(String jsonInput) throws JsonProcessingException {
+		List<Marine> marins = new ArrayList<>();
+		mapper.readTree(jsonInput).get("sailors").forEach(s -> {
+			marins.add(new Marine(s.get("id").asInt(), s.get("x").asInt(), s.get("y").asInt()));
 		});
 		return marins;
 	}
 
-	public List<Oar> fetchAllOars(String jString) throws JsonMappingException, JsonProcessingException {
-		List<Oar> oars=new ArrayList<>();
-		var mapper=new ObjectMapper();
-		mapper.readTree(jString).get("ship").get("entities").forEach(s->{
-			oars.add(new Oar(
-				s.get("x").asInt(),
-				s.get("y").asInt()
-			));
+	public List<Oar> fetchAllOars(String jString) throws JsonProcessingException {
+		List<Oar> oars = new ArrayList<>();
+		mapper.readTree(jString).get("ship").get("entities").forEach(s -> {
+			oars.add(new Oar(s.get("x").asInt(), s.get("y").asInt()));
 		});
 
 		return oars;
 	}
 
-	public int fetchWidth(String jString) throws JsonMappingException, JsonProcessingException {
-		var mapper=new ObjectMapper();
+	public int fetchWidth(String jString) throws JsonProcessingException {
 		return mapper.readTree(jString).get("ship").get("deck").get("width").asInt();
 	}
 
-	public List<MoveAction> fetchMoves(String jString) throws JsonMappingException, JsonProcessingException {
-		var mapper=new ObjectMapper();
-		List<MoveAction> moves=new ArrayList<>();
-		mapper.readTree(jString).forEach(action->{
-			if(action.get("type").asText().equals("MOVING") ){
-				moves.add(new MoveAction(action.get("sailorId").asInt(), action.get("xdistance").asInt(),action.get("ydistance").asInt() ));
+	public List<MoveAction> fetchMoves(String jString) throws JsonProcessingException {
+		List<MoveAction> moves = new ArrayList<>();
+		mapper.readTree(jString).forEach(action -> {
+			if (action.get("type").asText().equals("MOVING")) {
+				moves.add(new MoveAction(action.get("sailorId").asInt(), action.get("xdistance").asInt(),
+						action.get("ydistance").asInt()));
 			}
 		});
 
 		return moves;
 	}
 
-	public List<OarAction> fetchOarActions(String jString) throws JsonMappingException, JsonProcessingException {
-		List<OarAction> actions =new ArrayList<>();
-		mapper.readTree(jString).forEach(action->{
-			if(action.get("type").asText().equals("OAR") ){
+	public List<OarAction> fetchOarActions(String jString) throws JsonProcessingException {
+		List<OarAction> actions = new ArrayList<>();
+		mapper.readTree(jString).forEach(action -> {
+			if (action.get("type").asText().equals("OAR")) {
 				actions.add(new OarAction(action.get("sailorId").asInt()));
 			}
 		});
 
 		return actions;
 	}
+
 	/**
 	 * Return the list of checkpoint in the json string
+	 * 
 	 * @param jString
 	 * @return
 	 * @throws JsonMappingException
 	 * @throws JsonProcessingException
 	 */
-	public List<Checkpoint> fetchCheckpoints(String jString) throws JsonMappingException, JsonProcessingException {
+	public List<Checkpoint> fetchCheckpoints(String jString) throws JsonProcessingException {
 		return null;
 	}
-	public List<Equipment> fetchEquipments(String jString) throws JsonMappingException, JsonProcessingException {
+
+	public List<Equipment> fetchEquipments(String jString) throws JsonProcessingException {
 		List<Equipment> equipments = new ArrayList<>();
 
 		mapper.readTree(jString).get("ship").get("entities").forEach(e -> {
 
 			Equipment equipment = null;
 
-			if(e.get("type").asText().equals("oar")) {
+			if (e.get("type").asText().equals("oar")) {
 
 				equipment = new Oar(e.get("x").asInt(), e.get("y").asInt());
 
-			} else if(e.get("type").asText().equals("rudder")){
+			} else if (e.get("type").asText().equals("rudder")) {
 
 				equipment = new Gouvernail(e.get("x").asInt(), e.get("y").asInt());
 
 			} else {
 
-				//TODO Voile/Vigie si besoin
+				// TODO Voile/Vigie si besoin
 
 			}
 
@@ -114,32 +108,29 @@ public class InputParser {
 
 		return equipments;
 	}
-	public Position fetchBoatPosition(String jString) throws JsonMappingException, JsonProcessingException{
 
-		JsonNode positionNode=mapper.readTree(jString).get("ship").get("position");
-		return new Position(positionNode.get("x").asDouble() , positionNode.get("y").asDouble(),
-		positionNode.get("orientation").asDouble());
+	public Position fetchBoatPosition(String jString) throws JsonProcessingException {
+
+		JsonNode positionNode = mapper.readTree(jString).get("ship").get("position");
+		return new Position(positionNode.get("x").asDouble(), positionNode.get("y").asDouble(),
+				positionNode.get("orientation").asDouble());
 
 	}
 
-	public List<SailorAction> fetchActionsExceptMoveAction(String jString)
-			throws JsonMappingException, JsonProcessingException {
-		List<SailorAction> actions =new ArrayList<>();
-		mapper.readTree(jString).forEach(action->{
-			if(action.get("type").asText().equals("OAR") ){
-				actions.add(new OarAction(
-						action.get("sailorId").asInt()));
+	public List<SailorAction> fetchActionsExceptMoveAction(String jString) throws JsonProcessingException {
+		List<SailorAction> actions = new ArrayList<>();
+		mapper.readTree(jString).forEach(action -> {
+			if (action.get("type").asText().equals("OAR")) {
+				actions.add(new OarAction(action.get("sailorId").asInt()));
 			}
 
-			else if(action.get("type").asText().equals("TURN")){
-				actions.add(new Turn(
-						action.get("sailorId").asInt(),action.get("rotation").asDouble() ));
+			else if (action.get("type").asText().equals("TURN")) {
+				actions.add(new Turn(action.get("sailorId").asInt(), action.get("rotation").asDouble()));
 			}
 		});
 
 		return actions;
 
 	}
-
 
 }

@@ -6,7 +6,9 @@ package fr.unice.polytech.si3.qgl.stormbreakers.simulation;
  */
 public class MoveAction {
 
-    private final int xdistance,ydistance,id;
+    private final int xdistance;
+    private final int ydistance;
+    private final int id;
     
     MoveAction(int id,int xd,int yd){
         this.id=id;

@@ -9,7 +9,6 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import fr.unice.polytech.si3.qgl.regatta.cockpit.ICockpit;
 import fr.unice.polytech.si3.qgl.stormbreakers.Cockpit;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.SailorAction;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Oar;
 
 /**
@@ -21,7 +20,7 @@ class Simulator {
     EquipmentManager equipmentManager;
     Boat boat;
     InputParser ip = new InputParser();
-    private final int NBSTEP = 100;
+    private static final int NBSTEP = 100;
     private ICockpit cockpit;
     private InputProvider inputProvider;
     private Calculator calculator;
@@ -45,7 +44,7 @@ class Simulator {
 
     }
 
-    Simulator(ICockpit cockpit, InputProvider inputProvider) throws IOException {
+    Simulator(ICockpit cockpit, InputProvider inputProvider){
         this.cockpit = cockpit;
         this.inputProvider = inputProvider;
         this.calculator=new Calculator();
@@ -60,14 +59,11 @@ class Simulator {
      * @throws IOException
      */
 
-    void setUpSimulation() throws JsonMappingException, JsonProcessingException, IOException {
+    void setUpSimulation() throws JsonProcessingException, IOException {
         this.crew = new Crew(ip.fetchAllSailors(inputProvider.provideInit()));
         this.equipmentManager = new EquipmentManager(ip.fetchEquipments(inputProvider.provideInit()),
                 ip.fetchWidth(inputProvider.provideInit()));
-        boat = new Boat();
-        this.boat.setCrew(this.crew);
-        this.boat.setEquipmentManager(this.equipmentManager);
-        //System.out.println("Crew 0:" + this.crew);
+        boat = new Boat(this.crew,this.equipmentManager);
 
     }
 
@@ -82,16 +78,8 @@ class Simulator {
         String actions = this.cockpit.nextRound(inputProvider.provideFirstRound());
         List<MoveAction> moves = ip.fetchMoves(actions);
         List<SailorAction> sailorActions = ip.fetchActionsExceptMoveAction(actions);
-        
-        Position position=ip.fetchBoatPosition(inputProvider.provideFirstRound());
-        System.out.println("Moves: "+moves);
-        System.out.println("Actions: "+actions);
         this.crew.executeMoves(moves);
         this.crew.executeActions(sailorActions);
-        double rotation=this.angleRotation();
-        System.out.println("Rotation: " + rotation );
-        
-        System.out.println(this.cockpit.getLogs());
         
     }
 
@@ -101,7 +89,6 @@ class Simulator {
         // OARS
         for (Oar oar : this.equipmentManager.oars()) {
             if (oar.isUsed()) {
-                System.out.println("Oar used: "+oar);
                 if (this.equipmentManager.allRightOars().contains(oar)) {
                     radialSpeed += rotationSpeedPerOar;
                 } else if (this.equipmentManager.allLeftOars().contains(oar)) {
@@ -116,7 +103,7 @@ class Simulator {
     }
 
     double speed(){
-        return (165*this.equipmentManager.nbUsedOars())/this.equipmentManager.nbOars();
+        return (165*this.equipmentManager.nbUsedOars())/(double)this.equipmentManager.nbOars();
     }
 
     

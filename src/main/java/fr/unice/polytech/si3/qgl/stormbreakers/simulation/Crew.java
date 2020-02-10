@@ -1,13 +1,11 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.simulation;
 
 import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.SailorAction;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Oar;
 
 public class Crew {
 
@@ -43,15 +41,13 @@ public class Crew {
         }
     }
     /**
+     * WARNING le résultat de cette méthode est faux pour l'instant
      * Fonction qui renvoie les marins présents sur des rames à gauche
+     * 
      * @param equimentManager
      * @return
      */
     public List<Marine> leftMarinsOnOars(EquipmentManager equimentManager){
-        List<Marine> actions = new ArrayList<>();
-        for(Oar oar:equimentManager.allLeftOars()){
-            
-        }
         return marins.stream().filter(m->equimentManager.oarPresentAt(m.getPosition())).collect(Collectors.toList());
 
     }

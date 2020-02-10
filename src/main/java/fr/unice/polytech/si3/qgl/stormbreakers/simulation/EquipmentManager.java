@@ -53,7 +53,7 @@ public class EquipmentManager {
     }
 
     List<Oar> usedRightOars() {
-        return rightOars.stream().filter(oar->oar.isUsed()).collect(Collectors.toList());
+        return rightOars.stream().filter(Oar::isUsed).collect(Collectors.toList());
     }
 
     List<Oar> usedLeftOars() {
@@ -65,7 +65,7 @@ public class EquipmentManager {
     }
 
     boolean oarPresentAt(IntPosition pos){
-        return this.oars.stream().filter(oar-> oar.getX()==pos.getX() && oar.getY()==pos.getY()).findFirst().isPresent();
+        return this.oars.stream().anyMatch(oar-> oar.getX()==pos.getX() && oar.getY()==pos.getY());
     }
 
     boolean rudderPresentAt(IntPosition pos){
@@ -86,7 +86,7 @@ public class EquipmentManager {
     }
 
     int nbUsedOars(){
-        return (int) this.oars.stream().filter(oar->oar.isUsed()).count();
+        return (int) this.oars.stream().filter(Oar::isUsed).count();
     }
 
     double rudderRotation(){

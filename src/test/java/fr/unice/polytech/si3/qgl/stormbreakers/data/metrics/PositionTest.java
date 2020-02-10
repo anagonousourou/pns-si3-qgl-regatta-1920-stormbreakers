@@ -11,16 +11,12 @@ public class PositionTest {
     private Position a;
     private Position b;
     private Position c;
-    private Position d;
-
-    private static final double epsilon = Math.pow(10,-10);
-
+    
     @BeforeEach
     void setUp(){
         a=new Position(1.0, 1.0,3 );
         b=new Position(1.0, 1.0,3 );
         c=new Position(1.5, 1.0,3 );
-        d=new Position(0.0, 1.0,3 );
         
         
         

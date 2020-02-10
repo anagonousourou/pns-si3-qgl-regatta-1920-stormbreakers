@@ -11,13 +11,11 @@ import java.util.stream.Collectors;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.SailorAction;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.game.GameState;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Equipment;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Marin;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Checkpoint;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Bateau;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Fraction;
-import fr.unice.polytech.si3.qgl.stormbreakers.math.Vector;
 import fr.unice.polytech.si3.qgl.stormbreakers.processing.communication.Logger;
 
 public class Moteur {
@@ -85,7 +83,7 @@ public class Moteur {
 					this.sailors);
 			result.addAll(
 					captain.activateRudder(marinUtilise, marinAccssibles, this.ship.getGouvernail().get(0), angle));
-				
+
 			result.addAll(captain.toActivate(this.leftOars, this.rightOars, marinUtilise, this.sailors));
 			return result;
 		}
@@ -136,7 +134,7 @@ public class Moteur {
 		for (int i = 0; i <= leftOars.size(); i++) {
 			for (int j = 0; j <= rightOars.size(); j++) {
 				if (Math.abs(new Fraction(j - i, nbOars).eval()) <= 0.5) {
-						results.put(new Fraction(j - i, nbOars), j - i);
+					results.put(new Fraction(j - i, nbOars), j - i);
 				}
 			}
 		}
@@ -144,8 +142,7 @@ public class Moteur {
 	}
 
 	private int angleToDiff(Fraction angle) {
-		int e = possibleAngles().get(angle);
-		return e;
+		return possibleAngles().get(angle);
 	}
 
 	public Set<Fraction> possibleOrientations() {
@@ -163,8 +160,7 @@ public class Moteur {
 	}
 
 	double orientationNeeded(Checkpoint target) {
-		return new Navigator().additionalOrientationNeeded(ship.getPosition(),target.getPosition().getPoint2D());
+		return new Navigator().additionalOrientationNeeded(ship.getPosition(), target.getPosition().getPoint2D());
 	}
-
 
 }

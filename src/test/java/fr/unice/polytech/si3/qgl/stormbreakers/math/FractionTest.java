@@ -99,7 +99,7 @@ class FractionTest {
         assertEquals(new Fraction(-1,2).hashCode(), new Fraction(-1,2).hashCode(), "must have same hashcode");
         assertEquals(new Fraction(-1,2), new Fraction(-1,2), "must be equals");
         assertDoesNotThrow(()->{
-            System.out.println( map.get(new Fraction(-1,2)));
+            map.get(new Fraction(-1,2));
         });
     }
     /*

@@ -93,10 +93,8 @@ class CaptainTest {
 		int rameDroite=0;
 		
 		List<Marin> allsailors= new ArrayList<>();
-		System.out.println();
 		allsailors.addAll(List.of(m1,m2,m3,m4));
     	var listAction= rogers.toActivate(leftOars, rightOars, new ArrayList<Marin>(), allsailors);
-    	System.out.println(listAction);
 		var usedSailors= new ArrayList<Marin>();
     	List<SailorAction> listActionDroite=rogers.activateNbOars(rightOars, 4, usedSailors, allsailors);
     	List<SailorAction> listActionGauche=rogers.activateNbOars(rightOars, 4, usedSailors, allsailors);

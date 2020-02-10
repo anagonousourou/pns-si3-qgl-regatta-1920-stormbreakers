@@ -18,7 +18,7 @@ class CheckpointManager {
      * @param position
      */
 	public void updateCheckpoint(Position position) {
-        
+        // pas encore fini d'implémenter
 	}
     /**
      * 
