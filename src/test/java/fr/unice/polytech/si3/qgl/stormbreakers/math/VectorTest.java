@@ -3,8 +3,6 @@ package fr.unice.polytech.si3.qgl.stormbreakers.math;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import javax.swing.text.MutableAttributeSet;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class VectorTest {
@@ -69,6 +67,7 @@ class VectorTest {
         Vector vectA = new Vector(0,1);
         Vector vectB = new Vector(1,0);
         assertEquals(Math.PI/2,vectA.angleBetween(vectB));
+        assertEquals(Math.PI/2,vectB.angleBetween(vectA));
     }
 
     @Test

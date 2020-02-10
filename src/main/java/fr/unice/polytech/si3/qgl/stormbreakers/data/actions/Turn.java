@@ -7,6 +7,7 @@ public class Turn extends SailorAction {
     private double rotation;
 
     @JsonCreator
+	public
     Turn(
             @JsonProperty("sailorId") int sailorId,
             @JsonProperty("rotation") double rotation) {
@@ -17,5 +18,10 @@ public class Turn extends SailorAction {
     @JsonProperty("rotation")
     public double getRotation() {
         return rotation;
+    }
+
+    @Override
+    public String toLogs() {
+        return ActionType.TURN.shortCode + this.getSailorId();
     }
 }

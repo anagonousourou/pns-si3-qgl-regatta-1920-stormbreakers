@@ -18,4 +18,11 @@ public class RegattaGoal extends Goal {
     public List<Checkpoint> getCheckpoints() {
         return checkpoints;
     }
+
+    @Override
+    public String toLogs() {
+        return "CP"+checkpoints.size()+" "+checkpoints.get(0).toLogs();
+    }
+
+
 }

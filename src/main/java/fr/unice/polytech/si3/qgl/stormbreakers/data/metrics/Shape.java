@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import fr.unice.polytech.si3.qgl.stormbreakers.Logable;
 
 /**
  * Classe representant une forme geometrique
@@ -17,7 +18,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
         @JsonSubTypes.Type(value = Circle.class, name="circle"),
         @JsonSubTypes.Type(value = Rectangle.class, name="rectangle")
 })
-public abstract class Shape {
+public abstract class Shape implements Logable {
     private String type;
 
     @JsonCreator
@@ -37,8 +38,4 @@ public abstract class Shape {
      */
     public abstract boolean isPosInside(double x, double y);
 
-    @Override
-    public String toString() {
-        return getType();
-    }
 }

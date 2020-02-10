@@ -6,4 +6,8 @@ public class BattleGoal extends Goal {
         super("BATTLE");
     }
 
+    @Override
+    public String toLogs() {
+        return getMode();
+    }
 }

@@ -1,9 +1,11 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.data.game;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import fr.unice.polytech.si3.qgl.stormbreakers.Logable;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Marin;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Goal;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Bateau;
@@ -12,7 +14,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Bateau;
  * Classe representant les parametres d'initialisation d'une partie
  */
 
-public class InitGame {
+public class InitGame implements Logable{
     private Goal goal;
     private Bateau ship;
     private List<Marin> sailors;
@@ -51,4 +53,18 @@ public class InitGame {
         return shipCount;
     }
 
+    @Override
+    public String toString() {
+        return "InitGame{" + goal.toString() + "," + ship.toString() + "," + sailors.toString() + "}";
+    }
+
+    @Override
+    public String toLogs() {
+        return goal.toLogs() + "," + ship.toLogs() + "," + sailorsToString();
+    }
+
+    private String sailorsToString() {
+        List<Logable> logables = sailors.stream().map((Marin sailor)->(Logable) sailor).collect(Collectors.toList());
+        return "S:" + Logable.listToLogs(logables,"|", "[", "]");
+    }
 }

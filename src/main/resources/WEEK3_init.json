@@ -4,8 +4,32 @@
         "checkpoints": [
             {
                 "position": {
-                    "x": 0,
+                    "x": 80,
                     "y": 1000,
+                    "orientation": 0
+                },
+                "shape": {
+                    "type": "circle",
+                    "radius": 50
+                }
+            },
+            {
+                "position": {
+                    "x": 50,
+                    "y": 1500,
+                    "orientation": 0
+                },
+                "shape": {
+                    "type": "rectangle",
+                    "width": 50,
+                    "height":100,
+                    "orientation":0
+                }
+            },
+            {
+                "position": {
+                    "x": 200,
+                    "y": 1800,
                     "orientation": 0
                 },
                 "shape": {
@@ -50,21 +74,11 @@
                 "y": 2,
                 "type": "oar"
             },
-            {
-                "x": 1,
-                "y": 2,
-                "type": "oar"
-            },
-            {
-                "x": 2,
-                "y": 2,
-                "type": "oar"
-            },
-            {
-                "x": 1,
-                "y": 0,
-                "type": "rudder"
-            }
+      		{
+      			"x": 2,
+      			"y": 2,
+      			"type": "rudder"
+      		}
         ],
         "shape": {
             "type": "rectangle",

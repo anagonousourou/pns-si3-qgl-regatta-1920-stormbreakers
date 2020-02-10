@@ -45,4 +45,9 @@ public class Circle extends Shape {
     public String toString() {
         return getType()+": ("+radius+")";
     }
+
+    @Override
+    public String toLogs() {
+        return "C"+radius;
+    }
 }

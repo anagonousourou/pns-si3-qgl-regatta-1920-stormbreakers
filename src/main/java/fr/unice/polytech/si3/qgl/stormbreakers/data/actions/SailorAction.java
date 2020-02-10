@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import fr.unice.polytech.si3.qgl.stormbreakers.Logable;
 
 /**
  * Represents any action a Sailor can Do
@@ -21,7 +22,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
         @JsonSubTypes.Type(value = Oar.class, name="OAR"),
         @JsonSubTypes.Type(value = UseWatch.class, name="USE_WATCH")
 })
-public abstract  class SailorAction {
+public abstract  class SailorAction implements Logable {
     private int sailorId;
     private String type;
 
