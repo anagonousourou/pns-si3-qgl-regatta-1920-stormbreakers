@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.Logable;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Cartesian;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Polar;
 
 import java.util.Objects;
@@ -38,6 +39,10 @@ public class Position implements Logable {
 
     public double thetaTo(Position other) {
         return Math.atan2(other.getY(), other.getX()) - Math.atan2(this.getY(), this.getX());
+    }
+
+    public Point2D getPoint2D() {
+        return new Point2D(getX(),getY());
     }
 
     public double distanceTo(Position pos) {

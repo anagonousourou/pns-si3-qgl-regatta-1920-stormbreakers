@@ -32,6 +32,12 @@ public class Vector {
         return this.x*other.x+this.y*other.y;
     }
 
+    /**
+     * Renvoie la valeur absolue de l'angle non orienté entre les deux vecteurs
+     * comprise entre [0,Pi]
+     * @param other 2e vecteur
+     * @return double entre 0 et Pi
+     */
     public double angleBetween(Vector other) {
         return Math.acos( this.scal(other) / (this.norm() * other.norm()) );
     }
@@ -40,6 +46,12 @@ public class Vector {
         return new Vector( Math.cos(angle) , Math.sin(angle) );
     }
 
+    public double getDeltaX() {
+        return x;
+    }
 
+    public double getDeltaY() {
+        return y;
+    }
 
 }
