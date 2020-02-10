@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 
 public class GameState {
 
-    private Bateau ship;
+    private final Bateau ship;
     private List<Marin> orgaMarins;
     private List<Checkpoint> checkpoints;
     private InitGame stateInit;
@@ -57,7 +57,7 @@ public class GameState {
      * @param nextRound contient les donnees actualisees
      */
     public void updateTurn(NextRound nextRound) {
-        ship = nextRound.getShip();
+        this.ship.updateSelf(nextRound.getShip());
         wind = nextRound.getWind();
         if (checkpoints != null)
             actualiserCheckpoints();

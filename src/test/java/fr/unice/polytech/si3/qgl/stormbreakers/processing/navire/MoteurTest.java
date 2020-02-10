@@ -22,6 +22,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.Turn;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.game.GameState;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Checkpoint;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.Fraction;
 import fr.unice.polytech.si3.qgl.stormbreakers.processing.communication.InputParser;
 
 public class MoteurTest {
@@ -73,7 +74,7 @@ public class MoteurTest {
     void possibleOrientationsTest() {
         var result = this.moteur.possibleOrientations();
         assertEquals(3, result.size());
-        assertTrue(result.contains(0.0));
+        assertTrue(result.contains(new Fraction()));
     }
 
     @Test
@@ -81,7 +82,7 @@ public class MoteurTest {
         this.moteur = new Moteur(new GameState(p.fetchInitGameState(inputInit4)), new Captain());
         var result = this.moteur.possibleOrientations();
         assertEquals(7, result.size());
-        assertTrue(result.contains(0.0));
+        assertTrue(result.contains(new Fraction()));
     }
 
     @Test

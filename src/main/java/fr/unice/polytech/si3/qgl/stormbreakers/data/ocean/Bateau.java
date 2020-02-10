@@ -64,4 +64,8 @@ public class Bateau extends AutreBateau implements Logable {
         return Logable.listToLogs(logables,"|", "[", "]");
     }
 
+    public void updateSelf(Bateau newState){
+        this.position=newState.position;
+    }
+
 }

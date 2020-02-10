@@ -16,6 +16,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Equipment;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Marin;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Checkpoint;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Bateau;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.Fraction;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Vector;
 import fr.unice.polytech.si3.qgl.stormbreakers.processing.communication.Logger;
 
@@ -67,7 +68,7 @@ public class Moteur {
 	 * @return les SailorAction finales
 	 */
 	List<SailorAction> dispatchSailors(Checkpoint target) {
-		Set<Double> oarsAngles = this.possibleOrientations();
+		Set<Fraction> oarsAngles = this.possibleOrientations();
 		double angle = this.orientationNeeded(target);
 		List<SailorAction> result= new ArrayList<>();
 
@@ -93,11 +94,13 @@ public class Moteur {
        return result;
 		} else {
 			final double angleForSailor=angle;
-			Optional<Double> optAngle = oarsAngles.stream().filter(a -> a * angleForSailor > 0.0)
+			Optional<Fraction> optAngle = oarsAngles.stream().filter(a -> a.eval() * angleForSailor > 0.0)
 
-					.min((a, b) -> Double.compare(Math.abs(a - angleForSailor), Math.abs(b - angleForSailor)));
+					.min((a, b) -> Double.compare(Math.abs(a.eval()*PI - angleForSailor), Math.abs(b.eval()*PI - angleForSailor)));
 			if (optAngle.isPresent()) {
-				double approachingAngle = optAngle.get();
+				Fraction approachingAngle = optAngle.get();
+				double apangle=approachingAngle.eval();
+				System.out.println(apangle);
 				result.addAll(captain.minRepartition(this.rightOars, this.leftOars, this.angleToDiff(approachingAngle),
 						marinUtilise, this.sailors));
         return result;
@@ -134,31 +137,35 @@ public class Moteur {
 	 * @return une HashMap donc la key est l'angle, la value etant la difference
 	 *         mentionnee au-dessus.
 	 */
-	private Map<Double, Integer> possibleAngles() {
-		double nbOars = ship.getRames().size();
-		HashMap<Double, Integer> results = new HashMap<>();
-		results.put(0.0, 0);
+	private Map<Fraction, Integer> possibleAngles() {
+		int nbOars = ship.getRames().size();
+		HashMap<Fraction, Integer> results = new HashMap<>();
+		results.put( new Fraction() , 0);
 		for (int i = 0; i <= leftOars.size(); i++) {
 			for (int j = 0; j <= rightOars.size(); j++) {
 				if (i != j) {
-					results.put(PI / (nbOars / (j - i)), j - i);
+					if(Math.abs( new Fraction(j - i,nbOars ).eval() ) <= 0.5 ){
+						results.put(new Fraction(j - i,nbOars ) , j - i);
+					}
+					
 				}
 			}
 		}
 		return results;
 	}
 
-	private int angleToDiff(double angle) {
-		return possibleAngles().get(angle);
+	private int angleToDiff(Fraction angle) {
+		int e=possibleAngles().get(angle);
+		System.out.println(e);
+		return e;
 	}
 
-	public Set<Double> possibleOrientations() {
+	public Set<Fraction> possibleOrientations() {
 		int nbOars = ship.getRames().size();
-		Set<Double> result = new HashSet<>();
-
-		double step = PI / nbOars;
+		Set<Fraction> result = new HashSet<>();
 		for (int i = 0; i <= nbOars; i++) {
-			result.add((-PI / 2) + (i * step));
+			var f= new Fraction(-1,2).add( new Fraction(i,nbOars) );
+			result.add(f);
 		}
 
 		return result;
