@@ -90,13 +90,13 @@ public class MoteurTest {
         Mockito.when(c1.getPosition()).thenReturn(new Position(0,0));
         assertEquals(0,this.moteur.orientationNeeded(c1));
         //checkpoint au nord du bateau
-        Mockito.when(c1.getPosition()).thenReturn(new Position(1,0));
+        Mockito.when(c1.getPosition()).thenReturn(new Position(156.0,0.0));
         assertEquals(0,this.moteur.orientationNeeded(c1));
         //checkpoint a droite du bateau
-        Mockito.when(c1.getPosition()).thenReturn(new Position(0,-1));
+        Mockito.when(c1.getPosition()).thenReturn(new Position(0,-150.6));
         assertEquals(-Math.PI/2,this.moteur.orientationNeeded(c1));
         //checkpoint a pi/4 par rapport a bateau
-        Mockito.when(c1.getPosition()).thenReturn(new Position(1,1));
+        Mockito.when(c1.getPosition()).thenReturn(new Position(150.60,150.60));
         assertTrue(almostEqual(Math.PI/4,this.moteur.orientationNeeded(c1),EPSILON));
     }
     
