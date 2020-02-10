@@ -68,12 +68,34 @@ public class EquipmentManager {
         return this.oars.stream().filter(oar-> oar.getX()==pos.getX() && oar.getY()==pos.getY()).findFirst().isPresent();
     }
 
+    boolean rudderPresentAt(IntPosition pos){
+        if(rudder!=null){
+            return rudder.getX()==pos.getX() && rudder.getY()==pos.getY();
+        }
+        else{
+            return false;
+        }
+    }
+
     Optional<Oar> oarAt(IntPosition pos){
         return this.oars.stream().filter(oar-> oar.getX()==pos.getX() && oar.getY()==pos.getY()).findFirst();
     }
 
+    Optional<Equipment> equipmentAt(IntPosition pos){
+        return this.equipments.stream().filter(e-> e.getX()==pos.getX() && e.getY()==pos.getY()).findFirst();
+    }
+
     int nbUsedOars(){
         return (int) this.oars.stream().filter(oar->oar.isUsed()).count();
+    }
+
+    double rudderRotation(){
+        if(rudder!=null){
+            return rudder.getOrientation();
+        }
+        else{
+            return 0.0;
+        }
     }
 
 }

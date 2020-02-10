@@ -3,7 +3,10 @@ package fr.unice.polytech.si3.qgl.stormbreakers.simulation;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
+import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.Turn;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.EquipmentType;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Gouvernail;
 
 class Boat implements PropertyChangeListener {
     private Crew crew;
@@ -19,21 +22,29 @@ class Boat implements PropertyChangeListener {
                 marine.executeMove((MoveAction) evt.getNewValue());
                 if (equipmentManager.oarPresentAt(marine.getPosition())) {
                     marine.setOnEquipment(true);
-                    // later typeof equipment
-                } else {
+                    marine.setTypeOfEquipment(EquipmentType.OAR.code);
+                } 
+                else if(equipmentManager.rudderPresentAt(marine.getPosition())){
+                    marine.setOnEquipment(true);
+                    marine.setTypeOfEquipment(EquipmentType.RUDDER.code);
+                }
+                else {
                     marine.setOnEquipment(false);
                 }
             }
 
         }
 
-        else if (evt.getPropertyName().equals("OarAction")) {
+        else if (evt.getPropertyName().equals("Action")) {
             Marine marine = (Marine) evt.getSource();
             if (marine.onEquipment()) {
-                var optOar = this.equipmentManager.oarAt(marine.getPosition());
-                if (optOar.isPresent()) {
-                    System.out.println("Salut");
+                var optOar = this.equipmentManager.equipmentAt(marine.getPosition());
+                if (optOar.isPresent() && optOar.get().getType().equals( marine.getTypeOfEquipment() ) ) {
                     optOar.get().setUsed(true);
+                    if(optOar.get().getType().equals(EquipmentType.RUDDER.code)){
+                        
+                        ((Gouvernail)optOar.get()).setOrientation( ((Turn)evt.getNewValue()).getRotation()  );
+                    }
                 }
             }
 

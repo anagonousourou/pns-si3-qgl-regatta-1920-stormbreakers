@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.SailorAction;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Oar;
 
 public class Crew {
@@ -33,11 +34,11 @@ public class Crew {
             }
         }
     }
-    public void executeActions(List<OarAction> actions){
-        for(OarAction oa:actions){
-            var optMarin=this.getMarinById(oa.getId());
+    public void executeActions(List<SailorAction> actions){
+        for(SailorAction oa:actions){
+            var optMarin=this.getMarinById(oa.getSailorId());
             if(optMarin.isPresent()){
-                optMarin.get().requestOarAction(oa);
+                optMarin.get().requestAction(oa);
             }
         }
     }

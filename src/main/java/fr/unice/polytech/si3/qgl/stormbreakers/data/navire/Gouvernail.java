@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 
 public class Gouvernail extends Equipment {
+
+    private double orientation;
 	@JsonCreator
 	public
     Gouvernail(@JsonProperty("x") int x, 
@@ -15,5 +17,13 @@ public class Gouvernail extends Equipment {
     @Override
     public String toLogs() {
         return EquipmentType.RUDDER.shortCode+ getPosLog();
+    }
+
+    public double getOrientation() {
+        return orientation;
+    }
+
+    public void setOrientation(double orientation) {
+        this.orientation = orientation;
     }
 }

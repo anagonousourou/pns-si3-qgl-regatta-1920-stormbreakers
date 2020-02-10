@@ -5,7 +5,7 @@
             {
                 "position": {
                     "x": 80,
-                    "y": 1000,
+                    "y": 120,
                     "orientation": 0
                 },
                 "shape": {
@@ -70,6 +70,11 @@
                 "x": 2,
                 "y": 2,
                 "type": "oar"
+            },
+            {
+                "x": 1,
+                "y": 1,
+                "type": "rudder"
             }
         ],
         "shape": {

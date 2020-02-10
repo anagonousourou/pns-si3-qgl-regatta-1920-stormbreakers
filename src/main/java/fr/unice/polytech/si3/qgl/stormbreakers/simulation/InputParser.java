@@ -8,6 +8,9 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.OarAction;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.SailorAction;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.Turn;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Equipment;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Gouvernail;
@@ -65,7 +68,6 @@ public class InputParser {
 	}
 
 	public List<OarAction> fetchOarActions(String jString) throws JsonMappingException, JsonProcessingException {
-		var mapper=new ObjectMapper();
 		List<OarAction> actions =new ArrayList<>();
 		mapper.readTree(jString).forEach(action->{
 			if(action.get("type").asText().equals("OAR") ){
@@ -117,6 +119,25 @@ public class InputParser {
 		JsonNode positionNode=mapper.readTree(jString).get("ship").get("position");
 		return new Position(positionNode.get("x").asDouble() , positionNode.get("y").asDouble(),
 		positionNode.get("orientation").asDouble());
+
+	}
+
+	public List<SailorAction> fetchActionsExceptMoveAction(String jString)
+			throws JsonMappingException, JsonProcessingException {
+		List<SailorAction> actions =new ArrayList<>();
+		mapper.readTree(jString).forEach(action->{
+			if(action.get("type").asText().equals("OAR") ){
+				actions.add(new OarAction(
+						action.get("sailorId").asInt()));
+			}
+
+			else if(action.get("type").asText().equals("TURN")){
+				actions.add(new Turn(
+						action.get("sailorId").asInt(),action.get("rotation").asDouble() ));
+			}
+		});
+
+		return actions;
 
 	}
 

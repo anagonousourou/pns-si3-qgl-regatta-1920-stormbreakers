@@ -2,6 +2,7 @@ package fr.unice.polytech.si3.qgl.stormbreakers.data.metrics;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
 
 import java.util.Objects;
 
@@ -40,7 +41,7 @@ public class Rectangle extends Shape {
     public boolean isPosInside(double x, double y) {
         // On ramene le plan pour que les cotes du rectangle soient sur les axes du repere
         if (orientation != 0) {
-            Position pos = new Position(x,y,orientation);
+            Point2D pos = new Point2D(x,y);
             pos = pos.getRotatedBy(-orientation);
             x = pos.getX();
             y = pos.getY();

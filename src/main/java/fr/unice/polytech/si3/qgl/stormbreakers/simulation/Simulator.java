@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 
 import fr.unice.polytech.si3.qgl.regatta.cockpit.ICockpit;
 import fr.unice.polytech.si3.qgl.stormbreakers.Cockpit;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.SailorAction;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Oar;
 
@@ -80,12 +81,13 @@ class Simulator {
         this.cockpit.initGame(inputProvider.provideInit());
         String actions = this.cockpit.nextRound(inputProvider.provideFirstRound());
         List<MoveAction> moves = ip.fetchMoves(actions);
-        List<OarAction> oarActions = ip.fetchOarActions(actions);
+        List<SailorAction> sailorActions = ip.fetchActionsExceptMoveAction(actions);
+        
         Position position=ip.fetchBoatPosition(inputProvider.provideFirstRound());
         System.out.println("Moves: "+moves);
-        System.out.println("Actions: "+oarActions);
+        System.out.println("Actions: "+actions);
         this.crew.executeMoves(moves);
-        this.crew.executeActions(oarActions);
+        this.crew.executeActions(sailorActions);
         double rotation=this.angleRotation();
         System.out.println("Rotation: " + rotation );
         
@@ -107,6 +109,8 @@ class Simulator {
                 }
             }
         }
+
+        radialSpeed+=this.equipmentManager.rudderRotation();
 
         return radialSpeed;
     }

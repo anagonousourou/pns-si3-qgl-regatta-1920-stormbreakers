@@ -120,9 +120,9 @@ public class Captain {
     public List<SailorAction> minRepartition(List<Equipment> rightOars, List<Equipment> leftOars, int diffToCatch,
             List<Marin> marinUtilise, List<Marin> allsailors) {
         if (diffToCatch > 0) {
-            return this.activateNbOars(rightOars, -diffToCatch, marinUtilise, allsailors);
+            return this.activateNbOars(rightOars, diffToCatch, marinUtilise, allsailors);
         } else {
-            return this.activateNbOars(leftOars, diffToCatch, marinUtilise, allsailors);
+            return this.activateNbOars(leftOars, -diffToCatch, marinUtilise, allsailors);
         }
 
     }
