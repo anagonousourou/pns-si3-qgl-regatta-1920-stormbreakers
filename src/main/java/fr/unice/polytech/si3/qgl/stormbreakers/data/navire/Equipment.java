@@ -7,16 +7,17 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import fr.unice.polytech.si3.qgl.stormbreakers.Logable;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
-@JsonSubTypes({ @JsonSubTypes.Type(value = Rame.class, name = "oar") ,
+@JsonSubTypes({ @JsonSubTypes.Type(value = Oar.class, name = "oar") ,
         // @JsonSubTypes.Type(value = Voile.class, name="sail"),
         @JsonSubTypes.Type(value = Gouvernail.class, name="rudder")//,
         // @JsonSubTypes.Type(value = Vigie.class, name="watch")
 })
 
 public abstract class Equipment implements Deckable, Logable {
-    private String type;
-    private int x;
-    private int y;
+    protected String type;
+    protected int x;
+    protected int y;
+    protected boolean used =false;
 
     @JsonCreator
     Equipment(@JsonProperty("type") String type, @JsonProperty("x") int x, @JsonProperty("y") int y) {
@@ -42,6 +43,14 @@ public abstract class Equipment implements Deckable, Logable {
 
     public String getPosLog() {
         return x+"."+y;
+    }
+
+    public boolean isUsed() {
+        return used;
+    }
+
+    public void setUsed(boolean used) {
+        this.used = used;
     }
 
 }

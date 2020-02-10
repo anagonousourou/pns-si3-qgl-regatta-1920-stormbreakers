@@ -1,14 +1,15 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.processing.communication;
 
-import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.Oar;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.SailorAction;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.OarAction;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.SailorAction;
 
 class OutputBuilderTest {
 
@@ -30,8 +31,8 @@ class OutputBuilderTest {
     void testWriteActionsForSmallBoatExample() {
         List<SailorAction> actions = new ArrayList<>();
 
-        actions.add(new Oar(0));
-        actions.add(new Oar(1));
+        actions.add(new OarAction(0));
+        actions.add(new OarAction(1));
 
         String expected = "[{\"sailorId\": 0,\"type\": \"OAR\"},{\"sailorId\": 1,\"type\": \"OAR\"}]";
         expected = expected.replace(" ","");

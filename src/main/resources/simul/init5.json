@@ -32,8 +32,8 @@
         "life": 100,
         "position": {
             "x": 0,
-            "y": 0,
-            "orientation": 0
+            "y": 200,
+            "orientation": 0.0
         },
         "name": "Les copaings d'abord!",
         "deck": {

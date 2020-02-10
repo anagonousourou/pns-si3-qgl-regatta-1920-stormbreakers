@@ -3,10 +3,10 @@ package fr.unice.polytech.si3.qgl.stormbreakers.data.navire;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class Rame extends Equipment {
+public class Oar extends Equipment {
 
     @JsonCreator
-    public Rame(
+    public Oar(
             @JsonProperty("x") int x,
             @JsonProperty("y") int y
     ) {
@@ -16,5 +16,10 @@ public class Rame extends Equipment {
     @Override
     public String toLogs() {
         return EquipmentType.OAR.shortCode+ getPosLog();
+    }
+
+    @Override
+    public String toString() {
+        return this.getClass().getSimpleName()+"(x:"+x+", y:"+y+")";
     }
 }

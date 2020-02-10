@@ -128,7 +128,7 @@ public class Moteur {
 
 	/**
 	 * Methode servant a retourner les angles possibles du navire, ainsi que la
-	 * difference entre le nombre de rames a babord et le nombre de rames a tribord
+	 * difference entre le nombre de rames a babord(gauche) et le nombre de rames a tribord(droite)
 	 * necessaire pour chaque angle
 	 * 
 	 * @return une HashMap donc la key est l'angle, la value etant la difference

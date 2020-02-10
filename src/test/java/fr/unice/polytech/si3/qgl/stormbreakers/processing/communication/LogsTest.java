@@ -8,7 +8,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Shape;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Deck;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Equipment;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Marin;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Rame;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Oar;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Checkpoint;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Goal;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.RegattaGoal;
@@ -58,8 +58,8 @@ class LogsTest {
         Deck deck = new Deck(largeur,longueur);
         List<Equipment> entities = new ArrayList<>();
         for (int i=1; i<longueur; i+=(distRames+1)) {
-            entities.add(new Rame(i,0));
-            entities.add(new Rame(i,largeur-1));
+            entities.add(new Oar(i,0));
+            entities.add(new Oar(i,largeur-1));
         }
         return new Bateau(position,shape,100,deck,entities);
     }

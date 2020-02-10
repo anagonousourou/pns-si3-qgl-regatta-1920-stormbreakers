@@ -9,7 +9,7 @@
 
 
 # Navire
-- Rame
+- Oar
 -
 
 Bateau

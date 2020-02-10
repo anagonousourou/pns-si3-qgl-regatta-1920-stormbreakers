@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Equipment;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Gouvernail;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Marin;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Rame;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Oar;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -22,18 +22,18 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.Turn;
 
 class CaptainTest {
     private Captain rogers;
-    private Rame r1, r2, r3, r4, r5, r6;
+    private Oar r1, r2, r3, r4, r5, r6;
     private Marin m1, m2, m3, m4;
 
     @BeforeEach
     void setUp() {
         rogers = new Captain();
-        r1 = new Rame(0, 0);
-        r2 = new Rame(0, 2);
-        r3 = new Rame(2, 0);
-        r4 = new Rame(2, 2);
-        r5 = new Rame(4, 0);
-        r6 = new Rame(4, 2);
+        r1 = new Oar(0, 0);
+        r2 = new Oar(0, 2);
+        r3 = new Oar(2, 0);
+        r4 = new Oar(2, 2);
+        r5 = new Oar(4, 0);
+        r6 = new Oar(4, 2);
         m1 = new Marin(0, 0, 1, "Jose Martin");
         m2 = new Marin(1, 1, 0, "Gabriel Luu");
         m3 = new Marin(2, 4, 0, "Sandra Spinney");

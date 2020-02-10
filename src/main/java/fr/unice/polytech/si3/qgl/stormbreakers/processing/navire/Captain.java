@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.Oar;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.OarAction;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.SailorAction;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.Turn;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Equipment;
@@ -36,7 +36,7 @@ public class Captain {
                 for (Marin m : correspondances.get(oar)) {
                     if (!yetBusy.contains(m)) {
                         yetBusy.add(m);
-                        result.add(new Oar(m.getId()));
+                        result.add(new OarAction(m.getId()));
                         result.add(m.howToGoTo(oar.getX(), oar.getY()));
                         compteur++;
                         break;
@@ -119,7 +119,7 @@ public class Captain {
 
     public List<SailorAction> minRepartition(List<Equipment> rightOars, List<Equipment> leftOars, int diffToCatch,
             List<Marin> marinUtilise, List<Marin> allsailors) {
-        if (diffToCatch < 0) {
+        if (diffToCatch > 0) {
             return this.activateNbOars(rightOars, -diffToCatch, marinUtilise, allsailors);
         } else {
             return this.activateNbOars(leftOars, diffToCatch, marinUtilise, allsailors);
