@@ -12,18 +12,6 @@ public class Vector {
         this.y = y;
     }
 
-    public Vector(Cartesian start, Cartesian end) {
-        this.x = end.getX() - start.getX();
-        this.y = end.getY() - start.getY();
-    }
-
-    public Vector(Position start, Position end) {
-        this(
-                new Cartesian(start.getX(),start.getY()),
-                new Cartesian(end.getX(),end.getY())
-        );
-    }
-
     public double norm() {
         return Math.sqrt(x*x+y*y);
     }

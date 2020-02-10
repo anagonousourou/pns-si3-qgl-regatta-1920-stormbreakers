@@ -51,4 +51,5 @@ class NavigatorTest {
         // When behind to the right but unreachable
         assertEquals(-0.75 * Math.PI,navigator.additionalOrientationNeeded(new Position(1,1,Math.PI/2),new Point2D(2,-2)) );
     }
+
 }
