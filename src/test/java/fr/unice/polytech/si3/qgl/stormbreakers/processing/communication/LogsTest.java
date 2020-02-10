@@ -122,6 +122,7 @@ class LogsTest {
     
     @Test
     void testLog() {
+    	cleanUp();
     	logger.log("Lorem ipsum dolor sit amet, consectetur adipiscing elit");
     	assertEquals(1, logger.getSavedData().size());
     	
