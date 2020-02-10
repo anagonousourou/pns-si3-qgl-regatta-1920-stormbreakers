@@ -49,6 +49,11 @@ class FractionTest {
     }
 
     @Test
+    void gcdTest(){
+        assertEquals(2, Fraction.gcd(2, 4), "must be 2");
+    }
+
+    @Test
     void testEqualsWhenNullObject() {
         Fraction fraction = new Fraction(1, 1);
         Fraction other = null;

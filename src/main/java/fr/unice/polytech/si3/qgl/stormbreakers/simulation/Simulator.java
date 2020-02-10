@@ -6,6 +6,7 @@ import java.util.List;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
+import fr.unice.polytech.si3.qgl.regatta.cockpit.ICockpit;
 import fr.unice.polytech.si3.qgl.stormbreakers.Cockpit;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Oar;
@@ -20,7 +21,7 @@ class Simulator {
     Boat boat;
     InputParser ip = new InputParser();
     private final int NBSTEP = 100;
-    private Cockpit cockpit;
+    private ICockpit cockpit;
     private InputProvider inputProvider;
     private Calculator calculator;
 
@@ -43,7 +44,7 @@ class Simulator {
 
     }
 
-    Simulator(Cockpit cockpit, InputProvider inputProvider) throws IOException {
+    Simulator(ICockpit cockpit, InputProvider inputProvider) throws IOException {
         this.cockpit = cockpit;
         this.inputProvider = inputProvider;
         this.calculator=new Calculator();

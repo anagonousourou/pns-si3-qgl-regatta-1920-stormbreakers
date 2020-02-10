@@ -116,6 +116,11 @@ public class MoteurTest {
     }
 
     @Test
+    void anglesTest(){
+        
+        assertEquals(moteur3.possibleOrientations().size(), moteur3.possibleAngles().size(), "must be equal");
+    }
+    @Test
     void testDispatchUsingRudder() {
     	List<SailorAction> tmpActions = moteur3.actions();
     	assertFalse(tmpActions.isEmpty());

@@ -334,17 +334,7 @@ public class Fraction {
 
         int ad = this.denominator;
 
-        // Figure out the new denominator and the factors to get there.
-
-        int nd = Fraction.lcm(ad, bd);
-
-        int ax = nd / ad;
-
-        int bx = nd / bd;
-
-        int nn = (an * ax) + (bn * bx);
-
-        return new Fraction(nn, nd);
+        return new Fraction(an*bd+ad*bn , ad*bd);
 
     }
 
