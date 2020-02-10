@@ -33,8 +33,8 @@ public class Point2D {
     /**
      * Donne l'angle entre l'axe x et le vecteur position
      * retourne null si (0,0)
-     * @return une angle entre [0,2Pi[
-     * @throws RuntimeException if point is 0,0;
+     * @return une angle entre ]-Pi,Pi]
+     * @throws RuntimeException if point is 0,0
      */
     public double getAngleFromXAxis() {
         Vector unitX = new Vector(1,0);
@@ -53,8 +53,8 @@ public class Point2D {
         } else { // y!=0
             // Si y>0 l'angle est bien entre ]0,Pi[
             if (y>=0) return unorientedAngle;
-            // Si y<0 l'angle est entre ]Pi,2Pi[
-            else return 2*Math.PI - unorientedAngle;
+            // Si y<0 l'angle est entre ]-Pi,0[
+            else return -unorientedAngle;
         }
 
 
@@ -73,6 +73,10 @@ public class Point2D {
 
         double newX = x * Math.cos(theta) - y * Math.sin(theta);
         double newY = x * Math.sin(theta) + y * Math.cos(theta);
+
+        // On corrige des erreurs d'arrondis autour de 0
+        if (Utils.almostEquals(newX,0)) newX = 0;
+        if (Utils.almostEquals(newY,0)) newY = 0;
 
         return new Point2D(newX,newY);
     }

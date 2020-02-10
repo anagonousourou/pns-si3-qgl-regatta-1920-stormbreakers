@@ -32,17 +32,17 @@ class Point2DTest {
         assertEquals(Math.PI/3, new Point2D(0.5,Math.sqrt(3)/2).getAngleFromXAxis());
         assertEquals(Math.PI/4, new Point2D(Math.sqrt(2)/2,Math.sqrt(2)/2).getAngleFromXAxis());
         assertTrue(almostEquals(Math.PI/6,new Point2D(Math.sqrt(3)/2,0.5).getAngleFromXAxis()));
-
-        assertEquals(Math.PI/3+Math.PI, new Point2D(-0.5,-Math.sqrt(3)/2).getAngleFromXAxis());
-        assertEquals(Math.PI/4+Math.PI, new Point2D(-Math.sqrt(2)/2,-Math.sqrt(2)/2).getAngleFromXAxis());
-        assertEquals(Math.PI/6+Math.PI, new Point2D(-Math.sqrt(3)/2,-0.5).getAngleFromXAxis());
     }
 
     @Test
     void testGetAngleFromXAxisWhenUnderXAxis() {
-        assertEquals((2*Math.PI)-Math.PI/3, new Point2D(0.5,-Math.sqrt(3)/2).getAngleFromXAxis());
-        assertEquals((2*Math.PI)-Math.PI/4, new Point2D(Math.sqrt(2)/2,-Math.sqrt(2)/2).getAngleFromXAxis());
-        assertTrue(almostEquals((2*Math.PI)-Math.PI/6, new Point2D(Math.sqrt(3)/2,-0.5).getAngleFromXAxis()));
+        assertEquals(-Math.PI/3, new Point2D(0.5,-Math.sqrt(3)/2).getAngleFromXAxis());
+        assertEquals(-Math.PI/4, new Point2D(Math.sqrt(2)/2,-Math.sqrt(2)/2).getAngleFromXAxis());
+        assertTrue(almostEquals(-Math.PI/6, new Point2D(Math.sqrt(3)/2,-0.5).getAngleFromXAxis()));
+
+        assertEquals(Math.PI/3-Math.PI, new Point2D(-0.5,-Math.sqrt(3)/2).getAngleFromXAxis());
+        assertEquals(Math.PI/4-Math.PI, new Point2D(-Math.sqrt(2)/2,-Math.sqrt(2)/2).getAngleFromXAxis());
+        assertEquals(Math.PI/6-Math.PI, new Point2D(-Math.sqrt(3)/2,-0.5).getAngleFromXAxis());
     }
 
     @Test
@@ -50,8 +50,8 @@ class Point2DTest {
         Point2D point2D = new Point2D(Vector.createUnitVector(Math.PI/8));
         assertTrue(almostEquals(Math.PI/8,point2D.getAngleFromXAxis()));
 
-        point2D = new Point2D(Vector.createUnitVector(Math.PI/8+Math.PI));
-        assertTrue(almostEquals(Math.PI/8+Math.PI,point2D.getAngleFromXAxis()));
+        point2D = new Point2D(Vector.createUnitVector(-Math.PI/8));
+        assertTrue(almostEquals(-Math.PI/8,point2D.getAngleFromXAxis()));
     }
 
     @Test
