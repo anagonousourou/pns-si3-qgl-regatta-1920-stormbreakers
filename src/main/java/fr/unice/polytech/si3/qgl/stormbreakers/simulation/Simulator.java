@@ -6,8 +6,9 @@ import java.util.List;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
+import fr.unice.polytech.si3.qgl.regatta.cockpit.ICockpit;
 import fr.unice.polytech.si3.qgl.stormbreakers.Cockpit;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.SailorAction;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Oar;
 
 /**
@@ -19,8 +20,8 @@ class Simulator {
     EquipmentManager equipmentManager;
     Boat boat;
     InputParser ip = new InputParser();
-    private final int NBSTEP = 100;
-    private Cockpit cockpit;
+    private static final int NBSTEP = 100;
+    private ICockpit cockpit;
     private InputProvider inputProvider;
     private Calculator calculator;
 
@@ -30,12 +31,12 @@ class Simulator {
 
             @Override
             public String provideInit() throws IOException {
-                return new String(this.getClass().getResourceAsStream("/simul/fisa_init.json").readAllBytes());
+                return new String(this.getClass().getResourceAsStream("/simul/init5.json").readAllBytes());
             }
 
             @Override
             public String provideFirstRound() throws IOException {
-                return new String(this.getClass().getResourceAsStream("/simul/fisa_round1.json").readAllBytes());
+                return new String(this.getClass().getResourceAsStream("/simul/round1.json").readAllBytes());
             }
         });
         sim.setUpSimulation();
@@ -43,7 +44,7 @@ class Simulator {
 
     }
 
-    Simulator(Cockpit cockpit, InputProvider inputProvider) throws IOException {
+    Simulator(ICockpit cockpit, InputProvider inputProvider){
         this.cockpit = cockpit;
         this.inputProvider = inputProvider;
         this.calculator=new Calculator();
@@ -58,14 +59,11 @@ class Simulator {
      * @throws IOException
      */
 
-    void setUpSimulation() throws JsonMappingException, JsonProcessingException, IOException {
+    void setUpSimulation() throws JsonProcessingException, IOException {
         this.crew = new Crew(ip.fetchAllSailors(inputProvider.provideInit()));
         this.equipmentManager = new EquipmentManager(ip.fetchEquipments(inputProvider.provideInit()),
                 ip.fetchWidth(inputProvider.provideInit()));
-        boat = new Boat();
-        this.boat.setCrew(this.crew);
-        this.boat.setEquipmentManager(this.equipmentManager);
-        System.out.println("Crew 0:" + this.crew);
+        boat = new Boat(this.crew,this.equipmentManager);
 
     }
 
@@ -79,14 +77,10 @@ class Simulator {
         this.cockpit.initGame(inputProvider.provideInit());
         String actions = this.cockpit.nextRound(inputProvider.provideFirstRound());
         List<MoveAction> moves = ip.fetchMoves(actions);
-        List<OarAction> oarActions = ip.fetchOarActions(actions);
-        Position position=ip.fetchBoatPosition(inputProvider.provideFirstRound());
-        // System.out.println(moves);
+        List<SailorAction> sailorActions = ip.fetchActionsExceptMoveAction(actions);
         this.crew.executeMoves(moves);
-        this.crew.executeActions(oarActions);
-        double rotation=this.angleRotation();
-        System.out.println("Rotation: " + rotation );
-        
+        this.crew.executeActions(sailorActions);
+        System.out.println(this.cockpit.getLogs());
         
     }
 
@@ -104,11 +98,13 @@ class Simulator {
             }
         }
 
+        radialSpeed+=this.equipmentManager.rudderRotation();
+
         return radialSpeed;
     }
 
     double speed(){
-        return (165*this.equipmentManager.nbUsedOars())/this.equipmentManager.nbOars();
+        return (165*this.equipmentManager.nbUsedOars())/(double)this.equipmentManager.nbOars();
     }
 
     
