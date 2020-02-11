@@ -2,7 +2,7 @@ package fr.unice.polytech.si3.qgl.stormbreakers.refactoring;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Wind;
 
-public class SeaElements {
+public class SeaElements{
 
     private Wind wind;
     private Boat boat;
@@ -15,6 +15,8 @@ public class SeaElements {
         this.equipmentManager = equipmentManager;
     }
 
+
+
     /**
      * Calculate the norm of the speed procured by the wind and later
      * the streams given the current and actual conditions
@@ -22,6 +24,11 @@ public class SeaElements {
      * @return
      */
     public double currentExternalSpeed() {
+        if(wind!=null && equipmentManager.nbSails()!=0){
+            return ((double) equipmentManager.nbOpennedSails()/equipmentManager.nbSails())*wind.getStrength()*Math.cos(
+                this.boat.getOrientation()-this.wind.getOrientation()
+            );
+        }
         return 0.0;
     }
 

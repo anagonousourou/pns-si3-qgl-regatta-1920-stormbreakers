@@ -68,8 +68,6 @@ public class Point2D {
      * @return le point post-rotation
      */
     public Point2D getRotatedBy(double theta) {
-        Vector unitX = new Vector(1,0);
-        Vector toPoint = new Vector(getX(),getY());
 
         double newX = x * Math.cos(theta) - y * Math.sin(theta);
         double newY = x * Math.sin(theta) + y * Math.cos(theta);

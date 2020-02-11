@@ -15,6 +15,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Equipment;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Gouvernail;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Oar;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Sail;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Checkpoint;
 
 /**
@@ -96,9 +97,12 @@ public class InputParser {
 
 				equipment = new Gouvernail(e.get("x").asInt(), e.get("y").asInt());
 
-			} else {
+			} else if (e.get("type").asText().equals("sail")) {
+				equipment = new Sail(e.get("x").asInt(), e.get("y").asInt(), e.get("openned").asBoolean());
 
-				// TODO Voile/Vigie si besoin
+			}else {
+
+				// TODO Vigie si besoin
 
 			}
 

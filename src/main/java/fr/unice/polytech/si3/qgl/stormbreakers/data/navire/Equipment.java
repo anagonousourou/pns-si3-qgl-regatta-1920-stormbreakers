@@ -9,7 +9,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.refactoring.IntPosition;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
 @JsonSubTypes({ @JsonSubTypes.Type(value = Oar.class, name = "oar") ,
-        // @JsonSubTypes.Type(value = Voile.class, name="sail"),
+        // @JsonSubTypes.Type(value = Sail.class, name="sail"),
         @JsonSubTypes.Type(value = Gouvernail.class, name="rudder")//,
         // @JsonSubTypes.Type(value = Vigie.class, name="watch")
 })

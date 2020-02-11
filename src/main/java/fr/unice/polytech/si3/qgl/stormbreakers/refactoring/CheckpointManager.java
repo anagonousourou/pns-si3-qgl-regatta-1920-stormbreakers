@@ -7,7 +7,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Checkpoint;
 
 public class CheckpointManager {
 
-    List<Checkpoint> checkpoints;
+    private final List<Checkpoint> checkpoints;
     public CheckpointManager(List<Checkpoint> checkpoints){
         this.checkpoints=checkpoints;
 
@@ -25,6 +25,9 @@ public class CheckpointManager {
      * @return the nextCheckpoint in the List
      */
 	public Checkpoint nextCheckpoint() {
+        if(this.checkpoints!=null && !this.checkpoints.isEmpty()) {
+            this.checkpoints.get(0);
+        }
 		return null;
 	}
     

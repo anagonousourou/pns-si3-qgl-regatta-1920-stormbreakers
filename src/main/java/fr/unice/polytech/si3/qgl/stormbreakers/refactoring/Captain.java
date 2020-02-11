@@ -19,12 +19,15 @@ public class Captain {
     final private double EPS = 0.001;
     final private double SPEED = 165;
 
-    public Captain(Boat boat, CheckpointManager checkpointManager, EquipmentManager equipmentManager, Crew crew,
-            Navigator navigator) {
+    private SeaElements seaElements;
+
+    public Captain(Boat boat, CheckpointManager checkpointManager,   EquipmentManager equipmentManager, Crew crew,
+            Navigator navigator, SeaElements seaElements,MediatorCrewEquipment mediatorCrewEquipment) {
         this.boat = boat;
         this.checkpointManager = checkpointManager;
         this.navigator = navigator;
-        this.mediatorCrewEquipment = new MediatorCrewEquipment(crew, equipmentManager);
+        this.mediatorCrewEquipment = mediatorCrewEquipment;
+        this.seaElements= seaElements;
 
     }
 

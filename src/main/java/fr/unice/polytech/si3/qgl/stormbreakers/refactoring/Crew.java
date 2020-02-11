@@ -1,16 +1,14 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.refactoring;
 
 import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.SailorAction;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Oar;
 
 public class Crew {
 
-    private List<Marine> marins;
+    private final List<Marine> marins;
 
     public Crew(List<Marine> marins) {
         this.marins = marins;
@@ -30,9 +28,7 @@ public class Crew {
      * @param moves
      */
     public void executeMovingsInSailorAction(List<SailorAction> actions) {
-        for (SailorAction m : actions) {
-            // TODO complete
-        }
+        
     }
 
     

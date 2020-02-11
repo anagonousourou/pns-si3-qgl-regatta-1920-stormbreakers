@@ -4,17 +4,15 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.List;
 
-import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Circle;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Shape;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Equipment;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Oar;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Checkpoint;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Equipment;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Oar;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Checkpoint;
 
 class InputParserTest {
 
