@@ -2,8 +2,6 @@ package fr.unice.polytech.si3.qgl.stormbreakers.math;
 
 import java.util.Objects;
 
-import fr.unice.polytech.si3.qgl.stormbreakers.exceptions.ImpossibleAngleError;
-
 /**
  * Un point 2D dans une espace reel
  */
@@ -46,16 +44,16 @@ public class Point2D {
 
         if (x==0 && y==0) {
             // L'angle n'est pas définit
-            throw new ImpossibleAngleError("Cannot define angle for 0,0");
+            throw new RuntimeException("Cannot define angle for 0,0");
         } else if (y==0)  { // x!=0 et y==0
             // Si x > 0 l'angle est 0
             if (x > 0) return 0;
-                // Si x < 0 l'angle est Pi
+            // Si x < 0 l'angle est Pi
             else return Math.PI;
         } else { // y!=0
             // Si y>0 l'angle est bien entre ]0,Pi[
             if (y>=0) return unorientedAngle;
-                // Si y<0 l'angle est entre ]-Pi,0[
+            // Si y<0 l'angle est entre ]-Pi,0[
             else return -unorientedAngle;
         }
 
@@ -70,6 +68,8 @@ public class Point2D {
      * @return le point post-rotation
      */
     public Point2D getRotatedBy(double theta) {
+        Vector unitX = new Vector(1,0);
+        Vector toPoint = new Vector(getX(),getY());
 
         double newX = x * Math.cos(theta) - y * Math.sin(theta);
         double newY = x * Math.sin(theta) + y * Math.cos(theta);
