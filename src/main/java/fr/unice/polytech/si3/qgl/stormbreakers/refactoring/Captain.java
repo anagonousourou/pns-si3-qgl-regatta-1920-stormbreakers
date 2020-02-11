@@ -21,13 +21,13 @@ public class Captain {
 
     private SeaElements seaElements;
 
-    public Captain(Boat boat, CheckpointManager checkpointManager,   EquipmentManager equipmentManager, Crew crew,
-            Navigator navigator, SeaElements seaElements,MediatorCrewEquipment mediatorCrewEquipment) {
+    public Captain(Boat boat, CheckpointManager checkpointManager, EquipmentManager equipmentManager, Crew crew,
+            Navigator navigator, SeaElements seaElements, MediatorCrewEquipment mediatorCrewEquipment) {
         this.boat = boat;
         this.checkpointManager = checkpointManager;
         this.navigator = navigator;
         this.mediatorCrewEquipment = mediatorCrewEquipment;
-        this.seaElements= seaElements;
+        this.seaElements = seaElements;
 
     }
 
@@ -35,13 +35,14 @@ public class Captain {
      * Principal point d'entrée de la fonction
      */
     public List<SailorAction> nextRoundActions() {
-        //On remet le statut doneTurn de tout les marins à false
+        // On remet le statut doneTurn de tout les marins à false
         this.mediatorCrewEquipment.resetAvailability();
         this.checkpointManager.updateCheckpoint(boat.getPosition());
         // TODO condition pour le cas où on a fini ie plus de nextCheckpoint
         Checkpoint chpoint = this.checkpointManager.nextCheckpoint();
-
-        double orientation = this.navigator.additionalOrientationNeeded(boat.getPosition(), chpoint.getPosition().getPoint2D());
+        
+        double orientation = this.navigator.additionalOrientationNeeded(boat.getPosition(),
+                chpoint.getPosition().getPoint2D());
         double distance = boat.getPosition().distanceTo(chpoint.getPosition());
 
         List<SailorAction> actionsOrientation = this.actionsToOrientate(orientation);
@@ -63,47 +64,47 @@ public class Captain {
      * @return
      */
     List<SailorAction> actionsToOrientate(double orientation) {
-        if (Math.abs(orientation) < this.EPS) {//pas besoin de pivoter
+        if (Math.abs(orientation) < this.EPS) {// pas besoin de pivoter
             return List.of();
-        } 
-        //le gouvernail existe, est accessible et suffit
-        else if (mediatorCrewEquipment.rudderIsPresent() && mediatorCrewEquipment.rudderIsAccesible() && (Math.abs(orientation) <= Math.PI /4) ) {
-            
-                List<SailorAction> actions=new ArrayList<>();
-                Marine rudderMarine=mediatorCrewEquipment.marineForRudder();
-                Move tmpMove=rudderMarine.getPosition().howToMoveTo( mediatorCrewEquipment.rudderPosition() );
-                actions.add( new MoveAction(rudderMarine.getId(), tmpMove.getXdistance(),tmpMove.getYdistance() ));
-                actions.add( new Turn(rudderMarine.getId(),orientation) );
-                rudderMarine.setDoneTurn(true);
+        }
+        // le gouvernail existe, est accessible et suffit
+        else if (mediatorCrewEquipment.rudderIsPresent() && mediatorCrewEquipment.rudderIsAccesible()
+                && (Math.abs(orientation) <= Math.PI / 4)) {
 
-                return actions;
+            List<SailorAction> actions = new ArrayList<>();
+            Marine rudderMarine = mediatorCrewEquipment.marineForRudder();
+            Move tmpMove = rudderMarine.getPosition().howToMoveTo(mediatorCrewEquipment.rudderPosition());
+            actions.add(new MoveAction(rudderMarine.getId(), tmpMove.getXdistance(), tmpMove.getYdistance()));
+            actions.add(new Turn(rudderMarine.getId(), orientation));
+            rudderMarine.setDoneTurn(true);
+
+            return actions;
             /**
-             * TODO Plus tard, rajouter le cas où le gouvernail existe, est accessible
-             * mais ne suffit pas
+             * TODO Plus tard, rajouter le cas où le gouvernail existe, est accessible mais
+             * ne suffit pas
              */
 
-        } 
-        //le gouvernail n'existe pas 
-        else{
-            List<SailorAction> actions=new ArrayList<>();
-            int diff=navigator.fromAngleToDiff(orientation);
-            if(diff < 0){
+        }
+        // le gouvernail n'existe pas
+        else {
+            List<SailorAction> actions = new ArrayList<>();
+            int diff = navigator.fromAngleToDiff(orientation);
+            if (diff < 0) {
                 int tmp = -diff;
-                
+
                 do {
-                    actions=this.mediatorCrewEquipment.activateOarsOnRight(tmp);
+                    actions = this.mediatorCrewEquipment.activateOarsOnRight(tmp);
                     tmp--;
-                }while(actions.size()==0 && tmp!=0);
-            }
-            else{
+                } while (actions.size() == 0 && tmp != 0);
+            } else {
                 int tmp = diff;
                 do {
-                    actions=this.mediatorCrewEquipment.activateOarsOnLeft(tmp);
+                    actions = this.mediatorCrewEquipment.activateOarsOnLeft(tmp);
                     tmp--;
-                }while(actions.size()==0 && tmp!=0);
+                } while (actions.size() == 0 && tmp != 0);
             }
-            actions.forEach(action->{
-                this.mediatorCrewEquipment.getMarinById(action.getSailorId()).setDoneTurn(true); 
+            actions.forEach(action -> {
+                this.mediatorCrewEquipment.getMarinById(action.getSailorId()).setDoneTurn(true);
             });
             return actions;
         }

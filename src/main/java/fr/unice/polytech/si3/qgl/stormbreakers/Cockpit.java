@@ -8,7 +8,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.refactoring.Control;
 
 public class Cockpit implements ICockpit {
 	
-	Control control;
+	private Control control;
 	public void initGame(String game) {
 
 		this.control=new Control(game);
