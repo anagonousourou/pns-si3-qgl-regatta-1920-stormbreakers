@@ -12,7 +12,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Marin;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Checkpoint;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.RegattaGoal;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Bateau;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Vent;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Wind;
 
 /**
  * Classe representant l'etat du jeu au debut du tour courant
@@ -20,12 +20,12 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Vent;
 
 public class GameState {
 
-    private Bateau ship;
+    private final Bateau ship;
     private List<Marin> orgaMarins;
     private List<Checkpoint> checkpoints;
     private InitGame stateInit;
 
-    private Vent wind;
+    private Wind wind;
 
     GameState(Bateau ship, List<Marin> orgaMarins, List<Checkpoint> checkpoints) {
         this.ship = ship;
@@ -42,7 +42,7 @@ public class GameState {
     public GameState(InitGame initGame) {
         this.ship = initGame.getShip();
         this.orgaMarins = initGame.getSailors();
-        this.wind = new Vent(0.0, 0.0);
+        this.wind = new Wind(0.0, 0.0);
         this.stateInit = initGame;
 
         if (initGame.getGoal().getMode().equals("REGATTA")) {
@@ -57,7 +57,7 @@ public class GameState {
      * @param nextRound contient les donnees actualisees
      */
     public void updateTurn(NextRound nextRound) {
-        ship = nextRound.getShip();
+        this.ship.updateSelf(nextRound.getShip());
         wind = nextRound.getWind();
         if (checkpoints != null)
             actualiserCheckpoints();
@@ -122,7 +122,7 @@ public class GameState {
         return orgaMarins;
     }
 
-    public Vent getWind() {
+    public Wind getWind() {
         return wind;
     }
 

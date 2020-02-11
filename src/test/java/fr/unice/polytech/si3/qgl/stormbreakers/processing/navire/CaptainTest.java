@@ -9,13 +9,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Equipment;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Gouvernail;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Marin;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Oar;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.MoveAction;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.SailorAction;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Equipment;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Marin;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Oar;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.Turn;
 
 class CaptainTest {
     private Captain rogers;
@@ -75,40 +78,64 @@ class CaptainTest {
 
     @Test
     void toActivateTest() {
-        int widthship = 2;
-        List<Equipment> leftOars;
-        List<Equipment> rightOars;
-        List<Equipment> oars = new ArrayList<>();
-        oars.addAll(List.of(r1, r2, r3, r4));
-        if (widthship % 2 == 1) {// impair
-            leftOars = oars.stream().filter(oar -> oar.getY() < widthship / 2).collect(Collectors.toList());
-            rightOars = oars.stream().filter(oar -> oar.getY() > widthship / 2).collect(Collectors.toList());
-        } else {
-            leftOars = oars.stream().filter(oar -> oar.getY() < widthship / 2).collect(Collectors.toList());
-            rightOars = oars.stream().filter(oar -> oar.getY() >= widthship / 2).collect(Collectors.toList());
-        }
-        int rameGauche = 0;
-        int rameDroite = 0;
-
-        List<Marin> allsailors = new ArrayList<>();
-        System.out.println();
-        allsailors.addAll(List.of(m1, m2, m3, m4));
-        var listAction = rogers.toActivate(leftOars, rightOars, new ArrayList<Marin>(), allsailors);
-        System.out.println(listAction);
-        var usedSailors = new ArrayList<Marin>();
-        List<SailorAction> listActionDroite = rogers.activateNbOars(rightOars, 4, usedSailors, allsailors);
-        List<SailorAction> listActionGauche = rogers.activateNbOars(rightOars, 4, usedSailors, allsailors);
-        for (SailorAction actionLeft : listActionGauche) {
-            if (listAction.contains(actionLeft)) {
-                rameGauche++;
-            }
-        }
-        for (SailorAction actionRight : listActionDroite) {
-            if (listAction.contains(actionRight)) {
-                rameDroite++;
-            }
-        }
-        assertEquals(rameDroite, rameGauche);
+		int widthship = 2;
+		List<Equipment> leftOars;
+		List<Equipment> rightOars;
+		List<Equipment> oars=new ArrayList<>();
+		oars.addAll(List.of(r1,r2,r3,r4));
+		if (widthship % 2 == 1) {// impair
+			leftOars = oars.stream().filter(oar -> oar.getY() < widthship / 2).collect(Collectors.toList());
+			rightOars = oars.stream().filter(oar -> oar.getY() > widthship / 2).collect(Collectors.toList());
+		} else {
+			leftOars = oars.stream().filter(oar -> oar.getY() < widthship / 2).collect(Collectors.toList());
+			rightOars = oars.stream().filter(oar -> oar.getY() >= widthship / 2).collect(Collectors.toList());
+		}
+		int rameGauche=0;
+		int rameDroite=0;
+		
+		List<Marin> allsailors= new ArrayList<>();
+		allsailors.addAll(List.of(m1,m2,m3,m4));
+    	var listAction= rogers.toActivate(leftOars, rightOars, new ArrayList<Marin>(), allsailors);
+		var usedSailors= new ArrayList<Marin>();
+    	List<SailorAction> listActionDroite=rogers.activateNbOars(rightOars, 4, usedSailors, allsailors);
+    	List<SailorAction> listActionGauche=rogers.activateNbOars(rightOars, 4, usedSailors, allsailors);
+    	for(SailorAction actionLeft:listActionGauche) {
+    		if(listAction.contains(actionLeft)) {
+    			rameGauche++;
+    		}
+    	}
+    	for(SailorAction actionRight:listActionDroite) {
+    		if(listAction.contains(actionRight)) {
+    			rameDroite++;
+    		}
+    	}
+    	assertEquals(rameDroite, rameGauche);
+    }
+    
+    @Test
+    void activateRudderTest() {
+    	List<SailorAction> toTest1 = rogers.activateRudder(new ArrayList<Marin>(), List.of(m1, m2, m3, m4), new Gouvernail(0, 1), Math.PI/5);
+    	assertEquals(0, toTest1.get(0).getSailorId());
+    	assertEquals(0, toTest1.get(1).getSailorId());
+    	assertTrue(toTest1.get(0) instanceof MoveAction);
+    	assertTrue(toTest1.get(1) instanceof Turn);
+    	assertEquals(Math.PI/5, ((Turn) toTest1.get(1)).getRotation());
+    	
+    	List<SailorAction> toTest2 = rogers.activateRudder(new ArrayList<Marin>(), List.of(m1, m2), new Gouvernail(0, 1), -Math.PI/2);
+    	assertEquals(-Math.PI/4, ((Turn) toTest2.get(1)).getRotation());
+    	
+    	List<SailorAction> toTest3 = rogers.activateRudder(new ArrayList<Marin>(), List.of(m1), new Gouvernail(0, 1), Math.PI/2);
+    	assertEquals(Math.PI/4, ((Turn) toTest3.get(1)).getRotation());
     }
 
+    @Test
+    void marinsProcheGouvernailTest() {
+    	List<Marin> toTest1 = rogers.marinsProcheGouvernail(new Gouvernail(4, 5), List.of(m1, m2, m3, m4));
+    	assertTrue(toTest1.contains(m3));
+    	assertTrue(toTest1.contains(m4));
+    	assertEquals(2, toTest1.size());
+    	List<Marin> toTest2 = rogers.marinsProcheGouvernail(new Gouvernail(8, 9), List.of(m1, m2, m3, m4));
+    	assertTrue(toTest2.isEmpty());
+    	
+    }
 }

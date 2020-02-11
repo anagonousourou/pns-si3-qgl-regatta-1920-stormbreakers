@@ -13,10 +13,10 @@ import fr.unice.polytech.si3.qgl.stormbreakers.processing.communication.OutputBu
 import fr.unice.polytech.si3.qgl.stormbreakers.refactoring.Boat;
 import fr.unice.polytech.si3.qgl.stormbreakers.refactoring.Captain;
 import fr.unice.polytech.si3.qgl.stormbreakers.refactoring.CheckpointManager;
-import fr.unice.polytech.si3.qgl.stormbreakers.refactoring.Navigator;
 import fr.unice.polytech.si3.qgl.stormbreakers.refactoring.Crew;
 import fr.unice.polytech.si3.qgl.stormbreakers.refactoring.EquipmentManager;
 import fr.unice.polytech.si3.qgl.stormbreakers.refactoring.InputParser;
+import fr.unice.polytech.si3.qgl.stormbreakers.refactoring.Navigator;
 
 public class Cockpit implements ICockpit {
 	private InputParser parser = new InputParser();

@@ -4,19 +4,19 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Bateau;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.OceanEntity;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Vent;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Wind;
 
 import java.util.List;
 
 public class NextRound {
     private Bateau ship;
-    private Vent wind;
+    private Wind wind;
     private List<OceanEntity> visibleEntities;
 
     @JsonCreator
     NextRound(
             @JsonProperty("ship") Bateau ship,
-            @JsonProperty("wind") Vent wind,
+            @JsonProperty("wind") Wind wind,
             @JsonProperty("visibleEntities") List<OceanEntity> visibleEntities
     ) {
         this.ship = ship;
@@ -30,7 +30,7 @@ public class NextRound {
     }
 
     @JsonProperty("wind")
-    public Vent getWind() {
+    public Wind getWind() {
         return wind;
     }
 

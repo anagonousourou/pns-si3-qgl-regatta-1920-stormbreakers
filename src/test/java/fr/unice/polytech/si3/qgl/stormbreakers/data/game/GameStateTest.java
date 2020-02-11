@@ -57,10 +57,8 @@ class GameStateTest {
     @Test
     void testActualiserTour() {
         gameState.updateTurn(nextRoundSample);
+        //seul la position nous intéresse pour le moment
         assertEquals(nextRoundSample.getShip().getPosition(), gameState.getPositionBateau());
-        assertEquals(nextRoundSample.getShip().getLife(), gameState.getVieBateau());
-        assertEquals(nextRoundSample.getShip().getEquipments(), gameState.getEquipmentState());
-        assertEquals(nextRoundSample.getWind(), gameState.getWind());
     }
 
     @Test

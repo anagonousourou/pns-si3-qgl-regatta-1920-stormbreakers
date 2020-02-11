@@ -14,7 +14,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Shape;
 
 public abstract class OceanEntity {
   private String type;
-  private Position position;
+  protected Position position;
   private Shape shape;
 
   @JsonCreator

@@ -3,12 +3,12 @@ package fr.unice.polytech.si3.qgl.stormbreakers.data.ocean;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class Vent {
+public class Wind {
     private double orientation;
     private double strength;
 
     @JsonCreator
-    public Vent(
+    public Wind(
             @JsonProperty("orientation") double orientation,
             @JsonProperty("strength") double strength
     ) {

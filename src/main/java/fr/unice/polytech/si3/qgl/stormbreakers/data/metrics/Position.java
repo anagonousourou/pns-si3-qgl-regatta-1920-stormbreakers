@@ -4,9 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.Logable;
-import fr.unice.polytech.si3.qgl.stormbreakers.math.Cartesian;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
-import fr.unice.polytech.si3.qgl.stormbreakers.math.Polar;
 
 import java.util.Objects;
 
@@ -37,10 +35,6 @@ public class Position implements Logable {
         return y;
     }
 
-    public double thetaTo(Position other) {
-        return Math.atan2(other.getY(), other.getX()) - Math.atan2(this.getY(), this.getX());
-    }
-
     public Point2D getPoint2D() {
         return new Point2D(getX(),getY());
     }
@@ -51,12 +45,6 @@ public class Position implements Logable {
 
     public double getOrientation() {
         return this.orientation;
-    }
-
-    public Position getRotatedBy(double theta) {
-        Polar oldPolar = new Cartesian(x, y).toPolar();
-        Cartesian rotatedCartesian = new Polar(oldPolar.getR(), oldPolar.getTheta() + theta).toCartesian();
-        return new Position(rotatedCartesian.getX(), rotatedCartesian.getY(), oldPolar.getTheta() + theta);
     }
 
     @Override

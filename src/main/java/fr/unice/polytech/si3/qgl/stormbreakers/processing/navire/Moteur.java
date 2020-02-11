@@ -11,12 +11,11 @@ import java.util.stream.Collectors;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.SailorAction;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.game.GameState;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Equipment;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Marin;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Checkpoint;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Bateau;
-import fr.unice.polytech.si3.qgl.stormbreakers.math.Vector;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.Fraction;
 import fr.unice.polytech.si3.qgl.stormbreakers.processing.communication.Logger;
 
 public class Moteur {
@@ -52,6 +51,7 @@ public class Moteur {
 
 	/**
 	 * Fonction pour donner les actions pour atteindre un checkpoint
+	 * 
 	 * @param target
 	 * @return La liste d'action à effectuer pour se diriger vers le checkpoint
 	 */
@@ -67,29 +67,52 @@ public class Moteur {
 	 * @return les SailorAction finales
 	 */
 	List<SailorAction> dispatchSailors(Checkpoint target) {
-		Set<Double> oarsAngles = this.possibleOrientations();
+		Set<Fraction> oarsAngles = this.possibleOrientations();
 		double angle = this.orientationNeeded(target);
+		List<SailorAction> result = new ArrayList<>();
 
 		// Log angle to move by
 		Logger.getInstance().log("a:" + angle + " ");
-
 		List<Marin> marinUtilise = new ArrayList<>();
 		if (Math.abs(angle) <= Moteur.EPS) {
+			result.addAll(captain.toActivate(this.leftOars, this.rightOars, marinUtilise, this.sailors));
+			return result;
+		} else if (this.haveGouvernailandIsAccessible() && Math.abs(angle) <= Math.PI / 4) {
 
-			return captain.toActivate(this.leftOars, this.rightOars, marinUtilise, this.sailors);
-		} else {
-			Optional<Double> optAngle = oarsAngles.stream().filter(a -> a * angle > 0.0)
+			List<Marin> marinAccssibles = captain.marinsProcheGouvernail(this.ship.getGouvernail().get(0),
+					this.sailors);
+			result.addAll(
+					captain.activateRudder(marinUtilise, marinAccssibles, this.ship.getGouvernail().get(0), angle));
 
-					.min((a, b) -> Double.compare(Math.abs(a - angle), Math.abs(b - angle)));
+			result.addAll(captain.toActivate(this.leftOars, this.rightOars, marinUtilise, this.sailors));
+			return result;
+		}
+
+		else {
+			final double angleForSailor = angle;
+			Optional<Fraction> optAngle = oarsAngles.stream().filter(a -> a.eval() * angleForSailor > 0.0)
+
+					.min((a, b) -> Double.compare(Math.abs(a.eval() * PI - angleForSailor),
+							Math.abs(b.eval() * PI - angleForSailor)));
 			if (optAngle.isPresent()) {
-				double approachingAngle = optAngle.get();
-				return captain.minRepartition(this.rightOars, this.leftOars, this.angleToDiff(approachingAngle),
-						marinUtilise, this.sailors);
+				Fraction approachingAngle = optAngle.get();
+				result.addAll(captain.minRepartition(this.rightOars, this.leftOars, this.angleToDiff(approachingAngle),
+						marinUtilise, this.sailors));
+				return result;
 			} else {
-				return new ArrayList<>();
+				return result;
 			}
 
 		}
+	}
+
+	private boolean haveGouvernailandIsAccessible() {
+		List<Equipment> gouvernail = this.ship.getGouvernail();
+		if (!gouvernail.isEmpty()) {
+			List<Marin> marinAccssibles = captain.marinsProcheGouvernail(gouvernail.get(0), this.sailors);
+			return !marinAccssibles.isEmpty();
+		}
+		return false;
 	}
 
 	public List<SailorAction> actions() {
@@ -99,40 +122,36 @@ public class Moteur {
 
 	/**
 	 * Methode servant a retourner les angles possibles du navire, ainsi que la
-	 * difference entre le nombre de rames a babord et le nombre de rames a tribord
-	 * necessaire pour chaque angle
+	 * difference entre le nombre de rames a babord(gauche) et le nombre de rames a
+	 * tribord(droite) necessaire pour chaque angle
 	 * 
 	 * @return une HashMap donc la key est l'angle, la value etant la difference
 	 *         mentionnee au-dessus.
 	 */
-	private Map<Double, Integer> possibleAngles() {
-		double nbOars = ship.getRames().size();
-		HashMap<Double, Integer> results = new HashMap<>();
-		results.put(0.0, 0);
+	Map<Fraction, Integer> possibleAngles() {
+		int nbOars = ship.getRames().size();
+		HashMap<Fraction, Integer> results = new HashMap<>();
 		for (int i = 0; i <= leftOars.size(); i++) {
 			for (int j = 0; j <= rightOars.size(); j++) {
-				if (i != j) {
-					results.put(PI / (nbOars / (j - i)), j - i);
+				if (Math.abs(new Fraction(j - i, nbOars).eval()) <= 0.5) {
+					results.put(new Fraction(j - i, nbOars), j - i);
 				}
 			}
 		}
 		return results;
 	}
 
-	private int angleToDiff(double angle) {
+	private int angleToDiff(Fraction angle) {
 		return possibleAngles().get(angle);
-
 	}
 
-	public Set<Double> possibleOrientations() {
+	public Set<Fraction> possibleOrientations() {
 		int nbOars = ship.getRames().size();
-		Set<Double> result = new HashSet<>();
-
-		double step = PI / nbOars;
+		Set<Fraction> result = new HashSet<>();
 		for (int i = 0; i <= nbOars; i++) {
-			result.add((-PI / 2) + (i * step));
+			var f = new Fraction(-1, 2).add(new Fraction(i, nbOars));
+			result.add(f);
 		}
-
 		return result;
 	}
 
@@ -145,25 +164,7 @@ public class Moteur {
 	 * @return
 	 */
 	double orientationNeeded(Checkpoint target) {
-		double orientationShip = ship.getPosition().getOrientation();
-		Vector orientationUnit = Vector.createUnitVector(orientationShip);
-
-		Vector ShipToTarget = new Vector(ship.getPosition(),target.getPosition());
-
-		int angleSign = getAngleSign(target.getPosition(),ship.getPosition(), orientationShip);
-
-		// Si le bateau est sur le point même du checkpoint, l'angle duquel tourner est definit a 0
-		Double angleValue = (ShipToTarget.norm()>0)?orientationUnit.angleBetween(ShipToTarget):0;
-		return (double) ((angleValue != 0)?angleSign:1) * angleValue;
+		return new Navigator().additionalOrientationNeeded(ship.getPosition(), target.getPosition().getPoint2D());
 	}
 
-	// TODO: 08/02/2020 Use Coords instead of pos
-	private int getAngleSign(Position target, Position shipPos, Double shipOrientation) {
-		// On bouge le plan pour ramener le bateau en 0,0
-		Position target2 = new Position(target.getX()-shipPos.getX(),target.getY()-shipPos.getY(),0);
-		// On tourne le plan pour faire pointer le bateau selon l'axe x
-		Position target3 = target2.getRotatedBy(-shipOrientation);
-		// Si y positif on tourne en sens trigo
-		return (target3.getY()>0)?1:-1;
-	}
 }

@@ -44,6 +44,9 @@ public class Bateau extends AutreBateau implements Logable {
     public List<Equipment> getRames() {
     	return this.entities.stream().filter(e-> e.getType().equals("oar")).collect(Collectors.toList());
     }
+    public List<Equipment> getGouvernail() {
+    	return this.entities.stream().filter(e-> e.getType().equals("rudder")).collect(Collectors.toList());
+    }
     @JsonProperty("deck")
     public Deck getDeck() {
 		return deck;
@@ -58,6 +61,10 @@ public class Bateau extends AutreBateau implements Logable {
     private String entitiesToString() {
         List<Logable> logables = new ArrayList<>(entities);
         return Logable.listToLogs(logables,"|", "[", "]");
+    }
+
+    public void updateSelf(Bateau newState){
+        this.position=newState.position;
     }
 
 }

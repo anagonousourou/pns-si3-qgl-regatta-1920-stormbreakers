@@ -13,7 +13,7 @@ public class OarAction extends SailorAction implements Logable {
 
     @Override
     public String toString() {
-        return "Oar( idsailor:" + this.getSailorId() + " )";
+        return "OarAction( id:" + this.getSailorId() + " )";
     }
 
     @Override

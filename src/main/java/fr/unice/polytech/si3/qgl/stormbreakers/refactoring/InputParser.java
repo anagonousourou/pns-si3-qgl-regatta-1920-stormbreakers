@@ -25,7 +25,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Checkpoint;
 public class InputParser {
 	ObjectMapper mapper = new ObjectMapper();
 
-	public List<Marine> fetchAllSailors(String jsonInput) throws JsonMappingException, JsonProcessingException {
+	public List<Marine> fetchAllSailors(String jsonInput) throws  JsonProcessingException {
 		List<Marine> marins = new ArrayList<>();
 		mapper.readTree(jsonInput).get("sailors").forEach(s -> {
 			marins.add(new Marine(s.get("id").asInt(), s.get("x").asInt(), s.get("y").asInt()));
@@ -33,7 +33,7 @@ public class InputParser {
 		return marins;
 	}
 
-	public List<Oar> fetchAllOars(String jString) throws JsonMappingException, JsonProcessingException {
+	public List<Oar> fetchAllOars(String jString) throws  JsonProcessingException {
 		List<Oar> oars = new ArrayList<>();
 		mapper.readTree(jString).get("ship").get("entities").forEach(s -> {
 			oars.add(new Oar(s.get("x").asInt(), s.get("y").asInt()));
@@ -42,7 +42,7 @@ public class InputParser {
 		return oars;
 	}
 
-	public int fetchWidth(String jString) throws JsonMappingException, JsonProcessingException {
+	public int fetchWidth(String jString) throws  JsonProcessingException {
 		return mapper.readTree(jString).get("ship").get("deck").get("width").asInt();
 	}
 
@@ -56,7 +56,7 @@ public class InputParser {
 	 * @throws JsonMappingException
 	 * @throws JsonProcessingException
 	 */
-	public List<Checkpoint> fetchCheckpoints(String jString) throws JsonMappingException, JsonProcessingException {
+	public List<Checkpoint> fetchCheckpoints(String jString) throws  JsonProcessingException {
 		List<Checkpoint> checkpoints = new ArrayList<>();
 		mapper.readTree(jString).get("goal").get("checkpoints").forEach(c -> {
 			Shape shape;
@@ -72,7 +72,7 @@ public class InputParser {
 		return checkpoints;
 	}
 
-	public List<Equipment> fetchEquipments(String jString) throws JsonMappingException, JsonProcessingException {
+	public List<Equipment> fetchEquipments(String jString) throws JsonProcessingException {
 		List<Equipment> equipments = new ArrayList<>();
 		mapper.readTree(jString).get("ship").get("entities").forEach(e -> {
 			Equipment equipment = null;
@@ -80,15 +80,19 @@ public class InputParser {
 				equipment = new Oar(e.get("x").asInt(), e.get("y").asInt());
 			} else if(e.get("type").asText().equals("rudder")){
 				equipment = new Gouvernail(e.get("x").asInt(), e.get("y").asInt());
-			} else {
-				//TODO Voile/Vigie si besoin
+			} else if(e.get("type").asText().equals("sail")) {
+				equipment= new Voile(e.get("x").asInt(), e.get("y").asInt(),e.get("openned").asBoolean());
+				
+			}
+			else{
+				//TODO Vigie plus tard
 			}
 			equipments.add(equipment);
 		});
 		return equipments;
 	}
 
-	public Boat fetchBoat(String jString) throws JsonMappingException, JsonProcessingException {
+	public Boat fetchBoat(String jString) throws  JsonProcessingException {
 		JsonNode result = mapper.readTree(jString).get("ship");
 
 		int width = result.get("deck").get("width").asInt();
