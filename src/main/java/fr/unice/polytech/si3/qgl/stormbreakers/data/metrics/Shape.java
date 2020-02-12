@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import fr.unice.polytech.si3.qgl.stormbreakers.Logable;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
 
 /**
  * Classe representant une forme geometrique
@@ -36,6 +37,6 @@ public abstract class Shape implements Logable {
      * NB : Les coordonnees doivent etre données par rapport au CENTRE de la forme
      * @return true if (x,y) is inside this shape, false if not
      */
-    public abstract boolean isPosInside(double x, double y);
+    public abstract boolean isPtInside(Point2D pt);
 
 }

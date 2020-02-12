@@ -8,6 +8,7 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.List;
 
+import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -64,7 +65,7 @@ class GameStateTest {
     @Test
     void testActualiserCheckpointsWhenOut() {
         Checkpoint mockedCheckpoint = mock(Checkpoint.class);
-        when(mockedCheckpoint.isPosInside(any(Position.class))).thenReturn(false);
+        when(mockedCheckpoint.isPtInside(any(Point2D.class))).thenReturn(false);
 
         List<Checkpoint> checkpoints = new ArrayList<>();
         checkpoints.add(mockedCheckpoint);
@@ -79,7 +80,7 @@ class GameStateTest {
     @Test
     void testActualiserCheckpointsWhenIn() {
         Checkpoint mockedCheckpoint = mock(Checkpoint.class);
-        when(mockedCheckpoint.isPosInside(any(Position.class))).thenReturn(true);
+        when(mockedCheckpoint.isPtInside(any(Point2D.class))).thenReturn(true);
 
         List<Checkpoint> checkpoints = new ArrayList<>();
         checkpoints.add(mockedCheckpoint);

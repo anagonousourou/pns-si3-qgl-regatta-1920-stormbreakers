@@ -26,19 +26,19 @@ class CheckpointTest {
     @Test
     void isPosInsideWithoutOffset() {
         Checkpoint checkpoint = new Checkpoint(origin,rectangle);
-        assertTrue(checkpoint.isPosInside(origin));
+        assertTrue(checkpoint.isPtInside(origin.getPoint2D()));
     }
 
     @Test
     void isPosInsideWithOffsetWhenFalse() {
         Checkpoint checkpoint = new Checkpoint(offset,rectangle);
-        assertFalse(checkpoint.isPosInside(origin));
+        assertFalse(checkpoint.isPtInside(origin.getPoint2D()));
     }
 
     @Test
     void isPosInsideWithOffsetWhenTrue() {
         Checkpoint checkpoint = new Checkpoint(offset,rectangle);
-        assertTrue(checkpoint.isPosInside(offset));
+        assertTrue(checkpoint.isPtInside(offset.getPoint2D()));
     }
 
     /*

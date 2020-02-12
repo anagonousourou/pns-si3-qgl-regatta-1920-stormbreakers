@@ -1,5 +1,6 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.data.metrics;
 
+import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -18,22 +19,22 @@ class CircleTest {
 
     @Test
     void testIsInsideWhenTrue() {
-        assertTrue(circle.isPosInside(0,0));
+        assertTrue(circle.isPtInside(new Point2D(0,0)));
     }
 
     @Test
     void testIsInsideWhenAtBorder() {
-        assertTrue(circle.isPosInside(10,0));
+        assertTrue(circle.isPtInside(new Point2D(10,0)));
     }
 
     @Test
     void testIsInsideWhenSlightlyOut() {
-        assertFalse(circle.isPosInside(10,0.01));
+        assertFalse(circle.isPtInside(new Point2D(10,0.01)));
     }
 
     @Test
     void testIsInsideWhenFalse() {
-        assertFalse(circle.isPosInside(10,10));
+        assertFalse(circle.isPtInside(new Point2D(10,10)));
     }
 
     /*

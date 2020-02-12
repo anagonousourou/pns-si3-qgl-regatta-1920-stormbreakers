@@ -4,6 +4,7 @@ import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
 
 public class Circle extends Shape {
     private double radius;
@@ -20,12 +21,12 @@ public class Circle extends Shape {
     }
 
     @Override
-    public boolean isPosInside(double x, double y) {
-        return distFromCenter(x, y) <= radius;
+    public boolean isPtInside(Point2D pt) {
+        return distFromCenter(pt) <= radius;
     }
 
-    private double distFromCenter(double x, double y) {
-        return new Position(0, 0).distanceTo(new Position(x, y));
+    private double distFromCenter(Point2D pt) {
+        return new Point2D(0, 0).getDistanceTo(pt);
     }
 
     @Override
