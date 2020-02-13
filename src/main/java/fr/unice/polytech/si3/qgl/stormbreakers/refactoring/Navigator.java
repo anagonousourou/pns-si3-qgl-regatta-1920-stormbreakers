@@ -1,7 +1,10 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.refactoring;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.Fraction;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
+
+import java.util.*;
 
 /**
  *  Utilitaire de calcul destinés à la navigation
@@ -41,17 +44,25 @@ public class Navigator {
     }
 
     /**
-     * Return the difference nbleftoars-nbrightoars needed to get the 
-     * angle
-     * TODO add parameters if needed
-     * @param angle
-     * @return
+     * Renvoie les configurations de rames possibles
+     * @param nbLeftOars nombre total de rames à gauches
+     * @param nbRightOars nombre total de rames à droite
+     * @return Set<OarConfig> les configurations
      */
-    public int fromAngleToDiff(double angle){
-        //TODO 
-        return 0;
-    }
+    Set<OarConfig> possibleOarConfigs(int nbLeftOars, int nbRightOars) {
+        int nbOars = nbLeftOars + nbRightOars;
+        Set<OarConfig> possibleConfigs = new HashSet<>();
 
-    
+        for (int i = 0; i <= nbLeftOars; i++) {
+            for (int j = 0; j <= nbRightOars; j++) {
+                Fraction currentFraction = new Fraction(j - i, nbOars);
+                // On limite à la rotation maximale induite par les rames : plus/moins Pi/2
+                if (Math.abs(currentFraction.eval()) <= 0.5) {
+                    possibleConfigs.add(new OarConfig(currentFraction, j - i));
+                }
+            }
+        }
+        return possibleConfigs;
+    }
     
 }
