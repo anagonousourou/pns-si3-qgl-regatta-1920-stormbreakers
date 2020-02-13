@@ -78,6 +78,7 @@ class Simulator {
         String actions = this.cockpit.nextRound(inputProvider.provideFirstRound());
         List<MoveAction> moves = ip.fetchMoves(actions);
         List<SailorAction> sailorActions = ip.fetchActionsExceptMoveAction(actions);
+        System.out.println(sailorActions);
         this.crew.executeMoves(moves);
         this.crew.executeActions(sailorActions);
         System.out.println(this.cockpit.getLogs());

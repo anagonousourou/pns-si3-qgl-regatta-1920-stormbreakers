@@ -127,11 +127,14 @@ public class MediatorCrewEquipment {
     }
 
     List<SailorAction> activateNbOars(List<Oar> oars,int nb){
+        return this.activateNbOars(oars, nb, new ArrayList<>() );
+        
+    }
 
+    List<SailorAction> activateNbOars(List<Oar> oars,int nb,List<Marine> yetBusy){
         //Use the isDoneTurn method and a list to know if a sailor is available or not
         //but do not set value doneTurn only methods in Captain will do that
         List<SailorAction> result = new ArrayList<>();
-        List<Marine> yetBusy = new ArrayList<>();
         int compteur = 0;
         Map<Equipment, List<Marine>> correspondances = this.marinsDisponibles();
         for (Equipment oar : oars ) {
@@ -157,7 +160,7 @@ public class MediatorCrewEquipment {
     
 
     /**
-     * @param nb différence entre nbgauche-nbdroite if nb 
+     * @param nb différence entre nbdroite-nbgauche 
      * @return
      */
     public List<SailorAction> activateOars(int nb){
@@ -170,6 +173,29 @@ public class MediatorCrewEquipment {
         }
 
     }
+
+    public List<SailorAction> activateOarsNotStrict(int nb){
+        if(nb > 0){
+            List<SailorAction> actions=new ArrayList<>();
+            do{
+                actions=this.activateOarsOnRight(nb);
+                nb--;
+            }while(actions.isEmpty());
+            
+            return actions;
+        }
+        else{
+            nb=-nb;
+            List<SailorAction> actions=new ArrayList<>();
+            do{
+                actions=this.activateOarsOnLeft(nb);
+                nb--;
+                
+            }while(actions.isEmpty());
+            
+            return actions;
+        }
+    }
     /**
      * 
      * TODO
@@ -177,6 +203,7 @@ public class MediatorCrewEquipment {
      */
     public List<SailorAction> activateOarsEachSide(){
         return List.of();
+
 
     }
 

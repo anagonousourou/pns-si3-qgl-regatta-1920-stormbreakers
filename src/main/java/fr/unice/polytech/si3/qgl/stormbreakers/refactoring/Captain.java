@@ -89,27 +89,14 @@ public class Captain {
         // le gouvernail n'existe pas
         else {
             
-            int diff = navigator.fromAngleToDiff(orientation);
-            if (diff < 0) {
-                int tmp = -diff;
-                List<SailorAction> actions = new ArrayList<>();
-                do {
-                    actions = this.mediatorCrewEquipment.activateOarsOnRight(tmp);
-                    tmp--;
-                } while (actions.isEmpty() && tmp != 0);
-                return this.validateActions(actions);
-            } else {
-                int tmp = diff;
-                
-                List<SailorAction> actions = new ArrayList<>();
-                do {
-                    actions = this.mediatorCrewEquipment.activateOarsOnLeft(tmp);
-                    tmp--;
-                } while (actions.isEmpty() && tmp != 0);
-                return this.validateActions(actions);
-            }
-            
+            int diff = this.fromAngleToDiff(orientation);
+            List<SailorAction> actions=this.mediatorCrewEquipment.activateOarsNotStrict(diff);
+            return this.validateActions(actions);
         }
+    }
+
+    private int fromAngleToDiff(double orientation) {
+        return 0;
     }
 
     /**
