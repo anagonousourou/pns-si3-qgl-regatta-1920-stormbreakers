@@ -148,7 +148,7 @@ public class GameState {
             return true;
         }
 
-        return checkPt.isPosInside(getPositionBateau());
+        return checkPt.isPtInside(getPositionBateau().getPoint2D());
     }
 
     public InitGame getStateInit() {

@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import fr.unice.polytech.si3.qgl.stormbreakers.Logable;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Shape;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
 
 import java.util.Objects;
 
@@ -29,13 +30,17 @@ public class Checkpoint implements Logable {
         return shape;
     }
 
-    public boolean isPosInside(Position pos) {
-        return this.isPosInside(pos.getX(), pos.getY());
+    public boolean isPtInside(Point2D pt) {
+        return this.isPtInside(pt.getX(), pt.getY());
     }
 
-    private boolean isPosInside(double x, double y) {
+    private boolean isPtInside(double x, double y) {
         // On se replace par rapport au centre de la forme
-        return shape.isPosInside(x - position.getX(), y - position.getY());
+        Point2D pt = new Point2D(x - position.getX(), y - position.getY());
+        double orientation = position.getOrientation();
+        // On compense l'orientation du checkpoint
+        if (orientation != 0) pt = pt.getRotatedBy(-orientation);
+        return shape.isPtInside(pt);
     }
 
     @Override
