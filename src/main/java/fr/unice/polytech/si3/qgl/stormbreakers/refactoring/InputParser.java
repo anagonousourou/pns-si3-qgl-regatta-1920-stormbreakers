@@ -24,19 +24,27 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Checkpoint;
 
 public class InputParser {
 	ObjectMapper mapper = new ObjectMapper();
+	private final String shapeKey="shape";
+	private final String idKey="id"; 
+	private final String shipKey="ship";
+	private final String entitiesKey="entities";
+	private final String checkpointsKey="checkpoints";
+	private final String sailorsKey="sailors";
+	private final String xKey="x";
+	private final String yKey="y";
 
 	public List<Marine> fetchAllSailors(String jsonInput) throws JsonProcessingException {
 		List<Marine> marins = new ArrayList<>();
-		mapper.readTree(jsonInput).get("sailors").forEach(s -> {
-			marins.add(new Marine(s.get("id").asInt(), s.get("x").asInt(), s.get("y").asInt()));
+		mapper.readTree(jsonInput).get(sailorsKey).forEach(s -> {
+			marins.add(new Marine(s.get(idKey).asInt(), s.get(xKey).asInt(), s.get(yKey).asInt()));
 		});
 		return marins;
 	}
 
 	public List<Oar> fetchAllOars(String jString) throws JsonProcessingException {
 		List<Oar> oars = new ArrayList<>();
-		mapper.readTree(jString).get("ship").get("entities").forEach(s -> {
-			oars.add(new Oar(s.get("x").asInt(), s.get("y").asInt()));
+		mapper.readTree(jString).get(shipKey).get(entitiesKey).forEach(s -> {
+			oars.add(new Oar(s.get(xKey).asInt(), s.get(yKey).asInt()));
 		});
 
 		return oars;

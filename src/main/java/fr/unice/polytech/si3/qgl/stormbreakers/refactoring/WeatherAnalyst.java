@@ -2,14 +2,14 @@ package fr.unice.polytech.si3.qgl.stormbreakers.refactoring;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Wind;
 
-public class SeaElements{
+public class WeatherAnalyst{
 
     private Wind wind;
     private Boat boat;
     private EquipmentManager equipmentManager;
     //Later streams
 
-    public SeaElements(Wind wind, Boat boat, EquipmentManager equipmentManager) {
+    public WeatherAnalyst(Wind wind, Boat boat, EquipmentManager equipmentManager) {
         this.boat = boat;
         this.wind = wind;
         this.equipmentManager = equipmentManager;
@@ -40,4 +40,16 @@ public class SeaElements{
     public boolean additionalSpeedExists() {
         return wind != null;
     }
+    
+    /**
+     * Méthode chargée de retourner la vitesse maximale que pourrait apporter par les 
+     * éléments ex: dans le cas du vent le rapport nbOpennedSails/nbSails est remplacé par
+     * 1
+     * @return
+     */
+    public double potentialSpeedAcquirable(){
+        return 0.0;
+    }
+
+
 }

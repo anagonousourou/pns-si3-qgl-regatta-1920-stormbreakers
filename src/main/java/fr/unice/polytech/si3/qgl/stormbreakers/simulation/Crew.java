@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.SailorAction;
 
-public class Crew {
+class Crew {
 
     private List<Marine> marins;
 

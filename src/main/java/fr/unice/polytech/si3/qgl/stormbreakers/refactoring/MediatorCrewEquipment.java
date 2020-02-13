@@ -2,8 +2,11 @@ package fr.unice.polytech.si3.qgl.stormbreakers.refactoring;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.MoveAction;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.SailorAction;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.Turn;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Oar;
 
 public class MediatorCrewEquipment {
@@ -15,6 +18,13 @@ public class MediatorCrewEquipment {
         this.equipmentManager=equipmentManager;
     }
 
+    void validateActions(List<SailorAction> actions) {
+        actions.forEach(action -> {
+            this.getMarinById(action.getSailorId()).setDoneTurn(true);
+        });
+
+    }
+
 
     public boolean rudderIsAccesible(){
 
@@ -24,16 +34,24 @@ public class MediatorCrewEquipment {
      * Renvoie le marin sur le gouvernail ou le plus proche du gouvernail
      * @return
      */
-    public Marine marineForRudder(){
-        var optMarine =this.crew.marineAtPosition(this.equipmentManager.rudderPosition()).or(()->
+    public Optional<Marine> marineForRudder(){
+        return this.crew.marineAtPosition(this.equipmentManager.rudderPosition()).or(()->
             this.crew.marineClosestTo(this.equipmentManager.rudderPosition())
         );
+    }
 
+    public List<SailorAction> activateRudder(double orientation){
+        var optMarine=this.marineForRudder();
         if(optMarine.isPresent()){
-            return optMarine.get();
+            Marine rudderMarine =optMarine.get();
+            List<SailorAction> actions = new ArrayList<>();
+            Move tmpMove = rudderMarine.getPosition().howToMoveTo(this.rudderPosition());
+            actions.add(new MoveAction(rudderMarine.getId(), tmpMove.getXdistance(), tmpMove.getYdistance()));
+            actions.add(new Turn(rudderMarine.getId(), orientation));
+            return actions;
         }
-        //
-        return null;
+        return List.of();
+        
     }
 
     public boolean rudderIsPresent(){
@@ -48,7 +66,19 @@ public class MediatorCrewEquipment {
         return this.equipmentManager.nbOars();
     }
 
-    public int nbMarinsOnLeftOars(){
+    public int nbSails(){
+        return this.equipmentManager.nbSails();
+    }
+
+    public boolean allSailsAreOpenned(){
+        return this.nbSails()==this.nbSailsOpenned();
+    }
+
+    private int nbSailsOpenned() {
+        return this.equipmentManager.nbOpennedSails();
+    }
+
+    public int nbMarinsOnLeftOars() {
         return (int) this.equipmentManager.allLeftOars().stream().
         filter(oar-> this.crew.marineAtPosition(oar.getPosition()).isPresent() ).count();
     }
@@ -82,6 +112,25 @@ public class MediatorCrewEquipment {
     public List<SailorAction> activateOarsOnRight(int nb){
         //Use the isDoneTurn method to know if a sailor has been used or not
         return List.of();
+    }
+
+    /**
+     * 
+     * @param nb différence entre nbgauche-nbdroite if nb 
+     * @return
+     */
+    public List<SailorAction> activateOars(int nb){
+        return List.of();
+
+    }
+    /**
+     * 
+     * 
+     * @return
+     */
+    public List<SailorAction> activateOarsEachSide(){
+        return List.of();
+
     }
 
 
@@ -127,6 +176,45 @@ public class MediatorCrewEquipment {
 
         return marines;
     }
+
+    /**
+     * TODO
+     * Fonction qui renvoie si il est possible de fermer/descendre 
+     * toutes les voiles actuellement ouvertes
+     * @return un boleen
+     */
+    public boolean canLowerAllSails(){
+        return false;
+    }
+
+    /**
+     * TODO
+     * @return
+     */
+    public List<SailorAction> actionsToLowerSails(){
+        return List.of();
+    }
+
+    //TODO
+	public boolean canLiftAllSails() {
+		return false;
+	}
+
+    /**
+     * TODO
+     * @return
+     */
+	public List<SailorAction> actionsToLiftSails() {
+		return List.of();
+	}
+
+    /**
+     * TODO complete
+     * @return
+     */
+	public boolean canAccelerate() {
+		return false;
+	}
 
     
 }

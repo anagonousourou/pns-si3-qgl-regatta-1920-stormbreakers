@@ -26,9 +26,12 @@ public class CheckpointManager {
      */
 	public Checkpoint nextCheckpoint() {
         if(this.checkpoints!=null && !this.checkpoints.isEmpty()) {
-            this.checkpoints.get(0);
+            return this.checkpoints.get(0);
         }
-		return null;
+        else{
+            return null;
+        }
+		
 	}
     
 }

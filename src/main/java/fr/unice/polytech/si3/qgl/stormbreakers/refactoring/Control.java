@@ -15,7 +15,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.refactoring.Captain;
 import fr.unice.polytech.si3.qgl.stormbreakers.refactoring.MediatorCrewEquipment;
 import fr.unice.polytech.si3.qgl.stormbreakers.refactoring.Navigator;
 import fr.unice.polytech.si3.qgl.stormbreakers.refactoring.ObservableData;
-import fr.unice.polytech.si3.qgl.stormbreakers.refactoring.SeaElements;
+import fr.unice.polytech.si3.qgl.stormbreakers.refactoring.WeatherAnalyst;
 
 public class Control {
     private InputParser parser = new InputParser();
@@ -26,7 +26,7 @@ public class Control {
 	private Boat boat = null;
 	private CheckpointManager checkpointManager = null;
 	private Navigator navigator = new Navigator();
-	private SeaElements seaElements;
+	private WeatherAnalyst seaElements;
 	private Wind wind;
 	private MediatorCrewEquipment mediatorCrewEquipment;
 	private ObservableData observableData = new ObservableData();
@@ -47,7 +47,7 @@ public class Control {
 			boat = new Boat(position, decklength, deckwidth, life, parser);
 
 			mediatorCrewEquipment = new MediatorCrewEquipment(crew, equipmentManager);
-			seaElements = new SeaElements(wind, boat, equipmentManager);
+			seaElements = new WeatherAnalyst(wind, boat, equipmentManager);
 
 			captain = new Captain(boat, checkpointManager, equipmentManager, crew, navigator, seaElements,
 					mediatorCrewEquipment);
