@@ -69,6 +69,33 @@ class Point2DTest {
         assertTrue(almostEquals(new Point2D(0,1),new Point2D(0,1).getRotatedBy(2*Math.PI)));
     }
 
+    @Test
+    void testGetRotatedByHalfPi() {
+        Point2D pos = new Point2D(1,0);
+        Point2D expected = new Point2D(0,1);
+        Point2D result = pos.getRotatedBy(Math.PI/2);
+
+        assertTrue(almostEquals(expected,result));
+    }
+
+    @Test
+    void testGetRotatedByMinusHalfPi() {
+        Point2D pos = new Point2D(1,0);
+        Point2D expected = new Point2D(0,-1);
+        Point2D result = pos.getRotatedBy(-Math.PI/2);
+
+        assertTrue(almostEquals(expected,result));
+    }
+
+    @Test
+    void testGetRotatedBySixthOfPi() {
+        Point2D pos = new Point2D(1,0);
+        Point2D expected = new Point2D(Math.sqrt(3)/2,0.5);
+        Point2D result = pos.getRotatedBy(Math.PI/6);
+
+        assertTrue(almostEquals(expected,result));
+    }
+
 
     /*
      * Tests for equals

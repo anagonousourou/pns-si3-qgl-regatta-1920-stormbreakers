@@ -38,19 +38,25 @@ public class Rectangle extends Shape {
     }
 
     @Override
-    public boolean isPosInside(double x, double y) {
+    public boolean isPtInside(Point2D pt) {
+        Point2D point2D = new Point2D(pt);
         // On ramene le plan pour que les cotes du rectangle soient sur les axes du repere
         if (orientation != 0) {
-            Point2D pos = new Point2D(x,y);
-            pos = pos.getRotatedBy(-orientation);
-            x = pos.getX();
-            y = pos.getY();
+            point2D = pt.getRotatedBy(-orientation);
         }
+        return isPtInRectangle0(point2D);
+    }
 
+    /**
+     * Vérifie si le point est dans le rectangle d'orientation 0
+     * @param pt point à tester
+     * @return true s'il est dedans, false sinon
+     */
+    private boolean isPtInRectangle0(Point2D pt) {
         double eps = Math.pow(10,-10);
 
-        boolean xOk = between(x,-height/2,height/2,eps);
-        boolean yOk = between(y,-width/2,width/2,eps);
+        boolean xOk = between(pt.getX(),-height/2,height/2,eps);
+        boolean yOk = between(pt.getY(),-width/2,width/2,eps);
         return xOk && yOk;
     }
 

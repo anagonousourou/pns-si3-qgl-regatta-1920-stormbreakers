@@ -1,6 +1,7 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.refactoring;
 
 import java.beans.PropertyChangeListener;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,7 +25,7 @@ public class Crew {
 
     /**
      * fait executer aux marin concernés les MoveAction contenus dans le param moves
-     * 
+     * TODO
      * @param moves
      */
     public void executeMovingsInSailorAction(List<SailorAction> actions) {
@@ -58,6 +59,10 @@ public class Crew {
     void resetAvailability(){
         this.marins.forEach(m->m.setDoneTurn(false));
     }
+
+	public List<Marine> marins() {
+		return marins;
+	}
 
 
 }

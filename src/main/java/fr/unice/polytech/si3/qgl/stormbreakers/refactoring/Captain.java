@@ -16,12 +16,12 @@ public class Captain {
     private CheckpointManager checkpointManager;
     private MediatorCrewEquipment mediatorCrewEquipment;
     private Navigator navigator;
-    final private double EPS = 0.001;
-    final private double SPEED = 165;
+    private static final   double EPS = 0.001;
+    private static final   double SPEED = 165;
 
     private WeatherAnalyst weatherAnalyst;
 
-    public Captain(Boat boat, CheckpointManager checkpointManager, EquipmentManager equipmentManager, Crew crew,
+    public Captain(Boat boat, CheckpointManager checkpointManager, Crew crew,
             Navigator navigator, WeatherAnalyst weatherAnalyst, MediatorCrewEquipment mediatorCrewEquipment) {
         this.boat = boat;
         this.checkpointManager = checkpointManager;
@@ -72,7 +72,7 @@ public class Captain {
      * @return
      */
     List<SailorAction> actionsToOrientate(double orientation) {
-        if (Math.abs(orientation) < this.EPS) {// pas besoin de pivoter
+        if (Math.abs(orientation) < Captain.EPS) {// pas besoin de pivoter
             return List.of();
         }
         // le gouvernail existe, est accessible et suffit
@@ -88,23 +88,27 @@ public class Captain {
         }
         // le gouvernail n'existe pas
         else {
-            List<SailorAction> actions = new ArrayList<>();
+            
             int diff = navigator.fromAngleToDiff(orientation);
             if (diff < 0) {
                 int tmp = -diff;
-
+                List<SailorAction> actions = new ArrayList<>();
                 do {
                     actions = this.mediatorCrewEquipment.activateOarsOnRight(tmp);
                     tmp--;
                 } while (actions.isEmpty() && tmp != 0);
+                return this.validateActions(actions);
             } else {
                 int tmp = diff;
+                
+                List<SailorAction> actions = new ArrayList<>();
                 do {
                     actions = this.mediatorCrewEquipment.activateOarsOnLeft(tmp);
                     tmp--;
                 } while (actions.isEmpty() && tmp != 0);
+                return this.validateActions(actions);
             }
-            return this.validateActions(actions);
+            
         }
     }
 
@@ -221,6 +225,6 @@ public class Captain {
 
     /** Generic function to concatenate 2 lists in Java */
     private static <T> List<T> concatenate(List<T> list1, List<T> list2) {
-        return Stream.of(list1, list2).flatMap(x -> x.stream()).collect(Collectors.toList());
+        return Stream.of(list1, list2).flatMap(List::stream).collect(Collectors.toList());
     }
 }

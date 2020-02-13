@@ -1,7 +1,6 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.refactoring;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -12,7 +11,6 @@ import org.junit.jupiter.api.Test;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.OarAction;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.SailorAction;
-import fr.unice.polytech.si3.qgl.stormbreakers.refactoring.Crew;
 
 public class CaptainTest {
 
@@ -21,7 +19,7 @@ public class CaptainTest {
     @Test
     void speedSimple() {
         MediatorCrewEquipment mediatorCrewEquipment = mock(MediatorCrewEquipment.class);
-        rogers = new Captain(null, null, null, null, null, null, mediatorCrewEquipment);
+        rogers = new Captain(null, null, null, null, null, mediatorCrewEquipment);
         List<SailorAction> sailorsActions = List.of(new OarAction(1), new OarAction(3));
         when(mediatorCrewEquipment.nbOars()).thenReturn(4);
 
@@ -46,7 +44,7 @@ public class CaptainTest {
 
         MediatorCrewEquipment mediatorCrewEquipment = new MediatorCrewEquipment(crew, null);
 
-        rogers = new Captain(null, null, null, crew, null, null, mediatorCrewEquipment);
+        rogers = new Captain(null, null, crew, null, null, mediatorCrewEquipment);
 
         rogers.validateActions(List.of(new OarAction(1), new OarAction(3)));
 

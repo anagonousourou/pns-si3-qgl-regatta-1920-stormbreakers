@@ -4,6 +4,7 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.MoveAction;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.SailorAction;
 
 /**
  * classe qui représente un marin
@@ -40,7 +41,6 @@ class Marine {
     }
 
     public boolean onEquipment() {
-        // TODO completer
         return this.onEquipment;
     }
 
@@ -78,4 +78,8 @@ class Marine {
     public void setDoneTurn(boolean doneTurn) {
         this.doneTurn = doneTurn;
     }
+
+	public MoveAction howToGoTo(int x, int y) {
+		return new MoveAction(this.id, x-this.getPosition().getX(),y-this.getPosition().getY() );
+	}
 }

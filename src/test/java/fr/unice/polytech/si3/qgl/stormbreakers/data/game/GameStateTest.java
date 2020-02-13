@@ -12,10 +12,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.MoveAction;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Marin;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Checkpoint;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.RegattaGoal;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
 import fr.unice.polytech.si3.qgl.stormbreakers.processing.communication.InputParser;
 
 class GameStateTest {
@@ -64,7 +64,7 @@ class GameStateTest {
     @Test
     void testActualiserCheckpointsWhenOut() {
         Checkpoint mockedCheckpoint = mock(Checkpoint.class);
-        when(mockedCheckpoint.isPosInside(any(Position.class))).thenReturn(false);
+        when(mockedCheckpoint.isPtInside(any(Point2D.class))).thenReturn(false);
 
         List<Checkpoint> checkpoints = new ArrayList<>();
         checkpoints.add(mockedCheckpoint);
@@ -79,7 +79,7 @@ class GameStateTest {
     @Test
     void testActualiserCheckpointsWhenIn() {
         Checkpoint mockedCheckpoint = mock(Checkpoint.class);
-        when(mockedCheckpoint.isPosInside(any(Position.class))).thenReturn(true);
+        when(mockedCheckpoint.isPtInside(any(Point2D.class))).thenReturn(true);
 
         List<Checkpoint> checkpoints = new ArrayList<>();
         checkpoints.add(mockedCheckpoint);

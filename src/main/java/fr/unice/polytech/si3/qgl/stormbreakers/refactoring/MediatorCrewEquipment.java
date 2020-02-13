@@ -1,17 +1,23 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.refactoring;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.MoveAction;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.OarAction;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.SailorAction;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.Turn;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Equipment;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Oar;
 
 public class MediatorCrewEquipment {
     private Crew crew;
     private EquipmentManager equipmentManager;
+    private static final int MAXDISTANCE=5;
 
     public MediatorCrewEquipment(Crew crew, EquipmentManager equipmentManager) {
         this.crew = crew;
@@ -88,20 +94,26 @@ public class MediatorCrewEquipment {
         filter(oar-> this.crew.marineAtPosition(oar.getPosition()).isPresent() ).count();
     }
 
+    public Map<Equipment, List<Marine>> marinsDisponibles() {
+        HashMap<Equipment, List<Marine>> results = new HashMap<>();
+        this.equipmentManager.oars().forEach(oar -> results.put(oar,
+                this.crew.marins().stream().filter(m -> m.getPosition().distanceTo(oar.getPosition()) <= MediatorCrewEquipment.MAXDISTANCE)
+                        .collect(Collectors.toList())));
+        return results;
+    }
+
     
     /**
      * Return sailoractions to activate exactly nb oars on left
      * if it is not possible return empty list
-     * Do not make compromise the size of the list must be equals to nb or 0
+     * Do not make compromise the size of the list must be equals to either nb or 0
      * sailors actions include OarAction and MoveAction
      * @param nb
      * @param idsOfBusySailors
      * @return
      */
     public List<SailorAction> activateOarsOnLeft(int nb){
-        //Use the isDoneTurn method to know if a sailor is available or not
-        //but do not set value doneTurn only methods in Captain will do that
-        return List.of();
+        return this.activateNbOars(this.equipmentManager.allLeftOars(), nb);
     }
 
     /**
@@ -111,21 +123,56 @@ public class MediatorCrewEquipment {
      */
     public List<SailorAction> activateOarsOnRight(int nb){
         //Use the isDoneTurn method to know if a sailor has been used or not
-        return List.of();
+        return this.activateNbOars(this.equipmentManager.allRightOars(), nb);
     }
 
+    List<SailorAction> activateNbOars(List<Oar> oars,int nb){
+
+        //Use the isDoneTurn method and a list to know if a sailor is available or not
+        //but do not set value doneTurn only methods in Captain will do that
+        List<SailorAction> result = new ArrayList<>();
+        List<Marine> yetBusy = new ArrayList<>();
+        int compteur = 0;
+        Map<Equipment, List<Marine>> correspondances = this.marinsDisponibles();
+        for (Equipment oar : oars ) {
+            if (correspondances.get(oar) != null) {
+                for (Marine m : correspondances.get(oar)) {
+                    if (!yetBusy.contains(m) && !m.isDoneTurn()) {
+                        yetBusy.add(m);
+                        result.add(new OarAction(m.getId()));
+                        result.add(m.howToGoTo(oar.getX(), oar.getY()));
+                        compteur++;
+                        break;
+                    }
+                }
+            }
+            if (compteur == nb) {
+                break;
+            }
+
+        }
+        return result;
+    }
+
+    
+
     /**
-     * 
      * @param nb différence entre nbgauche-nbdroite if nb 
      * @return
      */
     public List<SailorAction> activateOars(int nb){
-        return List.of();
+
+        if(nb > 0){
+            return this.activateOarsOnRight(nb);
+        }
+        else{
+            return this.activateOarsOnLeft(-nb);
+        }
 
     }
     /**
      * 
-     * 
+     * TODO
      * @return
      */
     public List<SailorAction> activateOarsEachSide(){

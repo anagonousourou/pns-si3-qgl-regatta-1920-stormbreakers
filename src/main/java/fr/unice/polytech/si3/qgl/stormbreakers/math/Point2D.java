@@ -15,6 +15,11 @@ public class Point2D {
         this.y = y;
     }
 
+    public Point2D(Point2D point2D) {
+        this.x = point2D.x;
+        this.y = point2D.y;
+    }
+
     public Point2D(Vector fromOrigin) {
         this.x = fromOrigin.getDeltaX();
         this.y = fromOrigin.getDeltaY();

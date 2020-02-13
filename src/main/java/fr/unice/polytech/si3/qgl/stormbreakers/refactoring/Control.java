@@ -11,11 +11,6 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Wind;
 import fr.unice.polytech.si3.qgl.stormbreakers.processing.communication.Logger;
 import fr.unice.polytech.si3.qgl.stormbreakers.processing.communication.OutputBuilder;
-import fr.unice.polytech.si3.qgl.stormbreakers.refactoring.Captain;
-import fr.unice.polytech.si3.qgl.stormbreakers.refactoring.MediatorCrewEquipment;
-import fr.unice.polytech.si3.qgl.stormbreakers.refactoring.Navigator;
-import fr.unice.polytech.si3.qgl.stormbreakers.refactoring.ObservableData;
-import fr.unice.polytech.si3.qgl.stormbreakers.refactoring.WeatherAnalyst;
 
 public class Control {
     private InputParser parser = new InputParser();
@@ -49,7 +44,7 @@ public class Control {
 			mediatorCrewEquipment = new MediatorCrewEquipment(crew, equipmentManager);
 			seaElements = new WeatherAnalyst(wind, boat, equipmentManager);
 
-			captain = new Captain(boat, checkpointManager, equipmentManager, crew, navigator, seaElements,
+			captain = new Captain(boat, checkpointManager, crew, navigator, seaElements,
 					mediatorCrewEquipment);
 
 			this.observableData.addPropertyChangeListener(this.wind);
