@@ -1,20 +1,29 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.refactoring;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.Fraction;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class NavigatorTest {
 
     private Navigator navigator;
+    private OarConfig noOars;
 
     @BeforeEach
     void setUp(){
         navigator = new Navigator();
+        noOars = new OarConfig(new Fraction(),0);
     }
+
+    /*
+     * Tests for orientationNeeded
+     */
 
     @Test
     void testOrientationNeededWhenBoatOnTarget() {
@@ -51,4 +60,40 @@ class NavigatorTest {
         // When behind to the right but unreachable
         assertEquals(-0.75 * Math.PI,navigator.additionalOrientationNeeded(new Position(1,1,Math.PI/2),new Point2D(2,-2)) );
     }
+
+    /*
+     * Tests for possibleOarConfigs
+     */
+
+    @Test
+    void testPossibleOarConfigsHasAtLeastNoOars() {
+        Set<OarConfig> oarConfigs = navigator.possibleOarConfigs(1,1);
+        assertTrue(oarConfigs.contains(noOars));
+    }
+
+    @Test
+    void testPossibleOarConfigsHasNoMoreElementsThanNeeded() {
+        int nbLeftOars = 10;
+        int nbRightOars = 10;
+        Set<OarConfig> oarConfigs = navigator.possibleOarConfigs(nbLeftOars,nbRightOars);
+        int totalOars = nbLeftOars + nbRightOars;
+        assertTrue(oarConfigs.size() <= totalOars + 1); // Don't forget case noOars
+    }
+
+    @Test
+    void testPossibleOarConfigsAnglesAreInBoundaries() {
+        Set<OarConfig> oarConfigs = navigator.possibleOarConfigs(5,5);
+        oarConfigs.forEach( (OarConfig config) ->
+                assertTrue(Math.abs(config.getAngle()) <= Math.PI/2)
+        );
+    }
+
+    @Test
+    void testPossibleOarConfigsWhen() {
+        Set<OarConfig> oarConfigs = navigator.possibleOarConfigs(5,5);
+        oarConfigs.forEach( (OarConfig config) ->
+                assertTrue(Math.abs(config.getAngle()) <= Math.PI/2)
+        );
+    }
+
 }
