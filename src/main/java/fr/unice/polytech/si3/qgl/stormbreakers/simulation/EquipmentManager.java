@@ -68,6 +68,15 @@ public class EquipmentManager {
         return this.oars.stream().anyMatch(oar-> oar.getX()==pos.getX() && oar.getY()==pos.getY());
     }
 
+    String typeOfEquipmentPresentAt(IntPosition pos){
+        var optEq= this.equipments.stream().filter(equipment-> equipment.getX()==pos.getX() && equipment.getY()==pos.getY()).findFirst();
+        if(optEq.isPresent()){
+            return optEq.get().getType();
+        }
+
+        return "";
+    }
+
     boolean rudderPresentAt(IntPosition pos){
         if(rudder!=null){
             return rudder.getX()==pos.getX() && rudder.getY()==pos.getY();

@@ -2,12 +2,15 @@ package fr.unice.polytech.si3.qgl.stormbreakers.refactoring;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.ActionType;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.SailorAction;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Checkpoint;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.Fraction;
 
 public class Captain {
 
@@ -16,13 +19,13 @@ public class Captain {
     private CheckpointManager checkpointManager;
     private MediatorCrewEquipment mediatorCrewEquipment;
     private Navigator navigator;
-    private static final   double EPS = 0.001;
-    private static final   double SPEED = 165;
+    private static final double EPS = 0.001;
+    private static final double SPEED = 165;
 
     private WeatherAnalyst weatherAnalyst;
 
-    public Captain(Boat boat, CheckpointManager checkpointManager, Crew crew,
-            Navigator navigator, WeatherAnalyst weatherAnalyst, MediatorCrewEquipment mediatorCrewEquipment) {
+    public Captain(Boat boat, CheckpointManager checkpointManager, Crew crew, Navigator navigator,
+            WeatherAnalyst weatherAnalyst, MediatorCrewEquipment mediatorCrewEquipment) {
         this.boat = boat;
         this.checkpointManager = checkpointManager;
         this.navigator = navigator;
@@ -38,9 +41,9 @@ public class Captain {
         // On remet le statut doneTurn de tout les marins à false
         this.mediatorCrewEquipment.resetAvailability();
         this.checkpointManager.updateCheckpoint(boat.getPosition());
-        
+
         Checkpoint chpoint = this.checkpointManager.nextCheckpoint();
-        if(chpoint==null){
+        if (chpoint == null) {
             return List.of();
         }
 
@@ -50,14 +53,14 @@ public class Captain {
 
         List<SailorAction> actionsOrientation = this.actionsToOrientate(orientation);
 
-        double currentSpeed = this.calculateSpeed(actionsOrientation);
+        double currentSpeed = this.calculateSpeedFromOarsAction(actionsOrientation);
         List<SailorAction> actionsToAdjustSpeed = this.adjustSpeed(distance, currentSpeed);
 
         return Captain.<SailorAction>concatenate(actionsOrientation, actionsToAdjustSpeed);
 
     }
 
-    public double calculateSpeed(List<SailorAction> actions) {
+    public double calculateSpeedFromOarsAction(List<SailorAction> actions) {
         int nbActivatedOars = (int) actions.stream()
                 .filter(action -> action.getType().equals(ActionType.OAR.actionCode)).count();
 
@@ -88,14 +91,24 @@ public class Captain {
         }
         // le gouvernail n'existe pas
         else {
-            
+
             int diff = this.fromAngleToDiff(orientation);
-            List<SailorAction> actions=this.mediatorCrewEquipment.activateOarsNotStrict(diff);
+            List<SailorAction> actions = this.mediatorCrewEquipment.activateOarsNotStrict(diff);
             return this.validateActions(actions);
         }
     }
 
-    private int fromAngleToDiff(double orientation) {
+    int fromAngleToDiff(double orientation) {
+        var correspondances=this.navigator.pairAngleDifference(this.mediatorCrewEquipment.nbLeftOars(), this.mediatorCrewEquipment.nbRightOars());
+        Set<Fraction> eventailAngles= correspondances.keySet();
+        Optional<Fraction> optAngle = eventailAngles.stream().filter(a -> a.eval() * orientation > 0.0)
+
+                .min((a, b) -> Double.compare(Math.abs(a.eval() * Math.PI - orientation),
+                        Math.abs(b.eval() * Math.PI - orientation)));
+        if (optAngle.isPresent()) {
+            Fraction approachingAngle = optAngle.get();
+            return correspondances.get(approachingAngle);
+        }
         return 0;
     }
 
@@ -164,14 +177,8 @@ public class Captain {
             }
 
         }
-            return this.accelerate(distance, currentSpeed);
+        return this.accelerate(distance, currentSpeed);
 
-        
-
-    }
-
-    List<SailorAction> lowerSailsPartially(){
-        return List.of();
     }
 
     /**

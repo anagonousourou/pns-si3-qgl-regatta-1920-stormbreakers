@@ -6,8 +6,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class LowerSail extends SailorAction {
 
     @JsonCreator
-    LowerSail( @JsonProperty("sailorId") int sailorId) {
-        super(sailorId,ActionType.LOWERSAIL.actionCode);
+    public LowerSail(@JsonProperty("sailorId") int sailorId) {
+        super(sailorId, ActionType.LOWERSAIL.actionCode);
     }
 
     @Override

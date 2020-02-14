@@ -6,13 +6,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.LowerSail;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.MoveAction;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.OarAction;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.SailorAction;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.Turn;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Equipment;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.EquipmentType;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Oar;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Sail;
 
 public class MediatorCrewEquipment {
     private Crew crew;
@@ -72,8 +76,36 @@ public class MediatorCrewEquipment {
         return this.equipmentManager.nbOars();
     }
 
+    public int nbLeftOars(){
+        return this.equipmentManager.nbLeftOars();
+    }
+
+    public int nbRightOars(){
+        return this.equipmentManager.nbRightOars();
+    }
+
     public int nbSails(){
         return this.equipmentManager.nbSails();
+    }
+
+    public int lowerSailsPartially(List<SailorAction> actions) {
+        int nbOpenned =this.nbSailsOpenned();
+        List<Marine> marinesBusy=new ArrayList<>();
+        var marinsDisponibles=this.marinsDisponibles();
+        for(Sail sail:this.equipmentManager.opennedSails()){
+            
+                for(Marine marine:marinsDisponibles.get(sail)){
+                    if(!marine.isDoneTurn() && !marinesBusy.contains(marine )){
+                        actions.add( marine.howToGoTo(sail.getX(), sail.getY()) );
+                        actions.add( new LowerSail(marine.getId() ) );
+                        marinesBusy.add(marine);
+                        nbOpenned--;
+                        break;
+                    }
+                }
+            
+        }
+        return nbOpenned;
     }
 
     public boolean allSailsAreOpenned(){
@@ -124,6 +156,17 @@ public class MediatorCrewEquipment {
     public List<SailorAction> activateOarsOnRight(int nb){
         //Use the isDoneTurn method to know if a sailor has been used or not
         return this.activateNbOars(this.equipmentManager.allRightOars(), nb);
+    }
+
+    
+    public List<SailorAction> activateOarsOnRight(int nb,List<Marine> busy){
+        //Use the isDoneTurn method to know if a sailor has been used or not
+        return this.activateNbOars(this.equipmentManager.allRightOars(), nb,busy);
+    }
+
+    public List<SailorAction> activateOarsOnLeft(int nb,List<Marine> busy){
+        //Use the isDoneTurn method to know if a sailor has been used or not
+        return this.activateNbOars(this.equipmentManager.allLeftOars(), nb,busy);
     }
 
     List<SailorAction> activateNbOars(List<Oar> oars,int nb){
@@ -202,10 +245,22 @@ public class MediatorCrewEquipment {
      * @return
      */
     public List<SailorAction> activateOarsEachSide(){
+        List<SailorAction> actionsLeft=this.activateOarsOnLeft(1);
+        if(!actionsLeft.isEmpty()){
+            Marine usedOnLeft= this.crew.getMarinById(actionsLeft.get(0).getSailorId()).get();
+            List<Marine> busy=new ArrayList<>();
+            busy.add( usedOnLeft);
+            List<SailorAction> actionsRight=this.activateOarsOnRight(1,busy);
+
+            return MediatorCrewEquipment.<SailorAction>concatenate(actionsLeft, actionsRight);
+
+        }
         return List.of();
 
 
     }
+
+    
 
 
 	public void resetAvailability() {
@@ -287,8 +342,12 @@ public class MediatorCrewEquipment {
      * @return
      */
 	public boolean canAccelerate() {
-		return false;
+		return true;
 	}
 
+    /** Generic function to concatenate 2 lists in Java */
+    private static <T> List<T> concatenate(List<T> list1, List<T> list2) {
+        return Stream.of(list1, list2).flatMap(List::stream).collect(Collectors.toList());
+    }
     
 }

@@ -1,5 +1,6 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.refactoring;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -11,13 +12,14 @@ import org.junit.jupiter.api.Test;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.OarAction;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.SailorAction;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.Turn;
 
 public class CaptainTest {
 
     Captain rogers;
 
     @Test
-    void speedSimple() {
+    void accelerateTest() {
         MediatorCrewEquipment mediatorCrewEquipment = mock(MediatorCrewEquipment.class);
         rogers = new Captain(null, null, null, null, null, mediatorCrewEquipment);
         List<SailorAction> sailorsActions = List.of(new OarAction(1), new OarAction(3));
@@ -61,6 +63,27 @@ public class CaptainTest {
             m4.isDoneTurn(),"le marin 4 n'est pas occupe"
         );
 
+    }
+
+    @Test
+    void calculateSpeedTest(){
+        MediatorCrewEquipment mediatorCrewEquipment=mock(MediatorCrewEquipment.class);
+        rogers = new Captain(null, null, null, null, null, mediatorCrewEquipment );
+
+        when( mediatorCrewEquipment.nbOars() ).thenReturn(2);
+        assertEquals(165*((double)1/2),rogers.calculateSpeedFromOarsAction(
+            List.of(
+                new OarAction(1),
+                new Turn(5, 0.2)
+            )
+          )," should be equal" );
+
+          assertEquals(0,rogers.calculateSpeedFromOarsAction(
+            List.of(
+                new Turn(5, 0.2)
+            )
+          )," should be 0 since no oarsAction" );
+        
     }
 
 }

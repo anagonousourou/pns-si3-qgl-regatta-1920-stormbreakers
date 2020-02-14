@@ -25,14 +25,14 @@ class Boat implements PropertyChangeListener {
             if (!((MoveAction) evt.getNewValue()).longerThan(MAX_DISTANCE)) {
                 Marine marine = (Marine) evt.getSource();
                 marine.executeMove((MoveAction) evt.getNewValue());
-                if (equipmentManager.oarPresentAt(marine.getPosition())) {
+                String typeEquipment=equipmentManager.typeOfEquipmentPresentAt(marine.getPosition() );
+                if(typeEquipment.length()!=0){
                     marine.setOnEquipment(true);
-                    marine.setTypeOfEquipment(EquipmentType.OAR.code);
-                } else if (equipmentManager.rudderPresentAt(marine.getPosition())) {
-                    marine.setOnEquipment(true);
-                    marine.setTypeOfEquipment(EquipmentType.RUDDER.code);
-                } else {
+                    marine.setTypeOfEquipment( equipmentManager.typeOfEquipmentPresentAt(marine.getPosition() )  );
+                }
+                else{
                     marine.setOnEquipment(false);
+
                 }
             }
 
@@ -41,12 +41,16 @@ class Boat implements PropertyChangeListener {
         else if (evt.getPropertyName().equals("Action")) {
             Marine marine = (Marine) evt.getSource();
             if (marine.onEquipment()) {
-                var optOar = this.equipmentManager.equipmentAt(marine.getPosition());
-                if (optOar.isPresent() && optOar.get().getType().equals(marine.getTypeOfEquipment())) {
-                    optOar.get().setUsed(true);
-                    if (optOar.get().getType().equals(EquipmentType.RUDDER.code)) {
+                var optEq = this.equipmentManager.equipmentAt(marine.getPosition());
+                if (optEq.isPresent() && optEq.get().getType().equals(marine.getTypeOfEquipment())) {
+                    optEq.get().setUsed(true);
+                    if (optEq.get().getType().equals(EquipmentType.RUDDER.code)) {
 
-                        ((Gouvernail) optOar.get()).setOrientation(((Turn) evt.getNewValue()).getRotation());
+                        ((Gouvernail) optEq.get()).setOrientation(((Turn) evt.getNewValue()).getRotation());
+                    }
+                    else if(optEq.get().getType().equals(EquipmentType.SAIL.code)){
+                        /*boolean value=() evt.getNewValue()
+                        ((Sail) optEq.get()).setOpenned( );*/
                     }
                 }
             }

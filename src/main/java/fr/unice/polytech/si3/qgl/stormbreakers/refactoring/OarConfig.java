@@ -28,6 +28,10 @@ public class OarConfig {
         return Math.PI * fractionOfPi.eval();
     }
 
+    public Fraction getAngleFraction(){
+        return fractionOfPi;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj)

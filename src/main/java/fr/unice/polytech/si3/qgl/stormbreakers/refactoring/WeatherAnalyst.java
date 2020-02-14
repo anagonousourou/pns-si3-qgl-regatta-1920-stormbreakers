@@ -32,6 +32,15 @@ public class WeatherAnalyst{
         return 0.0;
     }
 
+    public double externalSpeedGivenNbOpennedSails(int nbOpennedSails){
+        if(wind!=null && equipmentManager.nbSails()!=0){
+            return ((double) nbOpennedSails/equipmentManager.nbSails())*wind.getStrength()*Math.cos(
+                this.boat.getOrientation()-this.wind.getOrientation()
+            );
+        }
+        return 0.0;
+    }
+
     /**
      * Dis si il existe un courant ou un stream susceptible de "pousser ou ralentir"
      * le bateau permet donc de savoir si il y a d'autres parametres que les rames dans le calcul de vitesse

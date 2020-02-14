@@ -64,5 +64,27 @@ public class Navigator {
         }
         return possibleConfigs;
     }
+
+    /**
+     * Renvoie les configurations de rames possibles
+     * @param nbLeftOars nombre total de rames à gauches
+     * @param nbRightOars nombre total de rames à droite
+     * @return Set<OarConfig> les configurations
+     */
+    Map<Fraction,Integer> pairAngleDifference(int nbLeftOars, int nbRightOars) {
+        int nbOars = nbLeftOars + nbRightOars;
+        Map<Fraction,Integer> possibleConfigs = new HashMap<>();
+
+        for (int i = 0; i <= nbLeftOars; i++) {
+            for (int j = 0; j <= nbRightOars; j++) {
+                Fraction currentFraction = new Fraction(j - i, nbOars);
+                // On limite à la rotation maximale induite par les rames : plus/moins Pi/2
+                if (Math.abs(currentFraction.eval()) <= 0.5) {
+                    possibleConfigs.put(currentFraction, j - i);
+                }
+            }
+        }
+        return possibleConfigs;
+    }
     
 }
