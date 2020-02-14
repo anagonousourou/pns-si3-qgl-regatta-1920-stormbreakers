@@ -12,20 +12,24 @@ import org.junit.jupiter.api.Test;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Equipment;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Oar;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Sail;
 
 public class EquipmentManagerTest {
     EquipmentManager equipmentManager;
     Equipment r1 = new Oar(1, 0);
-    Equipment r2 = new Oar(1, 1);
+    Equipment r2 = new Oar(1, 2);
     Equipment r3 = new Oar(2, 0);
-    Equipment r4 = new Oar(2, 1);
+    Equipment r4 = new Oar(2, 2);
     Equipment r5 = new Oar(3, 0);
-    Equipment r6 = new Oar(3, 1);
+    Equipment r6 = new Oar(3, 2);
+    Equipment r7 = new Sail(3, 1);
+    Sail r8 = new Sail(3, 0);
 
     @BeforeEach
     void setUp() {
 
-        equipmentManager = new EquipmentManager(List.of(r1, r2, r3, r4, r5, r6), 2);
+        equipmentManager = new EquipmentManager(List.of(r1, r2, r3, r4, r5, r6,r7,r8), 3);
+        r8.setOpenned(true);
     }
 
     @Test
@@ -57,7 +61,7 @@ public class EquipmentManagerTest {
 
     @Test
     void testOarPresentAt(){
-        assertTrue(this.equipmentManager.oarPresentAt( new IntPosition(3,1) ));
+        assertTrue(this.equipmentManager.oarPresentAt( new IntPosition(3,2) ));
         assertFalse(this.equipmentManager.oarPresentAt( new IntPosition(0,0) ));
     }
     
@@ -66,6 +70,12 @@ public class EquipmentManagerTest {
         assertThrows(NullPointerException.class, ()->{
             this.equipmentManager.rudderPosition();
         });
+    }
+    
+    @Test
+    void sailsTest() {
+    	assertTrue(this.equipmentManager.sails(true).get(0).equals(r8));
+    	assertTrue(this.equipmentManager.sails(false).get(0).equals(r7));
     }
 
 }

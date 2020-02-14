@@ -13,6 +13,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.SailorAction;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.Turn;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Equipment;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Oar;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Sail;
 
 public class MediatorCrewEquipment {
     private Crew crew;
@@ -102,7 +103,13 @@ public class MediatorCrewEquipment {
         return results;
     }
 
-    
+    public Map<Equipment, List<Marine>> marinsDisponiblesVoiles(boolean isOpened) {
+        HashMap<Equipment, List<Marine>> results = new HashMap<>();
+        this.equipmentManager.sails(isOpened).forEach(oar -> results.put(oar,
+                this.crew.getAvailableSailors().stream().filter(m -> m.getPosition().distanceTo(oar.getPosition()) <= MediatorCrewEquipment.MAXDISTANCE)
+                        .collect(Collectors.toList())));
+        return results;
+    }
     /**
      * Return sailoractions to activate exactly nb oars on left
      * if it is not possible return empty list
@@ -258,7 +265,18 @@ public class MediatorCrewEquipment {
      * @return un boleen
      */
     public boolean canLowerAllSails(){
-        return false;
+        List<Sail> sails=equipmentManager.sails(true);
+        Map<Equipment, List<Marine>> correspondances = marinsDisponiblesVoiles(true);
+        for(Sail sail:sails) {
+        	if(correspondances.get(sail).isEmpty()) {
+        		return false;
+        	}
+        	Marine firstMarin = correspondances.get(sail).get(0);
+        	correspondances.values().removeIf(val -> val.equals(firstMarin));
+        	//enleve le marin de toute la map pour qu'il
+        	//ne soit pas compter pour les autres voiles
+        }
+    	return true;
     }
 
     /**
@@ -271,7 +289,18 @@ public class MediatorCrewEquipment {
 
     //TODO
 	public boolean canLiftAllSails() {
-		return false;
+        List<Sail> sails=equipmentManager.sails(true);
+        Map<Equipment, List<Marine>> correspondances = marinsDisponiblesVoiles(true);
+        for(Sail sail:sails) {
+        	if(correspondances.get(sail).isEmpty()) {
+        		return false;
+        	}
+        	Marine firstMarin = correspondances.get(sail).get(0);
+        	correspondances.values().removeIf(val -> val.equals(firstMarin));
+        	//enleve le marin de toute la map pour qu'il
+        	//ne soit pas compter pour les autres voiles
+        }
+    	return true;
 	}
 
     /**

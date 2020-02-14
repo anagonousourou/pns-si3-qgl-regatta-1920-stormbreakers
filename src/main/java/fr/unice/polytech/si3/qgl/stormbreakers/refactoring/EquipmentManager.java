@@ -5,6 +5,7 @@ import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -119,7 +120,18 @@ public class EquipmentManager implements PropertyChangeListener {
     public int nbOpennedSails() {
         return (int) this.sails.stream().filter(Sail::isOpenned).count();
     }
-
+    
+    /**
+     * Permet de récupérer les voiles soit ouverte soit baisse
+     * @param isOpened
+     * @return List<Sail> - liste de voile ouverte si true sinon retourne les voiles baisse 
+     */
+    public List<Sail> sails(boolean isOpened) {
+    	if(isOpened) {
+    		return  this.sails.stream().filter(Sail::isOpenned).collect(Collectors.toList());
+    	}
+        return  this.sails.stream().filter(Predicate.not(Sail::isOpenned)).collect(Collectors.toList());
+    }
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         String jString = (String) evt.getNewValue();
