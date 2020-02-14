@@ -4,8 +4,10 @@ import java.beans.PropertyChangeListener;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.SailorAction;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Marin;
 
 public class Crew {
 
@@ -40,12 +42,14 @@ public class Crew {
     }
 
     public boolean marinAround(IntPosition position){
+        // TODO: 14/02/2020 Move verif to Marin::isInRangeOf(Pos)
         return this.marins.stream().filter(m->m.getPosition().distanceTo(position)<=5 ).findAny().isPresent();
     }
 
     public Optional<Marine> marineAtPosition(IntPosition position){
         return marins.stream().filter(m -> m.getPosition().distanceTo(position) == 0).findFirst();
     }
+
     /**
      * 
      * @param position
@@ -63,6 +67,14 @@ public class Crew {
 	public List<Marine> marins() {
 		return marins;
 	}
+
+	public List<Marine> getAvailableSailorsIn(List<Marine> sailors) {
+        return sailors.stream().filter(s -> s.isDoneTurn()).collect(Collectors.toList());
+    }
+
+    public List<Marine> getAvailableSailors() {
+        return getAvailableSailorsIn(marins);
+    }
 
 
 }

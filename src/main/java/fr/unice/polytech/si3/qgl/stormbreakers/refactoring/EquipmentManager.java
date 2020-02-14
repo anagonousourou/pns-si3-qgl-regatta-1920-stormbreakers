@@ -87,6 +87,14 @@ public class EquipmentManager implements PropertyChangeListener {
         return new ArrayList<>();
     }
 
+    public List<Oar> unusedLeftOars() {
+        return leftOars.stream().filter(oar -> ! oar.isUsed()).collect(Collectors.toList());
+    }
+
+    public List<Oar> unusedRightOars() {
+        return rightOars.stream().filter(oar -> ! oar.isUsed()).collect(Collectors.toList());
+    }
+
     List<Oar> toList() {
         return oars;
     }
