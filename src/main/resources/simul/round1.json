@@ -4,8 +4,8 @@
         "life": 100,
         "position": {
             "x": 0,
-            "y": 100,
-            "orientation": 0.0
+            "y": 300,
+            "orientation": 1.570796326794
         },
         "name": "Les copaings d'abord!",
         "deck": {
@@ -44,6 +44,18 @@
                 "type": "oar"
             },
             {
+                "x": 0,
+                "y": 1,
+                "type": "sail",
+                "openned": false
+            },
+            {
+                "x": 2,
+                "y": 1,
+                "type": "sail",
+                "openned": false
+            },
+            {
                 "x": 1,
                 "y": 1,
                 "type": "rudder"
@@ -55,5 +67,9 @@
             "height": 6,
             "orientation": 0
         }
+    },
+    "wind": {
+        "orientation": 0.78539816339744,
+        "strength": 200
     }
 }

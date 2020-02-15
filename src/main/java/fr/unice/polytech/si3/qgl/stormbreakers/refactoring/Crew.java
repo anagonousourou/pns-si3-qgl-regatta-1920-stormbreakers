@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.MoveAction;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.SailorAction;
 
 public class Crew {
@@ -24,14 +25,17 @@ public class Crew {
         this.marins.forEach(marin -> marin.addPropertyChangeListener(propertyChangeListener));
     }
 
-    /**
-     * fait executer aux marin concernés les MoveAction contenus dans le param moves
-     * TODO
-     * @param moves
-     */
-    public void executeMovingsInSailorAction(List<SailorAction> actions) {
-        
+    
+
+    public void executeMoves(List<MoveAction> moves){
+        for(MoveAction m:moves){
+            var optMarin=this.getMarinById(m.getSailorId());
+            if(optMarin.isPresent()){
+                optMarin.get().executeMove(m);
+            }
+        }
     }
+    
 
     
 
@@ -57,7 +61,7 @@ public class Crew {
     public Optional<Marine> marineClosestTo(IntPosition position){
         return marineClosestTo(position, marins);
     }
-    
+
     public Optional<Marine> marineClosestTo(IntPosition position, List<Marine> sailors){
         return sailors.stream().min(
                 Comparator.comparingInt(a -> a.getDistanceTo(position)));

@@ -58,10 +58,11 @@ public class CaptainTest {
         var m4 = new Marine(4, 4, 4);
         List<Marine> marins = List.of(m1, m2, m3, m4);
         Crew crew = new Crew(marins);
+        EquipmentManager equipmentManager=mock(EquipmentManager.class);
 
         marins.forEach(m -> assertFalse(m.isDoneTurn(), "par défaut  doneTurn est à false"));
 
-        MediatorCrewEquipment mediatorCrewEquipment = new MediatorCrewEquipment(crew, null);
+        MediatorCrewEquipment mediatorCrewEquipment = new MediatorCrewEquipment(crew, equipmentManager);
 
         rogers = new Captain(null, null, crew, null, null, mediatorCrewEquipment);
 

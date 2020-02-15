@@ -78,7 +78,7 @@ public class Captain {
         // le gouvernail existe, est accessible et suffit
         else if (mediatorCrewEquipment.rudderIsPresent() && mediatorCrewEquipment.rudderIsAccesible()
                 && (Math.abs(orientation) <= Math.PI / 4)) {
-
+            System.out.println("using the rudder");
             return this.validateActions(this.mediatorCrewEquipment.activateRudder(orientation));
             /**
              * TODO Plus tard, rajouter le cas où le gouvernail existe, est accessible mais
@@ -88,14 +88,16 @@ public class Captain {
         }
         // le gouvernail n'existe pas
         else {
-
-            int diff = this.navigator.fromAngleToDiff(orientation,this.mediatorCrewEquipment.nbLeftOars(),this.mediatorCrewEquipment.nbRightOars());
+            System.out.println("Orientation: "+orientation);
+            System.out.println(mediatorCrewEquipment.rudderIsPresent());
+            System.out.println(mediatorCrewEquipment.rudderIsAccesible());
+            System.out.println((Math.abs(orientation) <= Math.PI / 4));
+            int diff = this.navigator.fromAngleToDiff(orientation, this.mediatorCrewEquipment.nbLeftOars(),
+                    this.mediatorCrewEquipment.nbRightOars());
             List<SailorAction> actions = this.mediatorCrewEquipment.activateOarsNotStrict(diff);
             return this.validateActions(actions);
         }
     }
-
-    
 
     /**
      * Fonction qui envoie des actions pour ajouter des marins pour faire avancer le
@@ -171,6 +173,7 @@ public class Captain {
      */
     List<SailorAction> validateActions(List<SailorAction> actions) {
         this.mediatorCrewEquipment.validateActions(actions);
+        this.mediatorCrewEquipment.executeSailorsActions(actions);
         return actions;
 
     }

@@ -44,4 +44,6 @@ public abstract  class SailorAction implements Logable {
     public String getType() {
         return type;
     }
+
+    public abstract String compatibleEquipmentType();
 }

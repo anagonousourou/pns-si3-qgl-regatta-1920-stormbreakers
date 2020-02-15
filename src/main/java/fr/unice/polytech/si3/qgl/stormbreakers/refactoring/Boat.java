@@ -15,7 +15,7 @@ public class Boat implements PropertyChangeListener {
     private final int deckwidth;
     private final int decklength;
     private int life = 0;
-    // TODO add a Shape field
+    //add a Shape field
     private InputParser parser;
 
     public Boat(Position position, int decklength, int deckwidth, int life, InputParser parser) {

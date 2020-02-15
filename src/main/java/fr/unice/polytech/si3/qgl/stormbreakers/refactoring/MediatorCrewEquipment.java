@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.ActionType;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.LiftSail;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.LowerSail;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.MoveAction;
@@ -404,6 +405,47 @@ public class MediatorCrewEquipment {
             // ne soit pas compter pour les autres voiles
         }
         return true;
+    }
+
+    /**
+     * Cette méthode va déplacer les marins en utilisant les MoveAction
+     * de la liste 
+     * puis simulera l'execution des autres actions en marquant 
+     * les équipements concernés avec used=true
+     * il faut vérifier que l'action correspond au type d'équipement
+     * bien sur si le movingaction conduit le marin vers une case où il n'y
+     * a pas d'équipement on fait rien
+     * 
+     * Cela permettra de voir les équipements déja utilisés
+     * @param actions
+     */
+
+    void executeSailorsActions(List<SailorAction> actions){
+        List<MoveAction> moves=actions.stream().filter(act->act.getType().equals(ActionType.MOVING.actionCode))
+        .map(act->(MoveAction)act).collect(Collectors.toList());
+
+        List<SailorAction> otherActions=actions.stream().filter(act->!act.getType().equals(ActionType.MOVING.actionCode)).collect(Collectors.toList());
+
+        
+        this.crew.executeMoves(moves);
+        this.markEquipmentUsedByActions(otherActions);
+
+    }
+
+    public void markEquipmentUsedByActions(List<SailorAction> actions){
+        for(SailorAction oa:actions){
+            var optMarin=this.crew.getMarinById(oa.getSailorId());
+            if(optMarin.isPresent()){
+                Marine marine=optMarin.get();
+                var eq=this.equipmentManager.equipmentAt(marine.getPosition() );
+                if(eq.isPresent()){
+                    if(oa.compatibleEquipmentType().equals( eq.get().getType() )){
+                        eq.get().setUsed(true);
+                    }
+                }
+                
+            }
+        }
     }
 
     

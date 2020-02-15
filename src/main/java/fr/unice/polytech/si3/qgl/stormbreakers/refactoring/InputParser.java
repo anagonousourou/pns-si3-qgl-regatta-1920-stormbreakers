@@ -64,7 +64,7 @@ public class InputParser {
 		List<Checkpoint> checkpoints = new ArrayList<>();
 		mapper.readTree(jString).get("goal").get(checkpointsKey).forEach(c -> {
 			Shape shape;
-			if (c.get("shape").get("type").asText().equals("circle")) {
+			if (c.get(shapeKey).get("type").asText().equals("circle")) {
 				shape = new Circle(c.get(shapeKey).get("radius").asDouble());
 			} else {
 				shape = new Rectangle(c.get(shapeKey).get("width").asDouble(), c.get("shape").get("height").asDouble(),
@@ -88,7 +88,7 @@ public class InputParser {
 				equipment = new Sail(e.get("x").asInt(), e.get("y").asInt(), e.get("openned").asBoolean());
 
 			} else {
-				// TODO Vigie plus tard
+				//Vigie plus tard
 			}
 			equipments.add(equipment);
 		});

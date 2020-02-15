@@ -64,8 +64,6 @@ public class Control {
 
 		// Phase de calcul des actions
 		List<SailorAction> actions = this.captain.nextRoundActions();
-		// Appliquer les actions
-		this.crew.executeMovingsInSailorAction(actions);
 
 		// TODO Log current checkpoint
 

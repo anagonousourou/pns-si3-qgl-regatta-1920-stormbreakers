@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.Logable;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.EquipmentType;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Marin;
 
 public class MoveAction extends SailorAction implements Logable {
@@ -46,5 +47,10 @@ public class MoveAction extends SailorAction implements Logable {
     public String toLogs() {
         return ActionType.MOVING.shortCode + "(" + this.getSailorId() + "|" + this.xdistance + "," + this.ydistance
                 + ")";
+    }
+
+    @Override
+    public String compatibleEquipmentType() {
+        return "";
     }
 }

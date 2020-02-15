@@ -4,19 +4,21 @@
         "checkpoints": [
             {
                 "position": {
-                    "x": 80,
-                    "y": 120,
+                    "x": 1000,
+                    "y": 600,
                     "orientation": 0
                 },
                 "shape": {
-                    "type": "circle",
-                    "radius": 50
+                    "type": "rectangle",
+                    "width": 100,
+                    "height": 200,
+                    "orientation": 0
                 }
             },
             {
                 "position": {
-                    "x": 200,
-                    "y": 1800,
+                    "x": -800,
+                    "y": 600,
                     "orientation": 0
                 },
                 "shape": {
@@ -72,6 +74,18 @@
                 "type": "oar"
             },
             {
+                "x": 0,
+                "y": 1,
+                "type": "sail",
+                "openned": false
+            },
+            {
+                "x": 2,
+                "y": 1,
+                "type": "sail",
+                "openned": false
+            },
+            {
                 "x": 1,
                 "y": 1,
                 "type": "rudder"
@@ -86,28 +100,40 @@
     },
     "sailors": [
         {
-            "x": 5,
+            "x": 4,
             "y": 0,
             "id": 0,
             "name": "Edward Teach"
         },
         {
-            "x": 5,
+            "x": 4,
             "y": 1,
             "id": 1,
             "name": "Tom Pouce"
         },
         {
-            "x": 5,
+            "x": 4,
             "y": 2,
             "id": 2,
             "name": "Jack Sparrow"
         },
         {
-        	"x": 4,
+            "x": 5,
             "y": 0,
             "id": 3,
             "name": "Monkey D. Luffy"
+        },
+        {
+            "x": 5,
+            "y": 1,
+            "id": 4,
+            "name": "Gary Hawk"
+        },
+        {
+            "x": 5,
+            "y": 2,
+            "id": 5,
+            "name": "Rosa Kennedy"
         }
     ]
 }

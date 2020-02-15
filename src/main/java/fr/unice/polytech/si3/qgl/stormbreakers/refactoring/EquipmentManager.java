@@ -138,7 +138,6 @@ public class EquipmentManager implements PropertyChangeListener {
         try {
             this.setUp(this.parser.fetchEquipments(jString), this.parser.fetchBoatWidth(jString) );
         } catch (JsonProcessingException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
 
@@ -157,6 +156,14 @@ public class EquipmentManager implements PropertyChangeListener {
 	}
 	public List<Sail> closedSails() {
 		return this.sails.stream().filter(s-> !s.isOpenned() ).collect(Collectors.toList());
-	}
+    }
+    
+    void resetUsedStatus(){
+        this.equipments.forEach(eq->eq.resetUsed());
+    }
+
+    Optional<Equipment> equipmentAt(IntPosition pos){
+        return this.equipments.stream().filter(e-> e.getX()==pos.getX() && e.getY()==pos.getY()).findFirst();
+    }
 
 }

@@ -3,10 +3,12 @@ package fr.unice.polytech.si3.qgl.stormbreakers.simulation;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
+import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.SailorAction;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.Turn;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.EquipmentType;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Gouvernail;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Sail;
 
 class Boat implements PropertyChangeListener {
     private Crew crew;
@@ -42,16 +44,21 @@ class Boat implements PropertyChangeListener {
             Marine marine = (Marine) evt.getSource();
             if (marine.onEquipment()) {
                 var optEq = this.equipmentManager.equipmentAt(marine.getPosition());
-                if (optEq.isPresent() && optEq.get().getType().equals(marine.getTypeOfEquipment())) {
+                SailorAction action=(SailorAction) evt.getNewValue();
+                if (optEq.isPresent() && optEq.get().getType().equals(marine.getTypeOfEquipment()) &&  action.compatibleEquipmentType().equals(optEq.get().getType()) ) {
                     optEq.get().setUsed(true);
                     if (optEq.get().getType().equals(EquipmentType.RUDDER.code)) {
 
                         ((Gouvernail) optEq.get()).setOrientation(((Turn) evt.getNewValue()).getRotation());
                     }
                     else if(optEq.get().getType().equals(EquipmentType.SAIL.code)){
-                        
-                        /*boolean value=() evt.getNewValue()
-                        ((Sail) optEq.get()).setOpenned( );*/
+                        Sail sail=(Sail) optEq.get();
+                        if(action.getType().equals("LIFT_SAIL")){
+                            sail.setOpenned(true);
+                        }
+                        else if(action.getType().equals("LOWER_SAIL")){
+                            sail.setOpenned(false);
+                        }
                     }
                 }
             }
