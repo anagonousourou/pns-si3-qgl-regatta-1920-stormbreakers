@@ -20,10 +20,8 @@ public class CheckpointManager {
      * @param position
      */
 	public void updateCheckpoint(Position position) {
-        if (hasNextCheckpoint()) {
-            if (isPosInCheckpoint(position)) {
+        if (hasNextCheckpoint() && isPosInCheckpoint(position)) {
                 checkpoints.remove(0);
-            }
         }
 	}
 

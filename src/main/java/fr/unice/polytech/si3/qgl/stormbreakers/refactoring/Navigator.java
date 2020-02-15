@@ -30,7 +30,7 @@ public class Navigator {
         // Les coordonnées du bateau en (0,0)
         Point2D target2 = target.getTranslatedBy(-boatPosition.getX(), -boatPosition.getY());
         // On effectue une rotation pour ramener virtuellement
-        // la direction du bateau sur l'axe X;
+        // la direction du bateau sur l'axe X
         Point2D target3 = target2.getRotatedBy(-boatPosition.getOrientation());
         // On recupère l'angle entre le vecteur position de la cible et l'axe X
         double actualAngle = target3.getAngleFromXAxis();

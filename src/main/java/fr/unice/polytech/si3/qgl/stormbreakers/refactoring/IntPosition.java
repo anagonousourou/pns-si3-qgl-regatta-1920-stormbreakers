@@ -1,7 +1,8 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.refactoring;
 
 public class IntPosition {
-    private int x,y;
+    private int x;
+    private int y;
 
 
     public IntPosition(int x,int y){

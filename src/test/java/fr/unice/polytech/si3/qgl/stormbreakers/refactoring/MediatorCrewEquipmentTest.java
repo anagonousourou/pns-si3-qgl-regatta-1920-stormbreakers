@@ -231,7 +231,6 @@ public class MediatorCrewEquipmentTest {
 		assertEquals(4,resultActions.size());
 		MoveAction move1 = (MoveAction) resultActions.get(0);
 		assertAll(
-				// TODO: 15/02/2020 MoveAction equals
 				() -> assertEquals(sailorGoingLeft.getId(),move1.getSailorId()),
 				() -> assertEquals(-4, move1.getXdistance()),
 				() -> assertEquals(-1, move1.getYdistance())
@@ -273,7 +272,6 @@ public class MediatorCrewEquipmentTest {
 
 		MoveAction move1 = (MoveAction) resultActions.get(0);
 		assertAll(
-				// TODO: 15/02/2020 MoveAction equals
 				() -> assertEquals(sailorGoingLeft.getId(),move1.getSailorId()),
 				() -> assertEquals(-2, move1.getXdistance()),
 				() -> assertEquals(0, move1.getYdistance())

@@ -65,7 +65,7 @@ public class Control {
 		// Phase de calcul des actions
 		List<SailorAction> actions = this.captain.nextRoundActions();
 
-		// TODO Log current checkpoint
+		//Log current checkpoint
 
 		// Log actions generated
 		List<Logable> logableActions = new ArrayList<>(actions);

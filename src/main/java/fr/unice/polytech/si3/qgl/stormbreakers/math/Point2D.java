@@ -2,6 +2,8 @@ package fr.unice.polytech.si3.qgl.stormbreakers.math;
 
 import java.util.Objects;
 
+import fr.unice.polytech.si3.qgl.stormbreakers.exceptions.ImpossibleAngleError;
+
 /**
  * Un point 2D dans une espace reel
  */
@@ -39,7 +41,7 @@ public class Point2D {
      * Donne l'angle entre l'axe x et le vecteur position
      * retourne null si (0,0)
      * @return une angle entre ]-Pi,Pi]
-     * @throws RuntimeException if point is 0,0
+     * @throws  if point is 0,0
      */
     public double getAngleFromXAxis() {
         Vector unitX = new Vector(1,0);
@@ -49,7 +51,7 @@ public class Point2D {
 
         if (x==0 && y==0) {
             // L'angle n'est pas définit
-            throw new RuntimeException("Cannot define angle for 0,0");
+            throw new ImpossibleAngleError("Cannot define angle for 0,0");
         } else if (y==0)  { // x!=0 et y==0
             // Si x > 0 l'angle est 0
             if (x > 0) return 0;

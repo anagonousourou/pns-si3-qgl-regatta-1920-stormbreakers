@@ -80,7 +80,7 @@ public class Captain {
                 && (Math.abs(orientation) <= Math.PI / 4)) {
             return this.validateActions(this.mediatorCrewEquipment.activateRudder(orientation));
             /**
-             * TODO Plus tard, rajouter le cas où le gouvernail existe, est accessible mais
+             * Plus tard, rajouter le cas où le gouvernail existe, est accessible mais
              * ne suffit pas
              */
 

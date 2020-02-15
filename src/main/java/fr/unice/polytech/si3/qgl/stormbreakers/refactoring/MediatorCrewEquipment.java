@@ -28,9 +28,9 @@ public class MediatorCrewEquipment {
     }
 
     void validateActions(List<SailorAction> actions) {
-        actions.forEach(action -> {
-            this.getMarinById(action.getSailorId()).get().setDoneTurn(true);
-        });
+        actions.forEach(action -> 
+            this.getMarinById(action.getSailorId()).get().setDoneTurn(true)
+        );
 
     }
 
@@ -238,8 +238,9 @@ public class MediatorCrewEquipment {
     }
 
     public List<SailorAction> activateOarsNotStrict(int nb) {
+        List<SailorAction> actions;
         if (nb > 0) {
-            List<SailorAction> actions = new ArrayList<>();
+            
             do {
                 actions = this.activateOarsOnRight(nb);
                 nb--;
@@ -248,7 +249,6 @@ public class MediatorCrewEquipment {
             return actions;
         } else {
             nb = -nb;
-            List<SailorAction> actions = new ArrayList<>();
             do {
                 actions = this.activateOarsOnLeft(nb);
                 nb--;
@@ -288,8 +288,6 @@ public class MediatorCrewEquipment {
             currLeftOar = freeOarsOnLeftSide.get(0);
             freeOarsOnLeftSide.remove(currLeftOar);
 
-            // TODO: 15/02/2020 suggestion : method Crew: Optional<Marine>
-            // getClosestInReachOf(IntPosition, List<Marine>)
             IntPosition targetPos = currLeftOar.getPosition();
             List<Marine> sailorsInReach = crew.getSailorsWhoCanReach(availableSailors, targetPos);
             leftSailor = crew.marineClosestTo(targetPos, sailorsInReach);
@@ -326,7 +324,7 @@ public class MediatorCrewEquipment {
 
     public void resetAvailability() {
         this.crew.resetAvailability();
-        this.equipmentManager.resetUsedStatus();;
+        this.equipmentManager.resetUsedStatus();
     }
 
     public Optional<Marine> getMarinById(int id) {
@@ -405,16 +403,6 @@ public class MediatorCrewEquipment {
      */
     public boolean canLowerAllSails() {
         return canActOnSails(true);
-    }
-
-    // TODO
-    public List<SailorAction> actionsToLiftSails() {
-        return List.of();
-    }
-
-    // TODO
-    public List<SailorAction> actionsToLowerSails() {
-        return List.of();
     }
 
     /**

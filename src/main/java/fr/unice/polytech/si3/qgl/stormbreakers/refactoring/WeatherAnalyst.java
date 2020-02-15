@@ -57,6 +57,11 @@ public class WeatherAnalyst{
      * @return
      */
     public double potentialSpeedAcquirable(){
+        if(wind!=null && equipmentManager.nbSails()!=0){
+            return wind.getStrength()*Math.cos(
+                this.boat.getOrientation()-this.wind.getOrientation()
+            );
+        }
         return 0.0;
     }
 
