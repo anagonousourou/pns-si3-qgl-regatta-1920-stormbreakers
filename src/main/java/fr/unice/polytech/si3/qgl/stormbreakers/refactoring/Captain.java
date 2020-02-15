@@ -1,6 +1,5 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.refactoring;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -202,7 +201,7 @@ public class Captain {
         }
         double minAdditionalSpeed = SPEED * (2.0 / this.mediatorCrewEquipment.nbOars());
         if (currentSpeed + minAdditionalSpeed <= distance && this.mediatorCrewEquipment.canAccelerate()) {
-            List<SailorAction> actions = this.validateActions(this.mediatorCrewEquipment.activateOarsEachSide());
+            List<SailorAction> actions = this.validateActions(this.mediatorCrewEquipment.addOaringSailorsOnEachSide());
             return Captain.<SailorAction>concatenate(actions,
                     this.accelerate(distance, currentSpeed + minAdditionalSpeed));
 

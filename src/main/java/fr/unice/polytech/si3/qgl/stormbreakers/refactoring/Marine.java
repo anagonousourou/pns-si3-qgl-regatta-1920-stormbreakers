@@ -4,7 +4,6 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.MoveAction;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.SailorAction;
 
 /**
  * classe qui représente un marin
@@ -13,6 +12,8 @@ class Marine {
     private final int id;
     private IntPosition position;
     private boolean onEquipment = false;
+    private static final int MAX_MOVEMENT_DISTANCE = 5;
+
     /**
      * To Know wether a Marine is used or not
      * alternative to List of busy Marines
@@ -25,6 +26,10 @@ class Marine {
     Marine(int id, int x, int y) {
         this.id = id;
         this.position = new IntPosition(x, y);
+    }
+
+    Marine(int id, IntPosition pos) {
+        this(id,pos.getX(),pos.getY());
     }
 
     public void addPropertyChangeListener(PropertyChangeListener listener) {
@@ -79,7 +84,19 @@ class Marine {
         this.doneTurn = doneTurn;
     }
 
+    public MoveAction howToGoTo(IntPosition pos) {
+        return howToGoTo(pos.getX(),pos.getY());
+    }
+
 	public MoveAction howToGoTo(int x, int y) {
 		return new MoveAction(this.id, x-this.getPosition().getX(),y-this.getPosition().getY() );
 	}
+
+	public int getDistanceTo(IntPosition pos) {
+        return Math.abs(pos.getX()-this.getPosition().getX()) + Math.abs(pos.getY()-this.getPosition().getY());
+    }
+
+    public boolean canReach(IntPosition pos) {
+        return getDistanceTo(pos) <= MAX_MOVEMENT_DISTANCE;
+    }
 }

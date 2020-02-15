@@ -1,11 +1,17 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.refactoring;
 
 import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.MoveAction;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.SailorAction;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Oar;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -43,7 +49,7 @@ public class MediatorCrewEquipmentTest {
 		
 		equipmentManager= Mockito.mock(EquipmentManager.class);
 		crew = Mockito.mock(Crew.class);
-		coordinator=  new MediatorCrewEquipment(crew, equipmentManager);
+		coordinator =  new MediatorCrewEquipment(crew, equipmentManager);
 		Mockito.when(crew.getAvailableSailors()).thenReturn(marinsDisponibles);
 		Mockito.when(equipmentManager.sails(true)).thenReturn(voilesOuvertes);;
 		Mockito.when(equipmentManager.sails(false)).thenReturn(voilesBaissees);
@@ -92,4 +98,112 @@ public class MediatorCrewEquipmentTest {
 	void canLowerAllSails(){
 		
 	}
+
+	@Test
+	void addOaringSailorsOnEachSideTestWhenNoOarsOnLeftSide() {
+		List<Oar> leftOars = List.of();
+		Mockito.when(equipmentManager.unusedLeftOars()).thenReturn(leftOars);
+		List<Oar> rightOars = new ArrayList<>();
+		rightOars.add(new Oar(0,3));
+		Mockito.when(equipmentManager.unusedRightOars()).thenReturn(rightOars);
+
+		assertTrue(coordinator.addOaringSailorsOnEachSide().isEmpty());
+	}
+
+	@Test
+	void addOaringSailorsOnEachSideTestWhenNoOarsOnRightSide() {
+		List<Oar> leftOars = new ArrayList<>();
+		leftOars.add(new Oar(0,0));
+		Mockito.when(equipmentManager.unusedLeftOars()).thenReturn(leftOars);
+		List<Oar> rightOars = List.of();
+		Mockito.when(equipmentManager.unusedRightOars()).thenReturn(rightOars);
+
+		assertTrue(coordinator.addOaringSailorsOnEachSide().isEmpty());
+	}
+
+	@Test
+	void addOaringSailorsOnEachSideTestWhenFirstOarsReachable() {
+		Marine sailorGoingLeft = new Marine(0,4,1);
+		Marine sailorGoingRight = new Marine(1,4,2);
+		// Not assigned because too far
+		Marine sailorNotGoingLeft = new Marine(2,20,1);
+		Marine sailorNotGoingRight = new Marine(3,20,2);
+		Crew crew2 = new Crew(List.of(sailorGoingLeft,sailorGoingRight, sailorNotGoingLeft, sailorNotGoingRight));
+
+		MediatorCrewEquipment coordinator2 =  new MediatorCrewEquipment(crew2, equipmentManager);
+
+		Oar oarL1 = new Oar(0,0);
+		Oar oarL2 = new Oar(2,0);
+		List<Oar> leftOars = List.of(oarL1, oarL2);
+
+		Oar oarR1 = new Oar(0,3);
+		Oar oarR2 = new Oar(2,3);
+		List<Oar> rightOars = List.of(oarR1,oarR2);
+
+		Mockito.when(equipmentManager.unusedLeftOars()).thenReturn(leftOars);
+		Mockito.when(equipmentManager.unusedRightOars()).thenReturn(rightOars);
+
+		List<SailorAction> resultActions = coordinator2.addOaringSailorsOnEachSide();
+
+		assertEquals(4,resultActions.size());
+		MoveAction move1 = (MoveAction) resultActions.get(0);
+		assertAll(
+				// TODO: 15/02/2020 MoveAction equals
+				() -> assertEquals(sailorGoingLeft.getId(),move1.getSailorId()),
+				() -> assertEquals(-4, move1.getXdistance()),
+				() -> assertEquals(-1, move1.getYdistance())
+		);
+		MoveAction move2 = (MoveAction) resultActions.get(2);
+		assertAll(
+				() -> assertEquals(sailorGoingRight.getId(),move2.getSailorId()),
+				() -> assertEquals(-4, move2.getXdistance()),
+				() -> assertEquals(1, move2.getYdistance())
+		);
+	}
+
+	@Test
+	void addOaringSailorsOnEachSideTestWhenOnlyLastOarsReachable() {
+		Marine sailorGoingLeft = new Marine(1,12,0);
+		Marine sailorGoingRight = new Marine(3,12,3);
+		// Not assigned because too far
+		Marine sailorNotGoingLeft = new Marine(0,20,0);
+		Marine sailorNotGoingRight = new Marine(2,20,3);
+
+		Crew crew2 = new Crew(List.of(sailorNotGoingLeft,sailorGoingLeft,sailorNotGoingRight,sailorGoingRight));
+
+		MediatorCrewEquipment coordinator2 =  new MediatorCrewEquipment(crew2, equipmentManager);
+
+
+		Oar oarL1 = new Oar(0,0);
+		Oar oarL2 = new Oar(10,0);
+		List<Oar> leftOars = List.of(oarL1,oarL2);
+
+		Oar oarR1 = new Oar(0,3);
+		Oar oarR2 = new Oar(10,3);
+		List<Oar> rightOars =  List.of(oarR1,oarR2);
+
+		Mockito.when(equipmentManager.unusedLeftOars()).thenReturn(leftOars);
+		Mockito.when(equipmentManager.unusedRightOars()).thenReturn(rightOars);
+
+		List<SailorAction> resultActions = coordinator2.addOaringSailorsOnEachSide();
+		assertEquals(4,resultActions.size());
+
+		MoveAction move1 = (MoveAction) resultActions.get(0);
+		assertAll(
+				// TODO: 15/02/2020 MoveAction equals
+				() -> assertEquals(sailorGoingLeft.getId(),move1.getSailorId()),
+				() -> assertEquals(-2, move1.getXdistance()),
+				() -> assertEquals(0, move1.getYdistance())
+		);
+
+		MoveAction move2 = (MoveAction) resultActions.get(2);
+		assertAll(
+				() -> assertEquals(sailorGoingRight.getId(),move2.getSailorId()),
+				() -> assertEquals(-2, move2.getXdistance()),
+				() -> assertEquals(0, move2.getYdistance())
+		);
+
+	}
+
+
 }

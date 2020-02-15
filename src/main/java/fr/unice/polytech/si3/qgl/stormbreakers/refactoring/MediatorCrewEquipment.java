@@ -1,10 +1,6 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.refactoring;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.MoveAction;
@@ -95,18 +91,19 @@ public class MediatorCrewEquipment {
         filter(oar-> this.crew.marineAtPosition(oar.getPosition()).isPresent() ).count();
     }
 
+    // TODO: 14/02/2020 Change name or add rudder & sail support
     public Map<Equipment, List<Marine>> marinsDisponibles() {
         HashMap<Equipment, List<Marine>> results = new HashMap<>();
         this.equipmentManager.oars().forEach(oar -> results.put(oar,
-                this.crew.marins().stream().filter(m -> m.getPosition().distanceTo(oar.getPosition()) <= MediatorCrewEquipment.MAXDISTANCE)
+                this.crew.marins().stream().filter(m -> m.canReach(oar.getPosition()))
                         .collect(Collectors.toList())));
         return results;
     }
 
     public Map<Equipment, List<Marine>> marinsDisponiblesVoiles(boolean isOpened) {
         HashMap<Equipment, List<Marine>> results = new HashMap<>();
-        this.equipmentManager.sails(isOpened).forEach(oar -> results.put(oar,
-                this.crew.getAvailableSailors().stream().filter(m -> m.getPosition().distanceTo(oar.getPosition()) <= MediatorCrewEquipment.MAXDISTANCE)
+        this.equipmentManager.sails(isOpened).forEach(sail -> results.put(sail,
+                this.crew.getAvailableSailors().stream().filter(m -> m.canReach(sail.getPosition()))
                         .collect(Collectors.toList())));
         return results;
     }
@@ -203,14 +200,68 @@ public class MediatorCrewEquipment {
             return actions;
         }
     }
-    /**
-     * 
-     * TODO
-     * @return
-     */
-    public List<SailorAction> activateOarsEachSide(){
-        return List.of();
 
+    /**
+     * Prépare l'ajout d'un rameur de chaque coté du bateau
+     * @return actions move et oar nécessaires
+     */
+    public List<SailorAction> addOaringSailorsOnEachSide(){
+        List<SailorAction> actionsToReturn = new ArrayList<>();
+
+        List<Oar> freeOarsOnLeftSide = new ArrayList<>(equipmentManager.unusedLeftOars());
+        List<Oar> freeOarsOnRightSide = new ArrayList<>(equipmentManager.unusedRightOars());
+
+        List<Marine> availableSailors = crew.getAvailableSailors();
+
+        // Can't assign to non-free oars
+        // Can't assign when no sailors available
+        if (freeOarsOnLeftSide.size()==0 || freeOarsOnRightSide.size()==0 || availableSailors.isEmpty())
+            return List.of();
+
+
+        Optional<Marine> leftSailor = Optional.empty();
+        Optional<Marine> rightSailor = Optional.empty();
+
+        Oar currLeftOar = null;
+        Oar currRightOar = null;
+
+        // Try to find someone who can oar on left side
+        while (!leftSailor.isPresent() && !freeOarsOnLeftSide.isEmpty()) {
+            currLeftOar = freeOarsOnLeftSide.get(0);
+            freeOarsOnLeftSide.remove(currLeftOar);
+
+            // TODO: 15/02/2020 suggestion : method Crew:  Optional<Marine> getClosestInReachOf(IntPosition, List<Marine>)
+            IntPosition targetPos = currLeftOar.getPosition();
+            List<Marine> sailorsInReach = crew.getSailorsWhoCanReach(availableSailors,targetPos);
+            leftSailor = crew.marineClosestTo(targetPos,sailorsInReach);
+        }
+
+        if (leftSailor.isPresent()) {
+            // Cannot be used on both sides
+            availableSailors.remove(leftSailor);
+
+            // Try to find someone who can oar on right side
+            while (!rightSailor.isPresent() && !freeOarsOnRightSide.isEmpty()) {
+                currRightOar = freeOarsOnRightSide.get(0);
+                freeOarsOnRightSide.remove(currRightOar);
+
+                IntPosition targetPos = currRightOar.getPosition();
+                List<Marine> sailorsInReach = crew.getSailorsWhoCanReach(availableSailors,targetPos);
+                rightSailor = crew.marineClosestTo(targetPos,sailorsInReach);
+            }
+        }
+
+        if (leftSailor.isPresent() && rightSailor.isPresent()) {
+            // Ask left sailor to move then oar
+            actionsToReturn.add(leftSailor.get().howToGoTo(currLeftOar.getPosition()));
+            actionsToReturn.add(new OarAction(leftSailor.get().getId()));
+
+            // Ask right sailor to move then oar
+            actionsToReturn.add(rightSailor.get().howToGoTo(currRightOar.getPosition()));
+            actionsToReturn.add(new OarAction(rightSailor.get().getId()));
+        }
+
+        return actionsToReturn;
 
     }
 
