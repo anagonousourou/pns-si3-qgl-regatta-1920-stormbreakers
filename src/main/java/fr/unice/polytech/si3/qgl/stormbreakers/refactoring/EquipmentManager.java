@@ -2,7 +2,6 @@ package fr.unice.polytech.si3.qgl.stormbreakers.refactoring;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -85,7 +84,7 @@ public class EquipmentManager implements PropertyChangeListener {
     }
 
     List<Oar> usedLeftOars() {
-        return new ArrayList<>();
+        return leftOars.stream().filter(oar -> oar.isUsed()).collect(Collectors.toList());
     }
 
     public List<Oar> unusedLeftOars() {

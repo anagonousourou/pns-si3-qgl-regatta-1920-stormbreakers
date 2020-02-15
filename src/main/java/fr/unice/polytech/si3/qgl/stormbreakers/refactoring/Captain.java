@@ -189,8 +189,8 @@ public class Captain {
             return List.of();// RIEN A FAIRE
         }
         double minAdditionalSpeed = SPEED * (2.0 / this.mediatorCrewEquipment.nbOars());
-        if (currentSpeed + minAdditionalSpeed <= distance && this.mediatorCrewEquipment.canAccelerate()) {
-            List<SailorAction> actions = this.validateActions(this.mediatorCrewEquipment.activateOarsEachSide());
+        if (currentSpeed + minAdditionalSpeed <= distance) {
+            List<SailorAction> actions = this.validateActions(this.mediatorCrewEquipment.addOaringSailorsOnEachSide());
             return Captain.<SailorAction>concatenate(actions,
                     this.accelerate(distance, currentSpeed + minAdditionalSpeed));
 

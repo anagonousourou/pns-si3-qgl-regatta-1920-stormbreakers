@@ -62,12 +62,12 @@ public class InputParser {
 	 */
 	public List<Checkpoint> fetchCheckpoints(String jString) throws JsonProcessingException {
 		List<Checkpoint> checkpoints = new ArrayList<>();
-		mapper.readTree(jString).get("goal").get("checkpoints").forEach(c -> {
+		mapper.readTree(jString).get("goal").get(checkpointsKey).forEach(c -> {
 			Shape shape;
 			if (c.get("shape").get("type").asText().equals("circle")) {
-				shape = new Circle(c.get("shape").get("radius").asDouble());
+				shape = new Circle(c.get(shapeKey).get("radius").asDouble());
 			} else {
-				shape = new Rectangle(c.get("shape").get("width").asDouble(), c.get("shape").get("height").asDouble(),
+				shape = new Rectangle(c.get(shapeKey).get("width").asDouble(), c.get("shape").get("height").asDouble(),
 						c.get("shape").get("orientation").asDouble());
 			}
 			checkpoints.add(new Checkpoint(

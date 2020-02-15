@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -78,4 +79,35 @@ public class EquipmentManagerTest {
     	assertTrue(this.equipmentManager.sails(false).get(0).equals(r7));
     }
 
+    @Test
+    void unusedLeftOarsTest() {
+        List<Equipment> equipments = new ArrayList<>();
+        equipments.addAll(List.of(r1, r2, r3, r4, r5, r6, r7, r8));
+
+        Oar usedLeftOar = new Oar(4,0); usedLeftOar.setUsed(true);
+        equipments.add(usedLeftOar);
+
+        EquipmentManager equipmentManager2 = new EquipmentManager(equipments, 3);
+
+        List<Oar> unusedLeftOars = equipmentManager2.unusedLeftOars();
+        assertEquals(3,unusedLeftOars.size());
+        assertFalse(unusedLeftOars.contains(usedLeftOar));
+        unusedLeftOars.forEach(oar -> assertFalse(oar.isUsed()));
+    }
+
+    @Test
+    void unusedRightOarsTest() {
+        List<Equipment> equipments = new ArrayList<>();
+        equipments.addAll(List.of(r1, r2, r3, r4, r5, r6, r7, r8));
+
+        Oar usedRightOar = new Oar(4,3); usedRightOar.setUsed(true);
+        equipments.add(usedRightOar);
+
+        EquipmentManager equipmentManager2 = new EquipmentManager(equipments, 3);
+
+        List<Oar> unusedRightOars = equipmentManager2.unusedRightOars();
+        assertEquals(3,unusedRightOars.size());
+        assertFalse(unusedRightOars.contains(usedRightOar));
+        unusedRightOars.forEach(oar -> assertFalse(oar.isUsed()));
+    }
 }

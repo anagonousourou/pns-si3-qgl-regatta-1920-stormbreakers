@@ -11,7 +11,6 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
  * la mise à jour des infos du bateau notamment la vie et la position-orientation
  */
 public class Boat implements PropertyChangeListener {
-    private final int MAX_DISTANCE = 5;
     private Position position = null;
     private final int deckwidth;
     private final int decklength;

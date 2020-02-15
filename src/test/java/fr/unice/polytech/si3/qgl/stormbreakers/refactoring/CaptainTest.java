@@ -40,9 +40,9 @@ public class CaptainTest {
         List<SailorAction> sailorsActions = List.of(new OarAction(1), new OarAction(3));
         when(mediatorCrewEquipment.nbOars()).thenReturn(4);
 
-        when(mediatorCrewEquipment.activateOarsEachSide()).thenReturn(sailorsActions);
+        when(mediatorCrewEquipment.addOaringSailorsOnEachSide()).thenReturn(sailorsActions);
 
-        when(mediatorCrewEquipment.canAccelerate()).thenReturn(true, false);
+        
 
         assertTrue(sailorsActions.containsAll(this.rogers.accelerate(1230, 200)));
 

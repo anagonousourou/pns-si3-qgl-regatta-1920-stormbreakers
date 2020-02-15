@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.LiftSail;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.LowerSail;
@@ -21,7 +20,6 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Sail;
 public class MediatorCrewEquipment {
     private Crew crew;
     private EquipmentManager equipmentManager;
-    private static final int MAXDISTANCE = 5;
 
     public MediatorCrewEquipment(Crew crew, EquipmentManager equipmentManager) {
         this.crew = crew;
@@ -115,7 +113,7 @@ public class MediatorCrewEquipment {
         for (Sail sail : this.equipmentManager.closedSails()) {
             System.out.println(sail);
             for (Marine marine : marinsDisponibles.get(sail)) {
-                if ( ! marine.isDoneTurn() && !marinesBusy.contains(marine) ) {
+                if (!marine.isDoneTurn() && !marinesBusy.contains(marine)) {
                     actions.add(marine.howToGoTo(sail.getX(), sail.getY()));
                     actions.add(new LiftSail(marine.getId()));
                     marinesBusy.add(marine);
@@ -146,22 +144,21 @@ public class MediatorCrewEquipment {
                 .filter(oar -> this.crew.marineAtPosition(oar.getPosition()).isPresent()).count();
     }
 
+    // TODO: 14/02/2020 Change name or add rudder & sail support
     public Map<Equipment, List<Marine>> marinsDisponibles() {
         HashMap<Equipment, List<Marine>> results = new HashMap<>();
         this.equipmentManager.oars().forEach(oar -> results.put(oar,
-                this.crew.marins().stream()
-                        .filter(m -> m.getPosition().distanceTo(oar.getPosition()) <= MediatorCrewEquipment.MAXDISTANCE)
-                        .collect(Collectors.toList())));
+                this.crew.marins().stream().filter(m -> m.canReach(oar.getPosition())).collect(Collectors.toList())));
         return results;
     }
 
     public Map<Equipment, List<Marine>> marinsDisponiblesVoiles(boolean isOpened) {
         HashMap<Equipment, List<Marine>> results = new HashMap<>();
         this.equipmentManager.sails(isOpened).forEach(sail -> results.put(sail,
-                this.crew.marins().stream().filter(m -> m.getPosition().distanceTo(sail.getPosition()) <= MediatorCrewEquipment.MAXDISTANCE)
-                        .collect(Collectors.toList())));
+                this.crew.marins().stream().filter(m -> m.canReach(sail.getPosition())).collect(Collectors.toList())));
         return results;
     }
+
     /**
      * Return sailoractions to activate exactly nb oars on left if it is not
      * possible return empty list Do not make compromise the size of the list must
@@ -264,23 +261,67 @@ public class MediatorCrewEquipment {
     }
 
     /**
+     * Prépare l'ajout d'un rameur de chaque coté du bateau
      * 
-     * TODO
-     * 
-     * @return
+     * @return actions move et oar nécessaires
      */
-    public List<SailorAction> activateOarsEachSide() {
-        List<SailorAction> actionsLeft = this.activateOarsOnLeft(1);
-        if (!actionsLeft.isEmpty()) {
-            Marine usedOnLeft = this.crew.getMarinById(actionsLeft.get(0).getSailorId()).get();
-            List<Marine> busy = new ArrayList<>();
-            busy.add(usedOnLeft);
-            List<SailorAction> actionsRight = this.activateOarsOnRight(1, busy);
+    public List<SailorAction> addOaringSailorsOnEachSide() {
+        List<SailorAction> actionsToReturn = new ArrayList<>();
 
-            return MediatorCrewEquipment.<SailorAction>concatenate(actionsLeft, actionsRight);
+        List<Oar> freeOarsOnLeftSide = new ArrayList<>(equipmentManager.unusedLeftOars());
+        List<Oar> freeOarsOnRightSide = new ArrayList<>(equipmentManager.unusedRightOars());
 
+        List<Marine> availableSailors = crew.getAvailableSailors();
+
+        // Can't assign to non-free oars
+        // Can't assign when no sailors available
+        if (freeOarsOnLeftSide.size() == 0 || freeOarsOnRightSide.size() == 0 || availableSailors.isEmpty())
+            return List.of();
+
+        Optional<Marine> leftSailor = Optional.empty();
+        Optional<Marine> rightSailor = Optional.empty();
+
+        Oar currLeftOar = null;
+        Oar currRightOar = null;
+
+        // Try to find someone who can oar on left side
+        while (!leftSailor.isPresent() && !freeOarsOnLeftSide.isEmpty()) {
+            currLeftOar = freeOarsOnLeftSide.get(0);
+            freeOarsOnLeftSide.remove(currLeftOar);
+
+            // TODO: 15/02/2020 suggestion : method Crew: Optional<Marine>
+            // getClosestInReachOf(IntPosition, List<Marine>)
+            IntPosition targetPos = currLeftOar.getPosition();
+            List<Marine> sailorsInReach = crew.getSailorsWhoCanReach(availableSailors, targetPos);
+            leftSailor = crew.marineClosestTo(targetPos, sailorsInReach);
         }
-        return List.of();
+
+        if (leftSailor.isPresent()) {
+            // Cannot be used on both sides
+            availableSailors.remove(leftSailor.get());
+
+            // Try to find someone who can oar on right side
+            while (!rightSailor.isPresent() && !freeOarsOnRightSide.isEmpty()) {
+                currRightOar = freeOarsOnRightSide.get(0);
+                freeOarsOnRightSide.remove(currRightOar);
+
+                IntPosition targetPos = currRightOar.getPosition();
+                List<Marine> sailorsInReach = crew.getSailorsWhoCanReach(availableSailors, targetPos);
+                rightSailor = crew.marineClosestTo(targetPos, sailorsInReach);
+            }
+        }
+
+        if (leftSailor.isPresent() && rightSailor.isPresent()) {
+            // Ask left sailor to move then oar
+            actionsToReturn.add(leftSailor.get().howToGoTo(currLeftOar.getPosition()));
+            actionsToReturn.add(new OarAction(leftSailor.get().getId()));
+
+            // Ask right sailor to move then oar
+            actionsToReturn.add(rightSailor.get().howToGoTo(currRightOar.getPosition()));
+            actionsToReturn.add(new OarAction(rightSailor.get().getId()));
+        }
+
+        return actionsToReturn;
 
     }
 
@@ -329,72 +370,42 @@ public class MediatorCrewEquipment {
     }
 
     /**
-     * TODO Fonction qui renvoie si il est possible de fermer/descendre toutes les
+     * Fonction qui renvoie si il est possible de fermer/descendre toutes les
      * voiles actuellement ouvertes
      * 
      * @return un boleen
      */
-    public boolean canLowerAllSails(){
-        List<Sail> sails=equipmentManager.sails(true);
+    public boolean canLowerAllSails() {
+        List<Sail> sails = equipmentManager.sails(true);
         Map<Equipment, List<Marine>> correspondances = marinsDisponiblesVoiles(true);
-        for(Sail sail:sails) {
-        	if(correspondances.get(sail).isEmpty()) {
-        		return false;
-        	}
-        	Marine firstMarin = correspondances.get(sail).get(0);
-        	correspondances.values().removeIf(val -> val.equals(firstMarin));
-        	//enleve le marin de toute la map pour qu'il
-        	//ne soit pas compter pour les autres voiles
+        for (Sail sail : sails) {
+            if (correspondances.get(sail).isEmpty()) {
+                return false;
+            }
+            Marine firstMarin = correspondances.get(sail).get(0);
+            correspondances.values().removeIf(val -> val.equals(firstMarin));
+            // enleve le marin de toute la map pour qu'il
+            // ne soit pas compter pour les autres voiles
         }
-    	return true;
-    }
-
-    /**
-     * TODO
-     * 
-     * @return
-     */
-    public List<SailorAction> actionsToLowerSails() {
-        return List.of();
-    }
-
-    //TODO
-	public boolean canLiftAllSails() {
-        List<Sail> sails=equipmentManager.sails(true);
-        Map<Equipment, List<Marine>> correspondances = marinsDisponiblesVoiles(true);
-        for(Sail sail:sails) {
-        	if(correspondances.get(sail).isEmpty()) {
-        		return false;
-        	}
-        	Marine firstMarin = correspondances.get(sail).get(0);
-        	correspondances.values().removeIf(val -> val.equals(firstMarin));
-        	//enleve le marin de toute la map pour qu'il
-        	//ne soit pas compter pour les autres voiles
-        }
-    	return true;
-	}
-
-    /**
-     * TODO
-     * 
-     * @return
-     */
-    public List<SailorAction> actionsToLiftSails() {
-        return List.of();
-    }
-
-    /**
-     * TODO complete
-     * 
-     * @return
-     */
-    public boolean canAccelerate() {
         return true;
     }
 
-    /** Generic function to concatenate 2 lists in Java */
-    private static <T> List<T> concatenate(List<T> list1, List<T> list2) {
-        return Stream.of(list1, list2).flatMap(List::stream).collect(Collectors.toList());
+    
+    public boolean canLiftAllSails() {
+        List<Sail> sails = equipmentManager.sails(true);
+        Map<Equipment, List<Marine>> correspondances = marinsDisponiblesVoiles(true);
+        for (Sail sail : sails) {
+            if (correspondances.get(sail).isEmpty()) {
+                return false;
+            }
+            Marine firstMarin = correspondances.get(sail).get(0);
+            correspondances.values().removeIf(val -> val.equals(firstMarin));
+            // enleve le marin de toute la map pour qu'il
+            // ne soit pas compter pour les autres voiles
+        }
+        return true;
     }
+
+    
 
 }
