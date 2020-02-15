@@ -146,7 +146,7 @@ public class MediatorCrewEquipment {
                 for (Marine m : correspondances.get(oar)) {
                     if (!yetBusy.contains(m) && !m.isDoneTurn()) {
                         yetBusy.add(m);
-                        result.add(m.howToGoTo(oar.getX(), oar.getY()));
+                        result.add(m.howToMoveTo(new IntPosition(oar.getX(), oar.getY())));
                         result.add(new OarAction(m.getId()));
                         compteur++;
                         break;
@@ -252,11 +252,11 @@ public class MediatorCrewEquipment {
 
         if (leftSailor.isPresent() && rightSailor.isPresent()) {
             // Ask left sailor to move then oar
-            actionsToReturn.add(leftSailor.get().howToGoTo(currLeftOar.getPosition()));
+            actionsToReturn.add(leftSailor.get().howToMoveTo(currLeftOar.getPosition()));
             actionsToReturn.add(new OarAction(leftSailor.get().getId()));
 
             // Ask right sailor to move then oar
-            actionsToReturn.add(rightSailor.get().howToGoTo(currRightOar.getPosition()));
+            actionsToReturn.add(rightSailor.get().howToMoveTo(currRightOar.getPosition()));
             actionsToReturn.add(new OarAction(rightSailor.get().getId()));
         }
 
@@ -279,7 +279,7 @@ public class MediatorCrewEquipment {
      * @param equimentManager
      * @return
      */
-    public List<Marine> leftMarinsOnOars() {
+    public List<Marine> leftSailorsOnOars() {
         List<Marine> marines = new ArrayList<>();
         for(Oar oar:equipmentManager.allLeftOars()){
         	Optional<Marine> theSailor = this.crew.marineAtPosition(oar.getPosition());
@@ -298,7 +298,7 @@ public class MediatorCrewEquipment {
      * @param equimentManager
      * @return
      */
-    public List<Marine> rightMarinsOnOars() {
+    public List<Marine> rightSailorsOnOars() {
         List<Marine> marines = new ArrayList<>();
         for(Oar oar:equipmentManager.allRightOars()){
         	Optional<Marine> theSailor = this.crew.marineAtPosition(oar.getPosition());
@@ -309,67 +309,58 @@ public class MediatorCrewEquipment {
 
         return marines;
     }
+    
+    /**
+     * Method used to know if we can lift or lower all of the sails.
+     * 
+     * @param isOpened - true if we want to lower them, false if we want to lift them.
+     * @return true or false
+     */
+    
+    private boolean canActOnSails(boolean isOpened) {
+    	List<Sail> sails=equipmentManager.sails(isOpened);
+        Map<Equipment, List<Marine>> correspondances = marinsDisponiblesVoiles(isOpened);
+        for(Sail sail:sails) {
+        	if(correspondances.get(sail).isEmpty()) {
+        		return false;
+        	}
+        	Marine firstSailor = correspondances.get(sail).get(0);
+        	// Retrieve the sailor that can act on the current sail
+        	// from every entry, so that next sails will know that this sailor can't act on them
+        	correspondances.entrySet()
+        					.forEach(c -> {
+        						if(c.getValue().contains(firstSailor)) {
+        							c.getValue().remove(firstSailor);
+        						}
+        					});
+        }
+    	return true;
+    }
+    
 
     /**
-     * TODO
-     * Fonction qui renvoie si il est possible de fermer/descendre 
-     * toutes les voiles actuellement ouvertes
-     * @return un boleen
+     * Method used to know if we can lower all of the sails.
+     * @return true or false
      */
     public boolean canLowerAllSails(){
-        List<Sail> sails=equipmentManager.sails(true);
-        Map<Equipment, List<Marine>> correspondances = marinsDisponiblesVoiles(true);
-        for(Sail sail:sails) {
-        	if(correspondances.get(sail).isEmpty()) {
-        		return false;
-        	}
-        	Marine firstMarin = correspondances.get(sail).get(0);
-        	correspondances.values().removeIf(val -> val.equals(firstMarin));
-        	//enleve le marin de toute la map pour qu'il
-        	//ne soit pas compter pour les autres voiles
-        }
-    	return true;
+    	return canActOnSails(true);
     }
-
-    /**
-     * TODO
-     * @return
-     */
-    public List<SailorAction> actionsToLowerSails(){
-        return List.of();
-    }
-
-    //TODO
-	public boolean canLiftAllSails() {
-        List<Sail> sails=equipmentManager.sails(true);
-        Map<Equipment, List<Marine>> correspondances = marinsDisponiblesVoiles(true);
-        for(Sail sail:sails) {
-        	if(correspondances.get(sail).isEmpty()) {
-        		return false;
-        	}
-        	Marine firstMarin = correspondances.get(sail).get(0);
-        	correspondances.values().removeIf(val -> val.equals(firstMarin));
-        	//enleve le marin de toute la map pour qu'il
-        	//ne soit pas compter pour les autres voiles
-        }
-    	return true;
-	}
-
-    /**
-     * TODO
-     * @return
-     */
-	public List<SailorAction> actionsToLiftSails() {
-		return List.of();
-	}
-
-    /**
-     * TODO complete
-     * @return
-     */
-	public boolean canAccelerate() {
-		return false;
-	}
-
     
+    //TODO
+    public List<SailorAction> actionsToLiftSails(){
+    	return List.of();
+    }
+    
+    //TODO
+    public List<SailorAction> actionsToLowerSails(){
+    	return List.of();
+    }
+
+    /**
+     * Method used to know if we can lift all of the sails.
+     * @return true or false
+     */
+	public boolean canLiftAllSails() {
+		return canActOnSails(false);
+    }
 }

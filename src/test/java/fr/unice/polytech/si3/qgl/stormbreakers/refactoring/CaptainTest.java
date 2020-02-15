@@ -25,8 +25,6 @@ public class CaptainTest {
 
         when(mediatorCrewEquipment.addOaringSailorsOnEachSide()).thenReturn(sailorsActions);
 
-        when(mediatorCrewEquipment.canAccelerate()).thenReturn(true, false);
-
         assertTrue(sailorsActions.containsAll(this.rogers.accelerate(1230, 200)));
 
     }

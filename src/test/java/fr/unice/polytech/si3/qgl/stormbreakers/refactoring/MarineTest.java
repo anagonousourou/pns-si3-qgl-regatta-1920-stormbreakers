@@ -18,7 +18,7 @@ class MarineTest {
 
     @Test
     void howToGoToTestWhenSameSpot() {
-        MoveAction actual =  sailor.howToGoTo(marinPos);
+        MoveAction actual =  sailor.howToMoveTo(marinPos);
         MoveAction expected = new MoveAction(0,0,0);
 
         assertEquals(expected.getSailorId(),actual.getSailorId(), "Correct Id");
@@ -28,7 +28,7 @@ class MarineTest {
 
     @Test
     void howToGoToTestWhenDifferentSpot() {
-        MoveAction actual =  sailor.howToGoTo(targetPosInReach);
+        MoveAction actual =  sailor.howToMoveTo(targetPosInReach);
         MoveAction expected = new MoveAction(0,1,3);
 
         assertEquals(expected.getSailorId(),actual.getSailorId(), "Correct Id");
