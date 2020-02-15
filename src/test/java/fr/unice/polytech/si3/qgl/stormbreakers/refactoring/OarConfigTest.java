@@ -1,10 +1,11 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.refactoring;
 
-import fr.unice.polytech.si3.qgl.stormbreakers.math.Fraction;
-import org.junit.jupiter.api.BeforeEach;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.Fraction;
 
 class OarConfigTest {
     private static Fraction HALF = new Fraction(1,2);

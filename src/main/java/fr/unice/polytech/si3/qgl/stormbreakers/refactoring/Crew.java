@@ -1,13 +1,11 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.refactoring;
 
 import java.beans.PropertyChangeListener;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.SailorAction;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Marin;
 
 public class Crew {
 

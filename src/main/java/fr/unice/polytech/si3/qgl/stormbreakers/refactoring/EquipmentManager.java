@@ -11,7 +11,6 @@ import java.util.stream.Collectors;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Equipment;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.EquipmentType;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Gouvernail;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Oar;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Sail;
@@ -133,6 +132,7 @@ public class EquipmentManager implements PropertyChangeListener {
     	}
         return  this.sails.stream().filter(Predicate.not(Sail::isOpenned)).collect(Collectors.toList());
     }
+    
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         String jString = (String) evt.getNewValue();

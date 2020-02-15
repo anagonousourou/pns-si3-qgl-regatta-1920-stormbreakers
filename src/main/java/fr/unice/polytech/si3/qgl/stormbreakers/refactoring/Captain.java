@@ -2,16 +2,12 @@ package fr.unice.polytech.si3.qgl.stormbreakers.refactoring;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.ActionType;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.SailorAction;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Checkpoint;
-import fr.unice.polytech.si3.qgl.stormbreakers.math.Fraction;
 
 public class Captain {
 
