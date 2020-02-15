@@ -92,8 +92,6 @@ class LogsTest {
         assertTrue(log.length() < 200);
     }
 
-
-
     /* --------------------------------
                   Round Logs
        -------------------------------- */
@@ -122,6 +120,18 @@ class LogsTest {
         assertTrue(log.contains("CP"));
         assertTrue(log.contains("A"));
         assertTrue(log.contains("a"));
+    }
+    
+    @Test
+    void testLog() {
+    	cleanUp();
+    	logger.log("Lorem ipsum dolor sit amet, consectetur adipiscing elit");
+    	assertEquals(1, logger.getSavedData().size());
+    	
+    	cleanUp();
+    	logger.log("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisiutaliquip ex ea commodo consequat.");
+    	assertEquals(2, logger.getSavedData().size());
+    	logger.getSavedData().forEach(l -> { assertTrue(l.length() <= 200); });
     }
 
 }

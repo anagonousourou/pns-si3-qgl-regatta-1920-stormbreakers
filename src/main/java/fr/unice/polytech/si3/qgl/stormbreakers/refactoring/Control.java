@@ -72,8 +72,7 @@ public class Control {
 		Logger.getInstance().log("A:" + Logable.listToLogs(logableActions, ",", "[", "]"));
 
 		// Save logs and prepare for new instructions
-		Logger.getInstance().next();
-
+		
 		return outputBuilder.writeActions(actions);
     }
 
