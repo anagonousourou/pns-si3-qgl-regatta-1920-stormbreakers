@@ -16,7 +16,7 @@ class Boat implements PropertyChangeListener {
 
     Boat(Crew crew, EquipmentManager equipmentManager) {
         this.equipmentManager = equipmentManager;
-        this.crew = crew;
+        this.setCrew(crew);
     }
 
     @Override
@@ -49,6 +49,7 @@ class Boat implements PropertyChangeListener {
                         ((Gouvernail) optEq.get()).setOrientation(((Turn) evt.getNewValue()).getRotation());
                     }
                     else if(optEq.get().getType().equals(EquipmentType.SAIL.code)){
+                        
                         /*boolean value=() evt.getNewValue()
                         ((Sail) optEq.get()).setOpenned( );*/
                     }
@@ -57,7 +58,7 @@ class Boat implements PropertyChangeListener {
 
         }
     }
-
+    @Deprecated
     void setCrew(Crew c) {
         this.crew = c;
         this.crew.addListener(this);

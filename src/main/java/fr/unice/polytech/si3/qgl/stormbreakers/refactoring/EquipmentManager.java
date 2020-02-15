@@ -136,5 +136,8 @@ public class EquipmentManager implements PropertyChangeListener {
 	public List<Sail> opennedSails() {
 		return this.sails.stream().filter(Sail::isOpenned).collect(Collectors.toList());
 	}
+	public List<Sail> closedSails() {
+		return this.sails.stream().filter(s-> !s.isOpenned() ).collect(Collectors.toList());
+	}
 
 }

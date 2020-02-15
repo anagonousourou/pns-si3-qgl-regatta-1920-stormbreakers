@@ -2,6 +2,7 @@ package fr.unice.polytech.si3.qgl.stormbreakers.refactoring;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -99,8 +100,9 @@ public class Captain {
     }
 
     int fromAngleToDiff(double orientation) {
-        var correspondances=this.navigator.pairAngleDifference(this.mediatorCrewEquipment.nbLeftOars(), this.mediatorCrewEquipment.nbRightOars());
-        Set<Fraction> eventailAngles= correspondances.keySet();
+        Map<Fraction, Integer> correspondances = this.navigator.pairAngleDifference(this.mediatorCrewEquipment.nbLeftOars(),
+                this.mediatorCrewEquipment.nbRightOars());
+        Set<Fraction> eventailAngles = correspondances.keySet();
         Optional<Fraction> optAngle = eventailAngles.stream().filter(a -> a.eval() * orientation > 0.0)
 
                 .min((a, b) -> Double.compare(Math.abs(a.eval() * Math.PI - orientation),
@@ -124,11 +126,11 @@ public class Captain {
      */
     List<SailorAction> adjustSpeed(double distance, double currentSpeed) {
 
-        return this.speedTakingIntoAccountWind(distance, currentSpeed);
+        return this.adjustSpeedTakingIntoAccountWind(distance, currentSpeed);
 
     }
 
-    List<SailorAction> speedTakingIntoAccountWind(double distance, double currentSpeed) {
+    List<SailorAction> adjustSpeedTakingIntoAccountWind(double distance, double currentSpeed) {
         double currentExternalSpeed = this.weatherAnalyst.currentExternalSpeed();
 
         if (this.weatherAnalyst.additionalSpeedExists()) {
@@ -136,34 +138,33 @@ public class Captain {
             if (this.weatherAnalyst.potentialSpeedAcquirable() > 0.0
                     && (currentSpeed + this.weatherAnalyst.potentialSpeedAcquirable()) <= distance) {
 
-                if (this.mediatorCrewEquipment.canLiftAllSails()) {
-                    List<SailorAction> actionsToUseWeather = this
-                            .validateActions(this.mediatorCrewEquipment.actionsToLiftSails());
 
+                
+                    List<SailorAction> actionsToUseWeather = new ArrayList<>();
+                    int nbOpenned= this.mediatorCrewEquipment.liftSailsPartially(actionsToUseWeather);
+                    this.validateActions(actionsToUseWeather);
+                    double expectedSpeedFromWind = this.weatherAnalyst.externalSpeedGivenNbOpennedSails(nbOpenned);
                     return Captain.<SailorAction>concatenate(
 
                             actionsToUseWeather, this.validateActions(this.accelerate(distance,
-                                    currentSpeed + this.weatherAnalyst.potentialSpeedAcquirable())));
-                } else {
-                    // TODO activer partiellement les voiles pour profiter du vent
-                    return this.accelerate(distance, currentSpeed + currentExternalSpeed);
-                }
+                                    currentSpeed + expectedSpeedFromWind)));
+                
 
             }
 
             if (currentExternalSpeed < 0.0 || currentSpeed + currentExternalSpeed > distance) {
-                if (this.mediatorCrewEquipment.canLowerAllSails()) {
 
-                    List<SailorAction> actionsToCancelWeather = this
-                            .validateActions(this.mediatorCrewEquipment.actionsToLowerSails());
+                List<SailorAction> actionsToCancelWeather = new ArrayList<>();
+                int nbOpenned = this.mediatorCrewEquipment.lowerSailsPartially(actionsToCancelWeather);
+                this.validateActions(actionsToCancelWeather);
 
-                    return Captain.<SailorAction>concatenate(
+                double expectedSpeedFromWind = this.weatherAnalyst.externalSpeedGivenNbOpennedSails(nbOpenned);
 
-                            actionsToCancelWeather, this.validateActions(this.accelerate(distance, currentSpeed)));
-                } else {
-                    // TODO lower partiellement les voiles
-                    return this.accelerate(distance, currentSpeed + currentExternalSpeed);
-                }
+                return Captain.<SailorAction>concatenate(
+
+                        actionsToCancelWeather,
+                        this.validateActions(this.accelerate(distance, currentSpeed + expectedSpeedFromWind)));
+
             }
 
             // TODO voir si on peut pas ouvrir des voiles sups, sans dépasser bien sur
@@ -204,7 +205,7 @@ public class Captain {
      */
     List<SailorAction> accelerate(double distance, double currentSpeed) {
 
-        if (distance < currentSpeed) {
+        if (distance <= currentSpeed) {
             return List.of();// RIEN A FAIRE
         }
         double minAdditionalSpeed = SPEED * (2.0 / this.mediatorCrewEquipment.nbOars());

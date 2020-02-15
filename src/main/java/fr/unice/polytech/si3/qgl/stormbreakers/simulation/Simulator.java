@@ -81,7 +81,10 @@ class Simulator {
         System.out.println(sailorActions);
         this.crew.executeMoves(moves);
         this.crew.executeActions(sailorActions);
+        System.out.println(actions);
+        System.out.println("Angle rotation : "+ this.angleRotation() );
         System.out.println(this.cockpit.getLogs());
+
         
     }
 
