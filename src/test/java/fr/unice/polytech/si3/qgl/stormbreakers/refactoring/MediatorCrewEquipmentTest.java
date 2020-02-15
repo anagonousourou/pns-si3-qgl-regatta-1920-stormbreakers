@@ -1,9 +1,9 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.refactoring;
 
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -19,6 +19,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.Turn;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Oar;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Equipment;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Gouvernail;
@@ -71,7 +72,7 @@ public class MediatorCrewEquipmentTest {
 		crew = mock(Crew.class);
 		coordinator=  new MediatorCrewEquipment(crew, equipmentManager);
 		when(crew.getAvailableSailors()).thenReturn(marinsDisponibles);
-		when(equipmentManager.sails(true)).thenReturn(voilesOuvertes);
+		when(equipmentManager.sails(true)).thenReturn(voilesOuvertes);;
 		when(equipmentManager.sails(false)).thenReturn(voilesBaissees);
 	}
 
@@ -139,7 +140,7 @@ public class MediatorCrewEquipmentTest {
 	 *
 	 */
 	@Test
-	void marinsDisponiblesVoilesTest() {
+	void marinsDisponnibleVoilesTest() {
 		Map<Equipment, List<Marine>> results;
 		results = coordinator.marinsDisponiblesVoiles(true);
 		assertTrue(results.keySet().contains(s1));
@@ -153,38 +154,37 @@ public class MediatorCrewEquipmentTest {
 		assertEquals(List.of(m2, m4, m5), results.get(s2));
 		assertEquals(List.of(m1, m2, m3, m4, m5), results.get(s4));
 		
-		when(crew.getAvailableSailors()).thenReturn(List.of());
+		Mockito.when(crew.getAvailableSailors()).thenReturn(List.of());
 		results = coordinator.marinsDisponiblesVoiles(false);
 		assertEquals(List.of(), results.get(s2));
 		assertEquals(List.of(), results.get(s4));
 		
-		when(equipmentManager.sails(true)).thenReturn(List.of());;
+		Mockito.when(equipmentManager.sails(true)).thenReturn(List.of());;
 		assertTrue(coordinator.marinsDisponiblesVoiles(true).isEmpty());
 	}
 	
-	@Test
-	void canLiftAllSailsTest() {
-		assertTrue(coordinator.canLiftAllSails());
-		when(crew.getAvailableSailors()).thenReturn(List.of(m4));
-		assertFalse(coordinator.canLiftAllSails());
-		when(crew.getAvailableSailors()).thenReturn(List.of(m4, m5));
-		assertTrue(coordinator.canLiftAllSails());
+	/*
+	 * "vérification" un marin une voile (test avec cas 1 marin unique peut accédé à 2 voiles return false)
+	 * test cas simple de true et false 
+	 */
+	void canLiftAllSails() {
+		
 	}
-
-	@Test
-	void canLowerAllSailsTest(){
-		assertTrue(coordinator.canLowerAllSails());
-		when(crew.getAvailableSailors()).thenReturn(List.of());
-		assertFalse(coordinator.canLowerAllSails());
+	
+	/**
+	 * same as above
+	 */
+	void canLowerAllSails(){
+		
 	}
 
 	@Test
 	void addOaringSailorsOnEachSideTestWhenNoOarsOnLeftSide() {
 		List<Oar> leftOars = List.of();
-		when(equipmentManager.unusedLeftOars()).thenReturn(leftOars);
+		Mockito.when(equipmentManager.unusedLeftOars()).thenReturn(leftOars);
 		List<Oar> rightOars = new ArrayList<>();
 		rightOars.add(new Oar(0,3));
-		when(equipmentManager.unusedRightOars()).thenReturn(rightOars);
+		Mockito.when(equipmentManager.unusedRightOars()).thenReturn(rightOars);
 
 		assertTrue(coordinator.addOaringSailorsOnEachSide().isEmpty());
 	}
@@ -193,9 +193,9 @@ public class MediatorCrewEquipmentTest {
 	void addOaringSailorsOnEachSideTestWhenNoOarsOnRightSide() {
 		List<Oar> leftOars = new ArrayList<>();
 		leftOars.add(new Oar(0,0));
-		when(equipmentManager.unusedLeftOars()).thenReturn(leftOars);
+		Mockito.when(equipmentManager.unusedLeftOars()).thenReturn(leftOars);
 		List<Oar> rightOars = List.of();
-		when(equipmentManager.unusedRightOars()).thenReturn(rightOars);
+		Mockito.when(equipmentManager.unusedRightOars()).thenReturn(rightOars);
 
 		assertTrue(coordinator.addOaringSailorsOnEachSide().isEmpty());
 	}
@@ -219,8 +219,8 @@ public class MediatorCrewEquipmentTest {
 		Oar oarR2 = new Oar(2,3);
 		List<Oar> rightOars = List.of(oarR1,oarR2);
 
-		when(equipmentManager.unusedLeftOars()).thenReturn(leftOars);
-		when(equipmentManager.unusedRightOars()).thenReturn(rightOars);
+		Mockito.when(equipmentManager.unusedLeftOars()).thenReturn(leftOars);
+		Mockito.when(equipmentManager.unusedRightOars()).thenReturn(rightOars);
 
 		List<SailorAction> resultActions = coordinator2.addOaringSailorsOnEachSide();
 
@@ -261,8 +261,8 @@ public class MediatorCrewEquipmentTest {
 		Oar oarR2 = new Oar(10,3);
 		List<Oar> rightOars =  List.of(oarR1,oarR2);
 
-		when(equipmentManager.unusedLeftOars()).thenReturn(leftOars);
-		when(equipmentManager.unusedRightOars()).thenReturn(rightOars);
+		Mockito.when(equipmentManager.unusedLeftOars()).thenReturn(leftOars);
+		Mockito.when(equipmentManager.unusedRightOars()).thenReturn(rightOars);
 
 		List<SailorAction> resultActions = coordinator2.addOaringSailorsOnEachSide();
 		assertEquals(4,resultActions.size());
