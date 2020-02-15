@@ -8,15 +8,18 @@ import static org.mockito.ArgumentMatchers.any;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.MoveAction;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.SailorAction;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.Turn;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Oar;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Equipment;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Gouvernail;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Sail;
 
 public class MediatorCrewEquipmentTest {
@@ -26,6 +29,9 @@ public class MediatorCrewEquipmentTest {
 	
 	Sail s1, s2, s3, s4;
 	Marine m1, m2, m3, m4, m5, m6;
+	Gouvernail r1, r2;
+	
+	List<Equipment> equipments;
 	List<Sail> voilesOuvertes;
 	List<Sail> voilesBaissees;
 	List<Marine> marinsDisponibles;
@@ -42,17 +48,53 @@ public class MediatorCrewEquipmentTest {
 		m4 = new Marine(3, 1, 3);
 		m5 = new Marine(4, 4, 2);
 		m6 = new Marine(5, 6, 3);
+		r1 = new Gouvernail(2, 3);
+		r2 = new Gouvernail(10, 7);		
 		
 		marinsDisponibles = List.of(m1, m2, m3, m4, m5, m6);
 		voilesOuvertes = List.of(s1, s3);
 		voilesBaissees = List.of(s2, s4);
+		equipments = List.of(s1, s2, s3, s4);
 		
 		equipmentManager= Mockito.mock(EquipmentManager.class);
 		crew = Mockito.mock(Crew.class);
-		coordinator =  new MediatorCrewEquipment(crew, equipmentManager);
+		coordinator=  new MediatorCrewEquipment(crew, equipmentManager);
 		Mockito.when(crew.getAvailableSailors()).thenReturn(marinsDisponibles);
 		Mockito.when(equipmentManager.sails(true)).thenReturn(voilesOuvertes);;
 		Mockito.when(equipmentManager.sails(false)).thenReturn(voilesBaissees);
+	}
+
+	
+    @Test
+    void activateRudderTest() {
+    	// Setup sans utiliser Mockito
+    	List<Equipment> newVersion = new ArrayList<>(equipments);
+    	newVersion.add(r1);
+    	coordinator=  new MediatorCrewEquipment(new Crew(marinsDisponibles), new EquipmentManager(newVersion, 4));
+    	
+    	// Orientaiton valide, au moins 1 marin proche
+    	List<SailorAction> toTest1 = coordinator.activateRudder(Math.PI/4);
+    	Optional<Marine> sailorChosen1 = coordinator.marineForRudder();
+    	assertTrue(toTest1.get(0) instanceof MoveAction);
+    	int expectedX = sailorChosen1.get().getPosition().getX() + ((MoveAction) toTest1.get(0)).getXdistance();
+    	int expectedY = sailorChosen1.get().getPosition().getY() + ((MoveAction) toTest1.get(0)).getYdistance();
+    	assertEquals(r1.getX(), expectedX);
+    	assertEquals(r1.getY(), expectedY);
+    	
+    	assertTrue(toTest1.get(1) instanceof Turn);
+    	assertEquals(Math.PI/4, ((Turn) toTest1.get(1)).getRotation());
+    	
+    	// Aucun marin proche
+    	newVersion.remove(r1);
+    	newVersion.add(r2);
+    	coordinator=  new MediatorCrewEquipment(new Crew(marinsDisponibles), new EquipmentManager(newVersion, 4));
+    	List<SailorAction> toTest3 = coordinator.activateRudder(Math.PI/2);
+    	assertTrue(toTest3.isEmpty());
+    }
+    
+    @Test
+	void activateNbOarsTest() {
+		
 	}
 	
 	/**

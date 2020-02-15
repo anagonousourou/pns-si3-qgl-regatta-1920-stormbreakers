@@ -23,7 +23,7 @@ public class MediatorCrewEquipment {
 
     void validateActions(List<SailorAction> actions) {
         actions.forEach(action -> {
-            this.getMarinById(action.getSailorId()).setDoneTurn(true);
+            this.getMarinById(action.getSailorId()).get().setDoneTurn(true);
         });
 
     }
@@ -45,7 +45,7 @@ public class MediatorCrewEquipment {
 
     public List<SailorAction> activateRudder(double orientation){
         var optMarine=this.marineForRudder();
-        if(optMarine.isPresent()){
+        if(optMarine.isPresent() && rudderIsAccesible()){
             Marine rudderMarine =optMarine.get();
             List<SailorAction> actions = new ArrayList<>();
             Move tmpMove = rudderMarine.getPosition().howToMoveTo(this.rudderPosition());
@@ -146,8 +146,8 @@ public class MediatorCrewEquipment {
                 for (Marine m : correspondances.get(oar)) {
                     if (!yetBusy.contains(m) && !m.isDoneTurn()) {
                         yetBusy.add(m);
-                        result.add(new OarAction(m.getId()));
                         result.add(m.howToGoTo(oar.getX(), oar.getY()));
+                        result.add(new OarAction(m.getId()));
                         compteur++;
                         break;
                     }
@@ -179,8 +179,8 @@ public class MediatorCrewEquipment {
     }
 
     public List<SailorAction> activateOarsNotStrict(int nb){
+    	List<SailorAction> actions;
         if(nb > 0){
-            List<SailorAction> actions=new ArrayList<>();
             do{
                 actions=this.activateOarsOnRight(nb);
                 nb--;
@@ -190,7 +190,6 @@ public class MediatorCrewEquipment {
         }
         else{
             nb=-nb;
-            List<SailorAction> actions=new ArrayList<>();
             do{
                 actions=this.activateOarsOnLeft(nb);
                 nb--;
@@ -215,7 +214,7 @@ public class MediatorCrewEquipment {
 
         // Can't assign to non-free oars
         // Can't assign when no sailors available
-        if (freeOarsOnLeftSide.size()==0 || freeOarsOnRightSide.size()==0 || availableSailors.isEmpty())
+        if (freeOarsOnLeftSide.isEmpty() || freeOarsOnRightSide.isEmpty() || availableSailors.isEmpty())
             return List.of();
 
 
@@ -238,7 +237,7 @@ public class MediatorCrewEquipment {
 
         if (leftSailor.isPresent()) {
             // Cannot be used on both sides
-            availableSailors.remove(leftSailor);
+            availableSailors.remove(leftSailor.get());
 
             // Try to find someone who can oar on right side
             while (!rightSailor.isPresent() && !freeOarsOnRightSide.isEmpty()) {
@@ -270,8 +269,8 @@ public class MediatorCrewEquipment {
         this.crew.resetAvailability();;
     }
     
-    public Marine getMarinById(int id){
-        return this.crew.getMarinById(id).get();
+    public Optional<Marine> getMarinById(int id){
+    	return this.crew.getMarinById(id);
     }
 
     /**
@@ -283,8 +282,9 @@ public class MediatorCrewEquipment {
     public List<Marine> leftMarinsOnOars() {
         List<Marine> marines = new ArrayList<>();
         for(Oar oar:equipmentManager.allLeftOars()){
-            if(this.crew.marineAtPosition(oar.getPosition()).isPresent()){
-                marines.add(this.crew.marineAtPosition(oar.getPosition()).get());
+        	Optional<Marine> theSailor = this.crew.marineAtPosition(oar.getPosition());
+            if(theSailor.isPresent()){
+                marines.add(theSailor.get());
             }
         }
 
@@ -301,8 +301,9 @@ public class MediatorCrewEquipment {
     public List<Marine> rightMarinsOnOars() {
         List<Marine> marines = new ArrayList<>();
         for(Oar oar:equipmentManager.allRightOars()){
-            if(this.crew.marineAtPosition(oar.getPosition()).isPresent()){
-                marines.add(this.crew.marineAtPosition(oar.getPosition()).get());
+        	Optional<Marine> theSailor = this.crew.marineAtPosition(oar.getPosition());
+            if(theSailor.isPresent()){
+                marines.add(theSailor.get());
             }
         }
 
