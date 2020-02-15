@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.Logable;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Marin;
+import fr.unice.polytech.si3.qgl.stormbreakers.refactoring.Marine;
+import fr.unice.polytech.si3.qgl.stormbreakers.refactoring.MovementPath;
 
 public class MoveAction extends SailorAction implements Logable {
     private int xdistance;
@@ -16,6 +18,10 @@ public class MoveAction extends SailorAction implements Logable {
         super(sailorId, ActionType.MOVING.actionCode);
         this.xdistance = xdistance;
         this.ydistance = ydistance;
+    }
+
+    public MoveAction(int id, MovementPath pathTo) {
+        this(id,pathTo.getDeltaX(),pathTo.getDeltaY());
     }
 
     @JsonProperty("xdistance")
@@ -33,6 +39,12 @@ public class MoveAction extends SailorAction implements Logable {
     }
 
     public void applyTo(Marin sailor) {
+        if (sailor != null)
+            sailor.move(xdistance, ydistance);
+    }
+
+    // TODO: 15/02/2020 Remove when fusing Marin and Marine
+    public void applyTo(Marine sailor) {
         if (sailor != null)
             sailor.move(xdistance, ydistance);
     }

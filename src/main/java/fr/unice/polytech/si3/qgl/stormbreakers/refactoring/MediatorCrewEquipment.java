@@ -48,7 +48,7 @@ public class MediatorCrewEquipment {
         if(optMarine.isPresent() && rudderIsAccesible()){
             Marine rudderMarine =optMarine.get();
             List<SailorAction> actions = new ArrayList<>();
-            Move tmpMove = rudderMarine.getPosition().howToMoveTo(this.rudderPosition());
+            MoveAction tmpMove = rudderMarine.howToMoveTo(this.rudderPosition());
             actions.add(new MoveAction(rudderMarine.getId(), tmpMove.getXdistance(), tmpMove.getYdistance()));
             actions.add(new Turn(rudderMarine.getId(), orientation));
             return actions;

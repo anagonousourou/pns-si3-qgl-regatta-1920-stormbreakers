@@ -18,16 +18,13 @@ public class IntPosition {
         return y;
     }
 
-    public Move howToMoveTo(IntPosition otherPosition){
-        if(otherPosition!=null){
-            return new Move(otherPosition.x-this.x, otherPosition.y-this.y);
-        }
-        return null;
+    public void add(int deltaX, int deltaY){
+        this.x+=deltaX;
+        this.y+=deltaY;
     }
 
-    public void makeMove(Move mvt){
-        this.x+=mvt.getXdistance();
-        this.y+=mvt.getYdistance();
+    public MovementPath getPathTo(IntPosition target){
+        return new MovementPath(this,target);
     }
 
     @Override
