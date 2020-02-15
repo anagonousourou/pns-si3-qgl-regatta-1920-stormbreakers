@@ -44,7 +44,7 @@ public class MediatorCrewEquipmentTest {
 		equipmentManager= Mockito.mock(EquipmentManager.class);
 		crew = Mockito.mock(Crew.class);
 		coordinator=  new MediatorCrewEquipment(crew, equipmentManager);
-		Mockito.when(crew.getAvailableSailors()).thenReturn(marinsDisponibles);
+		Mockito.when(crew.marins()) .thenReturn(marinsDisponibles);
 		Mockito.when(equipmentManager.sails(true)).thenReturn(voilesOuvertes);;
 		Mockito.when(equipmentManager.sails(false)).thenReturn(voilesBaissees);
 	}
@@ -58,6 +58,7 @@ public class MediatorCrewEquipmentTest {
 	void marinsDisponnibleVoilesTest() {
 		Map<Equipment, List<Marine>> results;
 		results = coordinator.marinsDisponiblesVoiles(true);
+		
 		assertTrue(results.keySet().contains(s1));
 		assertTrue(results.keySet().contains(s3));
 		assertEquals(List.of(m3, m5, m6), results.get(s1));
@@ -69,7 +70,7 @@ public class MediatorCrewEquipmentTest {
 		assertEquals(List.of(m2, m4, m5), results.get(s2));
 		assertEquals(List.of(m1, m2, m3, m4, m5), results.get(s4));
 		
-		Mockito.when(crew.getAvailableSailors()).thenReturn(List.of());
+		Mockito.when(crew.marins()).thenReturn(List.of());
 		results = coordinator.marinsDisponiblesVoiles(false);
 		assertEquals(List.of(), results.get(s2));
 		assertEquals(List.of(), results.get(s4));

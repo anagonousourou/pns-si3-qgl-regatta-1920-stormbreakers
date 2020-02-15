@@ -91,8 +91,8 @@ public class MediatorCrewEquipment {
     public int lowerSailsPartially(List<SailorAction> actions) {
         int nbOpenned = this.nbSailsOpenned();
         List<Marine> marinesBusy = new ArrayList<>();
-        var marinsDisponibles = this.marinsDisponibles();
-        for (Sail sail : this.equipmentManager.opennedSails()) {
+        var marinsDisponibles = this.marinsDisponiblesVoiles(true);
+        for (Sail sail : this.equipmentManager.sails(true)) {
 
             for (Marine marine : marinsDisponibles.get(sail)) {
                 if (!marine.isDoneTurn() && !marinesBusy.contains(marine)) {
@@ -111,11 +111,11 @@ public class MediatorCrewEquipment {
     public int liftSailsPartially(List<SailorAction> actions) {
         int nbOpenned = this.nbSailsOpenned();
         List<Marine> marinesBusy = new ArrayList<>();
-        var marinsDisponibles = this.marinsDisponibles();
+        var marinsDisponibles = this.marinsDisponiblesVoiles(false);
         for (Sail sail : this.equipmentManager.closedSails()) {
-
+            System.out.println(sail);
             for (Marine marine : marinsDisponibles.get(sail)) {
-                if (!marine.isDoneTurn() && !marinesBusy.contains(marine)) {
+                if ( ! marine.isDoneTurn() && !marinesBusy.contains(marine) ) {
                     actions.add(marine.howToGoTo(sail.getX(), sail.getY()));
                     actions.add(new LiftSail(marine.getId()));
                     marinesBusy.add(marine);
@@ -157,8 +157,8 @@ public class MediatorCrewEquipment {
 
     public Map<Equipment, List<Marine>> marinsDisponiblesVoiles(boolean isOpened) {
         HashMap<Equipment, List<Marine>> results = new HashMap<>();
-        this.equipmentManager.sails(isOpened).forEach(oar -> results.put(oar,
-                this.crew.getAvailableSailors().stream().filter(m -> m.getPosition().distanceTo(oar.getPosition()) <= MediatorCrewEquipment.MAXDISTANCE)
+        this.equipmentManager.sails(isOpened).forEach(sail -> results.put(sail,
+                this.crew.marins().stream().filter(m -> m.getPosition().distanceTo(sail.getPosition()) <= MediatorCrewEquipment.MAXDISTANCE)
                         .collect(Collectors.toList())));
         return results;
     }

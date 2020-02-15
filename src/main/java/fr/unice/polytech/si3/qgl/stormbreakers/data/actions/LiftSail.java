@@ -15,4 +15,9 @@ public class LiftSail extends SailorAction {
         return ActionType.LIFTSAIL.shortCode + this.getSailorId();
     }
 
+    @Override
+    public String toString() {
+        return String.format("LiftSail(id :%d)", this.getSailorId());
+    }
+
 }

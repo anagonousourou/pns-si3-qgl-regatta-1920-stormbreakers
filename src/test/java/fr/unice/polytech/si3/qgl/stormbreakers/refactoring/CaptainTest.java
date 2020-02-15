@@ -11,6 +11,9 @@ import static org.mockito.Mockito.when;
 import java.io.IOException;
 import java.util.List;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.ActionType;
@@ -23,6 +26,12 @@ public class CaptainTest {
 
     Captain rogers;
     InputParser parser = new InputParser();
+    String gameData;
+
+    @BeforeEach
+    void setUp() throws IOException {
+        gameData = new String(this.getClass().getResourceAsStream("/captaintest/init.json").readAllBytes());
+    }
 
     @Test
     void accelerateTest() {
@@ -82,14 +91,9 @@ public class CaptainTest {
     @Test
     void actionsToOrientateTest() {
         MediatorCrewEquipment mediatorCrewEquipment = mock(MediatorCrewEquipment.class);
-        rogers = new Captain(null, null, null, null, null, mediatorCrewEquipment) {
-
-            @Override
-            int fromAngleToDiff(double orientation) {
-                // stub the method so we won't have to mock the Navigator
-                return -1;
-            }
-        };
+        Navigator navigator=mock(Navigator.class);
+        when(navigator.fromAngleToDiff(anyDouble(), anyInt(), anyInt())).thenReturn(-1);
+        rogers = new Captain(null, null, null, navigator, null, mediatorCrewEquipment);
 
         when(mediatorCrewEquipment.rudderIsPresent()).thenReturn(true);
         when(mediatorCrewEquipment.rudderIsAccesible()).thenReturn(true);
@@ -110,37 +114,84 @@ public class CaptainTest {
     }
 
     @Test
-    void speedTakingIntoAccountWindTest() {
-        // trucs à mocker : weatherAnalyst
+    void speedTakingIntoAccountWindNoWindTest() throws JsonProcessingException {
+        Crew crew = new Crew(this.parser.fetchAllSailors(gameData));
+        EquipmentManager equipmentManager = new EquipmentManager(parser.fetchEquipments(gameData),
+                parser.fetchBoatWidth(gameData), parser);
+        MediatorCrewEquipment mediatorCrewEquipment = new MediatorCrewEquipment(crew, equipmentManager);
 
-        try {
-            String game = new String(this.getClass().getResourceAsStream("/captaintest/init.json").readAllBytes());
-            Crew crew = new Crew(this.parser.fetchAllSailors(game));
-            EquipmentManager equipmentManager = new EquipmentManager(parser.fetchEquipments(game), parser.fetchBoatWidth(game), parser);
-            MediatorCrewEquipment mediatorCrewEquipment = new MediatorCrewEquipment(crew, equipmentManager);
+        WeatherAnalyst weatherAnalyst = mock(WeatherAnalyst.class);
 
-            WeatherAnalyst weatherAnalyst=mock(WeatherAnalyst.class);
+        rogers = new Captain(null, null, crew, null, weatherAnalyst, mediatorCrewEquipment);
 
-            rogers=new Captain(null, null, crew, null, weatherAnalyst, mediatorCrewEquipment);
+        when(weatherAnalyst.additionalSpeedExists()).thenReturn(false);
 
-            when(weatherAnalyst.additionalSpeedExists()).thenReturn(false);
+        List<SailorAction> result = rogers.adjustSpeedTakingIntoAccountWind(300, 0);
+        System.out.println(result);
+        assertFalse(result.isEmpty(), "should Send some actions");
+    }
 
-            List<SailorAction> result=rogers.adjustSpeedTakingIntoAccountWind(300, 0);
-            System.out.println(result);
-            assertFalse(result.isEmpty(),"Send some actions");
+    @Test
+    void speedTakingIntoAccountWindTest() throws JsonProcessingException {
 
-            when(weatherAnalyst.additionalSpeedExists()).thenReturn(true);
-            when(weatherAnalyst.potentialSpeedAcquirable()).thenReturn(200.56);
+        Crew crew = new Crew(this.parser.fetchAllSailors(gameData));
+        EquipmentManager equipmentManager = new EquipmentManager(parser.fetchEquipments(gameData),
+                parser.fetchBoatWidth(gameData), parser);
+        MediatorCrewEquipment mediatorCrewEquipment = new MediatorCrewEquipment(crew, equipmentManager);
 
-            List<SailorAction> results=rogers.adjustSpeedTakingIntoAccountWind(300, 0);
-            System.out.println(results);
-            assertTrue(results.stream().anyMatch(action->action.getType().equals(ActionType.LIFTSAIL.actionCode)),"Il y a au moins un liftaction" );
+        WeatherAnalyst weatherAnalyst = mock(WeatherAnalyst.class);
 
+        rogers = new Captain(null, null, crew, null, weatherAnalyst, mediatorCrewEquipment);
 
-        } catch (IOException e) {
-            
-        }
-        
+        when(weatherAnalyst.additionalSpeedExists()).thenReturn(true);
+        when(weatherAnalyst.potentialSpeedAcquirable()).thenReturn(200.56);
+
+        List<SailorAction> results = rogers.adjustSpeedTakingIntoAccountWind(300, 0);
+        System.out.println(results);
+        assertTrue(results.stream().anyMatch(action -> action.getType().equals(ActionType.LIFTSAIL.actionCode)),
+                "Il y a au moins un liftAction");
+
+        // clear
+
+        crew.resetAvailability();
+
+        when(weatherAnalyst.currentExternalSpeed()).thenReturn(-100.20);
+        when(weatherAnalyst.potentialSpeedAcquirable()).thenReturn(-200.40);
+
+        results = rogers.adjustSpeedTakingIntoAccountWind(300, 0);
+        System.out.println(results);
+        assertTrue(results.stream().anyMatch(action -> action.getType().equals(ActionType.LOWERSAIL.actionCode)),
+                "Il y a au moins un LowerAction");
+
+        // clear
+
+        crew.resetAvailability();
+
+        when(weatherAnalyst.currentExternalSpeed()).thenReturn(250.20);
+        when(weatherAnalyst.potentialSpeedAcquirable()).thenReturn(500.40);
+
+        results = rogers.adjustSpeedTakingIntoAccountWind(300, 0);
+        System.out.println("\n" + results);
+        assertFalse(results.stream().anyMatch(action -> action.getType().equals(ActionType.LIFTSAIL.actionCode)),
+                "Il N'Y A PAS de LiftAction");
+        assertFalse(results.stream().anyMatch(action -> action.getType().equals(ActionType.LOWERSAIL.actionCode)),
+                "et Certainement pas de  LowerAction");
+        assertTrue(results.isEmpty(), "Le vent fait tout le travail pas besoin de ramer");
+
+        // clear
+
+        crew.resetAvailability();
+
+        when(weatherAnalyst.currentExternalSpeed()).thenReturn(0.00);
+        when(weatherAnalyst.potentialSpeedAcquirable()).thenReturn(-500.40);
+
+        results = rogers.adjustSpeedTakingIntoAccountWind(300, 0);
+        System.out.println("\n" + results);
+        assertFalse(results.stream().anyMatch(action -> action.getType().equals(ActionType.LIFTSAIL.actionCode)),
+                "Il N'Y A PAS de LiftAction puique le vent vous ralentirait");
+        assertFalse(results.stream().anyMatch(action -> action.getType().equals(ActionType.LOWERSAIL.actionCode)),
+                "et Certainement pas de  LowerAction puique currentExternalSpeed==0 donc voiles supposées baissées ");
+
     }
 
 }
