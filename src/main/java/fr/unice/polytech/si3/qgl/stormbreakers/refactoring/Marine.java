@@ -8,7 +8,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.MoveAction;
 /**
  * classe qui représente un marin
  */
-class Marine {
+public class Marine {
     private final int id;
     private IntPosition position;
     private boolean onEquipment = false;
@@ -40,8 +40,20 @@ class Marine {
         this.pcs.removePropertyChangeListener(listener);
     }
 
-    public void executeMove(MoveAction mvt) {
-        this.position.makeMove(new Move(mvt.getXdistance(), mvt.getYdistance()));
+    /**
+     * Deplace le marin selon les distances passees en parametre
+     * @param xdistance distance selon l'axe X
+     * @param ydistance distance selon l'axe Y
+     */
+    public void move(int xdistance, int ydistance) {
+        if (Math.abs(xdistance) + Math.abs(ydistance) <= MAX_MOVEMENT_DISTANCE) {
+            // Le deplacement respecte la contraite de distance
+            position.add(xdistance,ydistance);
+        }
+    }
+
+    public void move(MoveAction mvt){
+        move(mvt.getXdistance(),mvt.getYdistance());
     }
 
     public boolean onEquipment() {
@@ -83,13 +95,9 @@ class Marine {
         this.doneTurn = doneTurn;
     }
 
-    public MoveAction howToGoTo(IntPosition pos) {
-        return howToGoTo(pos.getX(),pos.getY());
+    public MoveAction howToMoveTo(IntPosition pos) {
+        return new MoveAction(id, position.getPathTo(pos));
     }
-
-	public MoveAction howToGoTo(int x, int y) {
-		return new MoveAction(this.id, x-this.getPosition().getX(),y-this.getPosition().getY() );
-	}
 
 	public int getDistanceTo(IntPosition pos) {
         return Math.abs(pos.getX()-this.getPosition().getX()) + Math.abs(pos.getY()-this.getPosition().getY());
@@ -98,4 +106,5 @@ class Marine {
     public boolean canReach(IntPosition pos) {
         return getDistanceTo(pos) <= MAX_MOVEMENT_DISTANCE;
     }
+
 }

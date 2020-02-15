@@ -29,7 +29,7 @@ public class MediatorCrewEquipment {
 
     void validateActions(List<SailorAction> actions) {
         actions.forEach(action -> {
-            this.getMarinById(action.getSailorId()).setDoneTurn(true);
+            this.getMarinById(action.getSailorId()).get().setDoneTurn(true);
         });
 
     }
@@ -51,10 +51,10 @@ public class MediatorCrewEquipment {
 
     public List<SailorAction> activateRudder(double orientation) {
         var optMarine = this.marineForRudder();
-        if (optMarine.isPresent()) {
+        if (optMarine.isPresent() && rudderIsAccesible()) {
             Marine rudderMarine = optMarine.get();
             List<SailorAction> actions = new ArrayList<>();
-            Move tmpMove = rudderMarine.getPosition().howToMoveTo(this.rudderPosition());
+            MoveAction tmpMove = rudderMarine.howToMoveTo(this.rudderPosition());
             actions.add(new MoveAction(rudderMarine.getId(), tmpMove.getXdistance(), tmpMove.getYdistance()));
             actions.add(new Turn(rudderMarine.getId(), orientation));
             return actions;
@@ -95,7 +95,7 @@ public class MediatorCrewEquipment {
 
             for (Marine marine : marinsDisponibles.get(sail)) {
                 if (!marine.isDoneTurn() && !marinesBusy.contains(marine)) {
-                    actions.add(marine.howToGoTo(sail.getX(), sail.getY()));
+                    actions.add(marine.howToMoveTo(sail.getPosition()));
                     actions.add(new LowerSail(marine.getId()));
                     marinesBusy.add(marine);
                     nbOpenned--;
@@ -115,7 +115,7 @@ public class MediatorCrewEquipment {
             System.out.println(sail);
             for (Marine marine : marinsDisponibles.get(sail)) {
                 if (!marine.isDoneTurn() && !marinesBusy.contains(marine)) {
-                    actions.add(marine.howToGoTo(sail.getX(), sail.getY()));
+                    actions.add(marine.howToMoveTo(sail.getPosition()));
                     actions.add(new LiftSail(marine.getId()));
                     marinesBusy.add(marine);
                     nbOpenned++;
@@ -210,8 +210,8 @@ public class MediatorCrewEquipment {
                 for (Marine m : correspondances.get(oar)) {
                     if (!yetBusy.contains(m) && !m.isDoneTurn()) {
                         yetBusy.add(m);
+                        result.add(m.howToMoveTo(new IntPosition(oar.getX(), oar.getY())));
                         result.add(new OarAction(m.getId()));
-                        result.add(m.howToGoTo(oar.getX(), oar.getY()));
                         compteur++;
                         break;
                     }
@@ -276,7 +276,7 @@ public class MediatorCrewEquipment {
 
         // Can't assign to non-free oars
         // Can't assign when no sailors available
-        if (freeOarsOnLeftSide.size() == 0 || freeOarsOnRightSide.size() == 0 || availableSailors.isEmpty())
+        if (freeOarsOnLeftSide.isEmpty() || freeOarsOnRightSide.isEmpty() || availableSailors.isEmpty())
             return List.of();
 
         Optional<Marine> leftSailor = Optional.empty();
@@ -314,11 +314,11 @@ public class MediatorCrewEquipment {
 
         if (leftSailor.isPresent() && rightSailor.isPresent()) {
             // Ask left sailor to move then oar
-            actionsToReturn.add(leftSailor.get().howToGoTo(currLeftOar.getPosition()));
+            actionsToReturn.add(leftSailor.get().howToMoveTo(currLeftOar.getPosition()));
             actionsToReturn.add(new OarAction(leftSailor.get().getId()));
 
             // Ask right sailor to move then oar
-            actionsToReturn.add(rightSailor.get().howToGoTo(currRightOar.getPosition()));
+            actionsToReturn.add(rightSailor.get().howToMoveTo(currRightOar.getPosition()));
             actionsToReturn.add(new OarAction(rightSailor.get().getId()));
         }
 
@@ -331,8 +331,8 @@ public class MediatorCrewEquipment {
         ;
     }
 
-    public Marine getMarinById(int id) {
-        return this.crew.getMarinById(id).get();
+    public Optional<Marine> getMarinById(int id) {
+        return this.crew.getMarinById(id);
     }
 
     /**
@@ -341,11 +341,12 @@ public class MediatorCrewEquipment {
      * @param equimentManager
      * @return
      */
-    public List<Marine> leftMarinsOnOars() {
+    public List<Marine> leftSailorsOnOars() {
         List<Marine> marines = new ArrayList<>();
         for (Oar oar : equipmentManager.allLeftOars()) {
-            if (this.crew.marineAtPosition(oar.getPosition()).isPresent()) {
-                marines.add(this.crew.marineAtPosition(oar.getPosition()).get());
+            Optional<Marine> theSailor = this.crew.marineAtPosition(oar.getPosition());
+            if (theSailor.isPresent()) {
+                marines.add(theSailor.get());
             }
         }
 
@@ -359,11 +360,12 @@ public class MediatorCrewEquipment {
      * @param equimentManager
      * @return
      */
-    public List<Marine> rightMarinsOnOars() {
+    public List<Marine> rightSailorsOnOars() {
         List<Marine> marines = new ArrayList<>();
         for (Oar oar : equipmentManager.allRightOars()) {
-            if (this.crew.marineAtPosition(oar.getPosition()).isPresent()) {
-                marines.add(this.crew.marineAtPosition(oar.getPosition()).get());
+            Optional<Marine> theSailor = this.crew.marineAtPosition(oar.getPosition());
+            if (theSailor.isPresent()) {
+                marines.add(theSailor.get());
             }
         }
 
@@ -371,83 +373,104 @@ public class MediatorCrewEquipment {
     }
 
     /**
-     * Fonction qui renvoie si il est possible de fermer/descendre toutes les
-     * voiles actuellement ouvertes
+     * Method used to know if we can lift or lower all of the sails.
      * 
-     * @return un boleen
+     * @param isOpened - true if we want to lower them, false if we want to lift
+     *                 them.
+     * @return true or false
      */
-    public boolean canLowerAllSails() {
-        List<Sail> sails = equipmentManager.sails(true);
-        Map<Equipment, List<Marine>> correspondances = marinsDisponiblesVoiles(true);
-        for (Sail sail : sails) {
-            if (correspondances.get(sail).isEmpty()) {
-                return false;
-            }
-            Marine firstMarin = correspondances.get(sail).get(0);
-            correspondances.values().removeIf(val -> val.equals(firstMarin));
-            // enleve le marin de toute la map pour qu'il
-            // ne soit pas compter pour les autres voiles
-        }
-        return true;
-    }
 
-    
-    public boolean canLiftAllSails() {
-        List<Sail> sails = equipmentManager.sails(true);
-        Map<Equipment, List<Marine>> correspondances = marinsDisponiblesVoiles(true);
+    private boolean canActOnSails(boolean isOpened) {
+        List<Sail> sails = equipmentManager.sails(isOpened);
+        Map<Equipment, List<Marine>> correspondances = marinsDisponiblesVoiles(isOpened);
         for (Sail sail : sails) {
             if (correspondances.get(sail).isEmpty()) {
                 return false;
             }
-            Marine firstMarin = correspondances.get(sail).get(0);
-            correspondances.values().removeIf(val -> val.equals(firstMarin));
-            // enleve le marin de toute la map pour qu'il
-            // ne soit pas compter pour les autres voiles
+            Marine firstSailor = correspondances.get(sail).get(0);
+            // Retrieve the sailor that can act on the current sail
+            // from every entry, so that next sails will know that this sailor can't act on
+            // them
+            correspondances.entrySet().forEach(c -> {
+                if (c.getValue().contains(firstSailor)) {
+                    c.getValue().remove(firstSailor);
+                }
+            });
         }
         return true;
     }
 
     /**
+     * Method used to know if we can lower all of the sails.
+     * 
+     * @return true or false
+     */
+    public boolean canLowerAllSails() {
+        return canActOnSails(true);
+    }
+
+    // TODO
+    public List<SailorAction> actionsToLiftSails() {
+        return List.of();
+    }
+
+    // TODO
+    public List<SailorAction> actionsToLowerSails() {
+        return List.of();
+    }
+
+    /**
+     * Method used to know if we can lift all of the sails.
+     * 
+     * @return true or false
+     */
+    public boolean canLiftAllSails() {
+        return canActOnSails(false);
+    }
+
+    public void markEquipmentUsedByActions(List<SailorAction> actions) {
+
+        for (SailorAction oa : actions) {
+
+            var optMarin = this.crew.getMarinById(oa.getSailorId());
+
+            if (optMarin.isPresent()) {
+
+                Marine marine = optMarin.get();
+
+                var eq = this.equipmentManager.equipmentAt(marine.getPosition());
+
+                if (eq.isPresent() && oa.compatibleEquipmentType().equals(eq.get().getType())) {
+                    eq.get().setUsed(true);
+                }
+            }
+
+        }
+
+    }
+
+    /**
      * Cette méthode va déplacer les marins en utilisant les MoveAction
-     * de la liste 
-     * puis simulera l'execution des autres actions en marquant 
+     * de la liste
+     * puis simulera l'execution des autres actions en marquant
      * les équipements concernés avec used=true
      * il faut vérifier que l'action correspond au type d'équipement
      * bien sur si le movingaction conduit le marin vers une case où il n'y
      * a pas d'équipement on fait rien
-     * 
      * Cela permettra de voir les équipements déja utilisés
      * @param actions
      */
 
-    void executeSailorsActions(List<SailorAction> actions){
-        List<MoveAction> moves=actions.stream().filter(act->act.getType().equals(ActionType.MOVING.actionCode))
-        .map(act->(MoveAction)act).collect(Collectors.toList());
+    void executeSailorsActions(List<SailorAction> actions) {
 
-        List<SailorAction> otherActions=actions.stream().filter(act->!act.getType().equals(ActionType.MOVING.actionCode)).collect(Collectors.toList());
+        List<MoveAction> moves = actions.stream().filter(act -> act.getType().equals(ActionType.MOVING.actionCode))
+                .map(act -> (MoveAction) act).collect(Collectors.toList());
 
-        
+        List<SailorAction> otherActions = actions.stream()
+                .filter(act -> !act.getType().equals(ActionType.MOVING.actionCode)).collect(Collectors.toList());
         this.crew.executeMoves(moves);
         this.markEquipmentUsedByActions(otherActions);
 
     }
-
-    public void markEquipmentUsedByActions(List<SailorAction> actions){
-        for(SailorAction oa:actions){
-            var optMarin=this.crew.getMarinById(oa.getSailorId());
-            if(optMarin.isPresent()){
-                Marine marine=optMarin.get();
-                var eq=this.equipmentManager.equipmentAt(marine.getPosition() );
-                if(eq.isPresent()){
-                    if(oa.compatibleEquipmentType().equals( eq.get().getType() )){
-                        eq.get().setUsed(true);
-                    }
-                }
-                
-            }
-        }
-    }
-
-    
 
 }

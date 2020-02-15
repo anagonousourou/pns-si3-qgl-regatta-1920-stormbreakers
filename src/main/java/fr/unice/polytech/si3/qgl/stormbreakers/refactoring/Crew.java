@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.ActionType;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.MoveAction;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.SailorAction;
 
@@ -31,9 +32,26 @@ public class Crew {
         for(MoveAction m:moves){
             var optMarin=this.getMarinById(m.getSailorId());
             if(optMarin.isPresent()){
-                optMarin.get().executeMove(m);
+                optMarin.get().move(m);
             }
         }
+    }
+    /**
+     * Fait executer aux marin concernés les MoveAction contenus dans les actions
+     * @param actions liste des actions contenant des MoveAction
+     */
+    public void executeMovingsInSailorAction(List<SailorAction> actions) {
+        // On récupère les déplacements
+        List<MoveAction> moves = actions.stream()
+                .filter(act -> act.getType().equals(ActionType.MOVING.actionCode))
+                .map(x -> (MoveAction) x)
+                .collect(Collectors.toList());
+
+        for (MoveAction move : moves) {
+            Optional<Marine> sailor = getMarinById(move.getSailorId());
+            move.applyTo(sailor.get());
+        }
+        
     }
     
 
