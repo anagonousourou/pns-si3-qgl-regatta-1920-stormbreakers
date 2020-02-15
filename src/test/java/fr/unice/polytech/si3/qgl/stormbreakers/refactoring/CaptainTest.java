@@ -36,7 +36,7 @@ public class CaptainTest {
     @Test
     void accelerateTest() {
         MediatorCrewEquipment mediatorCrewEquipment = mock(MediatorCrewEquipment.class);
-        rogers = new Captain(null, null, null, null, null, mediatorCrewEquipment);
+        rogers = new Captain(null, null, null, null, mediatorCrewEquipment);
         List<SailorAction> sailorsActions = List.of(new OarAction(1), new OarAction(3));
         when(mediatorCrewEquipment.nbOars()).thenReturn(4);
 
@@ -64,7 +64,7 @@ public class CaptainTest {
 
         MediatorCrewEquipment mediatorCrewEquipment = new MediatorCrewEquipment(crew, equipmentManager);
 
-        rogers = new Captain(null, null, crew, null, null, mediatorCrewEquipment);
+        rogers = new Captain(null, null, null, null, mediatorCrewEquipment);
 
         rogers.validateActions(List.of(new OarAction(1), new OarAction(3)));
 
@@ -78,7 +78,7 @@ public class CaptainTest {
     @Test
     void calculateSpeedTest() {
         MediatorCrewEquipment mediatorCrewEquipment = mock(MediatorCrewEquipment.class);
-        rogers = new Captain(null, null, null, null, null, mediatorCrewEquipment);
+        rogers = new Captain(null, null, null, null, mediatorCrewEquipment);
 
         when(mediatorCrewEquipment.nbOars()).thenReturn(2);
         assertEquals(165 * ((double) 1 / 2),
@@ -94,7 +94,7 @@ public class CaptainTest {
         MediatorCrewEquipment mediatorCrewEquipment = mock(MediatorCrewEquipment.class);
         Navigator navigator=mock(Navigator.class);
         when(navigator.fromAngleToDiff(anyDouble(), anyInt(), anyInt())).thenReturn(-1);
-        rogers = new Captain(null, null, null, navigator, null, mediatorCrewEquipment);
+        rogers = new Captain(null, null, navigator, null, mediatorCrewEquipment);
 
         when(mediatorCrewEquipment.rudderIsPresent()).thenReturn(true);
         when(mediatorCrewEquipment.rudderIsAccesible()).thenReturn(true);
@@ -123,12 +123,11 @@ public class CaptainTest {
 
         WeatherAnalyst weatherAnalyst = mock(WeatherAnalyst.class);
 
-        rogers = new Captain(null, null, crew, null, weatherAnalyst, mediatorCrewEquipment);
+        rogers = new Captain(null, null, null, weatherAnalyst, mediatorCrewEquipment);
 
         when(weatherAnalyst.additionalSpeedExists()).thenReturn(false);
 
         List<SailorAction> result = rogers.adjustSpeedTakingIntoAccountWind(300, 0);
-        System.out.println(result);
         assertFalse(result.isEmpty(), "should Send some actions");
     }
 
@@ -142,13 +141,12 @@ public class CaptainTest {
 
         WeatherAnalyst weatherAnalyst = mock(WeatherAnalyst.class);
 
-        rogers = new Captain(null, null, crew, null, weatherAnalyst, mediatorCrewEquipment);
+        rogers = new Captain(null, null, null, weatherAnalyst, mediatorCrewEquipment);
 
         when(weatherAnalyst.additionalSpeedExists()).thenReturn(true);
         when(weatherAnalyst.potentialSpeedAcquirable()).thenReturn(200.56);
 
         List<SailorAction> results = rogers.adjustSpeedTakingIntoAccountWind(300, 0);
-        System.out.println(results);
         assertTrue(results.stream().anyMatch(action -> action.getType().equals(ActionType.LIFTSAIL.actionCode)),
                 "Il y a au moins un liftAction");
 
@@ -160,7 +158,6 @@ public class CaptainTest {
         when(weatherAnalyst.potentialSpeedAcquirable()).thenReturn(-200.40);
 
         results = rogers.adjustSpeedTakingIntoAccountWind(300, 0);
-        System.out.println(results);
         assertTrue(results.stream().anyMatch(action -> action.getType().equals(ActionType.LOWERSAIL.actionCode)),
                 "Il y a au moins un LowerAction");
 
@@ -172,7 +169,6 @@ public class CaptainTest {
         when(weatherAnalyst.potentialSpeedAcquirable()).thenReturn(500.40);
 
         results = rogers.adjustSpeedTakingIntoAccountWind(300, 0);
-        System.out.println("\n" + results);
         assertFalse(results.stream().anyMatch(action -> action.getType().equals(ActionType.LIFTSAIL.actionCode)),
                 "Il N'Y A PAS de LiftAction");
         assertFalse(results.stream().anyMatch(action -> action.getType().equals(ActionType.LOWERSAIL.actionCode)),
@@ -187,7 +183,6 @@ public class CaptainTest {
         when(weatherAnalyst.potentialSpeedAcquirable()).thenReturn(-500.40);
 
         results = rogers.adjustSpeedTakingIntoAccountWind(300, 0);
-        System.out.println("\n" + results);
         assertFalse(results.stream().anyMatch(action -> action.getType().equals(ActionType.LIFTSAIL.actionCode)),
                 "Il N'Y A PAS de LiftAction puique le vent vous ralentirait");
         assertFalse(results.stream().anyMatch(action -> action.getType().equals(ActionType.LOWERSAIL.actionCode)),

@@ -96,7 +96,6 @@ public class Navigator {
 
     int fromAngleToDiff(double orientation, int nbLeftOars, int nbRightOars) {
         Map<Fraction, Integer> correspondances = this.pairAngleDifference(nbLeftOars, nbRightOars);
-        System.out.println(correspondances);
         Set<Fraction> eventailAngles = correspondances.keySet();
         Optional<Fraction> optAngle = eventailAngles.stream().filter(a -> a.eval() * orientation > 0.0)
 
@@ -104,7 +103,6 @@ public class Navigator {
                         Math.abs(b.eval() * Math.PI - orientation)));
         if (optAngle.isPresent()) {
             Fraction approachingAngle = optAngle.get();
-            System.out.println(approachingAngle);
             return correspondances.get(approachingAngle);
         }
         return 0;

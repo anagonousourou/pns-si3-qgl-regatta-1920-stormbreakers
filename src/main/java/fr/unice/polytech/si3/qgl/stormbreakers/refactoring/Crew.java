@@ -49,7 +49,10 @@ public class Crew {
 
         for (MoveAction move : moves) {
             Optional<Marine> sailor = getMarinById(move.getSailorId());
-            move.applyTo(sailor.get());
+            if(sailor.isPresent()){
+                sailor.get().move(move );
+            }
+            
         }
         
     }
@@ -63,7 +66,7 @@ public class Crew {
     }
 
     public boolean marinAround(IntPosition position){
-        return this.marins.stream().filter(m->m.canReach(position)).findAny().isPresent();
+        return this.marins.stream().anyMatch(m->m.canReach(position));
     }
 
     public Optional<Marine> marineAtPosition(IntPosition position){

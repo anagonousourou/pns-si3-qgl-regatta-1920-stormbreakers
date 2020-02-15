@@ -21,7 +21,7 @@ public class Captain {
 
     private WeatherAnalyst weatherAnalyst;
 
-    public Captain(Boat boat, CheckpointManager checkpointManager, Crew crew, Navigator navigator,
+    public Captain(Boat boat, CheckpointManager checkpointManager, Navigator navigator,
             WeatherAnalyst weatherAnalyst, MediatorCrewEquipment mediatorCrewEquipment) {
         this.boat = boat;
         this.checkpointManager = checkpointManager;
@@ -78,7 +78,6 @@ public class Captain {
         // le gouvernail existe, est accessible et suffit
         else if (mediatorCrewEquipment.rudderIsPresent() && mediatorCrewEquipment.rudderIsAccesible()
                 && (Math.abs(orientation) <= Math.PI / 4)) {
-            System.out.println("using the rudder");
             return this.validateActions(this.mediatorCrewEquipment.activateRudder(orientation));
             /**
              * TODO Plus tard, rajouter le cas où le gouvernail existe, est accessible mais
@@ -88,10 +87,6 @@ public class Captain {
         }
         // le gouvernail n'existe pas
         else {
-            System.out.println("Orientation: "+orientation);
-            System.out.println(mediatorCrewEquipment.rudderIsPresent());
-            System.out.println(mediatorCrewEquipment.rudderIsAccesible());
-            System.out.println((Math.abs(orientation) <= Math.PI / 4));
             int diff = this.navigator.fromAngleToDiff(orientation, this.mediatorCrewEquipment.nbLeftOars(),
                     this.mediatorCrewEquipment.nbRightOars());
             List<SailorAction> actions = this.mediatorCrewEquipment.activateOarsNotStrict(diff);

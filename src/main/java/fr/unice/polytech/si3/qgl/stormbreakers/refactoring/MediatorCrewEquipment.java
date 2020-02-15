@@ -112,7 +112,6 @@ public class MediatorCrewEquipment {
         List<Marine> marinesBusy = new ArrayList<>();
         var marinsDisponibles = this.marinsDisponiblesVoiles(false);
         for (Sail sail : this.equipmentManager.closedSails()) {
-            System.out.println(sail);
             for (Marine marine : marinsDisponibles.get(sail)) {
                 if (!marine.isDoneTurn() && !marinesBusy.contains(marine)) {
                     actions.add(marine.howToMoveTo(sail.getPosition()));
@@ -145,9 +144,8 @@ public class MediatorCrewEquipment {
                 .filter(oar -> this.crew.marineAtPosition(oar.getPosition()).isPresent()).count();
     }
 
-    // TODO: 14/02/2020 Change name or add rudder & sail support
-    public Map<Equipment, List<Marine>> marinsDisponibles() {
-        HashMap<Equipment, List<Marine>> results = new HashMap<>();
+    public Map<Oar, List<Marine>> marinsDisponiblesForOar() {
+        HashMap<Oar, List<Marine>> results = new HashMap<>();
         this.equipmentManager.oars().forEach(oar -> results.put(oar,
                 this.crew.marins().stream().filter(m -> m.canReach(oar.getPosition())).collect(Collectors.toList())));
         return results;
@@ -204,8 +202,8 @@ public class MediatorCrewEquipment {
         // but do not set value doneTurn only methods in Captain will do that
         List<SailorAction> result = new ArrayList<>();
         int compteur = 0;
-        Map<Equipment, List<Marine>> correspondances = this.marinsDisponibles();
-        for (Equipment oar : oars) {
+        Map<Oar, List<Marine>> correspondances = this.marinsDisponiblesForOar();
+        for (Oar oar : oars) {
             if (correspondances.get(oar) != null) {
                 for (Marine m : correspondances.get(oar)) {
                     if (!yetBusy.contains(m) && !m.isDoneTurn()) {
@@ -328,7 +326,7 @@ public class MediatorCrewEquipment {
 
     public void resetAvailability() {
         this.crew.resetAvailability();
-        ;
+        this.equipmentManager.resetUsedStatus();;
     }
 
     public Optional<Marine> getMarinById(int id) {

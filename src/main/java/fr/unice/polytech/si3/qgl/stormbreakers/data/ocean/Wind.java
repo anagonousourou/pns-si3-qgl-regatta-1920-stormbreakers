@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
+import fr.unice.polytech.si3.qgl.stormbreakers.processing.communication.Logger;
 import fr.unice.polytech.si3.qgl.stormbreakers.refactoring.InputParser;
 
 public class Wind implements PropertyChangeListener {
@@ -41,7 +42,7 @@ public class Wind implements PropertyChangeListener {
             this.orientation = this.parser.fetchWindOrientation(jString);
             this.strength =this.parser.fetchWindStrength(jString);
         } catch (JsonProcessingException e) {
-            // TODO Auto-generated catch block
+            Logger.getInstance().log(e.getMessage());
         }
         
         

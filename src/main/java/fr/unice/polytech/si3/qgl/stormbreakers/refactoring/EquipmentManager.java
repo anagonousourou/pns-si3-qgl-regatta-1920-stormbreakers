@@ -13,6 +13,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Equipment;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Gouvernail;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Oar;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Sail;
+import fr.unice.polytech.si3.qgl.stormbreakers.processing.communication.Logger;
 
 public class EquipmentManager implements PropertyChangeListener {
     // pour le moment seulement les rames et le gouvernail
@@ -80,19 +81,19 @@ public class EquipmentManager implements PropertyChangeListener {
     }
 
     List<Oar> usedRightOars() {
-        return rightOars.stream().filter(oar -> oar.isUsed()).collect(Collectors.toList());
+        return rightOars.stream().filter(Oar::isUsed).collect(Collectors.toList());
     }
 
     List<Oar> usedLeftOars() {
-        return leftOars.stream().filter(oar -> oar.isUsed()).collect(Collectors.toList());
+        return leftOars.stream().filter(Oar::isUsed).collect(Collectors.toList());
     }
 
     public List<Oar> unusedLeftOars() {
-        return leftOars.stream().filter(oar -> ! oar.isUsed()).collect(Collectors.toList());
+        return leftOars.stream().filter(Predicate.not(Oar::isUsed )).collect(Collectors.toList());
     }
 
     public List<Oar> unusedRightOars() {
-        return rightOars.stream().filter(oar -> ! oar.isUsed()).collect(Collectors.toList());
+        return rightOars.stream().filter(Predicate.not(Oar::isUsed )).collect(Collectors.toList());
     }
 
     List<Oar> toList() {
@@ -100,8 +101,7 @@ public class EquipmentManager implements PropertyChangeListener {
     }
 
     boolean oarPresentAt(IntPosition pos) {
-        return this.oars.stream().filter(oar -> oar.getX() == pos.getX() && oar.getY() == pos.getY()).findFirst()
-                .isPresent();
+        return this.oars.stream().anyMatch(oar -> oar.getX() == pos.getX() && oar.getY() == pos.getY());
     }
 
     Optional<Oar> oarAt(IntPosition pos) {
@@ -138,7 +138,7 @@ public class EquipmentManager implements PropertyChangeListener {
         try {
             this.setUp(this.parser.fetchEquipments(jString), this.parser.fetchBoatWidth(jString) );
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
+           Logger.getInstance().log(e.getMessage());
         }
 
     }
@@ -159,7 +159,7 @@ public class EquipmentManager implements PropertyChangeListener {
     }
     
     void resetUsedStatus(){
-        this.equipments.forEach(eq->eq.resetUsed());
+        this.equipments.forEach(Equipment::resetUsed);
     }
 
     Optional<Equipment> equipmentAt(IntPosition pos){

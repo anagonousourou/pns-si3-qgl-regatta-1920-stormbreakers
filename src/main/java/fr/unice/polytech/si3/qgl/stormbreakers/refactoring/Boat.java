@@ -6,6 +6,7 @@ import java.beans.PropertyChangeListener;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
+import fr.unice.polytech.si3.qgl.stormbreakers.processing.communication.Logger;
 /**
  * Le bateau implémente Propertychange listener pour permettre 
  * la mise à jour des infos du bateau notamment la vie et la position-orientation
@@ -63,7 +64,7 @@ public class Boat implements PropertyChangeListener {
             this.life = this.parser.fetchBoatLife(data);
             this.position =this.parser.fetchBoatPosition(data);
         } catch (JsonProcessingException e) {
-            //something
+            Logger.getInstance().log(e.getMessage());
         }
         
 

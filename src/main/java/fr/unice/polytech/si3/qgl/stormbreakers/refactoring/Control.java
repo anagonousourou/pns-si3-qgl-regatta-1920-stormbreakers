@@ -44,7 +44,7 @@ public class Control {
 			mediatorCrewEquipment = new MediatorCrewEquipment(crew, equipmentManager);
 			seaElements = new WeatherAnalyst(wind, boat, equipmentManager);
 
-			captain = new Captain(boat, checkpointManager, crew, navigator, seaElements,
+			captain = new Captain(boat, checkpointManager, navigator, seaElements,
 					mediatorCrewEquipment);
 
 			this.observableData.addPropertyChangeListener(this.wind);
