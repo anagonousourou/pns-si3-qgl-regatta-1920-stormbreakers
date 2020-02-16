@@ -1,5 +1,6 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.refactoring;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
@@ -10,7 +11,7 @@ public class CheckpointManager {
     private final List<Checkpoint> checkpoints;
 
     public CheckpointManager(List<Checkpoint> checkpoints){
-        this.checkpoints=checkpoints;
+        this.checkpoints=new ArrayList<>(checkpoints);
 
     }
 

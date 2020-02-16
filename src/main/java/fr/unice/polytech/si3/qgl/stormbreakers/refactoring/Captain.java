@@ -21,8 +21,8 @@ public class Captain {
 
     private WeatherAnalyst weatherAnalyst;
 
-    public Captain(Boat boat, CheckpointManager checkpointManager, Navigator navigator,
-            WeatherAnalyst weatherAnalyst, Coordinator coordinator) {
+    public Captain(Boat boat, CheckpointManager checkpointManager, Navigator navigator, WeatherAnalyst weatherAnalyst,
+            Coordinator coordinator) {
         this.boat = boat;
         this.checkpointManager = checkpointManager;
         this.navigator = navigator;
@@ -80,8 +80,8 @@ public class Captain {
                 && (Math.abs(orientation) <= Math.PI / 4)) {
             return this.validateActions(this.coordinator.activateRudder(orientation));
             /**
-             * Plus tard, rajouter le cas où le gouvernail existe, est accessible mais
-             * ne suffit pas
+             * Plus tard, rajouter le cas où le gouvernail existe, est accessible mais ne
+             * suffit pas
              */
 
         }
@@ -183,7 +183,7 @@ public class Captain {
      */
     List<SailorAction> accelerate(double distance, double currentSpeed) {
 
-        if (distance <= currentSpeed) {
+        if (distance <= currentSpeed && currentSpeed > 0) {
             return List.of();// RIEN A FAIRE
         }
         double minAdditionalSpeed = SPEED * (2.0 / this.coordinator.nbOars());
@@ -193,7 +193,11 @@ public class Captain {
                     this.accelerate(distance, currentSpeed + minAdditionalSpeed));
 
         }
+        if(currentSpeed==0){
+            return this.validateActions(this.coordinator.addOaringSailorsOnEachSide());
+        }
         return List.of();
+        
     }
 
     /** Generic function to concatenate 2 lists in Java */
