@@ -14,7 +14,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.refactoring.IntPosition;
         // @JsonSubTypes.Type(value = Vigie.class, name="watch")
 })
 
-public abstract class Equipment implements Deckable, Logable {
+public abstract class Equipment implements Logable {
     private String type;
     private boolean used = false;
     protected int x;

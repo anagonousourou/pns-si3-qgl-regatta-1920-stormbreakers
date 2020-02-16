@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -51,6 +52,7 @@ class FractionTest {
     @Test
     void gcdTest(){
         assertEquals(2, Fraction.gcd(2, 4), "must be 2");
+        assertEquals(1, Fraction.gcd(17, 6), "must be 1");
     }
 
     @Test
@@ -86,6 +88,9 @@ class FractionTest {
         Fraction fraction2 = new Fraction(42, 10);
         assertNotEquals(fraction1, fraction2);
     }
+    /*
+     * End of tests for equals
+     */
 
     @Test
     void testHashMap(){
@@ -102,8 +107,77 @@ class FractionTest {
             map.get(new Fraction(-1,2));
         });
     }
-    /*
-     * End of tests for equals
-     */
+
+    @Test
+    void testAddFraction(){
+        Fraction f1=new Fraction(1,2);
+        Fraction f2=new Fraction(5, 3);
+
+        assertEquals(new Fraction(13,6), f1.add(f2) ,"Should be equal" );
+    }
+
+    @Test
+    void testMultFraction(){
+        Fraction f1=new Fraction(1,2);
+        Fraction f2=new Fraction(5, 3);
+
+        assertEquals(new Fraction(5,6), f1.multiply(f2), "Should be equal");
+    }
+
+    @Test
+    void testSubstractFraction(){
+        Fraction f1=new Fraction(1,2);
+        Fraction f2=new Fraction(5, 3);
+
+        assertEquals(new Fraction(-7,6), f1.subtract(f2), "Should be equal");
+    }
+    
+
+    @Test
+    void testDivideFraction(){
+        Fraction f1=new Fraction(1,2);
+        Fraction f2=new Fraction(5, 3);
+
+        assertEquals(new Fraction(3,10), f1.divide(f2), "Should be equal");
+
+        Fraction f3=new Fraction(3,2);
+        Fraction f4=new Fraction(1, -3);
+
+        assertEquals(new Fraction(-9,2), f3.divide(f4), "Should be equal");
+    }
+
+    @Test
+    void testLcm(){
+        assertEquals(6, Fraction.lcm(2, 3), "lcm de 2 et m est 6");
+
+        assertEquals(12, Fraction.lcm(12, 4), "lcm de 12 et 4 est 12");
+        assertEquals(36, Fraction.lcm(12, 18), "lcm de 12 et 18 est 36");
+    }
+
+
+    @Test
+    void gettersTest(){
+        Fraction f1=new Fraction(1,2);
+        Fraction f2=new Fraction(8, 12);
+        assertEquals(1, f1.getNumerator(), "must be 1");
+        assertEquals(2, f1.getDenominator(), "must be 2");
+
+        assertEquals(2, f2.getNumerator(), "must be 2");
+        assertEquals(3, f2.getDenominator(), "must be 3");
+    }
+
+    @Test
+    void toStringTest(){
+        Fraction f1=new Fraction(1,2);
+        Fraction f2=new Fraction(8, 12);
+
+        assertTrue(f1.toString().contains("1"));
+        assertTrue(f1.toString().contains("2"));
+        assertTrue(f1.toString().contains("/"));
+
+        assertTrue(f2.toString().contains("2"));
+        assertTrue(f2.toString().contains("3"));
+        assertTrue(f2.toString().contains("/"));
+    }
 
 }

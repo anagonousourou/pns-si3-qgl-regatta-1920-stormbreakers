@@ -274,48 +274,6 @@ public class Fraction {
 
     }
 
-    /**
-     * 
-     * Return the fraction as a string, that may contain a mixed number.
-     * 
-     * @return numerator/denominator or integral numerator/denominator
-     * 
-     */
-
-    public String toMixed() {
-
-        if (Math.abs(numerator) >= denominator) {
-
-            // Get out integer part
-
-            int i = numerator / denominator;
-
-            int n = numerator % denominator;
-
-            String s = java.lang.Integer.toString(i);
-
-            s += " ";
-
-            if (n != 0) {
-
-                s += toString(Math.abs(n), denominator);
-
-            }
-
-            return s;
-
-        } else if (numerator == 0) {
-
-            return "0";
-
-        } else {
-
-            return toString();
-
-        }
-
-    }
-
     
     /**
      * Determine the Least Common Multiple (LCM) of two integers

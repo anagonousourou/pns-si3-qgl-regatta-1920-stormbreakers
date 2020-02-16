@@ -8,7 +8,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.MoveAction;
 
 import java.util.Objects;
 
-public class Marin implements Deckable, Logable {
+public class Marin implements Logable {
 	private static final int MAX_DIST = 5;
 
     private int id;
