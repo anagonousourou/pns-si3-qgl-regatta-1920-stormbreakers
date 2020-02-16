@@ -99,4 +99,10 @@ class NavigatorTest {
         );
     }
 
+    @Test
+    void fromAngleToDiffEquilibre(){
+        assertEquals(1, navigator.fromAngleToDiff(0.65, 2, 2),"il faut 1 personne de plus a gauche qu'a droite");
+        assertEquals(0, navigator.fromAngleToDiff(0.0, 2, 2),"il faut 1 personne de plus a gauche qu'a droite");
+    }
+
 }
