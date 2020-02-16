@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.Logable;
-import fr.unice.polytech.si3.qgl.stormbreakers.refactoring.MovementPath;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.MovementPath;
 
 public class MoveAction extends SailorAction implements Logable {
     private int xdistance;
