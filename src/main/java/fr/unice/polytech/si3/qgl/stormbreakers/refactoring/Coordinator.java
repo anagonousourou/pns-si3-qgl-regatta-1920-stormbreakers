@@ -18,12 +18,12 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Equipment;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Oar;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Sail;
 
-public class MediatorCrewEquipment {
-    private Crew crew;
+public class Coordinator {
+    private CrewManager crewManager;
     private EquipmentManager equipmentManager;
 
-    public MediatorCrewEquipment(Crew crew, EquipmentManager equipmentManager) {
-        this.crew = crew;
+    public Coordinator(CrewManager crewManager, EquipmentManager equipmentManager) {
+        this.crewManager = crewManager;
         this.equipmentManager = equipmentManager;
     }
 
@@ -36,7 +36,7 @@ public class MediatorCrewEquipment {
 
     public boolean rudderIsAccesible() {
 
-        return this.crew.marinAround(this.equipmentManager.rudderPosition());
+        return this.crewManager.marinAround(this.equipmentManager.rudderPosition());
     }
 
     /**
@@ -45,8 +45,8 @@ public class MediatorCrewEquipment {
      * @return
      */
     public Optional<Marine> marineForRudder() {
-        return this.crew.marineAtPosition(this.equipmentManager.rudderPosition())
-                .or(() -> this.crew.marineClosestTo(this.equipmentManager.rudderPosition()));
+        return this.crewManager.marineAtPosition(this.equipmentManager.rudderPosition())
+                .or(() -> this.crewManager.marineClosestTo(this.equipmentManager.rudderPosition()));
     }
 
     public List<SailorAction> activateRudder(double orientation) {
@@ -136,25 +136,25 @@ public class MediatorCrewEquipment {
 
     public int nbMarinsOnLeftOars() {
         return (int) this.equipmentManager.allLeftOars().stream()
-                .filter(oar -> this.crew.marineAtPosition(oar.getPosition()).isPresent()).count();
+                .filter(oar -> this.crewManager.marineAtPosition(oar.getPosition()).isPresent()).count();
     }
 
     public int nbMarinsOnRightOars() {
         return (int) this.equipmentManager.allRightOars().stream()
-                .filter(oar -> this.crew.marineAtPosition(oar.getPosition()).isPresent()).count();
+                .filter(oar -> this.crewManager.marineAtPosition(oar.getPosition()).isPresent()).count();
     }
 
     public Map<Oar, List<Marine>> marinsDisponiblesForOar() {
         HashMap<Oar, List<Marine>> results = new HashMap<>();
         this.equipmentManager.oars().forEach(oar -> results.put(oar,
-                this.crew.marins().stream().filter(m -> m.canReach(oar.getPosition())).collect(Collectors.toList())));
+                this.crewManager.marins().stream().filter(m -> m.canReach(oar.getPosition())).collect(Collectors.toList())));
         return results;
     }
 
     public Map<Equipment, List<Marine>> marinsDisponiblesVoiles(boolean isOpened) {
         HashMap<Equipment, List<Marine>> results = new HashMap<>();
         this.equipmentManager.sails(isOpened).forEach(sail -> results.put(sail,
-                this.crew.marins().stream().filter(m -> m.canReach(sail.getPosition())).collect(Collectors.toList())));
+                this.crewManager.marins().stream().filter(m -> m.canReach(sail.getPosition())).collect(Collectors.toList())));
         return results;
     }
 
@@ -270,7 +270,7 @@ public class MediatorCrewEquipment {
         List<Oar> freeOarsOnLeftSide = new ArrayList<>(equipmentManager.unusedLeftOars());
         List<Oar> freeOarsOnRightSide = new ArrayList<>(equipmentManager.unusedRightOars());
 
-        List<Marine> availableSailors = crew.getAvailableSailors();
+        List<Marine> availableSailors = crewManager.getAvailableSailors();
 
         // Can't assign to non-free oars
         // Can't assign when no sailors available
@@ -289,8 +289,8 @@ public class MediatorCrewEquipment {
             freeOarsOnLeftSide.remove(currLeftOar);
 
             IntPosition targetPos = currLeftOar.getPosition();
-            List<Marine> sailorsInReach = crew.getSailorsWhoCanReach(availableSailors, targetPos);
-            leftSailor = crew.marineClosestTo(targetPos, sailorsInReach);
+            List<Marine> sailorsInReach = crewManager.getSailorsWhoCanReach(availableSailors, targetPos);
+            leftSailor = crewManager.marineClosestTo(targetPos, sailorsInReach);
         }
 
         if (leftSailor.isPresent()) {
@@ -303,8 +303,8 @@ public class MediatorCrewEquipment {
                 freeOarsOnRightSide.remove(currRightOar);
 
                 IntPosition targetPos = currRightOar.getPosition();
-                List<Marine> sailorsInReach = crew.getSailorsWhoCanReach(availableSailors, targetPos);
-                rightSailor = crew.marineClosestTo(targetPos, sailorsInReach);
+                List<Marine> sailorsInReach = crewManager.getSailorsWhoCanReach(availableSailors, targetPos);
+                rightSailor = crewManager.marineClosestTo(targetPos, sailorsInReach);
             }
         }
 
@@ -323,12 +323,12 @@ public class MediatorCrewEquipment {
     }
 
     public void resetAvailability() {
-        this.crew.resetAvailability();
+        this.crewManager.resetAvailability();
         this.equipmentManager.resetUsedStatus();
     }
 
     public Optional<Marine> getMarinById(int id) {
-        return this.crew.getMarinById(id);
+        return this.crewManager.getMarinById(id);
     }
 
     /**
@@ -340,7 +340,7 @@ public class MediatorCrewEquipment {
     public List<Marine> leftSailorsOnOars() {
         List<Marine> marines = new ArrayList<>();
         for (Oar oar : equipmentManager.allLeftOars()) {
-            Optional<Marine> theSailor = this.crew.marineAtPosition(oar.getPosition());
+            Optional<Marine> theSailor = this.crewManager.marineAtPosition(oar.getPosition());
             if (theSailor.isPresent()) {
                 marines.add(theSailor.get());
             }
@@ -359,7 +359,7 @@ public class MediatorCrewEquipment {
     public List<Marine> rightSailorsOnOars() {
         List<Marine> marines = new ArrayList<>();
         for (Oar oar : equipmentManager.allRightOars()) {
-            Optional<Marine> theSailor = this.crew.marineAtPosition(oar.getPosition());
+            Optional<Marine> theSailor = this.crewManager.marineAtPosition(oar.getPosition());
             if (theSailor.isPresent()) {
                 marines.add(theSailor.get());
             }
@@ -418,7 +418,7 @@ public class MediatorCrewEquipment {
 
         for (SailorAction oa : actions) {
 
-            var optMarin = this.crew.getMarinById(oa.getSailorId());
+            var optMarin = this.crewManager.getMarinById(oa.getSailorId());
 
             if (optMarin.isPresent()) {
 
@@ -454,7 +454,7 @@ public class MediatorCrewEquipment {
 
         List<SailorAction> otherActions = actions.stream()
                 .filter(act -> !act.getType().equals(ActionType.MOVING.actionCode)).collect(Collectors.toList());
-        this.crew.executeMoves(moves);
+        this.crewManager.executeMoves(moves);
         this.markEquipmentUsedByActions(otherActions);
 
     }

@@ -12,10 +12,10 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Wind;
 import fr.unice.polytech.si3.qgl.stormbreakers.processing.communication.Logger;
 import fr.unice.polytech.si3.qgl.stormbreakers.processing.communication.OutputBuilder;
 
-public class Control {
+public class ElementsConstructor {
     private InputParser parser = new InputParser();
 	private OutputBuilder outputBuilder = new OutputBuilder();
-	private Crew crew = null;
+	private CrewManager crewManager = null;
 	private EquipmentManager equipmentManager = null;
 	private Captain captain = null;
 	private Boat boat = null;
@@ -23,13 +23,13 @@ public class Control {
 	private Navigator navigator = new Navigator();
 	private WeatherAnalyst seaElements;
 	private Wind wind;
-	private MediatorCrewEquipment mediatorCrewEquipment;
+	private Coordinator coordinator;
 	private ObservableData observableData = new ObservableData();
     
-    public Control(String game){
+    public ElementsConstructor(String game){
         try {
 			wind = new Wind(parser);// son état est modifié au gré des tours
-			crew = new Crew(this.parser.fetchAllSailors(game));// construit une fois pour toute
+			crewManager = new CrewManager(this.parser.fetchAllSailors(game));// construit une fois pour toute
 			// son état varie en fonction des rounds à cause des sails
 			equipmentManager = new EquipmentManager(parser.fetchEquipments(game), parser.fetchBoatWidth(game), parser);
 			//
@@ -41,11 +41,11 @@ public class Control {
 			Position position = this.parser.fetchBoatPosition(game);
 			boat = new Boat(position, decklength, deckwidth, life, parser);
 
-			mediatorCrewEquipment = new MediatorCrewEquipment(crew, equipmentManager);
+			coordinator = new Coordinator(crewManager, equipmentManager);
 			seaElements = new WeatherAnalyst(wind, boat, equipmentManager);
 
 			captain = new Captain(boat, checkpointManager, navigator, seaElements,
-					mediatorCrewEquipment);
+					coordinator);
 
 			this.observableData.addPropertyChangeListener(this.wind);
 			this.observableData.addPropertyChangeListener(this.equipmentManager);
