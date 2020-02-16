@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.Logable;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Marin;
 import fr.unice.polytech.si3.qgl.stormbreakers.refactoring.MovementPath;
 
 public class MoveAction extends SailorAction implements Logable {
@@ -35,11 +34,6 @@ public class MoveAction extends SailorAction implements Logable {
 
     public boolean longerThan(int distance) {
         return Math.abs(this.xdistance) + Math.abs(this.ydistance) > distance;
-    }
-
-    public void applyTo(Marin sailor) {
-        if (sailor != null)
-            sailor.move(xdistance, ydistance);
     }
 
     @Override
