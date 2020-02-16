@@ -46,4 +46,36 @@ public class WeatherAnalystTest {
         when(equipmentManager.nbSails()).thenReturn(0);
         assertEquals(0.0,this.seaElements.currentExternalSpeed() ,"Pas de voile donc pas de vitesse procuree par le vent");
     }
+
+    @Test
+    void potentialSpeedAcquirableTest(){
+        Boat boat =mock(Boat.class);
+        Wind wind =mock(Wind.class);
+        EquipmentManager equipmentManager=mock(EquipmentManager.class);
+
+        when(wind.getStrength()).thenReturn(200.0);
+        when(wind.getOrientation()).thenReturn(0.785398163397448);
+        when(boat.getOrientation()).thenReturn(0.785398163397448);
+        when(equipmentManager.nbSails()).thenReturn(2);
+
+        this.seaElements = new WeatherAnalyst(wind, boat, equipmentManager);
+
+        assertEquals(200.0, this.seaElements.potentialSpeedAcquirable(), "");
+    }
+
+    @Test
+    void externalSpeedGivenNbOpennedSailsTest(){
+        Boat boat =mock(Boat.class);
+        Wind wind =mock(Wind.class);
+        EquipmentManager equipmentManager=mock(EquipmentManager.class);
+
+        when(wind.getStrength()).thenReturn(360.33);
+        when(wind.getOrientation()).thenReturn(0.785398163397448);
+        when(boat.getOrientation()).thenReturn(0.785398163397448);
+        when(equipmentManager.nbSails()).thenReturn(3);
+
+        this.seaElements = new WeatherAnalyst(wind, boat, equipmentManager);
+
+        assertTrue(Math.abs(120.11 -seaElements.externalSpeedGivenNbOpennedSails(1))<=0.001);
+    }
 }

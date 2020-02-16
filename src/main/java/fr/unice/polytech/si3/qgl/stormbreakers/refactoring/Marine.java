@@ -70,7 +70,7 @@ public class Marine {
 
     @Override
     public String toString() {
-        return "Marine(id: " + id + ", \n" + "position:" + position + " ) ";
+        return this.getClass().getSimpleName()+"(id: " + id + ", \n" + "position:" + position + " ) ";
     }
 
     public IntPosition getPosition() {

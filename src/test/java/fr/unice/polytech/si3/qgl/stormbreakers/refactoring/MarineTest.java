@@ -62,4 +62,13 @@ class MarineTest {
     void canReachTestWhenTooFar() {
         assertFalse(sailor.canReach(targetPosOutOfReach));
     }
+
+    @Test
+    void onEquipmentTest(){
+        assertFalse(sailor.onEquipment(),"Sailor not on equipment");
+    
+        sailor.setOnEquipment(true);
+
+        assertTrue(sailor.onEquipment(),"Sailor NOW on equipment");
+    }
 }
