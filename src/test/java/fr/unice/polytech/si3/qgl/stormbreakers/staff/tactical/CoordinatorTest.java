@@ -168,21 +168,19 @@ public class CoordinatorTest {
 		assertTrue(coordinator.marinsDisponiblesVoiles(true).isEmpty());
 	}
 	
-	@Disabled
 	@Test
 	void canLiftAllSailsTest() {
 		assertTrue(coordinator.canLiftAllSails());
-		when(crewManager.getAvailableSailors()).thenReturn(List.of(m4));
+		when(crewManager.marins()).thenReturn(List.of(m4));
 		assertFalse(coordinator.canLiftAllSails());
-		when(crewManager.getAvailableSailors()).thenReturn(List.of(m4, m5));
+		when(crewManager.marins()).thenReturn(List.of(m4, m5));
 		assertTrue(coordinator.canLiftAllSails());
 	}
 
-	@Disabled
 	@Test
 	void canLowerAllSailsTest(){
 		assertTrue(coordinator.canLowerAllSails());
-		when(crewManager.getAvailableSailors()).thenReturn(List.of());
+		when(crewManager.marins()).thenReturn(List.of());
 		assertFalse(coordinator.canLowerAllSails());
 	}
 
