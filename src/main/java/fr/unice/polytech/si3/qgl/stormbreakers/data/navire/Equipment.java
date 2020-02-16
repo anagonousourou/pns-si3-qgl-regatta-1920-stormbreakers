@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import fr.unice.polytech.si3.qgl.stormbreakers.Logable;
-import fr.unice.polytech.si3.qgl.stormbreakers.refactoring.IntPosition;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.IntPosition;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
 @JsonSubTypes({ @JsonSubTypes.Type(value = Oar.class, name = "oar") ,

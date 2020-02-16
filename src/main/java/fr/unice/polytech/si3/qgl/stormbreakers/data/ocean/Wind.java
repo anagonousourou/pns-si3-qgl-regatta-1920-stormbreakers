@@ -7,8 +7,8 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-import fr.unice.polytech.si3.qgl.stormbreakers.processing.communication.Logger;
-import fr.unice.polytech.si3.qgl.stormbreakers.refactoring.InputParser;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.processing.InputParser;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.processing.Logger;
 
 public class Wind implements PropertyChangeListener {
     private double orientation=0.0;

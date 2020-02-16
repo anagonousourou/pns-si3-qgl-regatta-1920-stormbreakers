@@ -3,8 +3,8 @@ package fr.unice.polytech.si3.qgl.stormbreakers;
 import java.util.List;
 
 import fr.unice.polytech.si3.qgl.regatta.cockpit.ICockpit;
-import fr.unice.polytech.si3.qgl.stormbreakers.processing.communication.Logger;
-import fr.unice.polytech.si3.qgl.stormbreakers.refactoring.ElementsConstructor;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.processing.ElementsConstructor;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.processing.Logger;
 
 public class Cockpit implements ICockpit {
 	
