@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Wind;
 
-public class SeaElementsTest {
+public class WeatherAnalystTest {
     
 
     WeatherAnalyst seaElements;

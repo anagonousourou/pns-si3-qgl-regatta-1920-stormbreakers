@@ -14,7 +14,7 @@ public class Captain {
     private Boat boat;
 
     private CheckpointManager checkpointManager;
-    private MediatorCrewEquipment mediatorCrewEquipment;
+    private Coordinator coordinator;
     private Navigator navigator;
     private static final double EPS = 0.001;
     private static final double SPEED = 165;
@@ -22,11 +22,11 @@ public class Captain {
     private WeatherAnalyst weatherAnalyst;
 
     public Captain(Boat boat, CheckpointManager checkpointManager, Navigator navigator,
-            WeatherAnalyst weatherAnalyst, MediatorCrewEquipment mediatorCrewEquipment) {
+            WeatherAnalyst weatherAnalyst, Coordinator coordinator) {
         this.boat = boat;
         this.checkpointManager = checkpointManager;
         this.navigator = navigator;
-        this.mediatorCrewEquipment = mediatorCrewEquipment;
+        this.coordinator = coordinator;
         this.weatherAnalyst = weatherAnalyst;
 
     }
@@ -36,7 +36,7 @@ public class Captain {
      */
     public List<SailorAction> nextRoundActions() {
         // On remet le statut doneTurn de tout les marins à false
-        this.mediatorCrewEquipment.resetAvailability();
+        this.coordinator.resetAvailability();
         this.checkpointManager.updateCheckpoint(boat.getPosition());
 
         Checkpoint chpoint = this.checkpointManager.nextCheckpoint();
@@ -61,7 +61,7 @@ public class Captain {
         int nbActivatedOars = (int) actions.stream()
                 .filter(action -> action.getType().equals(ActionType.OAR.actionCode)).count();
 
-        return SPEED * ((double) nbActivatedOars / this.mediatorCrewEquipment.nbOars());
+        return SPEED * ((double) nbActivatedOars / this.coordinator.nbOars());
     }
 
     /**
@@ -76,9 +76,9 @@ public class Captain {
             return List.of();
         }
         // le gouvernail existe, est accessible et suffit
-        else if (mediatorCrewEquipment.rudderIsPresent() && mediatorCrewEquipment.rudderIsAccesible()
+        else if (coordinator.rudderIsPresent() && coordinator.rudderIsAccesible()
                 && (Math.abs(orientation) <= Math.PI / 4)) {
-            return this.validateActions(this.mediatorCrewEquipment.activateRudder(orientation));
+            return this.validateActions(this.coordinator.activateRudder(orientation));
             /**
              * Plus tard, rajouter le cas où le gouvernail existe, est accessible mais
              * ne suffit pas
@@ -87,9 +87,9 @@ public class Captain {
         }
         // le gouvernail n'existe pas
         else {
-            int diff = this.navigator.fromAngleToDiff(orientation, this.mediatorCrewEquipment.nbLeftOars(),
-                    this.mediatorCrewEquipment.nbRightOars());
-            List<SailorAction> actions = this.mediatorCrewEquipment.activateOarsNotStrict(diff);
+            int diff = this.navigator.fromAngleToDiff(orientation, this.coordinator.nbLeftOars(),
+                    this.coordinator.nbRightOars());
+            List<SailorAction> actions = this.coordinator.activateOarsNotStrict(diff);
             return this.validateActions(actions);
         }
     }
@@ -119,7 +119,7 @@ public class Captain {
                     && potentialSpeedAcquirable != currentExternalSpeed) {
 
                 List<SailorAction> actionsToUseWeather = new ArrayList<>();
-                int nbOpenned = this.mediatorCrewEquipment.liftSailsPartially(actionsToUseWeather);
+                int nbOpenned = this.coordinator.liftSailsPartially(actionsToUseWeather);
                 this.validateActions(actionsToUseWeather);
                 double expectedSpeedFromWind = this.weatherAnalyst.externalSpeedGivenNbOpennedSails(nbOpenned);
                 return Captain.<SailorAction>concatenate(
@@ -132,7 +132,7 @@ public class Captain {
             if (currentExternalSpeed < 0.0 || currentSpeed + currentExternalSpeed > distance) {
 
                 List<SailorAction> actionsToCancelWeather = new ArrayList<>();
-                int nbOpenned = this.mediatorCrewEquipment.lowerSailsPartially(actionsToCancelWeather);
+                int nbOpenned = this.coordinator.lowerSailsPartially(actionsToCancelWeather);
                 this.validateActions(actionsToCancelWeather);
 
                 double expectedSpeedFromWind = this.weatherAnalyst.externalSpeedGivenNbOpennedSails(nbOpenned);
@@ -167,8 +167,8 @@ public class Captain {
      * @return le parametre inchangé pour permettre d'enchainer les méthodes
      */
     List<SailorAction> validateActions(List<SailorAction> actions) {
-        this.mediatorCrewEquipment.validateActions(actions);
-        this.mediatorCrewEquipment.executeSailorsActions(actions);
+        this.coordinator.validateActions(actions);
+        this.coordinator.executeSailorsActions(actions);
         return actions;
 
     }
@@ -186,9 +186,9 @@ public class Captain {
         if (distance <= currentSpeed) {
             return List.of();// RIEN A FAIRE
         }
-        double minAdditionalSpeed = SPEED * (2.0 / this.mediatorCrewEquipment.nbOars());
+        double minAdditionalSpeed = SPEED * (2.0 / this.coordinator.nbOars());
         if (currentSpeed + minAdditionalSpeed <= distance) {
-            List<SailorAction> actions = this.validateActions(this.mediatorCrewEquipment.addOaringSailorsOnEachSide());
+            List<SailorAction> actions = this.validateActions(this.coordinator.addOaringSailorsOnEachSide());
             return Captain.<SailorAction>concatenate(actions,
                     this.accelerate(distance, currentSpeed + minAdditionalSpeed));
 

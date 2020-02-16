@@ -10,11 +10,11 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.ActionType;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.MoveAction;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.SailorAction;
 
-public class Crew {
+public class CrewManager {
 
     private final List<Marine> marins;
 
-    public Crew(List<Marine> marins) {
+    public CrewManager(List<Marine> marins) {
         this.marins = marins;
     }
 

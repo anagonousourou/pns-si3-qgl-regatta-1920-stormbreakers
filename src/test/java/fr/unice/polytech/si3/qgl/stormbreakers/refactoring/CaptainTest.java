@@ -35,12 +35,12 @@ public class CaptainTest {
 
     @Test
     void accelerateTest() {
-        MediatorCrewEquipment mediatorCrewEquipment = mock(MediatorCrewEquipment.class);
-        rogers = new Captain(null, null, null, null, mediatorCrewEquipment);
+        Coordinator coordinator = mock(Coordinator.class);
+        rogers = new Captain(null, null, null, null, coordinator);
         List<SailorAction> sailorsActions = List.of(new OarAction(1), new OarAction(3));
-        when(mediatorCrewEquipment.nbOars()).thenReturn(4);
+        when(coordinator.nbOars()).thenReturn(4);
 
-        when(mediatorCrewEquipment.addOaringSailorsOnEachSide()).thenReturn(sailorsActions);
+        when(coordinator.addOaringSailorsOnEachSide()).thenReturn(sailorsActions);
 
         
 
@@ -57,14 +57,14 @@ public class CaptainTest {
         var m3 = new Marine(3, 3, 3);
         var m4 = new Marine(4, 4, 4);
         List<Marine> marins = List.of(m1, m2, m3, m4);
-        Crew crew = new Crew(marins);
+        CrewManager crewManager = new CrewManager(marins);
         EquipmentManager equipmentManager=mock(EquipmentManager.class);
 
         marins.forEach(m -> assertFalse(m.isDoneTurn(), "par défaut  doneTurn est à false"));
 
-        MediatorCrewEquipment mediatorCrewEquipment = new MediatorCrewEquipment(crew, equipmentManager);
+        Coordinator coordinator = new Coordinator(crewManager, equipmentManager);
 
-        rogers = new Captain(null, null, null, null, mediatorCrewEquipment);
+        rogers = new Captain(null, null, null, null, coordinator);
 
         rogers.validateActions(List.of(new OarAction(1), new OarAction(3)));
 
@@ -77,10 +77,10 @@ public class CaptainTest {
 
     @Test
     void calculateSpeedTest() {
-        MediatorCrewEquipment mediatorCrewEquipment = mock(MediatorCrewEquipment.class);
-        rogers = new Captain(null, null, null, null, mediatorCrewEquipment);
+        Coordinator coordinator = mock(Coordinator.class);
+        rogers = new Captain(null, null, null, null, coordinator);
 
-        when(mediatorCrewEquipment.nbOars()).thenReturn(2);
+        when(coordinator.nbOars()).thenReturn(2);
         assertEquals(165 * ((double) 1 / 2),
                 rogers.calculateSpeedFromOarsAction(List.of(new OarAction(1), new Turn(5, 0.2))), " should be equal");
 
@@ -91,22 +91,22 @@ public class CaptainTest {
 
     @Test
     void actionsToOrientateTest() {
-        MediatorCrewEquipment mediatorCrewEquipment = mock(MediatorCrewEquipment.class);
+        Coordinator coordinator = mock(Coordinator.class);
         Navigator navigator=mock(Navigator.class);
         when(navigator.fromAngleToDiff(anyDouble(), anyInt(), anyInt())).thenReturn(-1);
-        rogers = new Captain(null, null, navigator, null, mediatorCrewEquipment);
+        rogers = new Captain(null, null, navigator, null, coordinator);
 
-        when(mediatorCrewEquipment.rudderIsPresent()).thenReturn(true);
-        when(mediatorCrewEquipment.rudderIsAccesible()).thenReturn(true);
+        when(coordinator.rudderIsPresent()).thenReturn(true);
+        when(coordinator.rudderIsAccesible()).thenReturn(true);
 
         List<SailorAction> actionsRudder = List.of(new Turn(5, 0.2), new MoveAction(5, -1, 2));
-        when(mediatorCrewEquipment.activateRudder(anyDouble())).thenReturn(actionsRudder);
+        when(coordinator.activateRudder(anyDouble())).thenReturn(actionsRudder);
 
         assertEquals(actionsRudder, rogers.actionsToOrientate(0.32), "Should return the actionsRudder");
 
         List<SailorAction> bunchOfActions = List.of(new OarAction(1), new MoveAction(1, 0, 0));
 
-        when(mediatorCrewEquipment.activateOarsNotStrict(anyInt())).thenReturn(bunchOfActions);
+        when(coordinator.activateOarsNotStrict(anyInt())).thenReturn(bunchOfActions);
 
         assertEquals(bunchOfActions, rogers.actionsToOrientate(1.5), "Should return bunchOfActions");
 
@@ -116,14 +116,14 @@ public class CaptainTest {
 
     @Test
     void speedTakingIntoAccountWindNoWindTest() throws JsonProcessingException {
-        Crew crew = new Crew(this.parser.fetchAllSailors(gameData));
+        CrewManager crewManager = new CrewManager(this.parser.fetchAllSailors(gameData));
         EquipmentManager equipmentManager = new EquipmentManager(parser.fetchEquipments(gameData),
                 parser.fetchBoatWidth(gameData), parser);
-        MediatorCrewEquipment mediatorCrewEquipment = new MediatorCrewEquipment(crew, equipmentManager);
+        Coordinator coordinator = new Coordinator(crewManager, equipmentManager);
 
         WeatherAnalyst weatherAnalyst = mock(WeatherAnalyst.class);
 
-        rogers = new Captain(null, null, null, weatherAnalyst, mediatorCrewEquipment);
+        rogers = new Captain(null, null, null, weatherAnalyst, coordinator);
 
         when(weatherAnalyst.additionalSpeedExists()).thenReturn(false);
 
@@ -134,14 +134,14 @@ public class CaptainTest {
     @Test
     void speedTakingIntoAccountWindTest() throws JsonProcessingException {
 
-        Crew crew = new Crew(this.parser.fetchAllSailors(gameData));
+        CrewManager crewManager = new CrewManager(this.parser.fetchAllSailors(gameData));
         EquipmentManager equipmentManager = new EquipmentManager(parser.fetchEquipments(gameData),
                 parser.fetchBoatWidth(gameData), parser);
-        MediatorCrewEquipment mediatorCrewEquipment = new MediatorCrewEquipment(crew, equipmentManager);
+        Coordinator coordinator = new Coordinator(crewManager, equipmentManager);
 
         WeatherAnalyst weatherAnalyst = mock(WeatherAnalyst.class);
 
-        rogers = new Captain(null, null, null, weatherAnalyst, mediatorCrewEquipment);
+        rogers = new Captain(null, null, null, weatherAnalyst, coordinator);
 
         when(weatherAnalyst.additionalSpeedExists()).thenReturn(true);
         when(weatherAnalyst.potentialSpeedAcquirable()).thenReturn(200.56);
@@ -152,7 +152,7 @@ public class CaptainTest {
 
         // clear
 
-        crew.resetAvailability();
+        crewManager.resetAvailability();
 
         when(weatherAnalyst.currentExternalSpeed()).thenReturn(-100.20);
         when(weatherAnalyst.potentialSpeedAcquirable()).thenReturn(-200.40);
@@ -163,7 +163,7 @@ public class CaptainTest {
 
         // clear
 
-        crew.resetAvailability();
+        crewManager.resetAvailability();
 
         when(weatherAnalyst.currentExternalSpeed()).thenReturn(250.20);
         when(weatherAnalyst.potentialSpeedAcquirable()).thenReturn(500.40);
@@ -177,7 +177,7 @@ public class CaptainTest {
 
         // clear
 
-        crew.resetAvailability();
+        crewManager.resetAvailability();
 
         when(weatherAnalyst.currentExternalSpeed()).thenReturn(0.00);
         when(weatherAnalyst.potentialSpeedAcquirable()).thenReturn(-500.40);

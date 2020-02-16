@@ -13,7 +13,7 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 
-class CrewTest {
+class CrewManagerTest {
 
 
 
@@ -21,10 +21,10 @@ class CrewTest {
     @Test
     void marineClosestToTestWhenEmptyList() {
         List<Marine> sailors = List.of();
-        Crew crew = new Crew(sailors);
+        CrewManager crewManager = new CrewManager(sailors);
 
         IntPosition pos = new IntPosition(0,0);
-        assertTrue(crew.marineClosestTo(pos,sailors).isEmpty());
+        assertTrue(crewManager.marineClosestTo(pos,sailors).isEmpty());
     }
 
     @Test
@@ -32,10 +32,10 @@ class CrewTest {
         List<Marine> sailors = new ArrayList<>();
         sailors.add(new Marine(0,new IntPosition(2,0)));
         sailors.add(new Marine(1,new IntPosition(1,1)));
-        Crew crew = new Crew(sailors);
+        CrewManager crewManager = new CrewManager(sailors);
 
         IntPosition pos = new IntPosition(0,0);
-        Optional<Marine> optionalMarine = crew.marineClosestTo(pos,sailors);
+        Optional<Marine> optionalMarine = crewManager.marineClosestTo(pos,sailors);
         assertTrue(optionalMarine.isPresent());
         // First in the list
         assertEquals(0,optionalMarine.get().getId());
@@ -46,10 +46,10 @@ class CrewTest {
         List<Marine> sailors = new ArrayList<>();
         sailors.add(new Marine(0,new IntPosition(0,0)));
         sailors.add(new Marine(1,new IntPosition(1,1)));
-        Crew crew = new Crew(sailors);
+        CrewManager crewManager = new CrewManager(sailors);
 
         IntPosition pos = new IntPosition(0,0);
-        Optional<Marine> optionalMarine = crew.marineClosestTo(pos,sailors);
+        Optional<Marine> optionalMarine = crewManager.marineClosestTo(pos,sailors);
         assertTrue(optionalMarine.isPresent());
         // First in the list
         assertEquals(0,optionalMarine.get().getId());
@@ -57,7 +57,7 @@ class CrewTest {
 
     @Test
     void getAvailableSailorsInTest() {
-        Crew crew = new Crew(List.of());
+        CrewManager crewManager = new CrewManager(List.of());
 
         Marine sailor1 = new Marine(0,0,0); sailor1.setDoneTurn(true);
         Marine sailor2 = new Marine(1,0,0); sailor2.setDoneTurn(false); // available
@@ -66,7 +66,7 @@ class CrewTest {
         Marine sailor5 = new Marine(4,0,0); sailor5.setDoneTurn(true);
         List<Marine> sailors = List.of(sailor1,sailor2,sailor3,sailor4,sailor5);
 
-        List<Marine> result = crew.getAvailableSailorsIn(sailors);
+        List<Marine> result = crewManager.getAvailableSailorsIn(sailors);
 
         assertEquals(2,result.size());
         result.forEach(sailor -> assertFalse(sailor.isDoneTurn()));
@@ -74,7 +74,7 @@ class CrewTest {
 
     @Test
     void getSailorsWhoCanReachTest() {
-        Crew crew = new Crew(List.of());
+        CrewManager crewManager = new CrewManager(List.of());
 
         Marine sailor1 = mock(Marine.class); when(sailor1.canReach(any(IntPosition.class))).thenReturn(false);
         Marine sailor2 = mock(Marine.class); when(sailor2.canReach(any(IntPosition.class))).thenReturn(true);
@@ -85,7 +85,7 @@ class CrewTest {
         List<Marine> sailors = List.of(sailor1,sailor2,sailor3,sailor4,sailor5);
 
         IntPosition target = new IntPosition(0,0);
-        List<Marine> result = crew.getSailorsWhoCanReach(sailors,target);
+        List<Marine> result = crewManager.getSailorsWhoCanReach(sailors,target);
 
         assertEquals(2,result.size());
         result.forEach(sailor -> assertTrue(sailor.canReach(target)));

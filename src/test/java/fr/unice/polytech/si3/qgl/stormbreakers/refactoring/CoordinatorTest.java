@@ -25,10 +25,10 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Gouvernail;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Oar;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Sail;
 
-public class MediatorCrewEquipmentTest {
-	MediatorCrewEquipment coordinator;
+public class CoordinatorTest {
+	Coordinator coordinator;
 	EquipmentManager equipmentManager;
-	Crew crew;
+	CrewManager crewManager;
 	
 	Marine m1, m2, m3, m4, m5, m6;
 	Sail s1, s2, s3, s4;
@@ -69,9 +69,9 @@ public class MediatorCrewEquipmentTest {
 		equipments = List.of(s1, s2, s3, s4);
 		
 		equipmentManager= mock(EquipmentManager.class);
-		crew = mock(Crew.class);
-		coordinator=  new MediatorCrewEquipment(crew, equipmentManager);
-		when(crew.marins()).thenReturn(marinsDisponibles);
+		crewManager = mock(CrewManager.class);
+		coordinator=  new Coordinator(crewManager, equipmentManager);
+		when(crewManager.marins()).thenReturn(marinsDisponibles);
 		when(equipmentManager.sails(true)).thenReturn(voilesOuvertes);
 		when(equipmentManager.sails(false)).thenReturn(voilesBaissees);
 	}
@@ -82,7 +82,7 @@ public class MediatorCrewEquipmentTest {
     	// Setup sans utiliser Mockito
     	List<Equipment> newVersion = new ArrayList<>(equipments);
     	newVersion.add(r1);
-    	coordinator=  new MediatorCrewEquipment(new Crew(marinsDisponibles), new EquipmentManager(newVersion, 4));
+    	coordinator=  new Coordinator(new CrewManager(marinsDisponibles), new EquipmentManager(newVersion, 4));
     	
     	// Orientaiton valide, au moins 1 marin proche
     	List<SailorAction> toTest1 = coordinator.activateRudder(Math.PI/4);
@@ -99,7 +99,7 @@ public class MediatorCrewEquipmentTest {
     	// Aucun marin proche
     	newVersion.remove(r1);
     	newVersion.add(r2);
-    	coordinator =  new MediatorCrewEquipment(new Crew(marinsDisponibles), new EquipmentManager(newVersion, 4));
+    	coordinator =  new Coordinator(new CrewManager(marinsDisponibles), new EquipmentManager(newVersion, 4));
     	List<SailorAction> toTest3 = coordinator.activateRudder(Math.PI/2);
     	assertTrue(toTest3.isEmpty());
     }
@@ -107,7 +107,7 @@ public class MediatorCrewEquipmentTest {
     @Test
 	void activateNbOarsTest() {
     	// Marins dispo, rames présentes
-    	coordinator =  new MediatorCrewEquipment(new Crew(marinsDisponibles), new EquipmentManager(new ArrayList<Equipment>(rames), 4));
+    	coordinator =  new Coordinator(new CrewManager(marinsDisponibles), new EquipmentManager(new ArrayList<Equipment>(rames), 4));
     	List<SailorAction> toOar1 = coordinator.activateNbOars(rames, 3, new ArrayList<>());
     	assertTrue(toOar1.get(0) instanceof MoveAction);
     	int expectedX = m1.getPosition().getX() + ((MoveAction) toOar1.get(0)).getXdistance();
@@ -123,7 +123,7 @@ public class MediatorCrewEquipmentTest {
     	m1 = mock(Marine.class);
     	when(m1.isDoneTurn()).thenReturn(true);
     	marinsDisponibles = List.of(m1, m2, m3, m4, m5, m6);
-    	coordinator=  new MediatorCrewEquipment(new Crew(marinsDisponibles), new EquipmentManager(new ArrayList<Equipment>(rames), 4));
+    	coordinator=  new Coordinator(new CrewManager(marinsDisponibles), new EquipmentManager(new ArrayList<Equipment>(rames), 4));
     	
     	List<SailorAction> toOar2 = coordinator.activateNbOars(rames, 3, new ArrayList<>());
     	assertEquals(1, toOar2.get(0).getSailorId());
@@ -155,7 +155,7 @@ public class MediatorCrewEquipmentTest {
 		assertEquals(List.of(m2, m4, m5), results.get(s2));
 		assertEquals(List.of(m1, m2, m3, m4, m5), results.get(s4));
 		
-		when(crew.marins()).thenReturn(List.of());
+		when(crewManager.marins()).thenReturn(List.of());
 		results = coordinator.marinsDisponiblesVoiles(false);
 		assertEquals(List.of(), results.get(s2));
 		assertEquals(List.of(), results.get(s4));
@@ -168,9 +168,9 @@ public class MediatorCrewEquipmentTest {
 	@Test
 	void canLiftAllSailsTest() {
 		assertTrue(coordinator.canLiftAllSails());
-		when(crew.getAvailableSailors()).thenReturn(List.of(m4));
+		when(crewManager.getAvailableSailors()).thenReturn(List.of(m4));
 		assertFalse(coordinator.canLiftAllSails());
-		when(crew.getAvailableSailors()).thenReturn(List.of(m4, m5));
+		when(crewManager.getAvailableSailors()).thenReturn(List.of(m4, m5));
 		assertTrue(coordinator.canLiftAllSails());
 	}
 
@@ -178,7 +178,7 @@ public class MediatorCrewEquipmentTest {
 	@Test
 	void canLowerAllSailsTest(){
 		assertTrue(coordinator.canLowerAllSails());
-		when(crew.getAvailableSailors()).thenReturn(List.of());
+		when(crewManager.getAvailableSailors()).thenReturn(List.of());
 		assertFalse(coordinator.canLowerAllSails());
 	}
 
@@ -211,9 +211,9 @@ public class MediatorCrewEquipmentTest {
 		// Not assigned because too far
 		Marine sailorNotGoingLeft = new Marine(2,20,1);
 		Marine sailorNotGoingRight = new Marine(3,20,2);
-		Crew crew2 = new Crew(List.of(sailorGoingLeft,sailorGoingRight, sailorNotGoingLeft, sailorNotGoingRight));
+		CrewManager crew2 = new CrewManager(List.of(sailorGoingLeft,sailorGoingRight, sailorNotGoingLeft, sailorNotGoingRight));
 
-		MediatorCrewEquipment coordinator2 =  new MediatorCrewEquipment(crew2, equipmentManager);
+		Coordinator coordinator2 =  new Coordinator(crew2, equipmentManager);
 
 		Oar oarL1 = new Oar(0,0);
 		Oar oarL2 = new Oar(2,0);
@@ -251,9 +251,9 @@ public class MediatorCrewEquipmentTest {
 		Marine sailorNotGoingLeft = new Marine(0,20,0);
 		Marine sailorNotGoingRight = new Marine(2,20,3);
 
-		Crew crew2 = new Crew(List.of(sailorNotGoingLeft,sailorGoingLeft,sailorNotGoingRight,sailorGoingRight));
+		CrewManager crew2 = new CrewManager(List.of(sailorNotGoingLeft,sailorGoingLeft,sailorNotGoingRight,sailorGoingRight));
 
-		MediatorCrewEquipment coordinator2 =  new MediatorCrewEquipment(crew2, equipmentManager);
+		Coordinator coordinator2 =  new Coordinator(crew2, equipmentManager);
 
 
 		Oar oarL1 = new Oar(0,0);
