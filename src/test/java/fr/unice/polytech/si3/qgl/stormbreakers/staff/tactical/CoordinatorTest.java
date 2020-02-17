@@ -13,9 +13,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.mockito.stubbing.Answer;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.MoveAction;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.OarAction;
@@ -79,11 +77,6 @@ public class CoordinatorTest {
 		when(crewManager.marins()).thenReturn(marinsDisponibles);
 		when(equipmentsManager.sails(true)).thenReturn(voilesOuvertes);
 		when(equipmentsManager.sails(false)).thenReturn(voilesBaissees);
-	}
-	
-	@Test
-	void activateOarsNotStrictTest() {
-		
 	}
 	
 	@Test

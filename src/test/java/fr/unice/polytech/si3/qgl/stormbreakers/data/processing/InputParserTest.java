@@ -85,15 +85,4 @@ class InputParserTest {
         	assertEquals("rudder", equipments.get(2).getType());
         }
         
-        @Test 
-        void testFetchWindStrength() {
-        	
-        }
-        
-        
-        @Test 
-        void testFetchWindOrientation() {
-        	
-        }
-        
 }

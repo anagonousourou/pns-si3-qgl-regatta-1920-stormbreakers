@@ -2,8 +2,6 @@ package fr.unice.polytech.si3.qgl.stormbreakers.math;
 
 import java.util.Objects;
 
-import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
-
 public class IntPosition {
     private int x;
     private int y;
