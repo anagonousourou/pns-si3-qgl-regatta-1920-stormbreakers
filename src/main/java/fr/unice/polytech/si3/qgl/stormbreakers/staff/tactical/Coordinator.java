@@ -248,7 +248,7 @@ public class Coordinator {
             do {
                 actions = this.activateOarsOnRight(nb);
                 nb--;
-            } while (actions.isEmpty());
+            } while (actions.isEmpty() && nb > 0);
 
             return actions;
         } else {
@@ -257,7 +257,7 @@ public class Coordinator {
                 actions = this.activateOarsOnLeft(nb);
                 nb--;
 
-            } while (actions.isEmpty());
+            } while (actions.isEmpty()&& nb > 0);
 
             return actions;
         }
