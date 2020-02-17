@@ -84,4 +84,5 @@ class InputParserTest {
         	assertEquals(1, equipments.get(2).getPosition().getY());
         	assertEquals("rudder", equipments.get(2).getType());
         }
+        
 }

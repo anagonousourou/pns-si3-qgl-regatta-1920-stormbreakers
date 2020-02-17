@@ -13,7 +13,6 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.MoveAction;
@@ -79,8 +78,20 @@ public class CoordinatorTest {
 		when(equipmentsManager.sails(true)).thenReturn(voilesOuvertes);
 		when(equipmentsManager.sails(false)).thenReturn(voilesBaissees);
 	}
-
 	
+	@Test
+	void leftSailorsOnOarsTest() {
+		when(equipmentsManager.allLeftOars()).thenReturn(List.of(o1,o3,o5));
+		when(crewManager.marineAtPosition(o1.getPosition())).thenReturn(Optional.of(m1));
+		assertTrue(coordinator.leftSailorsOnOars().contains(m1) && coordinator.leftSailorsOnOars().size()==1);
+	}
+	
+	@Test
+	void rightSailorsOnOarsTest() {
+		when(equipmentsManager.allRightOars()).thenReturn(List.of(o2,o4,o6));
+		when(crewManager.marineAtPosition(o6.getPosition())).thenReturn(Optional.of(m5));
+		assertTrue(coordinator.rightSailorsOnOars().size()==1);
+	}
     @Test
     void activateRudderTest() {
     	// Setup sans utiliser Mockito

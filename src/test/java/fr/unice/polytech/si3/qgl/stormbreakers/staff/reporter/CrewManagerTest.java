@@ -13,6 +13,9 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 
+import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.MoveAction;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.OarAction;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.SailorAction;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Sailor;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.IntPosition;
 
@@ -28,6 +31,24 @@ class CrewManagerTest {
 
         IntPosition pos = new IntPosition(0,0);
         assertTrue(crewManager.marineClosestTo(pos,sailors).isEmpty());
+    }
+    
+    @Test
+    void executeMovingsInSailorAction() {
+        List<Sailor> sailors = new ArrayList<>();
+        Sailor sailor1 = new Sailor(0,0,0); 
+        sailors.add(sailor1); 
+        Sailor sailor2 = new Sailor(1,1,0);
+        sailors.add(sailor2);
+        CrewManager crewManager = new CrewManager(sailors);
+        var mov= new MoveAction(0, 2, 2);
+        var oar= new OarAction(1);
+        List<SailorAction> actions= new ArrayList<>();
+        actions.add(mov);
+        actions.add(oar);
+        crewManager.executeMovingsInSailorAction(actions);
+        assertTrue(sailor1.getPosition().equals(new IntPosition(2, 2)));
+        assertTrue(sailor2.getPosition().equals(new IntPosition(1, 0)));
     }
 
     @Test

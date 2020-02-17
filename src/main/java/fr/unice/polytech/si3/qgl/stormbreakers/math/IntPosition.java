@@ -1,5 +1,7 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.math;
 
+import java.util.Objects;
+
 public class IntPosition {
     private int x;
     private int y;
@@ -37,5 +39,16 @@ public class IntPosition {
         return Math.abs(this.x-position.x)+Math.abs(this.y-position.y);
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (this==obj) return true;
+        if (!(obj instanceof IntPosition)) return false;
+        IntPosition other = (IntPosition) obj;
+        return  other.getX()==x && other.getY()==y;
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(x,y);
+    }
 }
