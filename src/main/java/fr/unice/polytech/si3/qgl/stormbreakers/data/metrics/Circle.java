@@ -1,9 +1,10 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.data.metrics;
 
+import java.util.Objects;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
-import java.util.Objects;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
 
 public class Circle extends Shape {
     private double radius;
@@ -20,18 +21,20 @@ public class Circle extends Shape {
     }
 
     @Override
-    public boolean isPosInside(double x, double y) {
-        return distFromCenter(x, y) <= radius;
+    public boolean isPtInside(Point2D pt) {
+        return distFromCenter(pt) <= radius;
     }
 
-    private double distFromCenter(double x, double y) {
-        return new Position(0, 0).distanceTo(new Position(x, y));
+    private double distFromCenter(Point2D pt) {
+        return new Point2D(0, 0).getDistanceTo(pt);
     }
 
     @Override
     public boolean equals(Object obj) {
-        if (this==obj) return true;
-        if (!(obj instanceof Circle)) return false;
+        if (this == obj)
+            return true;
+        if (!(obj instanceof Circle))
+            return false;
         Circle other = (Circle) obj;
         return other.radius == radius;
     }
@@ -43,11 +46,11 @@ public class Circle extends Shape {
 
     @Override
     public String toString() {
-        return getType()+": ("+radius+")";
+        return getType() + ": (" + radius + ")";
     }
 
     @Override
     public String toLogs() {
-        return "C"+radius;
+        return "C" + radius;
     }
 }

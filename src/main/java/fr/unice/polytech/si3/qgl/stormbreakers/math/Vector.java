@@ -21,7 +21,6 @@ public class Vector {
     /**
      * Renvoie la valeur absolue de l'angle non orienté entre les deux vecteurs
      * comprise entre [0,Pi]
-     * 
      * @param other 2e vecteur
      * @return double entre 0 et Pi
      */
@@ -40,5 +39,4 @@ public class Vector {
     public double getDeltaY() {
         return y;
     }
-
 }

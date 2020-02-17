@@ -1,0 +1,14 @@
+[
+    {
+        "sailorId": 1,
+        "type": "OAR"
+    },
+    {
+        "sailorId": 0,
+        "type": "OAR"
+    },
+    {
+        "sailorId": 2,
+        "type": "OAR"
+    }
+]

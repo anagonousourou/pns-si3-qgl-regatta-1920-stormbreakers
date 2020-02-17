@@ -1,48 +1,22 @@
 package fr.unice.polytech.si3.qgl.stormbreakers;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import fr.unice.polytech.si3.qgl.regatta.cockpit.ICockpit;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.SailorAction;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.game.GameState;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.game.InitGame;
-import fr.unice.polytech.si3.qgl.stormbreakers.processing.navire.Captain;
-import fr.unice.polytech.si3.qgl.stormbreakers.processing.navire.Moteur;
-import fr.unice.polytech.si3.qgl.stormbreakers.processing.communication.InputParser;
-import fr.unice.polytech.si3.qgl.stormbreakers.processing.communication.Logger;
-import fr.unice.polytech.si3.qgl.stormbreakers.processing.communication.OutputBuilder;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.processing.ElementsConstructor;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.processing.Logger;
 
 public class Cockpit implements ICockpit {
-	private Moteur engine;
-	private GameState gState;
-	private InputParser parser = new InputParser();
-
+	
+	private ElementsConstructor elementsConstructor;
 	public void initGame(String game) {
-		InitGame initGame = this.parser.fetchInitGameState(game);
 
-		Logger.getInstance().log(initGame.toLogs());
-		this.gState = new GameState(initGame);
-		this.engine = new Moteur(gState, new Captain());
+		this.elementsConstructor=new ElementsConstructor(game);
 	}
 
 	public String nextRound(String round) {
-		this.gState.updateTurn(this.parser.fetchNextRoundState(round));
-		OutputBuilder outputBuilder = new OutputBuilder();
-
-		// Log current checkpoint
-		Logger.getInstance().log(" CP-" + gState.getNextCheckpoint().toLogs() + " ");
-
-		List<SailorAction> actions = this.engine.actions();
-
-		// Log actions generated
-		List<Logable> logableActions = new ArrayList<>(actions);
-		Logger.getInstance().log("A:"+Logable.listToLogs(logableActions,",","[","]"));
-
-		gState.actualiserActions(actions);
-
-		return outputBuilder.writeActions(actions);
-
+		return this.elementsConstructor.sendActions(round);
+		
 	}
 
 	@Override

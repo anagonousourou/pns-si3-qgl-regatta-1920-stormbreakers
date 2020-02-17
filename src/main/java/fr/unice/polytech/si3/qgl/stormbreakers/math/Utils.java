@@ -5,7 +5,6 @@ public class Utils {
     private Utils(){
         
     }
-
     private static final double EPSILON = Math.pow(10,-10);
 
     public static boolean almostEquals(double expected, double result) {

@@ -1,0 +1,75 @@
+{
+    "ship": {
+        "type": "ship",
+        "life": 60,
+        "position": {
+            "x": 0,
+            "y": 300,
+            "orientation": 1.570796326794
+        },
+        "name": "Les copaings d'abord!",
+        "deck": {
+            "width": 3,
+            "length": 6
+        },
+        "entities": [
+            {
+                "x": 0,
+                "y": 0,
+                "type": "oar"
+            },
+            {
+                "x": 1,
+                "y": 0,
+                "type": "oar"
+            },
+            {
+                "x": 2,
+                "y": 0,
+                "type": "oar"
+            },
+            {
+                "x": 0,
+                "y": 2,
+                "type": "oar"
+            },
+            {
+                "x": 1,
+                "y": 2,
+                "type": "oar"
+            },
+            {
+                "x": 2,
+                "y": 2,
+                "type": "oar"
+            },
+            {
+                "x": 0,
+                "y": 1,
+                "type": "sail",
+                "openned": false
+            },
+            {
+                "x": 2,
+                "y": 1,
+                "type": "sail",
+                "openned": true
+            },
+            {
+                "x": 1,
+                "y": 1,
+                "type": "rudder"
+            }
+        ],
+        "shape": {
+            "type": "rectangle",
+            "width": 3,
+            "height": 6,
+            "orientation": 0
+        }
+    },
+    "wind": {
+        "orientation": 0.78539816339744,
+        "strength": 200
+    }
+}

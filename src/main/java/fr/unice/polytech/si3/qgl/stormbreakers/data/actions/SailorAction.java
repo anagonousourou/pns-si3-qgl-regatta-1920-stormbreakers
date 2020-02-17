@@ -15,7 +15,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.Logable;
         include = JsonTypeInfo.As.PROPERTY,
         property = "type")
 @JsonSubTypes({
-        @JsonSubTypes.Type(value = Moving.class, name="MOVING"),
+        @JsonSubTypes.Type(value = MoveAction.class, name="MOVING"),
         @JsonSubTypes.Type(value = LiftSail.class, name="LIFT_SAIL"),
         @JsonSubTypes.Type(value = LowerSail.class, name="LOWER_SAIL"),
         @JsonSubTypes.Type(value = Turn.class, name="TURN"),
@@ -44,4 +44,6 @@ public abstract  class SailorAction implements Logable {
     public String getType() {
         return type;
     }
+
+    public abstract String compatibleEquipmentType();
 }

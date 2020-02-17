@@ -17,6 +17,11 @@ public class Point2D {
         this.y = y;
     }
 
+    public Point2D(Point2D point2D) {
+        this.x = point2D.x;
+        this.y = point2D.y;
+    }
+
     public Point2D(Vector fromOrigin) {
         this.x = fromOrigin.getDeltaX();
         this.y = fromOrigin.getDeltaY();
@@ -36,7 +41,7 @@ public class Point2D {
      * Donne l'angle entre l'axe x et le vecteur position
      * retourne null si (0,0)
      * @return une angle entre ]-Pi,Pi]
-     * @throws RuntimeException if point is 0,0
+     * @throws  if point is 0,0
      */
     public double getAngleFromXAxis() {
         Vector unitX = new Vector(1,0);
@@ -50,12 +55,12 @@ public class Point2D {
         } else if (y==0)  { // x!=0 et y==0
             // Si x > 0 l'angle est 0
             if (x > 0) return 0;
-                // Si x < 0 l'angle est Pi
+            // Si x < 0 l'angle est Pi
             else return Math.PI;
         } else { // y!=0
             // Si y>0 l'angle est bien entre ]0,Pi[
             if (y>=0) return unorientedAngle;
-                // Si y<0 l'angle est entre ]-Pi,0[
+            // Si y<0 l'angle est entre ]-Pi,0[
             else return -unorientedAngle;
         }
 
