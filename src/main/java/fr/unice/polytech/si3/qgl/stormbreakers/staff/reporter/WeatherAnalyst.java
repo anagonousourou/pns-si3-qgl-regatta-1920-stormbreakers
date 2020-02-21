@@ -48,7 +48,12 @@ public class WeatherAnalyst{
      * @return
      */
     public boolean additionalSpeedExists() {
-        return wind != null;
+        if(wind==null){
+            return false;
+        }
+        else{
+            return wind.getOrientation()!=0.0 || wind.getStrength()!=0.0;
+        }
     }
     
     /**

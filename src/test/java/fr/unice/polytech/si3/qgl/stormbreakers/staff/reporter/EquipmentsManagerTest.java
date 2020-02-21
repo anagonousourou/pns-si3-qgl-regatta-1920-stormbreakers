@@ -12,6 +12,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Equipment;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Gouvernail;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Oar;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Sail;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.IntPosition;
@@ -27,6 +28,7 @@ public class EquipmentsManagerTest {
     Equipment r6 = new Oar(3, 2);
     Equipment r7 = new Sail(3, 1);
     Sail r8 = new Sail(3, 0);
+    Equipment rudder=new Gouvernail(0, 0);
 
     @BeforeEach
     void setUp() {
@@ -38,6 +40,9 @@ public class EquipmentsManagerTest {
     @Test
     void testRudderIsPresent() {
         assertFalse(this.equipmentsManager.rudderIsPresent(), "Pas de Gouvernail");
+
+        equipmentsManager = new EquipmentsManager(List.of(r1, r2, r3, r4, r5, r6,r7,r8,rudder), 3);
+        assertTrue(this.equipmentsManager.rudderIsPresent(),"Il y a maintenant un gouvernail");
     }
 
     @Test
