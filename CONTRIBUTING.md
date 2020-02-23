@@ -5,30 +5,29 @@
 ## Table des matières
 
 * [Master](#master)
-* [Release](#release)
+* [Prod](#prod)
 * [Feature](#feature)
 * [Hotfix](#hotfix)
 
 ### Master
 
-Seuls les releases et correctifs sont autorisés à modifier cette branche. Interdiction de développer directement dessus.
+Seule la prod et les correctifs sont autorisés à modifier cette branche. Interdiction de développer directement dessus.
 
-### Release
+### Prod
 
-Convention de nommage des branches releases : **release/...** "..." étant le nom de la release.
+Convention de nommage de la branche prod : **prod**
 
-* Une branche de type release peut être modifiée à n'importe quel moment.
+* La branche prod peut être modifiée à n'importe quel moment, mais de préférence pas directement.
 * Avant le merge vers master, attendre que les autres contributeurs acceptent la pull request.
-  * :exclamation: Ne sera mergée à master que lorsqu'elle sera finie, documentée, et complétement testée.
-  * Le commit qui déclenchera le merge doit être taggé avec le bon nom de version.  
+  * :exclamation: Ne sera mergée à master que lorsque son contenu contiendra tout ce qui est requis pour la release correspondante, et qu'il soit documentée et complétement testé.
+  * Le commit qui déclenchera le merge doit être taggé avec le bon nom de la nouvelle release.
 
 ### Feature
 
 Convention de nommage des branches features : **feature/...** "..." étant le nom du nouveau feature.
 
-* Une ou plusieurs features peuvent soummettre une pull request à une branche de type release.
-* Peut engendrer une pull request à n'importe quel moment vers la release correspondante.
-* Avant le merge vers une release, attendre que les autres contributeurs acceptent la pull request.
+* Une ou plusieurs features peuvent soummettre une pull request à une branche prod.
+* Avant le merge vers prod, attendre que les autres contributeurs acceptent la pull request.
 
 ### Hotfix
 
