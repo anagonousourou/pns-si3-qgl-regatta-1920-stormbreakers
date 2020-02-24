@@ -29,20 +29,20 @@ import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.EquipmentsManager;
 import fr.unice.polytech.si3.qgl.stormbreakers.staff.tactical.Coordinator;
 
 public class CoordinatorTest {
-	Coordinator coordinator;
-	EquipmentsManager equipmentsManager;
-	CrewManager crewManager;
+	private Coordinator coordinator;
+	private EquipmentsManager equipmentsManager;
+	private CrewManager crewManager;
 	
-	Sailor m1, m2, m3, m4, m5, m6;
-	Sail s1, s2, s3, s4;
-	Oar o1, o2, o3, o4, o5, o6;
-	Gouvernail r1, r2;
+	private Sailor m1, m2, m3, m4, m5, m6;
+	private Sail s1, s2, s3, s4;
+	private Oar o1, o2, o3, o4, o5, o6;
+	private Gouvernail r1, r2;
 	
-	List<Equipment> equipments;
-	List<Oar> rames;
-	List<Sail> voilesOuvertes;
-	List<Sail> voilesBaissees;
-	List<Sailor> marinsDisponibles;
+	private List<Equipment> equipments;
+	private List<Oar> rames;
+	private List<Sail> voilesOuvertes;
+	private List<Sail> voilesBaissees;
+	private List<Sailor> marinsDisponibles;
 	
 	@BeforeEach
 	void setup(){
@@ -300,4 +300,80 @@ public class CoordinatorTest {
 	}
 
 
+    @Test
+    void bringSailorsCloserToOarsTestAllOarsCovered() {
+		Sailor sailor1 = new Sailor(0,3,3);
+		Sailor sailor2 = new Sailor(1,5,5);
+		Sailor sailor3 = new Sailor(2,1,1);
+		List<Sailor> availableSailors = List.of(sailor1,sailor2,sailor3);
+
+		Oar oar1 = new Oar(4,4);
+		Oar oar2 = new Oar(6,6);
+		Oar oar3 = new Oar(7,7);
+		List<Oar> unusedOars = List.of(oar1,oar2,oar3);
+
+		List<MoveAction> moves = coordinator.bringSailorsCloserToOars(new ArrayList<>(availableSailors),unusedOars);
+
+		assertEquals(3,moves.size());
+    }
+
+	@Test
+	void bringSailorsCloserToOarsTestWhenNoOars() {
+		Sailor sailor1 = new Sailor(0,3,3);
+		Sailor sailor2 = new Sailor(1,5,5);
+		Sailor sailor3 = new Sailor(2,1,1);
+		List<Sailor> availableSailors = List.of(sailor1,sailor2,sailor3);
+
+		List<Oar> unusedOars = List.of();
+
+		List<MoveAction> moves = coordinator.bringSailorsCloserToOars(new ArrayList<>(availableSailors),unusedOars);
+
+		assertTrue(moves.isEmpty());
+	}
+
+	@Test
+	void bringSailorsCloserToOarsTestWhenNoSailors() {
+		List<Sailor> availableSailors = List.of();
+
+		Oar oar1 = new Oar(4,4);
+		Oar oar2 = new Oar(6,6);
+		Oar oar3 = new Oar(7,7);
+		List<Oar> unusedOars = List.of(oar1,oar2,oar3);
+
+		List<MoveAction> moves = coordinator.bringSailorsCloserToOars(new ArrayList<>(availableSailors),unusedOars);
+
+		assertTrue(moves.isEmpty());
+	}
+
+	@Test
+	void bringSailorsCloserToOarsTestWhenNotEnoughSailors() {
+		Sailor sailor1 = new Sailor(0,3,3);
+		Sailor sailor2 = new Sailor(1,5,5);
+		List<Sailor> availableSailors = List.of(sailor1,sailor2);
+
+		Oar oar1 = new Oar(4,4);
+		Oar oar2 = new Oar(6,6);
+		Oar oar3 = new Oar(7,7);
+		List<Oar> unusedOars = List.of(oar1,oar2,oar3);
+
+		List<MoveAction> moves = coordinator.bringSailorsCloserToOars(new ArrayList<>(availableSailors),unusedOars);
+
+		assertEquals(2,moves.size());
+	}
+
+	@Test
+	void bringSailorsCloserToOarsTestWhenNotEnoughOars() {
+		Sailor sailor1 = new Sailor(0,3,3);
+		Sailor sailor2 = new Sailor(1,5,5);
+		Sailor sailor3 = new Sailor(2,1,1);
+		List<Sailor> availableSailors = List.of(sailor1,sailor2,sailor3);
+
+		Oar oar1 = new Oar(4,4);
+		Oar oar2 = new Oar(6,6);
+		List<Oar> unusedOars = List.of(oar1,oar2);
+
+		List<MoveAction> moves = coordinator.bringSailorsCloserToOars(new ArrayList<>(availableSailors),unusedOars);
+
+		assertEquals(2,moves.size());
+	}
 }
