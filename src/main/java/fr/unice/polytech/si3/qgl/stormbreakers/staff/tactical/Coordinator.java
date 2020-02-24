@@ -59,7 +59,7 @@ public class Coordinator {
             Sailor rudderMarine = optMarine.get();
             List<SailorAction> actions = new ArrayList<>();
             MoveAction tmpMove = rudderMarine.howToMoveTo(this.rudderPosition());
-            actions.add(new MoveAction(rudderMarine.getId(), tmpMove.getXdistance(), tmpMove.getYdistance()));
+            actions.add(tmpMove);
             actions.add(new Turn(rudderMarine.getId(), orientation));
             return actions;
         }
@@ -458,6 +458,7 @@ public class Coordinator {
 
         List<SailorAction> otherActions = actions.stream()
                 .filter(act -> !act.getType().equals(ActionType.MOVING.actionCode)).collect(Collectors.toList());
+        
         this.crewManager.executeMoves(moves);
         this.markEquipmentUsedByActions(otherActions);
 

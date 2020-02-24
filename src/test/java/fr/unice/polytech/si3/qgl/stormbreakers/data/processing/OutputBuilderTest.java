@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Test;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.OarAction;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.SailorAction;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.processing.OutputBuilder;
 
 class OutputBuilderTest {
 

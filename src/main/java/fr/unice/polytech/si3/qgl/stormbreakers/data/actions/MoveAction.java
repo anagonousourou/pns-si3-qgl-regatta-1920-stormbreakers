@@ -3,10 +3,9 @@ package fr.unice.polytech.si3.qgl.stormbreakers.data.actions;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import fr.unice.polytech.si3.qgl.stormbreakers.Logable;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.MovementPath;
 
-public class MoveAction extends SailorAction implements Logable {
+public class MoveAction extends SailorAction {
     private int xdistance;
     private int ydistance;
 

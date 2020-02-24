@@ -16,7 +16,6 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Gouvernail;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Oar;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Sail;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.IntPosition;
-import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.EquipmentsManager;
 
 public class EquipmentsManagerTest {
     EquipmentsManager equipmentsManager;

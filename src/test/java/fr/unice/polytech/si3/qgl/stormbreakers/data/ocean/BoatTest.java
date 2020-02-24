@@ -7,7 +7,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Boat;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.processing.InputParser;
 
 public class BoatTest {
