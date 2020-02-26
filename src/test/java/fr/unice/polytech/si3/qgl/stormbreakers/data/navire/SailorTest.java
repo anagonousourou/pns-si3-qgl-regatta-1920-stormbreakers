@@ -3,11 +3,13 @@ package fr.unice.polytech.si3.qgl.stormbreakers.data.navire;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.*;
 
 import org.junit.jupiter.api.Test;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.MoveAction;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.IntPosition;
+import org.mockito.Mockito;
 
 class SailorTest {
     private IntPosition origin = new IntPosition(0,0);
@@ -71,5 +73,53 @@ class SailorTest {
         sailor.setOnEquipment(true);
 
         assertTrue(sailor.onEquipment(),"Sailor NOW on equipment");
+    }
+
+
+    @Test
+    void howToGetCloserToTestWhenCloseEnough() {
+        Sailor sailorSpy = spy(sailor);
+        IntPosition someReachablePos = new IntPosition(1,1);
+        MoveAction movement = sailorSpy.howToGetCloserTo(someReachablePos);
+
+        verify(sailorSpy,atLeastOnce()).howToMoveTo(someReachablePos);
+    }
+
+    @Test
+    void howToGetCloserToTestWhenFarOutOfReach() {
+        IntPosition someUnreachablePos = new IntPosition(10,10);
+        MoveAction movement = sailor.howToGetCloserTo(someUnreachablePos);
+
+        // TODO: 24/02/2020 MoveAction equals
+        MoveAction expected = new MoveAction(sailor.getId(),5,0);
+        assertEquals(expected.getSailorId(),movement.getSailorId());
+        assertEquals(expected.getXdistance(),movement.getXdistance());
+        assertEquals(expected.getYdistance(),movement.getYdistance());
+    }
+
+    @Test
+    void howToGetCloserToTestWhenXRowReachableButYTooFar() {
+        IntPosition someUnreachablePos = new IntPosition(5,10);
+        MoveAction movement = sailor.howToGetCloserTo(someUnreachablePos);
+
+        // X satisfait donc on deplace selon Y aussi
+        // TODO: 24/02/2020 MoveAction equals
+        MoveAction expected = new MoveAction(sailor.getId(),2,3);
+        assertEquals(expected.getSailorId(),movement.getSailorId());
+        assertEquals(expected.getXdistance(),movement.getXdistance());
+        assertEquals(expected.getYdistance(),movement.getYdistance());
+    }
+
+    @Test
+    void howToGetCloserToTestWhenYColReachableButXTooFar() {
+        IntPosition someUnreachablePos = new IntPosition(10,5);
+        MoveAction movement = sailor.howToGetCloserTo(someUnreachablePos);
+
+        // X prioritaire donc tout sur X
+        // TODO: 24/02/2020 MoveAction equals
+        MoveAction expected = new MoveAction(sailor.getId(),5,0);
+        assertEquals(expected.getSailorId(),movement.getSailorId());
+        assertEquals(expected.getXdistance(),movement.getXdistance());
+        assertEquals(expected.getYdistance(),movement.getYdistance());
     }
 }

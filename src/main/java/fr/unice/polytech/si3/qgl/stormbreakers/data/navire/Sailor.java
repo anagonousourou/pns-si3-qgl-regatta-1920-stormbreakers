@@ -7,6 +7,7 @@ import java.util.Objects;
 import fr.unice.polytech.si3.qgl.stormbreakers.Logable;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.MoveAction;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.IntPosition;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.MovementPath;
 
 /**
  * classe qui représente un marin
@@ -134,4 +135,27 @@ public class Sailor implements Logable {
         return "M(id:" + id + "position:" + position + ")";
     }
 
+    /**
+     * Retourne un MoveAction vers la position indiquée
+     * priviliégie le déplacement selon X
+     * @param position vers laquelle se diriger
+     * @return MoveAction limité par le déplacement maximal authorisé
+     */
+    public MoveAction howToGetCloserTo(IntPosition position) {
+        int distanceShortOf = getDistanceTo(position) - MAX_MOVEMENT_DISTANCE;
+        if (distanceShortOf<=0) return howToMoveTo(position);
+        else {
+            MovementPath path = this.position.getPathTo(position);
+            int toLowerXBy = 0;
+            int toLowerYBy;
+            // lower deltaY enough
+            toLowerYBy = Math.min(distanceShortOf,path.getDeltaY());
+            distanceShortOf -= toLowerYBy;
+            // If still too far lower deltaX enough
+            if (distanceShortOf>0) {
+                toLowerXBy = Math.min(distanceShortOf,path.getDeltaX());
+            }
+            return new MoveAction(id, path.getDeltaX()-toLowerXBy, path.getDeltaY()-toLowerYBy);
+        }
+    }
 }

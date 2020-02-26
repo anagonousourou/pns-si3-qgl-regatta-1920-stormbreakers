@@ -1,10 +1,6 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.staff.tactical;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.ActionType;
@@ -462,6 +458,44 @@ public class Coordinator {
         this.crewManager.executeMoves(moves);
         this.markEquipmentUsedByActions(otherActions);
 
+    }
+
+
+    /**
+     * Rapproche au mieux les marins non-assignés de rames non-occupées
+     * NB: utilise une copie de sailors
+     */
+    List<MoveAction> bringSailorsCloserToOars() {
+        List<Sailor> availableSailors = crewManager.getAvailableSailors();
+
+        List<Oar> unusedOars = new ArrayList<>();
+        unusedOars.addAll(equipmentsManager.unusedLeftOars());
+        unusedOars.addAll(equipmentsManager.unusedRightOars());
+
+        return bringSailorsCloserToOars(new ArrayList<>(availableSailors),unusedOars);
+    }
+
+    /**
+     * Rapproche au mieux les marins des rames en parametre
+     * NB: modifie la liste de marins (retire ceux assignés)
+     * @param sailors Liste de marins
+     * @param oars rames à approcher
+     */
+    List<MoveAction> bringSailorsCloserToOars(List<Sailor> sailors, List<Oar> oars) {
+        List<MoveAction> moves = new ArrayList<>();
+        Iterator<Oar> it = oars.iterator();
+
+        for ( ; it.hasNext(); ) {
+            Oar currentOar = it.next();
+            Optional<Sailor> closestSailorOpt = sailors.stream().min(Comparator.comparingInt(a -> a.getDistanceTo(currentOar.getPosition())));
+
+            if (closestSailorOpt.isPresent()) {
+                Sailor closestSailor = closestSailorOpt.get();
+                moves.add(closestSailor.howToGetCloserTo(currentOar.getPosition()));
+                sailors.remove(closestSailor); // Already assigned
+            }
+        }
+        return moves;
     }
 
 }
