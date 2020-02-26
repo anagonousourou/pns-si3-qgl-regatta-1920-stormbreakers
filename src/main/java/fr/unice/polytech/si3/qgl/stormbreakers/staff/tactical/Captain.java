@@ -1,7 +1,9 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.staff.tactical;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -10,6 +12,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.SailorAction;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Checkpoint;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Boat;
 import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.CheckpointsManager;
+import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.OarsConfig;
 import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.WeatherAnalyst;
 
 public class Captain {
@@ -75,27 +78,46 @@ public class Captain {
      * @return
      */
     List<SailorAction> actionsToOrientate(double orientation) {
-        if (Math.abs(orientation) < Captain.EPS) {// pas besoin de pivoter
+    	// NO ORIENTATION NEEDED
+        if (Math.abs(orientation) < Captain.EPS) {
             return List.of();
         }
-        // le gouvernail existe, est accessible et suffit
-        else if (coordinator.rudderIsPresent() && coordinator.rudderIsAccesible()
-                && (Math.abs(orientation) <= Math.PI / 4)) {
-            return this.validateActions(this.coordinator.activateRudder(orientation));
-            /**
-             * Plus tard, rajouter le cas où le gouvernail existe, est accessible mais ne
-             * suffit pas
-             */
-
-        }
-        // le gouvernail n'existe pas
-        else {
-            int diff = this.navigator.fromAngleToDiff(orientation, this.coordinator.nbLeftOars(),
+        
+        // Find an "exact" match of the orientation within the angles possible with oars only
+        Optional<OarsConfig> possibleOarsConfig = navigator.possibleOarConfigs(coordinator.nbLeftOars(), coordinator.nbRightOars())
+        		.stream()
+        		.filter(oc -> Math.abs(oc.getAngle() - orientation) < EPS)
+        		.findFirst();
+        if(possibleOarsConfig.isPresent()) {
+        	int diff = this.navigator.fromAngleToDiff(orientation, this.coordinator.nbLeftOars(),
                     this.coordinator.nbRightOars());
-            List<SailorAction> actions = this.coordinator.activateOarsNotStrict(diff);
-            return this.validateActions(actions);
+            return this.validateActions(this.coordinator.activateOarsNotStrict(diff));
         }
-    }
+        
+        List<SailorAction> actions = List.of(); 
+        
+        //TODO angle inférieur à maxOarsConfig ?? On fAit cOmMeNt --> on utilise le rudder
+        
+        // No match found, so we take the greatest angle possible with oars only
+    	Optional<OarsConfig> maxOarsConfig = navigator.possibleOarConfigs(coordinator.nbLeftOars(),
+                coordinator.nbRightOars())
+    			.stream()
+        		.filter(oc -> oc.getAngle() > 0 && orientation > 0 || oc.getAngle() < 0 && orientation < 0)
+        		.max((oc1, oc2) -> (int)(Math.abs(oc1.getAngle()) - Math.abs(oc2.getAngle())));       
+		if (maxOarsConfig.isPresent()) {
+			int diff = maxOarsConfig.get().getAngleFraction().getDenominator();
+			double angleMaxOarsConfig = maxOarsConfig.get().getAngle();
+			actions = new ArrayList<>(validateActions(coordinator.activateOarsNotStrict(diff)));
+
+			// If the rudder is present, accessible, and necessary, then we use it as well.
+			if (coordinator.rudderIsPresent() && coordinator.rudderIsAccesible()
+					&& Math.abs(orientation) <= (Math.PI / 4) + Math.abs(maxOarsConfig.get().getAngle())) {
+				double restOrientation = orientation - ((orientation > 0) ? - angleMaxOarsConfig : + angleMaxOarsConfig);
+				actions.addAll(validateActions(this.coordinator.activateRudder(restOrientation)));
+			}
+		}
+		return actions;
+	}
 
     /**
      * Fonction qui envoie des actions pour ajouter des marins pour faire avancer le
