@@ -14,7 +14,6 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Equipment;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Oar;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Sailor;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Checkpoint;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.processing.InputParser;
 
 class InputParserTest {
 

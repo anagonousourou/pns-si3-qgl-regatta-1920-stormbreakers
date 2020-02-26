@@ -6,8 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
-import fr.unice.polytech.si3.qgl.stormbreakers.data.processing.Logger;
-
 class LogsTest {
 
     private Logger logger = Logger.getInstance();

@@ -38,7 +38,7 @@ public class Captain {
      * Principal point d'entrée de la classe
      */
     public List<SailorAction> nextRoundActions() {
-        // On remet le statut doneTurn de tout les marins à false
+        // On remet le statut doneTurn de tous les marins à false
         this.coordinator.resetAvailability();
         this.checkpointsManager.updateCheckpoint(boat.getPosition());
 
@@ -128,7 +128,7 @@ public class Captain {
                 return Captain.<SailorAction>concatenate(
 
                         actionsToUseWeather,
-                        this.validateActions(this.accelerate(distance, currentSpeed + expectedSpeedFromWind)));
+                        this.accelerate(distance, currentSpeed + expectedSpeedFromWind));
 
             }
 
@@ -143,7 +143,7 @@ public class Captain {
                 return Captain.<SailorAction>concatenate(
 
                         actionsToCancelWeather,
-                        this.validateActions(this.accelerate(distance, currentSpeed + expectedSpeedFromWind)));
+                        this.accelerate(distance, currentSpeed + expectedSpeedFromWind));
 
             }
 
@@ -177,7 +177,7 @@ public class Captain {
     }
 
     /**
-     * Cette méthode permet essaie d'augmenter la vitesse du bateau tout en
+     * Cette méthode permet d'augmenter la vitesse du bateau tout en
      * respectant la distance
      * 
      * @param distance

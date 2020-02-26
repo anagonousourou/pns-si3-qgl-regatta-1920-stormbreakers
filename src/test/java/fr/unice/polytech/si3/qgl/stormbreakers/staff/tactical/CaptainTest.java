@@ -9,6 +9,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -23,10 +24,10 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.SailorAction;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.Turn;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Sailor;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.processing.InputParser;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.IntPosition;
 import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.CrewManager;
 import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.EquipmentsManager;
 import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.WeatherAnalyst;
-import fr.unice.polytech.si3.qgl.stormbreakers.staff.tactical.Captain;
 
 public class CaptainTest {
 
@@ -122,7 +123,12 @@ public class CaptainTest {
 
     @Test
     void speedTakingIntoAccountWindNoWindTest() throws JsonProcessingException {
-        CrewManager crewManager = new CrewManager(this.parser.fetchAllSailors(gameData));
+        var allSailors= this.parser.fetchAllSailors(gameData);
+        var prevsPos=new HashMap<Integer,IntPosition>();
+
+        allSailors.forEach(a->prevsPos.computeIfAbsent(a.getId(), k-> new IntPosition(a.getPosition())  ));
+
+        CrewManager crewManager = new CrewManager(allSailors);
         EquipmentsManager equipmentsManager = new EquipmentsManager(parser.fetchEquipments(gameData),
                 parser.fetchBoatWidth(gameData), parser);
         Coordinator coordinator = new Coordinator(crewManager, equipmentsManager);
@@ -135,12 +141,22 @@ public class CaptainTest {
 
         List<SailorAction> result = rogers.adjustSpeedTakingIntoAccountWind(300, 0);
         assertFalse(result.isEmpty(), "should Send some actions");
+
+        result.stream().filter(action->action.getType().equals(ActionType.MOVING.actionCode)).map(action->(MoveAction)action)
+        .forEach(
+                moving-> prevsPos.compute(moving.getSailorId(), (k,v)-> new IntPosition(v.getX()+moving.getXdistance(),v.getY()+moving.getYdistance() ) )
+        );
+
+        allSailors.stream().filter(sailor->prevsPos.keySet().contains(sailor.getId()) ).forEach(sailor->assertEquals(sailor.getPosition(),prevsPos.get(sailor.getId()) , "Should be equals"));
+        
     }
 
     @Test
     void speedTakingIntoAccountWindTest() throws JsonProcessingException {
+        var allSailors= this.parser.fetchAllSailors(gameData);
 
-        CrewManager crewManager = new CrewManager(this.parser.fetchAllSailors(gameData));
+
+        CrewManager crewManager = new CrewManager(allSailors);
         EquipmentsManager equipmentsManager = new EquipmentsManager(parser.fetchEquipments(gameData),
                 parser.fetchBoatWidth(gameData), parser);
         Coordinator coordinator = new Coordinator(crewManager, equipmentsManager);
@@ -153,8 +169,12 @@ public class CaptainTest {
         when(weatherAnalyst.potentialSpeedAcquirable()).thenReturn(200.56);
 
         List<SailorAction> results = rogers.adjustSpeedTakingIntoAccountWind(300, 0);
+        
+
         assertTrue(results.stream().anyMatch(action -> action.getType().equals(ActionType.LIFTSAIL.actionCode)),
                 "Il y a au moins un liftAction");
+        
+        
 
         // clear
 

@@ -26,7 +26,6 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Sail;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Sailor;
 import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.CrewManager;
 import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.EquipmentsManager;
-import fr.unice.polytech.si3.qgl.stormbreakers.staff.tactical.Coordinator;
 
 public class CoordinatorTest {
 	Coordinator coordinator;
@@ -115,7 +114,8 @@ public class CoordinatorTest {
     	newVersion.remove(r1);
     	newVersion.add(r2);
     	coordinator =  new Coordinator(new CrewManager(marinsDisponibles), new EquipmentsManager(newVersion, 4));
-    	List<SailorAction> toTest3 = coordinator.activateRudder(Math.PI/2);
+		List<SailorAction> toTest3 = coordinator.activateRudder(Math.PI/2);
+		
     	assertTrue(toTest3.isEmpty());
     }
 
