@@ -52,9 +52,7 @@ public class EquipmentsManager implements PropertyChangeListener {
         }
         var optRuddder = this.equipments.stream().filter(e -> e.getType().equals("rudder")).map(e -> (Gouvernail) e)
                 .findFirst();
-        if (optRuddder.isPresent()) {
-            this.rudder = optRuddder.get();
-        }
+        optRuddder.ifPresent(gouvernail -> this.rudder = gouvernail);
     }
 
     /**

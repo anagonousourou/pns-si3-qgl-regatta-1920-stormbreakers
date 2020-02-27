@@ -33,9 +33,7 @@ public class CrewManager {
     public void executeMoves(List<MoveAction> moves){
         for(MoveAction m:moves){
             var optMarin=this.getMarinById(m.getSailorId());
-            if(optMarin.isPresent()){
-                optMarin.get().move(m);
-            }
+            optMarin.ifPresent(sailor -> sailor.move(m));
         }
     }
     /**
@@ -50,10 +48,8 @@ public class CrewManager {
                 .collect(Collectors.toList());
 
         for (MoveAction move : moves) {
-            Optional<Sailor> sailor = getMarinById(move.getSailorId());
-            if(sailor.isPresent()){
-                sailor.get().move(move );
-            }
+            Optional<Sailor> sailorOpt = getMarinById(move.getSailorId());
+            sailorOpt.ifPresent(sailor -> sailor.move(move));
             
         }
         

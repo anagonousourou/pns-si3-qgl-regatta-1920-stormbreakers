@@ -1,8 +1,6 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -47,8 +45,8 @@ class CrewManagerTest {
         actions.add(mov);
         actions.add(oar);
         crewManager.executeMovingsInSailorAction(actions);
-        assertTrue(sailor1.getPosition().equals(new IntPosition(2, 2)));
-        assertTrue(sailor2.getPosition().equals(new IntPosition(1, 0)));
+        assertEquals(sailor1.getPosition(), new IntPosition(2, 2));
+        assertEquals(sailor2.getPosition(), new IntPosition(1, 0));
     }
 
     @Test
@@ -140,7 +138,7 @@ class CrewManagerTest {
         List<Sailor> sailors = new ArrayList<>();
 
         MoveAction moveAction = crewManager.bringClosestSailorCloserTo(sailors,new IntPosition(5,5));
-        assertEquals(null,moveAction);
+        assertNull(moveAction);
 
     }
 }

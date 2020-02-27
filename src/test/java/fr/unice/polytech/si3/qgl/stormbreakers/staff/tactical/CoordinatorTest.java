@@ -90,7 +90,7 @@ public class CoordinatorTest {
 	void rightSailorsOnOarsTest() {
 		when(equipmentsManager.allRightOars()).thenReturn(List.of(o2,o4,o6));
 		when(crewManager.marineAtPosition(o6.getPosition())).thenReturn(Optional.of(m5));
-		assertTrue(coordinator.rightSailorsOnOars().size()==1);
+        assertEquals(1, coordinator.rightSailorsOnOars().size());
 	}
     @Test
     void activateRudderTest() {
@@ -159,14 +159,14 @@ public class CoordinatorTest {
 		Map<Equipment, List<Sailor>> results;
 		results = coordinator.marinsDisponiblesVoiles(true);
 		
-		assertTrue(results.keySet().contains(s1));
-		assertTrue(results.keySet().contains(s3));
+		assertTrue(results.containsKey(s1));
+		assertTrue(results.containsKey(s3));
 		assertEquals(List.of(m3, m5, m6), results.get(s1));
 		assertEquals(marinsDisponibles, results.get(s3));
 		
 		results = coordinator.marinsDisponiblesVoiles(false);
-		assertTrue(results.keySet().contains(s2));
-		assertTrue(results.keySet().contains(s4));
+		assertTrue(results.containsKey(s2));
+		assertTrue(results.containsKey(s4));
 		assertEquals(List.of(m2, m4, m5), results.get(s2));
 		assertEquals(List.of(m1, m2, m3, m4, m5), results.get(s4));
 		
@@ -175,7 +175,7 @@ public class CoordinatorTest {
 		assertEquals(List.of(), results.get(s2));
 		assertEquals(List.of(), results.get(s4));
 		
-		when(equipmentsManager.sails(true)).thenReturn(List.of());;
+		when(equipmentsManager.sails(true)).thenReturn(List.of());
 		assertTrue(coordinator.marinsDisponiblesVoiles(true).isEmpty());
 	}
 	
@@ -321,7 +321,7 @@ public class CoordinatorTest {
 		Equipment equipment3 = new Oar(7,7);
 		List<Equipment> equipments = List.of(equipment1,equipment2,equipment3);
 
-		List<MoveAction> moves = coordinator.bringSailorsCloserToEquipments(new ArrayList<>(availableSailors),new ArrayList<Equipment>(equipments));
+		List<MoveAction> moves = coordinator.bringSailorsCloserToEquipments(new ArrayList<>(availableSailors),new ArrayList<>(equipments));
 
 		assertEquals(3,moves.size());
     }
@@ -338,7 +338,7 @@ public class CoordinatorTest {
 
 		List<Equipment> equipments = List.of();
 
-		List<MoveAction> moves = coordinator.bringSailorsCloserToEquipments(new ArrayList<>(availableSailors),new ArrayList<Equipment>(equipments));
+		List<MoveAction> moves = coordinator.bringSailorsCloserToEquipments(new ArrayList<>(availableSailors),new ArrayList<>(equipments));
 
 		assertTrue(moves.isEmpty());
 	}
@@ -355,7 +355,7 @@ public class CoordinatorTest {
 		Equipment equipment3 = new Oar(7,7);
 		List<Equipment> equipments = List.of(equipment1,equipment2,equipment3);
 
-		List<MoveAction> moves = coordinator.bringSailorsCloserToEquipments(new ArrayList<>(availableSailors),new ArrayList<Equipment>(equipments));
+		List<MoveAction> moves = coordinator.bringSailorsCloserToEquipments(new ArrayList<>(availableSailors),new ArrayList<>(equipments));
 
 		assertTrue(moves.isEmpty());
 	}
@@ -374,7 +374,7 @@ public class CoordinatorTest {
 		Equipment equipment3 = new Oar(7,7);
 		List<Equipment> equipments = List.of(equipment1,equipment2,equipment3);
 
-		List<MoveAction> moves = coordinator.bringSailorsCloserToEquipments(new ArrayList<>(availableSailors),new ArrayList<Equipment>(equipments));
+		List<MoveAction> moves = coordinator.bringSailorsCloserToEquipments(new ArrayList<>(availableSailors),new ArrayList<>(equipments));
 
 		assertEquals(2,moves.size());
 	}
@@ -393,7 +393,7 @@ public class CoordinatorTest {
 		Equipment equipment2 = new Oar(6,6);
 		List<Equipment> equipments = List.of(equipment1,equipment2);
 
-		List<MoveAction> moves = coordinator.bringSailorsCloserToEquipments(new ArrayList<>(availableSailors),new ArrayList<Equipment>(equipments));
+		List<MoveAction> moves = coordinator.bringSailorsCloserToEquipments(new ArrayList<>(availableSailors),new ArrayList<>(equipments));
 
 		assertEquals(2,moves.size());
 	}
