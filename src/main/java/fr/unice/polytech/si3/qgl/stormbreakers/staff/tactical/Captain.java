@@ -104,7 +104,7 @@ public class Captain {
         		.filter(oc -> oc.getAngle() > 0 && orientation > 0 || oc.getAngle() < 0 && orientation < 0)
         		.max((oc1, oc2) -> (int)(Math.abs(oc1.getAngle()) - Math.abs(oc2.getAngle())));   
     	// If the rudder is present, accessible, and there is at least 1 OarsConfig possible
-		if (maxOarsConfig.isPresent() && coordinator.rudderIsPresent() && coordinator.rudderIsAccesible()) {
+		if (maxOarsConfig.isPresent()) {
 			double chosenAngleOarsConfig = 0;
 			int diff;
 			
@@ -121,17 +121,17 @@ public class Captain {
 				actions = new ArrayList<>(validateActions(coordinator.activateOarsNotStrict(diff)));
 				
 			// If "orientation" is bigger than the maxOarsConfig angle,
-			// but smaller than this angle used alongside the rudder,
-			// then we use maxOarsConfig alongside the rudder for a precise orientation.
-			} else if (Math.abs(orientation) <= (Math.PI / 4) + Math.abs(maxOarsConfig.get().getAngle())) {
+			// then we use maxOarsConfig alongside the rudder for a bigger orientation.
+			} else {
 				diff = maxOarsConfig.get().getOarSidesDifference();
 				chosenAngleOarsConfig = maxOarsConfig.get().getAngle();
 				actions = new ArrayList<>(validateActions(coordinator.activateOarsNotStrict(diff)));	
 			}
-			double restOrientation = orientation - ((orientation > 0) ? - chosenAngleOarsConfig : + chosenAngleOarsConfig);
-			
+			//double restOrientation = orientation - ((orientation < Math.PI/2) ? + chosenAngleOarsConfig : - chosenAngleOarsConfig);
+			double restOrientation = orientation - chosenAngleOarsConfig;
+
 			// If the rudder is necessary, then we use it alongside the chosen OarsConfig
-			if(restOrientation > 0) {
+			if(coordinator.rudderIsPresent() && coordinator.rudderIsAccesible() && restOrientation != 0 && !actions.isEmpty()) {
 				actions.addAll(validateActions(this.coordinator.activateRudder(restOrientation)));
 			}
 		}

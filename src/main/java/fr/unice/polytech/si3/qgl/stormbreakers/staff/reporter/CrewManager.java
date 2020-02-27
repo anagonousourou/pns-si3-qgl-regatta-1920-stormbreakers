@@ -74,7 +74,10 @@ public class CrewManager {
     public Optional<Sailor> marineAtPosition(IntPosition position){
         return marins.stream().filter(m -> m.getPosition().distanceTo(position) == 0).findFirst();
     }
-
+    
+    public Optional<Sailor> availableSailorAtPosition(IntPosition position){
+        return getAvailableSailors().stream().filter(m -> m.getPosition().distanceTo(position) == 0).findFirst();
+    }
 
     /**
      *
@@ -83,6 +86,10 @@ public class CrewManager {
      */
     public Optional<Sailor> marineClosestTo(IntPosition position){
         return marineClosestTo(position, marins);
+    }
+    
+    public Optional<Sailor> availableSailorClosestTo(IntPosition position){
+        return marineClosestTo(position, getAvailableSailors());
     }
 
     public Optional<Sailor> marineClosestTo(IntPosition position, List<Sailor> sailors){

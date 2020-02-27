@@ -49,8 +49,8 @@ public class Coordinator {
      * @return
      */
     public Optional<Sailor> marineForRudder() {
-        return this.crewManager.marineAtPosition(this.equipmentsManager.rudderPosition())
-                .or(() -> this.crewManager.marineClosestTo(this.equipmentsManager.rudderPosition()));
+        return this.crewManager.availableSailorAtPosition(this.equipmentsManager.rudderPosition())
+                .or(() -> this.crewManager.availableSailorClosestTo(this.equipmentsManager.rudderPosition()));
     }
 
     public List<SailorAction> activateRudder(double orientation) {
