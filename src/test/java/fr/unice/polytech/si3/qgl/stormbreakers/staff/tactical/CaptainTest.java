@@ -15,6 +15,7 @@ import java.util.List;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.ActionType;
@@ -22,6 +23,10 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.MoveAction;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.OarAction;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.SailorAction;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.Turn;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Equipment;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Gouvernail;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Oar;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Sailor;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.processing.InputParser;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.IntPosition;
@@ -96,6 +101,7 @@ public class CaptainTest {
 
     }
 
+    @Disabled
     @Test
     void actionsToOrientateTest() {
         Coordinator coordinator = mock(Coordinator.class);
@@ -120,7 +126,143 @@ public class CaptainTest {
         assertEquals(List.of(), rogers.actionsToOrientate(0.00012), "Orientation low no need to turn");
 
     }
-
+    
+    @Test
+    void actionsToOrientateTest1() {
+    	List<Sailor> sailors = List.of(
+    			new Sailor(0, new IntPosition(0, 0)),
+        		new Sailor(1, new IntPosition(0, 1)),
+        		new Sailor(2, new IntPosition(1, 0)),
+        		new Sailor(3, new IntPosition(1, 1)));
+    	CrewManager crewManager = new CrewManager(sailors);
+    	
+    	List<Equipment> equipments = List.of(
+    			new Oar(0, 0),
+    			new Oar(1, 0),
+    			new Oar(0, 1),
+    			new Oar(1, 1));
+    	EquipmentsManager equipmentsManager = new EquipmentsManager(equipments, 2);
+        Navigator navigator = new Navigator();
+        List<SailorAction> actions;
+        
+        Coordinator coordinator = new Coordinator(crewManager, equipmentsManager);
+        rogers = new Captain(null, null, navigator, null, coordinator);
+        
+        actions = List.of(sailors.get(0).howToMoveTo(equipments.get(2).getPosition()),
+        		new OarAction(0),
+        		sailors.get(1).howToMoveTo(equipments.get(3).getPosition()),
+        		new OarAction(1));
+        
+        assertEquals(List.of(), rogers.actionsToOrientate(0));
+        assertEquals(actions.toString(), rogers.actionsToOrientate(Math.PI/2).toString());
+        
+        
+    }
+    
+    @Test
+    void actionsToOrientateTest2() {
+    	List<Sailor> sailors = List.of(
+    			new Sailor(0, new IntPosition(0, 0)),
+        		new Sailor(1, new IntPosition(0, 1)),
+        		new Sailor(2, new IntPosition(1, 0)),
+        		new Sailor(3, new IntPosition(1, 1)));
+    	CrewManager crewManager = new CrewManager(sailors);
+    	
+    	List<Equipment> equipments = List.of(
+    			new Oar(0, 0),
+    			new Oar(1, 0),
+    			new Oar(0, 1),
+    			new Oar(1, 1));
+    	EquipmentsManager equipmentsManager = new EquipmentsManager(equipments, 2);
+        Navigator navigator = new Navigator();        
+        Coordinator coordinator = new Coordinator(crewManager, equipmentsManager);
+        rogers = new Captain(null, null, navigator, null, coordinator);
+        
+        List<SailorAction> actions = List.of(sailors.get(0).howToMoveTo(equipments.get(0).getPosition()),
+        		new OarAction(0));
+        assertEquals(actions.toString(), rogers.actionsToOrientate(-Math.PI/4).toString());
+    }
+    
+    @Test
+    void actionsToOrientateTest3() {
+    	List<Sailor> sailors = List.of(
+    			new Sailor(0, new IntPosition(0, 0)),
+        		new Sailor(1, new IntPosition(0, 1)),
+        		new Sailor(2, new IntPosition(1, 0)),
+        		new Sailor(3, new IntPosition(1, 1)));
+    	CrewManager crewManager = new CrewManager(sailors);
+    	List<Equipment> equipments = List.of(
+        		new Oar(0, 0),
+    			new Oar(1, 0),
+    			new Oar(0, 1),
+    			new Oar(1, 1),
+    			new Gouvernail(2, 2));
+    	EquipmentsManager equipmentsManager = new EquipmentsManager(equipments, 2);
+    	Coordinator coordinator = new Coordinator(crewManager, equipmentsManager);
+        Navigator navigator = new Navigator();
+        rogers = new Captain(null, null, navigator, null, coordinator);
+        
+        List<SailorAction> actions = List.of(sailors.get(0).howToMoveTo(equipments.get(0).getPosition()),
+        		new OarAction(0),
+        		sailors.get(3).howToMoveTo(equipments.get(4).getPosition()));
+        List<SailorAction> actualActions = rogers.actionsToOrientate(-Math.PI/5);
+        assertEquals(4, actualActions.size());
+        assertEquals(- Math.PI/5 + Math.PI/4, ((Turn)actualActions.remove(3)).getRotation());
+        assertEquals(actions.toString(), actualActions.toString());
+    }
+    
+    @Test
+    void actionsToOrientateTest4() {
+    	List<Sailor> sailors = List.of(
+    			new Sailor(0, new IntPosition(0, 0)),
+        		new Sailor(1, new IntPosition(0, 1)),
+        		new Sailor(2, new IntPosition(1, 0)),
+        		new Sailor(3, new IntPosition(1, 1)));
+    	CrewManager crewManager = new CrewManager(sailors);
+    	List<Equipment> equipments = List.of(
+        		new Oar(0, 0),
+    			new Oar(1, 0),
+    			new Oar(0, 1),
+    			new Oar(1, 1),
+    			new Gouvernail(2, 2));
+    	EquipmentsManager equipmentsManager = new EquipmentsManager(equipments, 2);
+    	Coordinator coordinator = new Coordinator(crewManager, equipmentsManager);
+        Navigator navigator = new Navigator();
+        rogers = new Captain(null, null, navigator, null, coordinator);
+        
+        List<SailorAction> actions = List.of();
+        List<SailorAction> actualActions = rogers.actionsToOrientate(Math.PI/0.5);
+        assertEquals(null, actualActions.size());
+        assertEquals(Math.PI/0.5 + null, ((Turn)actualActions.remove(3)).getRotation());
+        assertEquals(actions.toString(), rogers.actionsToOrientate(Math.PI/0.5).toString());
+    }
+    
+    @Test
+    void actionsToOrientateTest5() {
+    	List<Sailor> sailors = List.of(
+    			new Sailor(0, new IntPosition(0, 0)),
+        		new Sailor(1, new IntPosition(0, 1)),
+        		new Sailor(2, new IntPosition(1, 0)),
+        		new Sailor(3, new IntPosition(1, 1)));
+    	CrewManager crewManager = new CrewManager(sailors);
+    	List<Equipment> equipments = List.of(
+        		new Oar(0, 0),
+    			new Oar(1, 0),
+    			new Oar(0, 1),
+    			new Oar(1, 1),
+    			new Gouvernail(2, 2));
+    	EquipmentsManager equipmentsManager = new EquipmentsManager(equipments, 2);
+    	Coordinator coordinator = new Coordinator(crewManager, equipmentsManager);
+        Navigator navigator = new Navigator();
+        rogers = new Captain(null, null, navigator, null, coordinator);
+        
+        List<SailorAction> actions = List.of();
+        List<SailorAction> actualActions = rogers.actionsToOrientate(Math.PI/10);
+        assertEquals(null, actualActions.size());
+        assertEquals(Math.PI/10 + null, ((Turn)actualActions.remove(3)).getRotation());
+        assertEquals(actions.toString(), rogers.actionsToOrientate(Math.PI/10).toString()); 
+        }
+    
     @Test
     void speedTakingIntoAccountWindNoWindTest() throws JsonProcessingException {
         var allSailors= this.parser.fetchAllSailors(gameData);
