@@ -6,7 +6,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Shape;
 public class Courant extends OceanEntity {
     private double strength;
 
-    Courant(Position position, Shape shape, double strength) {
+    public Courant(Position position, Shape shape, double strength) {
         super("stream",position,shape);
         this.strength = strength;
     }

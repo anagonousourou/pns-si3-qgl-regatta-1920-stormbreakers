@@ -18,6 +18,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Oar;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Sail;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Sailor;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Checkpoint;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Courant;
 
 /**
  * This class is used to parse the JSON formatted String
@@ -134,6 +135,25 @@ public class InputParser {
 			return 0.0;
 		} else {
 			return  result.get(ORIENTATION_KEY).asDouble();
+		}
+	}
+
+	/**
+	 * Renvoie les courants
+	 * TODO
+	 * @param jString
+	 * @return
+	 * @throws JsonProcessingException
+	 */
+	@SuppressWarnings("unchecked")
+	public List<Courant> fetchStreams(String jString) throws JsonProcessingException{
+
+		JsonNode visibleEntities=mapper.readTree(jString).get("visibleEntities");
+		if(visibleEntities==null){
+			return List.of();
+		}
+		else{
+			return (List<Courant>)mapper.readValue(visibleEntities.toString(), mapper.getTypeFactory().constructCollectionType(List.class, Courant.class));
 		}
 	}
 

@@ -1,0 +1,19 @@
+{
+    "visibleEntities": [
+        {
+            "type": "stream",
+            "position": {
+                "x": 500,
+                "y": 0,
+                "orientation": 0
+            },
+            "shape": {
+                "type": "rectangle",
+                "width": 50,
+                "height": 500,
+                "orientation": 0
+            },
+            "strength": 40
+        }
+    ]
+}
