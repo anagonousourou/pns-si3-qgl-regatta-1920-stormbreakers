@@ -1,7 +1,6 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.staff.tactical;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -86,7 +85,6 @@ public class Captain {
         // Find an "exact" match of the orientation within the angles possible with oars only
         Optional<OarsConfig> possibleOarsConfig = navigator.possibleOarConfigs(coordinator.nbLeftOars(), coordinator.nbRightOars())
         		.stream()
-        		//.filter(oc -> Math.abs(oc.getAngle()) - Math.abs(orientation) < EPS)
         		.filter(oc -> oc.getAngle() == orientation)
         		.findFirst();
         if(possibleOarsConfig.isPresent()) {
@@ -127,7 +125,6 @@ public class Captain {
 				chosenAngleOarsConfig = maxOarsConfig.get().getAngle();
 				actions = new ArrayList<>(validateActions(coordinator.activateOarsNotStrict(diff)));	
 			}
-			//double restOrientation = orientation - ((orientation < Math.PI/2) ? + chosenAngleOarsConfig : - chosenAngleOarsConfig);
 			double restOrientation = orientation - chosenAngleOarsConfig;
 
 			// If the rudder is necessary, then we use it alongside the chosen OarsConfig
