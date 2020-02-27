@@ -66,6 +66,8 @@ public class EquipmentsManager implements PropertyChangeListener {
         return this.rudder != null;
     }
 
+    public boolean isRudderUsed() {return rudder.isUsed();}
+
     public List<Oar> allLeftOars() {
         return leftOars;
     }
@@ -88,6 +90,10 @@ public class EquipmentsManager implements PropertyChangeListener {
 
     List<Oar> usedLeftOars() {
         return leftOars.stream().filter(Oar::isUsed).collect(Collectors.toList());
+    }
+
+    public List<Oar> unusedOars() {
+        return oars.stream().filter(Predicate.not(Oar::isUsed )).collect(Collectors.toList());
     }
 
     public List<Oar> unusedLeftOars() {

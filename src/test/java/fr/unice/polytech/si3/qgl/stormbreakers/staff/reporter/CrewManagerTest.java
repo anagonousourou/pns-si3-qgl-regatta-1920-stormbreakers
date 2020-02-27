@@ -114,4 +114,33 @@ class CrewManagerTest {
         assertEquals(2,result.size());
         result.forEach(sailor -> assertTrue(sailor.canReach(target)));
     }
+
+    @Test
+    void bringClosestSailorCloserToTest() {
+        CrewManager crewManager = new CrewManager(List.of());
+
+        Sailor sailor1 = new Sailor(0,0,0); sailor1.setDoneTurn(false); // available
+        Sailor sailor2 = new Sailor(1,1,1); sailor2.setDoneTurn(false); // available
+        Sailor sailor3 = new Sailor(2,2,2); sailor3.setDoneTurn(false); // available
+        Sailor sailor4 = new Sailor(3,3,3); sailor4.setDoneTurn(false); // available
+        Sailor sailor5 = new Sailor(4,4,4); sailor5.setDoneTurn(false); // available
+        List<Sailor> sailors = new ArrayList<>( List.of(sailor1,sailor2,sailor3,sailor4,sailor5) ); // Needs to be mutable
+
+        MoveAction moveAction = crewManager.bringClosestSailorCloserTo(sailors,new IntPosition(5,5));
+        assertEquals(sailor5.getId(),moveAction.getSailorId());
+        assertEquals(4,sailors.size()); // Un de moins car déplacé
+        assertEquals(1,moveAction.getXdistance());
+        assertEquals(1,moveAction.getYdistance());
+    }
+
+    @Test
+    void bringClosestSailorCloserToTestWhenNoSailors() {
+        CrewManager crewManager = new CrewManager(List.of());
+
+        List<Sailor> sailors = new ArrayList<>();
+
+        MoveAction moveAction = crewManager.bringClosestSailorCloserTo(sailors,new IntPosition(5,5));
+        assertEquals(null,moveAction);
+
+    }
 }
