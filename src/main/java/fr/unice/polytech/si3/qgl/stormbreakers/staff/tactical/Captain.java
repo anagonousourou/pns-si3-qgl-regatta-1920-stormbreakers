@@ -86,7 +86,8 @@ public class Captain {
         // Find an "exact" match of the orientation within the angles possible with oars only
         Optional<OarsConfig> possibleOarsConfig = navigator.possibleOarConfigs(coordinator.nbLeftOars(), coordinator.nbRightOars())
         		.stream()
-        		.filter(oc -> Math.abs(oc.getAngle() - orientation) < EPS)
+        		//.filter(oc -> Math.abs(oc.getAngle()) - Math.abs(orientation) < EPS)
+        		.filter(oc -> oc.getAngle() == orientation)
         		.findFirst();
         if(possibleOarsConfig.isPresent()) {
         	int diff = this.navigator.fromAngleToDiff(orientation, this.coordinator.nbLeftOars(),
@@ -96,23 +97,41 @@ public class Captain {
         
         List<SailorAction> actions = List.of(); 
         
-        //TODO angle inférieur à maxOarsConfig ?? On fAit cOmMeNt --> on utilise le rudder
-        
-        // No match found, so we take the greatest angle possible with oars only
+        // No match found, so we take the greatest angle possible (with oars only) as a reference for later
     	Optional<OarsConfig> maxOarsConfig = navigator.possibleOarConfigs(coordinator.nbLeftOars(),
                 coordinator.nbRightOars())
     			.stream()
         		.filter(oc -> oc.getAngle() > 0 && orientation > 0 || oc.getAngle() < 0 && orientation < 0)
-        		.max((oc1, oc2) -> (int)(Math.abs(oc1.getAngle()) - Math.abs(oc2.getAngle())));       
-		if (maxOarsConfig.isPresent()) {
-			int diff = maxOarsConfig.get().getAngleFraction().getDenominator();
-			double angleMaxOarsConfig = maxOarsConfig.get().getAngle();
-			actions = new ArrayList<>(validateActions(coordinator.activateOarsNotStrict(diff)));
-
-			// If the rudder is present, accessible, and necessary, then we use it as well.
-			if (coordinator.rudderIsPresent() && coordinator.rudderIsAccesible()
-					&& Math.abs(orientation) <= (Math.PI / 4) + Math.abs(maxOarsConfig.get().getAngle())) {
-				double restOrientation = orientation - ((orientation > 0) ? - angleMaxOarsConfig : + angleMaxOarsConfig);
+        		.max((oc1, oc2) -> (int)(Math.abs(oc1.getAngle()) - Math.abs(oc2.getAngle())));   
+    	// If the rudder is present, accessible, and there is at least 1 OarsConfig possible
+		if (maxOarsConfig.isPresent() && coordinator.rudderIsPresent() && coordinator.rudderIsAccesible()) {
+			double chosenAngleOarsConfig = 0;
+			int diff;
+			
+			// If "orientation" is smaller than the maxOarsConfig angle,
+			// then we choose the closest oarsConfig angle
+			if(Math.abs(orientation) < Math.abs(maxOarsConfig.get().getAngle())){
+				Optional<OarsConfig> closestOarsConfig = navigator.possibleOarConfigs(coordinator.nbLeftOars(),
+		                coordinator.nbRightOars())
+		    			.stream()
+		    			.filter(oc -> oc.getAngle() > 0 && orientation > 0 || oc.getAngle() < 0 && orientation < 0)
+		        		.min((oc1, oc2) -> (int)(Math.abs(oc1.getAngle()) - Math.abs(oc2.getAngle() - (Math.abs(orientation)))));
+				diff = (closestOarsConfig.isPresent() ? closestOarsConfig.get().getOarSidesDifference(): 0);
+				chosenAngleOarsConfig = (closestOarsConfig.isPresent() ? closestOarsConfig.get().getAngle(): 0);
+				actions = new ArrayList<>(validateActions(coordinator.activateOarsNotStrict(diff)));
+				
+			// If "orientation" is bigger than the maxOarsConfig angle,
+			// but smaller than this angle used alongside the rudder,
+			// then we use maxOarsConfig alongside the rudder for a precise orientation.
+			} else if (Math.abs(orientation) <= (Math.PI / 4) + Math.abs(maxOarsConfig.get().getAngle())) {
+				diff = maxOarsConfig.get().getOarSidesDifference();
+				chosenAngleOarsConfig = maxOarsConfig.get().getAngle();
+				actions = new ArrayList<>(validateActions(coordinator.activateOarsNotStrict(diff)));	
+			}
+			double restOrientation = orientation - ((orientation > 0) ? - chosenAngleOarsConfig : + chosenAngleOarsConfig);
+			
+			// If the rudder is necessary, then we use it alongside the chosen OarsConfig
+			if(restOrientation > 0) {
 				actions.addAll(validateActions(this.coordinator.activateRudder(restOrientation)));
 			}
 		}

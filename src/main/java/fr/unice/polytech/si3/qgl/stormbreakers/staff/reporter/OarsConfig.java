@@ -27,6 +27,10 @@ public class OarsConfig {
     public double getAngle() {
         return Math.PI * fractionOfPi.eval();
     }
+    
+    public int getOarSidesDifference() {
+    	return oarSidesDifference;
+    }
 
     public Fraction getAngleFraction(){
         return fractionOfPi;
