@@ -2,6 +2,7 @@ package fr.unice.polytech.si3.qgl.stormbreakers.data.ocean;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
@@ -9,12 +10,16 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Shape;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
 
+@JsonSubTypes({
+  @JsonSubTypes.Type(value = Courant.class, name="stream"),
+})
 
 public abstract class OceanEntity {
   private String type;
   protected Position position;
-  private Shape shape;
+  protected Shape shape;
 
+  
   @JsonCreator
   OceanEntity(@JsonProperty("type") String type, @JsonProperty("postion") Position position,
       @JsonProperty("shape") Shape shape) {

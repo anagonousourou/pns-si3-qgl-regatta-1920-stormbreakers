@@ -14,6 +14,9 @@ public class TargetDefiner  {
         this.checkpointsManager = checkpointsManager;
     }
 
+    boolean thereIsStreamOnTrajectory(){
+        return false;
+    }
    
 
 }
