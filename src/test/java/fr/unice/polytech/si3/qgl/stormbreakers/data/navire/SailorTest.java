@@ -25,9 +25,7 @@ class SailorTest {
         MoveAction actual =  sailor.howToMoveTo(marinPos);
         MoveAction expected = new MoveAction(0,0,0);
 
-        assertEquals(expected.getSailorId(),actual.getSailorId(), "Correct Id");
-        assertEquals(expected.getXdistance(),actual.getXdistance(), "Correct X distance");
-        assertEquals(expected.getYdistance(),actual.getYdistance(), "Correct Y distance");
+        assertEquals(expected,actual);
     }
 
     @Test
@@ -35,9 +33,7 @@ class SailorTest {
         MoveAction actual =  sailor.howToMoveTo(targetPosInReach);
         MoveAction expected = new MoveAction(0,1,3);
 
-        assertEquals(expected.getSailorId(),actual.getSailorId(), "Correct Id");
-        assertEquals(expected.getXdistance(),actual.getXdistance(), "Correct X distance");
-        assertEquals(expected.getYdistance(),actual.getYdistance(), "Correct Y distance");
+        assertEquals(expected,actual);
     }
 
     @Test
@@ -90,11 +86,8 @@ class SailorTest {
         IntPosition someUnreachablePos = new IntPosition(10,10);
         MoveAction movement = sailor.howToGetCloserTo(someUnreachablePos);
 
-        // TODO: 24/02/2020 MoveAction equals
         MoveAction expected = new MoveAction(sailor.getId(),5,0);
-        assertEquals(expected.getSailorId(),movement.getSailorId());
-        assertEquals(expected.getXdistance(),movement.getXdistance());
-        assertEquals(expected.getYdistance(),movement.getYdistance());
+        assertEquals(expected,movement);
     }
 
     @Test
@@ -103,11 +96,8 @@ class SailorTest {
         MoveAction movement = sailor.howToGetCloserTo(someUnreachablePos);
 
         // X satisfait donc on deplace selon Y aussi
-        // TODO: 24/02/2020 MoveAction equals
         MoveAction expected = new MoveAction(sailor.getId(),2,3);
-        assertEquals(expected.getSailorId(),movement.getSailorId());
-        assertEquals(expected.getXdistance(),movement.getXdistance());
-        assertEquals(expected.getYdistance(),movement.getYdistance());
+        assertEquals(expected,movement);
     }
 
     @Test
@@ -116,10 +106,7 @@ class SailorTest {
         MoveAction movement = sailor.howToGetCloserTo(someUnreachablePos);
 
         // X prioritaire donc tout sur X
-        // TODO: 24/02/2020 MoveAction equals
         MoveAction expected = new MoveAction(sailor.getId(),5,0);
-        assertEquals(expected.getSailorId(),movement.getSailorId());
-        assertEquals(expected.getXdistance(),movement.getXdistance());
-        assertEquals(expected.getYdistance(),movement.getYdistance());
+        assertEquals(expected,movement);
     }
 }
