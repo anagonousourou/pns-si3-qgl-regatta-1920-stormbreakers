@@ -4,8 +4,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -409,6 +408,67 @@ public class CoordinatorTest {
 		assertEquals(0,moves.size());
 	}
 
+    @Test
+    void manageUnusedSailorsTestWhenNotEnoughSailors() {
+        Sailor sailor1 = new Sailor(0,0,0);
+        Sailor sailor2 = new Sailor(1,0,0);
+        List<Sailor> sailors = List.of(sailor1,sailor2);
+        CrewManager crew2 = new CrewManager(sailors);
+
+        // Rudder
+        when(equipmentsManager.rudderIsPresent()).thenReturn(true);
+        when(equipmentsManager.isRudderUsed()).thenReturn(true);
+        IntPosition rudderPos = new IntPosition(5,3);
+        when(equipmentsManager.rudderPosition()).thenReturn(rudderPos);
+
+        // Oars
+        Oar oarL1 = new Oar(4,0);
+        List<Oar> oars = List.of(oarL1);
+        when(equipmentsManager.unusedOars()).thenReturn(oars);
+
+        // Sails
+        Sail sail1 = new Sail(8,3);
+        List<Sail> sails = List.of(sail1);
+        when(equipmentsManager.sails()).thenReturn(sails);
+
+        Coordinator coordinator2 =  new Coordinator(crew2, equipmentsManager);
+        List<MoveAction> moves = coordinator2.manageUnusedSailors();
+
+        assertEquals(2,moves.size());
+    }
+
+	@Test
+	void manageUnusedSailorsTestWhenTooManySailors() {
+		Sailor sailor1 = new Sailor(0,0,0);
+		Sailor sailor2 = new Sailor(1,0,0);
+		Sailor sailor3 = new Sailor(2,0,0);
+		Sailor sailor4 = new Sailor(3,0,0);
+		Sailor sailor5 = new Sailor(4,0,0);
+		List<Sailor> sailors = List.of(sailor1,sailor2, sailor3, sailor4,sailor5);
+		CrewManager crew2 = new CrewManager(sailors);
+
+		// Rudder
+		when(equipmentsManager.rudderIsPresent()).thenReturn(true);
+		when(equipmentsManager.isRudderUsed()).thenReturn(true);
+		IntPosition rudderPos = new IntPosition(5,3);
+		when(equipmentsManager.rudderPosition()).thenReturn(rudderPos);
+
+		// Oars
+		Oar oarL1 = new Oar(4,0);
+		List<Oar> oars = List.of(oarL1);
+		when(equipmentsManager.unusedOars()).thenReturn(oars);
+
+		// Sails
+		Sail sail1 = new Sail(8,3);
+		List<Sail> sails = List.of(sail1);
+		when(equipmentsManager.sails()).thenReturn(sails);
+
+		Coordinator coordinator2 =  new Coordinator(crew2, equipmentsManager);
+		List<MoveAction> moves = coordinator2.manageUnusedSailors();
+
+		assertEquals(3,moves.size());
+	}
+
 	@Test
 	void manageUnusedSailorsTestAllEquipmentsCovered() {
 		Sailor sailor1 = new Sailor(0,0,0);
@@ -431,7 +491,7 @@ public class CoordinatorTest {
 		when(equipmentsManager.unusedOars()).thenReturn(oars);
 
 		// Sails
-		Sail sail1 = new Sail(8,3);
+		Sail sail1 = new Sail(5,3);
 		Sail sail2 = new Sail(8,3);
 		List<Sail> sails = List.of(sail1,sail2);
 		when(equipmentsManager.sails()).thenReturn(sails);
@@ -463,7 +523,7 @@ public class CoordinatorTest {
 		when(equipmentsManager.unusedOars()).thenReturn(oars);
 
 		// Sails
-		Sail sail1 = new Sail(8,3);
+		Sail sail1 = new Sail(5,3);
 		Sail sail2 = new Sail(8,3);
 		List<Sail> sails = List.of(sail1,sail2);
 		when(equipmentsManager.sails()).thenReturn(sails);
