@@ -52,9 +52,7 @@ public class EquipmentsManager implements PropertyChangeListener {
         }
         var optRuddder = this.equipments.stream().filter(e -> e.getType().equals("rudder")).map(e -> (Gouvernail) e)
                 .findFirst();
-        if (optRuddder.isPresent()) {
-            this.rudder = optRuddder.get();
-        }
+        optRuddder.ifPresent(gouvernail -> this.rudder = gouvernail);
     }
 
     /**
@@ -65,6 +63,8 @@ public class EquipmentsManager implements PropertyChangeListener {
     public boolean rudderIsPresent() {
         return this.rudder != null;
     }
+
+    public boolean isRudderUsed() {return rudder.isUsed();}
 
     public List<Oar> allLeftOars() {
         return leftOars;
@@ -88,6 +88,10 @@ public class EquipmentsManager implements PropertyChangeListener {
 
     List<Oar> usedLeftOars() {
         return leftOars.stream().filter(Oar::isUsed).collect(Collectors.toList());
+    }
+
+    public List<Oar> unusedOars() {
+        return oars.stream().filter(Predicate.not(Oar::isUsed )).collect(Collectors.toList());
     }
 
     public List<Oar> unusedLeftOars() {

@@ -164,7 +164,6 @@ public class Coordinator {
      * be equals to either nb or 0 sailors actions include OarAction and MoveAction
      * 
      * @param nb
-     * @param idsOfBusySailors
      * @return
      */
     public List<SailorAction> activateOarsOnLeft(int nb) {
@@ -277,45 +276,45 @@ public class Coordinator {
         if (freeOarsOnLeftSide.isEmpty() || freeOarsOnRightSide.isEmpty() || availableSailors.isEmpty())
             return List.of();
 
-        Optional<Sailor> leftSailor = Optional.empty();
-        Optional<Sailor> rightSailor = Optional.empty();
+        Optional<Sailor> leftSailorOpt = Optional.empty();
+        Optional<Sailor> rightSailorOpt = Optional.empty();
 
         Oar currLeftOar = null;
         Oar currRightOar = null;
 
         // Try to find someone who can oar on left side
-        while (!leftSailor.isPresent() && !freeOarsOnLeftSide.isEmpty()) {
+        while (leftSailorOpt.isEmpty() && !freeOarsOnLeftSide.isEmpty()) {
             currLeftOar = freeOarsOnLeftSide.get(0);
             freeOarsOnLeftSide.remove(currLeftOar);
 
             IntPosition targetPos = currLeftOar.getPosition();
             List<Sailor> sailorsInReach = crewManager.getSailorsWhoCanReach(availableSailors, targetPos);
-            leftSailor = crewManager.marineClosestTo(targetPos, sailorsInReach);
+            leftSailorOpt = crewManager.marineClosestTo(targetPos, sailorsInReach);
         }
 
-        if (leftSailor.isPresent()) {
+        if (leftSailorOpt.isPresent()) {
             // Cannot be used on both sides
-            availableSailors.remove(leftSailor.get());
+            availableSailors.remove(leftSailorOpt.get());
 
             // Try to find someone who can oar on right side
-            while (!rightSailor.isPresent() && !freeOarsOnRightSide.isEmpty()) {
+            while (rightSailorOpt.isEmpty() && !freeOarsOnRightSide.isEmpty()) {
                 currRightOar = freeOarsOnRightSide.get(0);
                 freeOarsOnRightSide.remove(currRightOar);
 
                 IntPosition targetPos = currRightOar.getPosition();
                 List<Sailor> sailorsInReach = crewManager.getSailorsWhoCanReach(availableSailors, targetPos);
-                rightSailor = crewManager.marineClosestTo(targetPos, sailorsInReach);
+                rightSailorOpt = crewManager.marineClosestTo(targetPos, sailorsInReach);
             }
         }
 
-        if (leftSailor.isPresent() && rightSailor.isPresent()) {
+        if (leftSailorOpt.isPresent() && rightSailorOpt.isPresent()) {
             // Ask left sailor to move then oar
-            actionsToReturn.add(leftSailor.get().howToMoveTo(currLeftOar.getPosition()));
-            actionsToReturn.add(new OarAction(leftSailor.get().getId()));
+            actionsToReturn.add(leftSailorOpt.get().howToMoveTo(currLeftOar.getPosition()));
+            actionsToReturn.add(new OarAction(leftSailorOpt.get().getId()));
 
             // Ask right sailor to move then oar
-            actionsToReturn.add(rightSailor.get().howToMoveTo(currRightOar.getPosition()));
-            actionsToReturn.add(new OarAction(rightSailor.get().getId()));
+            actionsToReturn.add(rightSailorOpt.get().howToMoveTo(currRightOar.getPosition()));
+            actionsToReturn.add(new OarAction(rightSailorOpt.get().getId()));
         }
 
         return actionsToReturn;
@@ -333,17 +332,13 @@ public class Coordinator {
 
     /**
      * Fonction qui renvoie les marins présents sur des rames à gauche
-     * 
-     * @param equimentManager
      * @return
      */
     public List<Sailor> leftSailorsOnOars() {
         List<Sailor> sailors = new ArrayList<>();
         for (Oar oar : equipmentsManager.allLeftOars()) {
             Optional<Sailor> theSailor = this.crewManager.marineAtPosition(oar.getPosition());
-            if (theSailor.isPresent()) {
-                sailors.add(theSailor.get());
-            }
+            theSailor.ifPresent(sailor -> sailors.add(sailor));
         }
 
         return sailors;
@@ -352,17 +347,13 @@ public class Coordinator {
 
     /**
      * Fonction qui renvoie les marins présents sur des rames à droite
-     * 
-     * @param equimentManager
      * @return
      */
     public List<Sailor> rightSailorsOnOars() {
         List<Sailor> sailors = new ArrayList<>();
         for (Oar oar : equipmentsManager.allRightOars()) {
             Optional<Sailor> theSailor = this.crewManager.marineAtPosition(oar.getPosition());
-            if (theSailor.isPresent()) {
-                sailors.add(theSailor.get());
-            }
+            theSailor.ifPresent(sailor -> sailors.add(sailor));
         }
 
         return sailors;
@@ -460,42 +451,43 @@ public class Coordinator {
 
     }
 
-
     /**
-     * Rapproche au mieux les marins non-assignés de rames non-occupées
-     * NB: utilise une copie de sailors
+     * Rapproche, tant que possible, de chaque équipement non-utilisé,
+     * un marin non assignés
+     * ordre de priorité: gouvernail, puis rames, puis voiles
+     * @return déplacements générés
      */
-    List<MoveAction> bringSailorsCloserToOars() {
+    public List<MoveAction> manageUnusedSailors() {
         List<Sailor> availableSailors = crewManager.getAvailableSailors();
+        List<MoveAction> moves = new ArrayList<>();
 
-        List<Oar> unusedOars = new ArrayList<>();
-        unusedOars.addAll(equipmentsManager.unusedLeftOars());
-        unusedOars.addAll(equipmentsManager.unusedRightOars());
+        if (rudderIsPresent() && equipmentsManager.isRudderUsed()) {
+            moves.add(crewManager.bringClosestSailorCloserTo(availableSailors,rudderPosition()));
+        }
+        moves.addAll(bringSailorsCloserToEquipments(availableSailors,new ArrayList<Equipment>(equipmentsManager.unusedOars())));
+        moves.addAll(bringSailorsCloserToEquipments(availableSailors,new ArrayList<Equipment>(equipmentsManager.sails())));
 
-        return bringSailorsCloserToOars(new ArrayList<>(availableSailors),unusedOars);
+        return moves;
     }
 
     /**
-     * Rapproche au mieux les marins des rames en parametre
+     * Rapproche au mieux les marins des equipements en parametre
      * NB: modifie la liste de marins (retire ceux assignés)
      * @param sailors Liste de marins
-     * @param oars rames à approcher
+     * @param equipments à approcher
+     * @return déplacements générés
      */
-    List<MoveAction> bringSailorsCloserToOars(List<Sailor> sailors, List<Oar> oars) {
+    List<MoveAction> bringSailorsCloserToEquipments(List<Sailor> sailors, List<Equipment> equipments) {
         List<MoveAction> moves = new ArrayList<>();
-        Iterator<Oar> it = oars.iterator();
+        Iterator<Equipment> it = equipments.iterator();
 
         for ( ; it.hasNext(); ) {
-            Oar currentOar = it.next();
-            Optional<Sailor> closestSailorOpt = sailors.stream().min(Comparator.comparingInt(a -> a.getDistanceTo(currentOar.getPosition())));
-
-            if (closestSailorOpt.isPresent()) {
-                Sailor closestSailor = closestSailorOpt.get();
-                moves.add(closestSailor.howToGetCloserTo(currentOar.getPosition()));
-                sailors.remove(closestSailor); // Already assigned
-            }
+            Equipment currentEquipment = it.next();
+            MoveAction generatedMove = crewManager.bringClosestSailorCloserTo(sailors,currentEquipment.getPosition());
+            if (generatedMove!=null) moves.add(generatedMove);
         }
         return moves;
     }
+
 
 }
