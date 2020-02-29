@@ -121,6 +121,10 @@ public class Point2D {
         return getVectorTo(other).norm();
     }
 
+    public double distanceTo(Point2D other) {
+        return getVectorTo(other).norm();
+    }
+
     @Override
     public String toString() {
         return String.format("%s(x: %f, y: %f)", this.getClass().getSimpleName(),x,y);

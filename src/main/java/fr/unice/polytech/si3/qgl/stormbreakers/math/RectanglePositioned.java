@@ -90,4 +90,16 @@ public class RectanglePositioned {
     public Optional<LineSegment2D> edgeOfIntersection(LineSegment2D lineSegment2D){
         return List.of(largeur1,longueur1,largeur2,longueur2).stream().filter(s->lineSegment2D.intersects(lineSegment2D)).findFirst();
     }
+    /**
+     * Retourne le point du rectangle le plus proche de poin2d
+     * @param point2d
+     * @return
+     */
+    public Optional<Point2D> closestPointTo(Point2D point2d){
+        return List.of(largeur1,longueur1,largeur2,longueur2).stream()
+        .map(l->l.closestPointTo(point2d))
+        .min((p,pother)-> Double.compare(p.distanceTo(point2d),pother.distanceTo(point2d) ));
+    }
+
+
 }

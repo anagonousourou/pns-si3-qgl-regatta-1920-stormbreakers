@@ -1,5 +1,9 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.math;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.DoubleStream;
+
 import fr.unice.polytech.si3.qgl.stormbreakers.exceptions.DegeneratedLine2DException;
 
 /* File LineSegment2D.java 
@@ -236,7 +240,7 @@ public class LineSegment2D {
 		return (Math.abs((x - x0) * dy - (y - y0) * dx) / (denom * denom) < LineSegment2D.ACCURACY);
 	}
 
-	public boolean contains(double xp, double yp) {
+	/*public boolean contains(double xp, double yp) {
 		if (!this.supportContains(xp, yp))
 			return false;
 
@@ -249,47 +253,37 @@ public class LineSegment2D {
 			return false;
 
 		return true;
-	}
+	}*/
 
-	/**
-	 * Computes position on the line of the point given by (x,y). The position is
-	 * the number t such that if the point belong to the line, it location is given
-	 * by x=x0+t*dx and y=y0+t*dy.
-	 * <p>
-	 * If the point does not belong to the line, the method returns the position of
-	 * its projection on the line.
-	 */
-	public double positionOnLine(double x, double y) {
-		double denom = dx * dx + dy * dy;
-		if (Math.abs(denom) < LineSegment2D.ACCURACY)
-			throw new DegeneratedLine2DException("");
-		return ((y - y0) * dy + (x - x0) * dx) / denom;
-	}
+	
 
 	/**
 	 * Get the distance of the point (x, y) to this edge.
 	 */
 
 	public double distance(double x, double y) {
-		// In case of line segment with same extremities, computes distance to initial
-		// point
-		/*
-		 * if (length() < LineSegment2D.ACCURACY) { return Position.distance(this.x0,
-		 * this.y0, x, y); }
-		 * 
-		 * // compute position on the supporting line line = this.supportingLine();
-		 * double t = this.positionOnLine(x, y);
-		 * 
-		 * // clamp with parameterization bounds of edge t = Math.max(Math.min(t, 1),
-		 * 0);
-		 * 
-		 * // compute position of projected point on the edge Point2D proj =
-		 * line.point(t);
-		 * 
-		 * // return distance to projected point return proj.distance(x, y);
-		 */
-		// TODO
-		return 0.0;
+		// In case of line segment with same extremities, computes distance to initial point 
+        if (length() < LineSegment2D.ACCURACY)
+        {
+			return Math.hypot(this.x0-x, this.y0-y);
+        }
+        
+        // compute position on the supporting line
+    	Line2D line = this.supportingLine();
+        double t = line.positionOnLine(x, y);
+
+        // clamp with parameterization bounds of edge
+		t = Math.max(Math.min(t, 1), 0);
+		
+		// compute position of projected point on the edge
+		Point2D proj = line.point(t);
+		
+		// return distance to projected point
+		return proj.getDistanceTo(new Point2D(x, y));
+	}
+
+	private Line2D supportingLine() {
+		return new Line2D(x0,y0, dx,dy);
 	}
 
 	public boolean almostEquals(double a, double b) {
@@ -338,6 +332,19 @@ public class LineSegment2D {
 		hash = hash * 31 + Double.valueOf(this.dx).hashCode();
 		hash = hash * 31 + Double.valueOf(this.dy).hashCode();
 		return hash;
+	}
+	/**
+	 * Renvoie le point du segment de droite qui est le plus proche 
+	 * @param point2d
+	 * @return
+	 */
+	public Point2D closestPointTo(Point2D point2d){
+		List<Point2D> points=new ArrayList<>();
+		DoubleStream.iterate(0, d-> d <= 1.0, d-> d+0.1).forEach(d->
+			points.add( this.point(d) )
+		);
+		return points.stream().min((p,pother)-> Double.compare(p.distanceTo(point2d),pother.distanceTo(point2d) )).get();
+		
 	}
 
 	
