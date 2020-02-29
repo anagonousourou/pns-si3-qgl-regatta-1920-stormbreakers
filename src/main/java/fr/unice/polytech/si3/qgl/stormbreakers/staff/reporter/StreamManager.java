@@ -11,6 +11,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Boat;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Courant;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.processing.InputParser;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.processing.Logger;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.LineSegment2D;
 import fr.unice.polytech.si3.qgl.stormbreakers.staff.tactical.Navigator;
 
 /**
@@ -34,7 +35,7 @@ public class StreamManager implements PropertyChangeListener {
      * Method to say if the boat is currently within a stream
      * @return
      */
-    boolean insideStream(){
+    public boolean insideStream(){
         return this.courants.stream().anyMatch(courant->courant.getShape().isPtInside(boat.getPosition().getPoint2D()));
     }
 
@@ -45,10 +46,10 @@ public class StreamManager implements PropertyChangeListener {
      * @return
      */
 
-    boolean thereIsStreamBetween(Position position){
+    public boolean thereIsStreamBetween(Position position){
+        LineSegment2D segment2d=new LineSegment2D(position.getPoint2D(), boat.getPosition().getPoint2D());
+        return this.courants.stream().anyMatch(courant->courant.intersectsWith( segment2d ));
         
-        //TODO complete
-        return false;
         
     }
     

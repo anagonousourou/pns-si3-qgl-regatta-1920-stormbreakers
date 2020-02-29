@@ -7,10 +7,8 @@ import java.io.IOException;
 import java.util.List;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Equipment;
@@ -107,9 +105,9 @@ class InputParserTest {
 
                 assertTrue(result2.isEmpty(), "No streams or entities");
 
-                var result3=parser.fetchStreams(streams3);
+                var result3 = parser.fetchStreams(streams3);
 
-                assertTrue(result3.isEmpty(),"json sans clé visibleEntities on renvoie une liste vide");
+                assertTrue(result3.isEmpty(), "json sans clé visibleEntities on renvoie une liste vide");
         }
 
 }
