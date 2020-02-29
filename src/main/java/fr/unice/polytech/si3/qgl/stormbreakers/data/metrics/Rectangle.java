@@ -2,6 +2,9 @@ package fr.unice.polytech.si3.qgl.stormbreakers.data.metrics;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Checkpoint;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.LineSegment2D;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
 
 import java.util.Objects;
@@ -102,5 +105,25 @@ public class Rectangle extends Shape {
     public String toLogs() {
         return "R" + "(" + width + "|" + height + "|" + orientation + ")";
     }
+
+	public Point2D findPointNearestToPosition(Position other,Position rectangle) {
+		// TODO Auto-generated method stub
+		if(orientation-Math.PI/2<0.0001||orientation-(2*Math.PI/2)<0.0001) {
+			return new Point2D( rectangle.getX(),other.getY());
+		}else if(orientation<0.0001||orientation-(2*Math.PI)<0.0001) {
+			double x=other.getX();
+			if(x>=rectangle.getX()+(height/2))
+			return new Point2D(other.getX(), rectangle.getY());
+		}else {
+			LineSegment2D sRect= new LineSegment2D(
+					Math.cos(orientation)*(rectangle.getX()+(this.height/2)),
+					Math.sin(orientation)*rectangle.getY()+(this.width/2),
+					Math.cos(orientation)*other.getX()-(this.height/2),
+					Math.sin(orientation)*rectangle.getY()-(this.width/2));
+			return sRect.getIntersection(other);
+		}
+		
+	}
+
 
 }

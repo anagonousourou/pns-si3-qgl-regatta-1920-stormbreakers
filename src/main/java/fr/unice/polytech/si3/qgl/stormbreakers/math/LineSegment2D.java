@@ -1,5 +1,6 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.math;
 
+import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
 import fr.unice.polytech.si3.qgl.stormbreakers.exceptions.DegeneratedLine2DException;
 
 /* File LineSegment2D.java 
@@ -340,5 +341,6 @@ public class LineSegment2D {
 		return hash;
 	}
 
+	
 	
 }
