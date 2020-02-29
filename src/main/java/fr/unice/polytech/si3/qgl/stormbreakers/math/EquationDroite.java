@@ -51,12 +51,10 @@ public class EquationDroite {
 		return new Position(x, y);
 	}
 
-	private double getA() {
-		// TODO Auto-generated method stub
+	double getA() {
 		return a;
 	}
-	private double getB() {
-		// TODO Auto-generated method stub
+	double getB() {
 		return b;
 	}
 }
