@@ -1,5 +1,8 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.math;
 
+import java.util.List;
+import java.util.Optional;
+
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Rectangle;
 
@@ -77,5 +80,14 @@ public class RectanglePositioned {
 
     public boolean intersectsWith(LineSegment2D lineSegment2D){
         return largeur1.intersects(lineSegment2D)||longueur1.intersects(lineSegment2D)||largeur2.intersects(lineSegment2D)||longueur2.intersects(lineSegment2D);
+    }
+
+    /**
+     * Retourne un des cotes que le segment passé en parametre touche
+     * @param lineSegment2D
+     * @return
+     */
+    public Optional<LineSegment2D> edgeOfIntersection(LineSegment2D lineSegment2D){
+        return List.of(largeur1,longueur1,largeur2,longueur2).stream().filter(s->lineSegment2D.intersects(lineSegment2D)).findFirst();
     }
 }

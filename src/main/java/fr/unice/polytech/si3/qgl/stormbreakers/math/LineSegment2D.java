@@ -87,6 +87,21 @@ public class LineSegment2D {
 		return b1 && b2;
 	}
 
+	/**
+     * Returns the unique intersection of two straight objects. If the intersection
+     * doesn't exist (parallel lines, short edge), return null.
+     */
+    public Point2D intersection( LineSegment2D line2) {
+        // Compute denominator, and tests its validity
+        double denom = this.dx * line2.dy - this.dy * line2.dx;
+        if (Math.abs(denom) < LineSegment2D.ACCURACY)
+            return null;
+
+        // Compute position of intersection point
+        double t = ((this.y0 - line2.y0) * line2.dx - (this.x0 - line2.x0) * line2.dy) / denom;
+        return new Point2D(this.x0 + t * this.dx, this.y0 + t * this.dy);
+    }
+
 	// ===================================================================
 	// constructors
 
