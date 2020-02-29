@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Checkpoint;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.EquationDroite;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.LineSegment2D;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
 
@@ -113,12 +114,18 @@ public class Rectangle extends Shape {
 		}else if(orientation<0.0001||orientation-(2*Math.PI)<0.0001) {
 			return new Point2D(other.getX(), rectangle.getY());
 		}else {
-			LineSegment2D sRect= new LineSegment2D(
+			/*LineSegment2D sRect= new LineSegment2D(
 					Math.cos(orientation)*(rectangle.getX()+(this.height/2)),
 					Math.sin(orientation)*rectangle.getY()+(this.width/2),
 					Math.cos(orientation)*other.getX()-(this.height/2),
+					Math.sin(orientation)*rectangle.getY()-(this.width/2));*/
+			
+			EquationDroite droiteRect= new EquationDroite(Math.cos(orientation)*(rectangle.getX()+(this.height/2)),
+					Math.sin(orientation)*rectangle.getY()+(this.width/2),
+					Math.cos(orientation)*other.getX()-(this.height/2),
 					Math.sin(orientation)*rectangle.getY()-(this.width/2));
-			return sRect.getIntersection(other);
+			
+			return null;//sRect.getIntersection(other);
 		}
 		
 	}
