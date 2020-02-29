@@ -111,8 +111,6 @@ public class Rectangle extends Shape {
 		if(orientation-Math.PI/2<0.0001||orientation-(2*Math.PI/2)<0.0001) {
 			return new Point2D( rectangle.getX(),other.getY());
 		}else if(orientation<0.0001||orientation-(2*Math.PI)<0.0001) {
-			double x=other.getX();
-			if(x>=rectangle.getX()+(height/2))
 			return new Point2D(other.getX(), rectangle.getY());
 		}else {
 			LineSegment2D sRect= new LineSegment2D(

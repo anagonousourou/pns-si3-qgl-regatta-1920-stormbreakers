@@ -341,6 +341,11 @@ public class LineSegment2D {
 		return hash;
 	}
 
+	public Point2D getIntersection(Position other) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	
 	
 }
