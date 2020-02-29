@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Rectangle;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Shape;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Checkpoint;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.LineSegment2D;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.RectanglePositioned;
 
@@ -20,6 +22,7 @@ public class Courant extends OceanEntity {
 		return strength;
     }
     
+	
     @Override
     public String toString() {
         return String.format("%s(strength= %f, position= %s, shape= %s)", this.getClass().getSimpleName(),strength,position.toString(),shape.toString());
@@ -34,5 +37,18 @@ public class Courant extends OceanEntity {
             return false;
         }
     }
+
+	
+	public boolean bringCloserCp(Checkpoint cp, Boat boat) {
+		
+		Rectangle r=(Rectangle)this.shape;
+		Point2D nearestPoint=r.findPointNearestToPosition(cp.getPosition(),this.position);
+		Point2D cpPoint2D = new Point2D(cp.getPosition().getX(),cp.getPosition().getY());
+		Point2D boatPoint2D = new Point2D(boat.getPosition().getX(),boat.getPosition().getY());
+		if(nearestPoint.getDistanceTo(cpPoint2D)<boatPoint2D.getDistanceTo(cpPoint2D)) {
+			
+		}
+		return false;
+	}
 
 }

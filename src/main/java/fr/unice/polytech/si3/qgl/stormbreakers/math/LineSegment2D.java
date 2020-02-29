@@ -348,4 +348,7 @@ public class LineSegment2D {
 	}
 
 	
+
+	
+	
 }

@@ -7,6 +7,7 @@ import java.util.List;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Checkpoint;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Boat;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Courant;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.processing.InputParser;
@@ -53,6 +54,15 @@ public class StreamManager implements PropertyChangeListener {
         
     }
     
+    
+   public Courant streamBringCloserCp(Checkpoint cp) {
+	   for(Courant courant:courants) {
+		   if(courant.bringCloserCp(cp,boat)) {
+			   return courant;
+		   }
+	   }
+    	return null;
+    }
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
