@@ -3,9 +3,12 @@ package fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
+import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.IPoint;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Checkpoint;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Boat;
@@ -64,6 +67,20 @@ public class StreamManager implements PropertyChangeListener {
         LineSegment2D segment2d = new LineSegment2D(position, boat.getPosition());
         return this.courants.stream().anyMatch(courant -> courant.intersectsWith(segment2d));
 
+    }
+
+    public Courant firstStreamBetween(Position destination){
+        LineSegment2D segment2d = new LineSegment2D(destination, boat.getPosition());
+        List<Courant> streamsOnTrajectory=this.courants.stream().filter(courant->courant.intersectsWith(segment2d))
+        .collect(Collectors.toList());
+
+        if(streamsOnTrajectory.size()==1){
+            return streamsOnTrajectory.get(0);
+        }
+        else if(streamsOnTrajectory.size()>1){
+            //TODO 
+        }
+        return null;
     }
 
     public Courant streamBringCloserCp(Checkpoint cp) {

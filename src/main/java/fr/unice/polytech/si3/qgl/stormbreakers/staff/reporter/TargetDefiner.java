@@ -27,15 +27,46 @@ public class TargetDefiner  {
     }
 
     boolean thereIsStreamOnTrajectory(){
-        return false;
+        return this.streamManager.thereIsStreamBetween(checkpointsManager.nextCheckpoint().getPosition() );
+    }
+
+    Courant nextStreamOnTrajectory(){
+        if(thereIsStreamOnTrajectory()){
+            return this.streamManager.firstStreamBetween(boat.getPosition());
+        }
+        return null;
     }
 
     public TupleDistanceOrientation defineNextTarget(){
         Checkpoint checkpoint=checkpointsManager.nextCheckpoint();
         if(checkpoint!=null){
-            if(streamManager.insideStream()&& streamManager.streamAroundBoat().isPtInside(checkpoint.getPosition())){
-
+            if(streamManager.insideStream() &&  !streamManager.streamAroundBoat().isPtInside(checkpoint.getPosition())){
+                return this.caseInsideAStream();
             }
+            else if(streamManager.insideStream() && streamManager.streamAroundBoat().isPtInside(checkpoint.getPosition())){
+                //LATER affiner la distance et l'orientation et déplacer dans caseInsideAStream
+                double distance=boat.getPosition().distanceTo(checkpoint.getPosition());
+                double orientation=navigator.additionalOrientationNeeded(boat.getPosition(), checkpoint.getPosition().getPoint2D());
+
+                return new TupleDistanceOrientation(distance, orientation);
+            }
+
+            else if(thereIsStreamOnTrajectory()){
+                Courant courant=nextStreamOnTrajectory();
+
+                if(courant.isCompatibleWith(boat.getPosition(),checkpoint.getPosition())){
+                    return new TupleDistanceOrientation(boat.getPosition().distanceTo(checkpoint.getPosition())
+                        , navigator.additionalOrientationNeeded(boat.getPosition(), checkpoint.getPosition().getPoint2D()));
+                }
+                else{
+                    //TODO eviter le courant pour le moment on fonce droit dedans en augmentant juste la distance/vitesse à prendre
+                    return new TupleDistanceOrientation(boat.getPosition().distanceTo(checkpoint.getPosition())+courant.getStrength()
+                        , navigator.additionalOrientationNeeded(boat.getPosition(), checkpoint.getPosition().getPoint2D()));
+                }
+                
+            }
+
+
         }
 
         return null;
@@ -60,7 +91,7 @@ public class TargetDefiner  {
             return new TupleDistanceOrientation(distance, orientation);
         }
         else if(helpness > 0){
-            
+            //TODO distinguer si le courant nous aide temporairement seulement
             Point2D pointToLeave=this.maximalPointToStay(boat.getPosition().getPoint2D(), cpPoint, courantVector, streamAround.getShape());
             if(pointToLeave.distanceTo(boat.getPosition().getPoint2D()) <= streamAround.getStrength()){
                 double orientation=navigator.additionalOrientationNeeded(boat.getPosition(), cpPoint);
@@ -111,7 +142,7 @@ public class TargetDefiner  {
     }
 
     Point2D calculateEscapePoint(Courant courant,Point2D position){
-        //LATER add strenght consideration etc ...
+        //TODO LATER add strenght consideration etc ...
         return courant.closestPointTo(position);
     }
 

@@ -1,5 +1,7 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.math;
 
+import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.IPoint;
+
 public class Vector {
 
     private double x;
@@ -10,7 +12,7 @@ public class Vector {
         this.y = y;
     }
 
-    public Vector(Point2D start, Point2D end) {
+    public Vector(IPoint start, IPoint end) {
         this.x = end.x() - start.x();
         this.y = end.y() - start.y();
     }

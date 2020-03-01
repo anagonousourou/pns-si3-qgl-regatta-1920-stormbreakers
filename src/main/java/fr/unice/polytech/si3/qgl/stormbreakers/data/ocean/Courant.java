@@ -10,6 +10,8 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Checkpoint;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.LineSegment2D;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.RectanglePositioned;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.Utils;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.Vector;
 
 public class Courant extends OceanEntity {
     private double strength;
@@ -67,9 +69,23 @@ public class Courant extends OceanEntity {
 		Point2D cpPoint2D = new Point2D(cp.getPosition().x(),cp.getPosition().y());
 		Point2D boatPoint2D = new Point2D(boat.getPosition().x(),boat.getPosition().y());
 		if(nearestPoint.getDistanceTo(cpPoint2D)<boatPoint2D.getDistanceTo(cpPoint2D)) {
-			return r.haveGoodOrientation( cp, this.getPosition(), boat);
+			return r.haveGoodOrientation( cp, this.getPosition(), boat.getPosition());
 		}
 		return false;
+	}
+    /**
+     * Dis si le courant est compatible avec le traject défini par les parametres
+     * @param depart
+     * @param destination
+     * @return
+     */
+	public boolean isCompatibleWith(IPoint depart,IPoint destination) {
+        Vector courantVector=Vector.createUnitVector( this.getPosition().getOrientation() );
+        
+        Vector trajectoirVector= new Vector(depart, destination);
+
+        double helpness=courantVector.scal(trajectoirVector);
+        return helpness >= Utils.EPSILON;
 	}
 
 
