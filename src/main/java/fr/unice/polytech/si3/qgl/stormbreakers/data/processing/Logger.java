@@ -22,21 +22,25 @@ public class Logger {
     }
 
     /**
-     * Saves string into current log line
-     * creates a new line to add to the logs list if overflow spotted
+     * Saves string into current log line creates a new line to add to the logs list
+     * if overflow spotted
+     * 
      * @param msg string to be saved
      */
     public void log(String msg) {
-        if (msg==null) return;
+        if (msg == null)
+            return;
 
-        while (msg.length()>0) {
+        while (msg.length() > 0) {
             msg = addOnCurrentLine(msg);
-            if (msg.length()!=0) push(); // if something remains we're on a new log line
+            if (msg.length() != 0)
+                push(); // if something remains we're on a new log line
         }
     }
 
     /**
      * Logs a predefined separator
+     * 
      * @see Logger log
      */
     public void addSeparator() {
@@ -44,8 +48,8 @@ public class Logger {
     }
 
     /**
-     * Adds msg to the current log line
-     * uses substring if too long
+     * Adds msg to the current log line uses substring if too long
+     * 
      * @param msg string to log on current log line
      * @return String: the remaining part of the msg
      */
@@ -70,31 +74,32 @@ public class Logger {
      * Stores last line as logs
      */
     private void push() {
-        if (currentLogLine.length()==0) return; // No need to push empty line
+        if (currentLogLine.length() == 0)
+            return; // No need to push empty line
         allLogs.add(currentLogLine.toString());
         clearCurrentLogLine();
     }
 
     /**
-     * Stores msg as logs
-     * without using current log line
-     * by creating a new line
+     * Stores msg as logs without using current log line by creating a new line
+     * 
      * @param msg to push
      */
     private void directPush(String msg) {
-        if ("".equals(msg)) return; // No need to push empty line
+        if ("".equals(msg))
+            return; // No need to push empty line
         if (allLogs.size() < MAX_LOG_LINES) {
             allLogs.add(msg);
         }
     }
-
 
     private void clearCurrentLogLine() {
         currentLogLine = new StringBuilder();
     }
 
     public List<String> getSavedData() {
-        if (allLogs.size() < MAX_LOG_LINES) push();
+        if (allLogs.size() < MAX_LOG_LINES)
+            push();
         return allLogs;
     }
 

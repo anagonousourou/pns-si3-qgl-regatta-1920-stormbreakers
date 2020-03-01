@@ -30,6 +30,7 @@ public class Checkpoint implements Logable {
         return shape;
     }
 
+    //LATER turn this to a interface method
     public boolean isPtInside(Point2D pt) {
         return this.isPtInside(pt.getX(), pt.getY());
     }

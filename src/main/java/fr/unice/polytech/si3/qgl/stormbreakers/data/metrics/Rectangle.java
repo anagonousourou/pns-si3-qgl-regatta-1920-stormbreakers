@@ -1,14 +1,12 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.data.metrics;
 
+import java.util.Objects;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Checkpoint;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.EquationDroite;
-import fr.unice.polytech.si3.qgl.stormbreakers.math.LineSegment2D;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
-
-import java.util.Objects;
 
 public class Rectangle extends Shape {
     private double width;

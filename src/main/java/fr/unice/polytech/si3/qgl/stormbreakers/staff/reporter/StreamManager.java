@@ -13,7 +13,6 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Courant;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.processing.InputParser;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.processing.Logger;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.LineSegment2D;
-import fr.unice.polytech.si3.qgl.stormbreakers.staff.tactical.Navigator;
 
 /**
  * Classe pour gérér les streams
@@ -23,49 +22,57 @@ public class StreamManager implements PropertyChangeListener {
     private List<Courant> courants;
     private InputParser parser;
     private Boat boat;
-    private Navigator navigator;
+
     private static final double EPS = 0.001;
 
-    public StreamManager(InputParser parser,Boat boat,Navigator navigator) {
+    public StreamManager(InputParser parser, Boat boat) {
         this.parser = parser;
-        this.boat=boat;
-        this.navigator=navigator;
+        this.boat = boat;
 
     }
+
     /**
      * Method to say if the boat is currently within a stream
+     * 
      * @return
      */
-    public boolean insideStream(){
-        return this.courants.stream().anyMatch(courant->courant.getShape().isPtInside(boat.getPosition().getPoint2D()));
-    }
-
-    public Courant streamAroundBoat(){
-        return this.courants.stream().filter(courant->courant.getShape().isPtInside(boat.getPosition().getPoint2D())).findAny().get();
+    public boolean insideStream() {
+        return this.courants.stream().anyMatch(courant -> courant.isPtInside(boat.getPosition().getPoint2D()));
     }
 
     /**
-     * Méthode to say if there is any streams from the boat 
-     * to the given position
+     * 
+     * @return
+     */
+    public Courant streamAroundBoat() {
+        var optCourant = this.courants.stream().filter(courant -> courant.isPtInside(boat.getPosition().getPoint2D()))
+                .findAny();
+        if (optCourant.isPresent()) {
+            return optCourant.get();
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Méthode to say if there is any streams from the boat to the given position
+     * 
      * @param position
      * @return
      */
+    public boolean thereIsStreamBetween(Position position) {
+        LineSegment2D segment2d = new LineSegment2D(position.getPoint2D(), boat.getPosition().getPoint2D());
+        return this.courants.stream().anyMatch(courant -> courant.intersectsWith(segment2d));
 
-    public boolean thereIsStreamBetween(Position position){
-        LineSegment2D segment2d=new LineSegment2D(position.getPoint2D(), boat.getPosition().getPoint2D());
-        return this.courants.stream().anyMatch(courant->courant.intersectsWith( segment2d ));
-        
-        
     }
-    
-    
-   public Courant streamBringCloserCp(Checkpoint cp) {
-	   for(Courant courant:courants) {
-		   if(courant.bringCloserCp(cp,boat)) {
-			   return courant;
-		   }
-	   }
-    	return null;
+
+    public Courant streamBringCloserCp(Checkpoint cp) {
+        for (Courant courant : courants) {
+            if (courant.bringCloserCp(cp, boat)) {
+                return courant;
+            }
+        }
+        return null;
     }
 
     @Override
@@ -77,5 +84,12 @@ public class StreamManager implements PropertyChangeListener {
             Logger.getInstance().log(e.getMessage());
         }
     }
-    
+
+    /**
+     * @param courants the courants to set
+     */
+    void setCourants(List<Courant> courants) {
+        this.courants = courants;
+    }
+
 }
