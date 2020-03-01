@@ -102,10 +102,10 @@ public class CoordinatorTest {
     	List<SailorAction> toTest1 = coordinator.activateRudder(Math.PI/4);
     	Optional<Sailor> sailorChosen1 = coordinator.marineForRudder();
     	assertTrue(toTest1.get(0) instanceof MoveAction);
-    	int expectedX = sailorChosen1.get().getPosition().getX() + ((MoveAction) toTest1.get(0)).getXdistance();
-    	int expectedY = sailorChosen1.get().getPosition().getY() + ((MoveAction) toTest1.get(0)).getYdistance();
-    	assertEquals(r1.getX(), expectedX);
-    	assertEquals(r1.getY(), expectedY);
+    	int expectedX = sailorChosen1.get().getPosition().x() + ((MoveAction) toTest1.get(0)).getXdistance();
+    	int expectedY = sailorChosen1.get().getPosition().y() + ((MoveAction) toTest1.get(0)).getYdistance();
+    	assertEquals(r1.x(), expectedX);
+    	assertEquals(r1.y(), expectedY);
     	
     	assertTrue(toTest1.get(1) instanceof Turn);
     	assertEquals(Math.PI/4, ((Turn) toTest1.get(1)).getRotation());
@@ -125,10 +125,10 @@ public class CoordinatorTest {
     	coordinator =  new Coordinator(new CrewManager(marinsDisponibles), new EquipmentsManager(new ArrayList<Equipment>(rames), 4));
     	List<SailorAction> toOar1 = coordinator.activateNbOars(rames, 3, new ArrayList<>());
     	assertTrue(toOar1.get(0) instanceof MoveAction);
-    	int expectedX = m1.getPosition().getX() + ((MoveAction) toOar1.get(0)).getXdistance();
-    	int expectedY = m1.getPosition().getY() + ((MoveAction) toOar1.get(0)).getYdistance();
-    	assertEquals(o1.getX(), expectedX);
-    	assertEquals(o1.getY(), expectedY);
+    	int expectedX = m1.getPosition().x() + ((MoveAction) toOar1.get(0)).getXdistance();
+    	int expectedY = m1.getPosition().y() + ((MoveAction) toOar1.get(0)).getYdistance();
+    	assertEquals(o1.x(), expectedX);
+    	assertEquals(o1.y(), expectedY);
 
     	assertTrue(toOar1.get(1) instanceof OarAction);
     	assertEquals(0, toOar1.get(0).getSailorId());

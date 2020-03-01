@@ -85,6 +85,7 @@ public class StreamManagerTest {
         assertFalse(manager.thereIsStreamBetween(new Position(300, 300)));
         assertTrue(manager.thereIsStreamBetween(new Position(900, 100)));
         assertTrue(manager.thereIsStreamBetween(new Position(500, 100)));
+        assertFalse(manager.thereIsStreamBetween(new Position(-300, 100)));
 
 
     }

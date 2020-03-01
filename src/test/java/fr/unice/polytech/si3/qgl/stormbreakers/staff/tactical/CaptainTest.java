@@ -265,7 +265,7 @@ public class CaptainTest {
 
         result.stream().filter(action->action.getType().equals(ActionType.MOVING.actionCode)).map(action->(MoveAction)action)
         .forEach(
-                moving-> prevsPos.compute(moving.getSailorId(), (k,v)-> new IntPosition(v.getX()+moving.getXdistance(),v.getY()+moving.getYdistance() ) )
+                moving-> prevsPos.compute(moving.getSailorId(), (k,v)-> new IntPosition(v.x()+moving.getXdistance(),v.y()+moving.getYdistance() ) )
         );
 
         allSailors.stream().filter(sailor->prevsPos.keySet().contains(sailor.getId()) ).forEach(sailor->assertEquals(sailor.getPosition(),prevsPos.get(sailor.getId()) , "Should be equals"));

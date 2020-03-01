@@ -50,46 +50,46 @@ class InputParserTest {
         @Test
         void testFetchAllSailors() {
                 assertEquals(0, sailors.get(0).getId());
-                assertEquals(0, sailors.get(0).getPosition().getX());
-                assertEquals(0, sailors.get(0).getPosition().getY());
+                assertEquals(0, sailors.get(0).getPosition().x());
+                assertEquals(0, sailors.get(0).getPosition().y());
 
                 assertEquals(1, sailors.get(1).getId());
-                assertEquals(0, sailors.get(1).getPosition().getX());
-                assertEquals(1, sailors.get(1).getPosition().getY());
+                assertEquals(0, sailors.get(1).getPosition().x());
+                assertEquals(1, sailors.get(1).getPosition().y());
         }
 
         @Test
         void testFetchAllOars() {
-                assertEquals(0, oars.get(0).getPosition().getX());
-                assertEquals(0, oars.get(0).getPosition().getY());
+                assertEquals(0, oars.get(0).getPosition().x());
+                assertEquals(0, oars.get(0).getPosition().y());
 
-                assertEquals(1, oars.get(1).getPosition().getX());
-                assertEquals(0, oars.get(1).getPosition().getY());
+                assertEquals(1, oars.get(1).getPosition().x());
+                assertEquals(0, oars.get(1).getPosition().y());
         }
 
         @Test
         void testFetchCheckpoints() {
-                assertEquals(1000, checkpoints.get(0).getPosition().getX());
-                assertEquals(0, checkpoints.get(0).getPosition().getY());
+                assertEquals(1000, checkpoints.get(0).getPosition().x());
+                assertEquals(0, checkpoints.get(0).getPosition().y());
                 assertEquals("circle", checkpoints.get(0).getShape().getType());
 
-                assertEquals(0, checkpoints.get(1).getPosition().getX());
-                assertEquals(0, checkpoints.get(1).getPosition().getY());
+                assertEquals(0, checkpoints.get(1).getPosition().x());
+                assertEquals(0, checkpoints.get(1).getPosition().y());
                 assertEquals("circle", checkpoints.get(1).getShape().getType());
         }
 
         @Test
         void testFetchEquipments() {
-                assertEquals(0, equipments.get(0).getPosition().getX());
-                assertEquals(0, equipments.get(0).getPosition().getY());
+                assertEquals(0, equipments.get(0).getPosition().x());
+                assertEquals(0, equipments.get(0).getPosition().y());
                 assertEquals("oar", equipments.get(0).getType());
 
-                assertEquals(1, equipments.get(1).getPosition().getX());
-                assertEquals(0, equipments.get(1).getPosition().getY());
+                assertEquals(1, equipments.get(1).getPosition().x());
+                assertEquals(0, equipments.get(1).getPosition().y());
                 assertEquals("oar", equipments.get(1).getType());
 
-                assertEquals(1, equipments.get(2).getPosition().getX());
-                assertEquals(1, equipments.get(2).getPosition().getY());
+                assertEquals(1, equipments.get(2).getPosition().x());
+                assertEquals(1, equipments.get(2).getPosition().y());
                 assertEquals("rudder", equipments.get(2).getType());
         }
 

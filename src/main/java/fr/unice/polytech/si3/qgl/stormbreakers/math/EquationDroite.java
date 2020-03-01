@@ -12,9 +12,9 @@ public class EquationDroite {
 		this.b=b;
 	}
 	public EquationDroite(Position p1, Position p2) {
-		a=(p2.getY()-p1.getY())/(p2.getX()-p1.getX()); 
-		EquationDroite e= new EquationDroite(-a, p1.getY());
-		b=e.resolutionValeurB(p1.getX());
+		a=(p2.y()-p1.y())/(p2.x()-p1.x()); 
+		EquationDroite e= new EquationDroite(-a, p1.y());
+		b=e.resolutionValeurB(p1.x());
 	}
 	
 	
@@ -39,9 +39,9 @@ public class EquationDroite {
 	
 	EquationDroite findEqPerpendicularLineByPos(Position p) {
 		double lineA= -(1/a);
-		EquationDroite e= new EquationDroite(-lineA, p.getY());
+		EquationDroite e= new EquationDroite(-lineA, p.y());
 		System.out.println("AB:("+e.getA()+","+e.getB()+")");
-		double lineB=e.resolutionValeurB(p.getX()); 
+		double lineB=e.resolutionValeurB(p.x()); 
 		return new EquationDroite(lineA, lineB);
 	}
 	

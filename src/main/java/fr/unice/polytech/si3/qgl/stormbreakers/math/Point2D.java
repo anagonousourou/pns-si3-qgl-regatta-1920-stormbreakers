@@ -3,13 +3,14 @@ package fr.unice.polytech.si3.qgl.stormbreakers.math;
 import java.util.Objects;
 import static java.lang.Math.hypot;
 
+import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.IPoint;
 import fr.unice.polytech.si3.qgl.stormbreakers.exceptions.ImpossibleAngleError;
 
 /**
  * Un point 2D dans une espace reel
  */
 
-public class Point2D {
+public class Point2D implements IPoint{
     private double x;
     private double y;
     private static double EPS=0.0001;
@@ -29,13 +30,7 @@ public class Point2D {
         this.y = fromOrigin.getDeltaY();
     }
 
-    public double getX() {
-        return x;
-    }
-
-    public double getY() {
-        return y;
-    }
+    
 
     /**
      * Donne l'angle entre l'axe x et le vecteur position retourne null si (0,0)
@@ -45,7 +40,7 @@ public class Point2D {
      */
     public double getAngleFromXAxis() {
         Vector unitX = new Vector(1, 0);
-        Vector toPoint = new Vector(getX(), getY());
+        Vector toPoint = new Vector(this.x, this.y);
         // Renvoie un angle entre [0,Pi]
         double unorientedAngle = unitX.angleBetween(toPoint);
 
@@ -184,11 +179,17 @@ public class Point2D {
         return 0;
     }
 
+    @Override
     public double y() {
         return y;
     }
-
+    @Override
     public double x() {
         return x;
+    }
+
+    @Override
+    public double distanceTo(IPoint other) {
+        return Math.sqrt((other.x() - this.x) * (other.x() - this.x) + (other.y() - this.y) * (other.y() - this.y));
     }
 }

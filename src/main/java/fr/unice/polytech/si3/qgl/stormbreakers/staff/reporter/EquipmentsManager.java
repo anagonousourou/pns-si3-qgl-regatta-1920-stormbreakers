@@ -44,11 +44,11 @@ public class EquipmentsManager implements PropertyChangeListener {
         this.oars = this.equipments.stream().filter(e -> e.getType().equals("oar")).map(e -> (Oar) e)
                 .collect(Collectors.toList());
         if (widthship % 2 == 1) {// impair
-            this.leftOars = this.oars.stream().filter(oar -> oar.getY() < widthship / 2).collect(Collectors.toList());
-            this.rightOars = this.oars.stream().filter(oar -> oar.getY() > widthship / 2).collect(Collectors.toList());
+            this.leftOars = this.oars.stream().filter(oar -> oar.y() < widthship / 2).collect(Collectors.toList());
+            this.rightOars = this.oars.stream().filter(oar -> oar.y() > widthship / 2).collect(Collectors.toList());
         } else {
-            this.leftOars = this.oars.stream().filter(oar -> oar.getY() < widthship / 2).collect(Collectors.toList());
-            this.rightOars = this.oars.stream().filter(oar -> oar.getY() >= widthship / 2).collect(Collectors.toList());
+            this.leftOars = this.oars.stream().filter(oar -> oar.y() < widthship / 2).collect(Collectors.toList());
+            this.rightOars = this.oars.stream().filter(oar -> oar.y() >= widthship / 2).collect(Collectors.toList());
         }
         var optRuddder = this.equipments.stream().filter(e -> e.getType().equals("rudder")).map(e -> (Gouvernail) e)
                 .findFirst();
@@ -107,15 +107,15 @@ public class EquipmentsManager implements PropertyChangeListener {
     }
 
     boolean oarPresentAt(IntPosition pos) {
-        return this.oars.stream().anyMatch(oar -> oar.getX() == pos.getX() && oar.getY() == pos.getY());
+        return this.oars.stream().anyMatch(oar -> oar.x() == pos.x() && oar.y() == pos.y());
     }
 
     Optional<Oar> oarAt(IntPosition pos) {
-        return this.oars.stream().filter(oar -> oar.getX() == pos.getX() && oar.getY() == pos.getY()).findFirst();
+        return this.oars.stream().filter(oar -> oar.x() == pos.x() && oar.y() == pos.y()).findFirst();
     }
 
     public IntPosition rudderPosition() {
-        return new IntPosition(rudder.getX(), rudder.getY());
+        return new IntPosition(rudder.x(), rudder.y());
     }
 
     public int nbSails() {
@@ -169,7 +169,7 @@ public class EquipmentsManager implements PropertyChangeListener {
     }
 
     public Optional<Equipment> equipmentAt(IntPosition pos){
-        return this.equipments.stream().filter(e-> e.getX()==pos.getX() && e.getY()==pos.getY()).findFirst();
+        return this.equipments.stream().filter(e-> e.x()==pos.x() && e.y()==pos.y()).findFirst();
     }
 
 }

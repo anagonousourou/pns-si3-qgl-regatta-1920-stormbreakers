@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.Logable;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.IPoint;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Shape;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
@@ -31,13 +32,13 @@ public class Checkpoint implements Logable {
     }
 
     //LATER turn this to a interface method
-    public boolean isPtInside(Point2D pt) {
-        return this.isPtInside(pt.getX(), pt.getY());
+    public boolean isPtInside(IPoint pt) {
+        return this.isPtInside(pt.x(), pt.y());
     }
 
     private boolean isPtInside(double x, double y) {
         // On se replace par rapport au centre de la forme
-        Point2D pt = new Point2D(x - position.getX(), y - position.getY());
+        Point2D pt = new Point2D(x - position.x(), y - position.y());
         double orientation = position.getOrientation();
         // On compense l'orientation du checkpoint
         if (orientation != 0) pt = pt.getRotatedBy(-orientation);

@@ -37,7 +37,7 @@ public class StreamManager implements PropertyChangeListener {
      * @return
      */
     public boolean insideStream() {
-        return this.courants.stream().anyMatch(courant -> courant.isPtInside(boat.getPosition().getPoint2D()));
+        return this.courants.stream().anyMatch(courant -> courant.isPtInside(boat.getPosition()));
     }
 
     /**
@@ -45,7 +45,7 @@ public class StreamManager implements PropertyChangeListener {
      * @return
      */
     public Courant streamAroundBoat() {
-        var optCourant = this.courants.stream().filter(courant -> courant.isPtInside(boat.getPosition().getPoint2D()))
+        var optCourant = this.courants.stream().filter(courant -> courant.isPtInside(boat.getPosition()))
                 .findAny();
         if (optCourant.isPresent()) {
             return optCourant.get();
@@ -61,7 +61,7 @@ public class StreamManager implements PropertyChangeListener {
      * @return
      */
     public boolean thereIsStreamBetween(Position position) {
-        LineSegment2D segment2d = new LineSegment2D(position.getPoint2D(), boat.getPosition().getPoint2D());
+        LineSegment2D segment2d = new LineSegment2D(position, boat.getPosition());
         return this.courants.stream().anyMatch(courant -> courant.intersectsWith(segment2d));
 
     }

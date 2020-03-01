@@ -1,14 +1,14 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.data.metrics;
 
+import java.util.Objects;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.Logable;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
 
-import java.util.Objects;
-
-public class Position implements Logable {
+public class Position implements Logable,IPoint {
     private double x;
     private double y;
     private double orientation;
@@ -26,19 +26,20 @@ public class Position implements Logable {
     }
 
     @JsonProperty("x")
-    public double getX() {
+    public double x() {
         return x;
     }
 
     @JsonProperty("y")
-    public double getY() {
+    public double y() {
         return y;
     }
 
-    public Point2D getPoint2D() {
-        return new Point2D(getX(), getY());
-    }
+    
 
+    public double distanceTo(IPoint other){
+        return Math.sqrt((other.x() - this.x) * (other.x() - this.x) + (other.y() - this.y) * (other.y() - this.y));
+    }
     public double distanceTo(Position pos) {
         return Math.sqrt((pos.x - this.x) * (pos.x - this.x) + (pos.y - this.y) * (pos.y - this.y));
     }
@@ -75,4 +76,8 @@ public class Position implements Logable {
     public String toLogs() {
         return "P(" + this.x + "|" + this.y + "|" + this.orientation + ")";
     }
+
+	public Point2D getPoint2D() {
+		return new Point2D(this.x, this.y);
+	}
 }

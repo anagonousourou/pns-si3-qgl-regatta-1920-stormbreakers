@@ -33,11 +33,11 @@ public class Sailor implements Logable {
     }
 
     public Sailor(int id, IntPosition pos) {
-        this(id, pos.getX(), pos.getY());
+        this(id, pos.x(), pos.y());
     }
 
     public Sailor(int id, IntPosition pos, String name) {
-        this(id, pos.getX(), pos.getY());
+        this(id, pos.x(), pos.y());
         this.name = name;
 
     }
@@ -99,11 +99,11 @@ public class Sailor implements Logable {
     }
 
     public MoveAction howToMoveTo(IntPosition pos) {
-        return new MoveAction(id, pos.getX() - this.position.getX(), pos.getY() - this.position.getY());
+        return new MoveAction(id, pos.x() - this.position.x(), pos.y() - this.position.y());
     }
 
     public int getDistanceTo(IntPosition pos) {
-        return Math.abs(pos.getX() - this.position.getX()) + Math.abs(pos.getY() - this.position.getY());
+        return Math.abs(pos.x() - this.position.x()) + Math.abs(pos.y() - this.position.y());
     }
 
     public boolean canReach(IntPosition pos) {

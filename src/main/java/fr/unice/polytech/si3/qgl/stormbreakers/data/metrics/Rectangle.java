@@ -5,8 +5,10 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import fr.unice.polytech.si3.qgl.stormbreakers.math.EquationDroite;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Checkpoint;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Boat;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.RectanglePositioned;
 
 public class Rectangle extends Shape {
     private double width;
@@ -54,11 +56,11 @@ public class Rectangle extends Shape {
      * @param pt point à tester
      * @return true s'il est dedans, false sinon
      */
-    private boolean isPtInRectangle0(Point2D pt) {
+    private boolean isPtInRectangle0(IPoint pt) {
         double eps = Math.pow(10, -10);
 
-        boolean xOk = between(pt.getX(), -height / 2, height / 2, eps);
-        boolean yOk = between(pt.getY(), -width / 2, width / 2, eps);
+        boolean xOk = between(pt.x(), -height / 2, height / 2, eps);
+        boolean yOk = between(pt.y(), -width / 2, width / 2, eps);
         return xOk && yOk;
     }
 
@@ -107,21 +109,83 @@ public class Rectangle extends Shape {
 
 	public Point2D findPointNearestToPosition(Position other,Position rectangle) {
 		// TODO Auto-generated method stub
-		if(orientation-Math.PI/2<0.0001||orientation-(2*Math.PI/2)<0.0001) {
-			return new Point2D( rectangle.getX(),other.getY());
-		}else if(orientation<0.0001||orientation-(2*Math.PI)<0.0001) {
-			return new Point2D(other.getX(), rectangle.getY());
+		if(Math.abs(orientation-Math.PI/2)<0.0001||Math.abs(orientation-(2*Math.PI/2))<0.0001) {
+			if(Math.abs(other.y()-rectangle.y())<(height/2)) {
+				return new Point2D( rectangle.x(),other.y());
+			}else if(other.x()-rectangle.y()<(-height/2)){
+				return new Point2D( rectangle.x(),rectangle.y()-(height/2));
+			}else {
+				return new Point2D( rectangle.x(),rectangle.y()+(height/2));
+			}
+		}else if(Math.abs(orientation)<0.0001||Math.abs(orientation)-(2*Math.PI)<0.0001) {
+			
+			if(Math.abs(other.x()-rectangle.x())<(height/2)) {
+				return new Point2D(other.x(), rectangle.y());
+			}else if(other.x()-rectangle.x()<(-height/2)){
+				return new Point2D(rectangle.x()-(height/2), rectangle.y());
+			}else {
+				return new Point2D(rectangle.x()+(height/2), rectangle.y());
+			}
+			
 		}else {
+			/*EquationDroite droiteRect= new EquationDroite(Math.cos(orientation)*(rectangle.x()+(this.height/2)),
+					Math.sin(orientation)*rectangle.y()+(this.width/2),
+					Math.cos(orientation)*other.x()-(this.height/2),
+					Math.sin(orientation)*rectangle.y()-(this.width/2));*/
 			
-			EquationDroite droiteRect= new EquationDroite(Math.cos(orientation)*(rectangle.getX()+(this.height/2)),
-					Math.sin(orientation)*rectangle.getY()+(this.width/2),
-					Math.cos(orientation)*other.getX()-(this.height/2),
-					Math.sin(orientation)*rectangle.getY()-(this.width/2));
-			
-			return droiteRect.findPointIntersectPerpendicularLineByPos(other);
+			// droiteRect.findPointIntersectPerpendicularLineByPos(other);
+			RectanglePositioned rect =  new RectanglePositioned(this, rectangle);
+/*
+			if(this.isPtInRectangle0(p)) {
+				return p;
+			}else if(other.x()<rectangle.x() || other.y()<)*/
+			Point2D p= new Point2D(other.x(),other.y());
+			return rect.closestPointTo(p).get() ;
 		}
 		
 	}
 
+	public boolean haveGoodOrientation(Checkpoint cp, Position rectangle, Boat boat) {
+		// TODO Auto-generated method stub
+		if(0<=orientation && orientation<(Math.PI)/2){
+			if(cp.getPosition().y()>rectangle.y()-Math.sin(orientation)*width/4 
+					&& cp.getPosition().x()-Math.cos(orientation)*height/4>=rectangle.x()
+					&& boat.getPosition().x()<cp.getPosition().x()
+					&& boat.getPosition().y()<cp.getPosition().y()) {
+				return true;
+			}else {
+				return false;
+			}
+		}else if((Math.PI/2)<=orientation && orientation<Math.PI) {
+			if(cp.getPosition().y()>rectangle.y()-Math.sin(orientation)*width/4 
+					&& cp.getPosition().x()-Math.cos(orientation)*height/4<=rectangle.x()
+					&& boat.getPosition().x()<cp.getPosition().x()
+					&& boat.getPosition().y()>cp.getPosition().y()) {
+				return true;
+			}else {
+				return false;
+			}
+		}
+		else if((Math.PI)<=orientation && orientation<((3*Math.PI)/2)) {
+			if(cp.getPosition().x()<rectangle.x()-Math.cos(orientation)*height/4 
+					&& cp.getPosition().x()-Math.cos(orientation)*height/4<=rectangle.x()
+					&& boat.getPosition().x()>cp.getPosition().x()
+					&& boat.getPosition().y()>cp.getPosition().y()) {
+				return true;
+			}else {
+				return false;
+			}
+		}else {
+			if(cp.getPosition().x()>rectangle.x()-Math.cos(orientation)*height/4 
+					&& cp.getPosition().x()-Math.cos(orientation)*height/4>=rectangle.x()
+					&& boat.getPosition().x()>cp.getPosition().x()
+					&& boat.getPosition().y()<cp.getPosition().y()) {
+				return true;
+			}else {
+				return false;
+			}
+		}
+	}
 
+	
 }

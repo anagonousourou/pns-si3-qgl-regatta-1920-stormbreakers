@@ -2,6 +2,7 @@ package fr.unice.polytech.si3.qgl.stormbreakers.data.ocean;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.IPoint;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Rectangle;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Shape;
@@ -42,31 +43,35 @@ public class Courant extends OceanEntity {
         return new RectanglePositioned((Rectangle) this.shape, this.position).closestPointTo(point2d).get();
     }
 
-    public boolean bringCloserCp(Checkpoint cp, Boat boat) {
-
-        Rectangle r = (Rectangle) this.shape;
-        Point2D nearestPoint = r.findPointNearestToPosition(cp.getPosition(), this.position);
-        Point2D cpPoint2D = new Point2D(cp.getPosition().getX(), cp.getPosition().getY());
-        Point2D boatPoint2D = new Point2D(boat.getPosition().getX(), boat.getPosition().getY());
-        if (nearestPoint.getDistanceTo(cpPoint2D) < boatPoint2D.getDistanceTo(cpPoint2D)) {
-
-        }
-        return false;
-    }
+    
 
     // LATER turn this into a interface method to implement TODO
-    public boolean isPtInside(Point2D pt) {
-        return this.isPtInside(pt.getX(), pt.getY());
+    public boolean isPtInside(IPoint pt) {
+        return this.isPtInside(pt.x(), pt.y());
     }
 
     private boolean isPtInside(double x, double y) {
         // On se replace par rapport au centre de la forme
-        Point2D pt = new Point2D(x - position.getX(), y - position.getY());
+        Point2D pt = new Point2D(x - position.x(), y - position.y());
         double orientation = position.getOrientation();
         // On compense l'orientation du checkpoint
         if (orientation != 0)
             pt = pt.getRotatedBy(-orientation);
         return shape.isPtInside(pt);
     }
+	
+	public boolean bringCloserCp(Checkpoint cp, Boat boat) {
+		
+		Rectangle r=(Rectangle)this.shape;
+		Point2D nearestPoint=r.findPointNearestToPosition(cp.getPosition(),this.position);
+		Point2D cpPoint2D = new Point2D(cp.getPosition().x(),cp.getPosition().y());
+		Point2D boatPoint2D = new Point2D(boat.getPosition().x(),boat.getPosition().y());
+		if(nearestPoint.getDistanceTo(cpPoint2D)<boatPoint2D.getDistanceTo(cpPoint2D)) {
+			return r.haveGoodOrientation( cp, this.getPosition(), boat);
+		}
+		return false;
+	}
+
+
 
 }

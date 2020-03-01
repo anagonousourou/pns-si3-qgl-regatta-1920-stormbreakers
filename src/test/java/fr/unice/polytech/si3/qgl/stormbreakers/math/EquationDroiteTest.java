@@ -18,7 +18,7 @@ public class EquationDroiteTest {
 	    b = new Position(-2, 6, 3 );
         c = new Position(3, -1.0, 3 );
         eqD1 = new EquationDroite(a, b);
-        eqD2 = new EquationDroite(b.getX(), b.getY(), c.getX(), c.getY());
+        eqD2 = new EquationDroite(b.x(), b.y(), c.x(), c.y());
         eqD3 = new EquationDroite(1, 2);
     }
 

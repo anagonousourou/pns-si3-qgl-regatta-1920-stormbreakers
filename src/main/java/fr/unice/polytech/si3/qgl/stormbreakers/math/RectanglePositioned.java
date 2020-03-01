@@ -30,8 +30,8 @@ public class RectanglePositioned {
 
         double theta = alpha + beta;
 
-        double xpoint = position.getX() + radius * Math.cos(theta);
-        double ypoint = position.getY() + radius * Math.sin(theta);
+        double xpoint = position.x() + radius * Math.cos(theta);
+        double ypoint = position.y() + radius * Math.sin(theta);
 
         return new Point2D(xpoint, ypoint);
     }
@@ -44,8 +44,8 @@ public class RectanglePositioned {
 
         double theta = alpha - beta;
 
-        double xpoint = position.getX() + radius * Math.cos(theta);
-        double ypoint = position.getY() + radius * Math.sin(theta);
+        double xpoint = position.x() + radius * Math.cos(theta);
+        double ypoint = position.y() + radius * Math.sin(theta);
 
         return new Point2D(xpoint, ypoint);
     }
@@ -58,8 +58,8 @@ public class RectanglePositioned {
 
         double theta = Math.PI + alpha + beta;
 
-        double xpoint = position.getX() + radius * Math.cos(theta);
-        double ypoint = position.getY() + radius * Math.sin(theta);
+        double xpoint = position.x() + radius * Math.cos(theta);
+        double ypoint = position.y() + radius * Math.sin(theta);
 
         return new Point2D(xpoint, ypoint);
     }
@@ -72,8 +72,8 @@ public class RectanglePositioned {
 
         double theta = Math.PI + alpha - beta;
 
-        double xpoint = position.getX() + radius * Math.cos(theta);
-        double ypoint = position.getY() + radius * Math.sin(theta);
+        double xpoint = position.x() + radius * Math.cos(theta);
+        double ypoint = position.y() + radius * Math.sin(theta);
 
         return new Point2D(xpoint, ypoint);
     }

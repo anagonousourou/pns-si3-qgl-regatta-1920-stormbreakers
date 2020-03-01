@@ -207,7 +207,7 @@ public class Coordinator {
                 for (Sailor m : correspondances.get(oar)) {
                     if (!yetBusy.contains(m) && !m.isDoneTurn()) {
                         yetBusy.add(m);
-                        result.add(m.howToMoveTo(new IntPosition(oar.getX(), oar.getY())));
+                        result.add(m.howToMoveTo(new IntPosition(oar.x(), oar.y())));
                         result.add(new OarAction(m.getId()));
                         compteur++;
                         break;

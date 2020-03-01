@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.DoubleStream;
 
+import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.IPoint;
 import fr.unice.polytech.si3.qgl.stormbreakers.exceptions.DegeneratedLine2DException;
 
 /* File LineSegment2D.java 
@@ -110,8 +111,8 @@ public class LineSegment2D {
 	// constructors
 
 	/** Defines a new Edge with two extremities. */
-	public LineSegment2D(Point2D point1, Point2D point2) {
-		this(point1.getX(), point1.y(), point2.x(), point2.y());
+	public LineSegment2D(IPoint point1, IPoint point2) {
+		this(point1.x(), point1.y(), point2.x(), point2.y());
 	}
 
 	/** Defines a new Edge with two extremities. */

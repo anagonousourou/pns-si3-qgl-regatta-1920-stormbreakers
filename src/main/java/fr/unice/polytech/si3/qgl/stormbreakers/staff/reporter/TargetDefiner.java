@@ -1,8 +1,7 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter;
 
-
-
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Shape;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Checkpoint;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Boat;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Courant;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
@@ -29,6 +28,17 @@ public class TargetDefiner  {
 
     boolean thereIsStreamOnTrajectory(){
         return false;
+    }
+
+    public TupleDistanceOrientation defineNextTarget(){
+        Checkpoint checkpoint=checkpointsManager.nextCheckpoint();
+        if(checkpoint!=null){
+            if(streamManager.insideStream()&& streamManager.streamAroundBoat().isPtInside(checkpoint.getPosition())){
+
+            }
+        }
+
+        return null;
     }
 
 
