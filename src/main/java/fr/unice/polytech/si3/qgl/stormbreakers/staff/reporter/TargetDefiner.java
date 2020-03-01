@@ -111,9 +111,13 @@ public class TargetDefiner  {
         }
 
         else if(helpness < 0){
-            Point2D escapePoint=this.calculateEscapePoint(streamAround, boat.getPosition().getPoint2D());
-            double orientation= navigator.additionalOrientationNeeded(boat.getPosition(), escapePoint);
-            return new TupleDistanceOrientation(TargetDefiner.ARBITRARY_DISTANCE, orientation);
+            // TODO Afin de rester cohérent avec la "politique" qui fait foncer le bateau tout droit 
+            //dans le checkpoint meme si il y a un courant défavorable on continue notre chemin
+            //quand  la "politique" aura changé on changera cette partie
+            double orientation=navigator.additionalOrientationNeeded(boat.getPosition(), cpPoint);
+            double distance=boat.getPosition().getPoint2D().distanceTo(cpPoint);
+            return new TupleDistanceOrientation(distance, orientation);
+            
         }
 
         return null;

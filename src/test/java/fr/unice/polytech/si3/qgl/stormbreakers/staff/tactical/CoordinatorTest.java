@@ -472,7 +472,7 @@ public class CoordinatorTest {
 		assertEquals(3,moves.size());
 	}
 
-	@Deprecated
+	@Disabled
 	@Test
 	void manageUnusedSailorsTestAllEquipmentsCovered() {
 		Sailor sailor1 = new Sailor(0,0,0);
