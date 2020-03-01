@@ -46,9 +46,11 @@ public class Courant extends OceanEntity {
 		Point2D cpPoint2D = new Point2D(cp.getPosition().getX(),cp.getPosition().getY());
 		Point2D boatPoint2D = new Point2D(boat.getPosition().getX(),boat.getPosition().getY());
 		if(nearestPoint.getDistanceTo(cpPoint2D)<boatPoint2D.getDistanceTo(cpPoint2D)) {
-			
+			return r.haveGoodOrientation( cp, this.getPosition(), boat);
 		}
 		return false;
 	}
+
+
 
 }
