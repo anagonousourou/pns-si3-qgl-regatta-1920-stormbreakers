@@ -38,6 +38,10 @@ public class Courant extends OceanEntity {
         }
     }
 
+    public Point2D closestPointTo(Point2D point2d){
+        return new RectanglePositioned((Rectangle)this.shape, this.position).closestPointTo(point2d).get();
+    }
+
 	
 	public boolean bringCloserCp(Checkpoint cp, Boat boat) {
 		

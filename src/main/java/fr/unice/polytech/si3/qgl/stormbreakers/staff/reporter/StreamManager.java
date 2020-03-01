@@ -20,10 +20,10 @@ import fr.unice.polytech.si3.qgl.stormbreakers.staff.tactical.Navigator;
  */
 public class StreamManager implements PropertyChangeListener {
 
-    List<Courant> courants;
-    InputParser parser;
-    Boat boat;
-    Navigator navigator;
+    private List<Courant> courants;
+    private InputParser parser;
+    private Boat boat;
+    private Navigator navigator;
     private static final double EPS = 0.001;
 
     public StreamManager(InputParser parser,Boat boat,Navigator navigator) {

@@ -5,7 +5,6 @@ package fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Shape;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Boat;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Courant;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.processing.InputParser;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Vector;
 import fr.unice.polytech.si3.qgl.stormbreakers.staff.tactical.Navigator;
@@ -13,14 +12,15 @@ import fr.unice.polytech.si3.qgl.stormbreakers.staff.tactical.Navigator;
 public class TargetDefiner  {
 
     private CheckpointsManager checkpointsManager;
-    private InputParser parser;
+    
     private StreamManager streamManager;
     private Boat boat;
     private Navigator navigator;
     private static final double EPS = 0.001;
+    private static final double ARBITRARY_DISTANCE=300;
 
-    public TargetDefiner(CheckpointsManager checkpointsManager, InputParser parser,StreamManager streamManager,Boat boat,Navigator navigator) {
-        this.parser = parser;
+    public TargetDefiner(CheckpointsManager checkpointsManager, StreamManager streamManager,Boat boat,Navigator navigator) {
+        
         this.checkpointsManager = checkpointsManager;
         this.streamManager=streamManager;
         this.boat=boat;
@@ -32,7 +32,7 @@ public class TargetDefiner  {
     }
 
 
-    TupleDistanceOrientation caseInsideAStream(){
+    public TupleDistanceOrientation caseInsideAStream(){
         Courant streamAround=this.streamManager.streamAroundBoat();
 
         Vector courantVector=Vector.createUnitVector( streamAround.getPosition().getOrientation() );
@@ -50,13 +50,24 @@ public class TargetDefiner  {
             return new TupleDistanceOrientation(distance, orientation);
         }
         else if(helpness > 0){
-
-            Point2D pointToLeave=this.maximalPointToStay(boat.getPosition().getPoint2D(), cpPoint, courantVector, streamAround.getShape());
-            double orientation=streamAround.getPosition().getOrientation()-boat.getOrientation();
-
             
-            double distance;
-            //PAS FINI
+            Point2D pointToLeave=this.maximalPointToStay(boat.getPosition().getPoint2D(), cpPoint, courantVector, streamAround.getShape());
+            if(pointToLeave.distanceTo(boat.getPosition().getPoint2D()) <= streamAround.getStrength()){
+                double orientation=navigator.additionalOrientationNeeded(boat.getPosition(), cpPoint);
+                double distance=boat.getPosition().getPoint2D().distanceTo(cpPoint);
+                return new TupleDistanceOrientation(distance, orientation);
+            }
+            else {
+                double orientation=streamAround.getPosition().getOrientation()-boat.getOrientation();
+                double distance= pointToLeave.distanceTo(boat.getPosition().getPoint2D())-streamAround.getStrength();
+                return new TupleDistanceOrientation(distance, orientation);
+            }
+        }
+
+        else if(helpness < 0){
+            Point2D escapePoint=this.calculateEscapePoint(streamAround, boat.getPosition().getPoint2D());
+            double orientation= navigator.additionalOrientationNeeded(boat.getPosition(), escapePoint);
+            return new TupleDistanceOrientation(TargetDefiner.ARBITRARY_DISTANCE, orientation);
         }
 
         return null;
@@ -87,6 +98,11 @@ public class TargetDefiner  {
     double helpness(Vector streamVector,Point2D depart, Point2D destination){
         Vector trajectVector=new Vector(depart, destination);
         return streamVector.scal(trajectVector);
+    }
+
+    Point2D calculateEscapePoint(Courant courant,Point2D position){
+        //LATER add strenght consideration etc ...
+        return courant.closestPointTo(position);
     }
 
     
