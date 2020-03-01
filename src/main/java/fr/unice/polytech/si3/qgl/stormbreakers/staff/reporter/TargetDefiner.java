@@ -65,6 +65,11 @@ public class TargetDefiner  {
                 }
                 
             }
+            else {//pas de stream du tout ou pas de stream sur la trajectoire
+                double distance= checkpoint.getPosition().distanceTo(boat.getPosition());
+                double orientation=navigator.additionalOrientationNeeded(boat.getPosition(), checkpoint.getPosition().getPoint2D());
+                return new TupleDistanceOrientation(distance, orientation);
+            }
 
 
         }

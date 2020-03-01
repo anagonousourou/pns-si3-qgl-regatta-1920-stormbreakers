@@ -21,6 +21,13 @@ public class Position implements Logable,IPoint {
         this.orientation = orientation;
     }
 
+    public static Position create(double x,double y){
+        return new Position(x, y);
+    }
+    public static Position create(double x,double y,double orientation){
+        return new Position(x, y,orientation);
+    }
+
     public Position(double x, double y) {
         this(x, y, 0);
     }

@@ -62,6 +62,7 @@ public class ElementsConstructor {
 			this.observableData.addPropertyChangeListener(this.wind);
 			this.observableData.addPropertyChangeListener(this.equipmentsManager);
 			this.observableData.addPropertyChangeListener(this.boat);
+			this.observableData.addPropertyChangeListener(this.streamManager);
 
 		} catch (JsonProcessingException e) {
 			Logger.getInstance().log(e.getMessage());
