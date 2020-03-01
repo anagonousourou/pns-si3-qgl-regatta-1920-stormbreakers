@@ -10,6 +10,11 @@ public class Vector {
         this.y = y;
     }
 
+    public Vector(Point2D start, Point2D end) {
+        this.x = end.x() - start.x();
+        this.y = end.y() - start.y();
+    }
+
     public double norm() {
         return Math.sqrt(x * x + y * y);
     }
@@ -21,6 +26,7 @@ public class Vector {
     /**
      * Renvoie la valeur absolue de l'angle non orienté entre les deux vecteurs
      * comprise entre [0,Pi]
+     * 
      * @param other 2e vecteur
      * @return double entre 0 et Pi
      */
@@ -38,5 +44,14 @@ public class Vector {
 
     public double getDeltaY() {
         return y;
+    }
+    /**
+     * Mutiplie les coords du vecteur par le facteur passé en parametre
+     * ne modifie pas le vecteur
+     * @param scaleFactor
+     * @return le nouveau vecteur obtenu
+     */
+    public Vector scaleVector(double scaleFactor){
+        return new Vector(this.x*scaleFactor, this.y*scaleFactor);
     }
 }

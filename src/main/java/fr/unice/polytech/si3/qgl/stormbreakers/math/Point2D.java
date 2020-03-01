@@ -101,6 +101,16 @@ public class Point2D {
     }
 
     /**
+     * Fait une tranlation du point avec le vecteur
+     * 
+     * 
+     * @return le point post-translation
+     */
+    public Point2D getTranslatedBy(Vector vector) {
+        return new Point2D(x + vector.getDeltaX(), y + vector.getDeltaY());
+    }
+
+    /**
      * Renvoie le vecteur duquel déplacer ce point pour obtenir celui passé en
      * parametre
      * 

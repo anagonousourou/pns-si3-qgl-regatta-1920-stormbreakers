@@ -40,6 +40,10 @@ public class StreamManager implements PropertyChangeListener {
         return this.courants.stream().anyMatch(courant->courant.getShape().isPtInside(boat.getPosition().getPoint2D()));
     }
 
+    public Courant streamAroundBoat(){
+        return this.courants.stream().filter(courant->courant.getShape().isPtInside(boat.getPosition().getPoint2D())).findAny().get();
+    }
+
     /**
      * Méthode to say if there is any streams from the boat 
      * to the given position
