@@ -404,7 +404,7 @@ public class CoordinatorTest {
 		CrewManager crew2 = new CrewManager(sailors);
 
 		Coordinator coordinator2 =  new Coordinator(crew2, equipmentsManager);
-		List<MoveAction> moves = coordinator2.manageUnusedSailors();
+		List<SailorAction> moves = coordinator2.manageUnusedSailors();
 
 		assertEquals(0,moves.size());
 	}
@@ -433,7 +433,7 @@ public class CoordinatorTest {
         when(equipmentsManager.sails()).thenReturn(sails);
 
         Coordinator coordinator2 =  new Coordinator(crew2, equipmentsManager);
-        List<MoveAction> moves = coordinator2.manageUnusedSailors();
+        List<SailorAction> moves = coordinator2.manageUnusedSailors();
 
         assertEquals(2,moves.size());
     }
@@ -465,7 +465,7 @@ public class CoordinatorTest {
 		when(equipmentsManager.sails()).thenReturn(sails);
 
 		Coordinator coordinator2 =  new Coordinator(crew2, equipmentsManager);
-		List<MoveAction> moves = coordinator2.manageUnusedSailors();
+		List<SailorAction> moves = coordinator2.manageUnusedSailors();
 
 		assertEquals(3,moves.size());
 	}
@@ -498,7 +498,7 @@ public class CoordinatorTest {
 		when(equipmentsManager.sails()).thenReturn(sails);
 
 		Coordinator coordinator2 =  new Coordinator(crew2, equipmentsManager);
-		List<MoveAction> moves = coordinator2.manageUnusedSailors();
+		List<SailorAction> moves = coordinator2.manageUnusedSailors();
 
 		assertEquals(sailors.size(),moves.size());
 	}
@@ -530,7 +530,7 @@ public class CoordinatorTest {
 		when(equipmentsManager.sails()).thenReturn(sails);
 
 		Coordinator coordinator2 =  new Coordinator(crew2, equipmentsManager);
-		List<MoveAction> moves = coordinator2.manageUnusedSailors();
+		List<SailorAction> moves = coordinator2.manageUnusedSailors();
 
 		assertEquals(sailors.size()-1,moves.size());
 	}

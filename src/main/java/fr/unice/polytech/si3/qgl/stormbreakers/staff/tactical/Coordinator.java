@@ -457,9 +457,9 @@ public class Coordinator {
      * ordre de priorité: gouvernail, puis rames, puis voiles
      * @return déplacements générés
      */
-    public List<MoveAction> manageUnusedSailors() {
+    public List<SailorAction> manageUnusedSailors() {
         List<Sailor> availableSailors = crewManager.getAvailableSailors();
-        List<MoveAction> moves = new ArrayList<>();
+        List<SailorAction> moves = new ArrayList<>();
 
         if (rudderIsPresent() && equipmentsManager.isRudderUsed()) {
             moves.add(crewManager.bringClosestSailorCloserTo(availableSailors,rudderPosition()));

@@ -142,7 +142,7 @@ public class TargetDefiner  {
     }
 
     Point2D calculateEscapePoint(Courant courant,Point2D position){
-        //TODO LATER add strenght consideration etc ...
+        //TODO LATER add strength consideration etc ...
         return courant.closestPointTo(position);
     }
 

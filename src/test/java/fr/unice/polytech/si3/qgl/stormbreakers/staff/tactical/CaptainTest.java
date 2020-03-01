@@ -44,7 +44,7 @@ public class CaptainTest {
     @Test
     void accelerateTest() {
         Coordinator coordinator = mock(Coordinator.class);
-        rogers = new Captain(null, null, null, null, coordinator);
+        rogers = new Captain(null, null, null, null, coordinator,null);
         List<SailorAction> sailorsActions = List.of(new OarAction(1), new OarAction(3));
         when(coordinator.nbOars()).thenReturn(4);
 
@@ -72,7 +72,7 @@ public class CaptainTest {
 
         Coordinator coordinator = new Coordinator(crewManager, equipmentsManager);
 
-        rogers = new Captain(null, null, null, null, coordinator);
+        rogers = new Captain(null, null, null, null, coordinator,null);
 
         rogers.validateActions(List.of(new OarAction(1), new OarAction(3)));
 
@@ -86,7 +86,7 @@ public class CaptainTest {
     @Test
     void calculateSpeedTest() {
         Coordinator coordinator = mock(Coordinator.class);
-        rogers = new Captain(null, null, null, null, coordinator);
+        rogers = new Captain(null, null, null, null, coordinator,null);
 
         when(coordinator.nbOars()).thenReturn(2);
         assertEquals(165 * ((double) 1 / 2),
@@ -116,7 +116,7 @@ public class CaptainTest {
         List<SailorAction> actions;
         
         Coordinator coordinator = new Coordinator(crewManager, equipmentsManager);
-        rogers = new Captain(null, null, navigator, null, coordinator);
+        rogers = new Captain(null, null, navigator, null, coordinator,null);
         
         actions = List.of(sailors.get(0).howToMoveTo(equipments.get(2).getPosition()),
         		new OarAction(0),
@@ -145,7 +145,7 @@ public class CaptainTest {
     	EquipmentsManager equipmentsManager = new EquipmentsManager(equipments, 2);
         Navigator navigator = new Navigator();        
         Coordinator coordinator = new Coordinator(crewManager, equipmentsManager);
-        rogers = new Captain(null, null, navigator, null, coordinator);
+        rogers = new Captain(null, null, navigator, null, coordinator,null);
         
         List<SailorAction> actions = List.of(sailors.get(0).howToMoveTo(equipments.get(0).getPosition()),
         		new OarAction(0));
@@ -170,7 +170,7 @@ public class CaptainTest {
     	EquipmentsManager equipmentsManager = new EquipmentsManager(equipments, 2);
     	Coordinator coordinator = new Coordinator(crewManager, equipmentsManager);
         Navigator navigator = new Navigator();
-        rogers = new Captain(null, null, navigator, null, coordinator);
+        rogers = new Captain(null, null, navigator, null, coordinator,null);
         
         List<SailorAction> actions = List.of(sailors.get(0).howToMoveTo(equipments.get(0).getPosition()),
         		new OarAction(0),
@@ -199,7 +199,7 @@ public class CaptainTest {
     	EquipmentsManager equipmentsManager = new EquipmentsManager(equipments, 2);
     	Coordinator coordinator = new Coordinator(crewManager, equipmentsManager);
         Navigator navigator = new Navigator();
-        rogers = new Captain(null, null, navigator, null, coordinator);
+        rogers = new Captain(null, null, navigator, null, coordinator,null);
         
         List<SailorAction> actions = List.of(sailors.get(0).howToMoveTo(equipments.get(2).getPosition()),
         		new OarAction(0),
@@ -230,7 +230,7 @@ public class CaptainTest {
     	EquipmentsManager equipmentsManager = new EquipmentsManager(equipments, 2);
     	Coordinator coordinator = new Coordinator(crewManager, equipmentsManager);
         Navigator navigator = new Navigator();
-        rogers = new Captain(null, null, navigator, null, coordinator);
+        rogers = new Captain(null, null, navigator, null, coordinator,null);
         
         List<SailorAction> actions = List.of(sailors.get(0).howToMoveTo(equipments.get(2).getPosition()),
         		new OarAction(0),
@@ -256,7 +256,7 @@ public class CaptainTest {
 
         WeatherAnalyst weatherAnalyst = mock(WeatherAnalyst.class);
 
-        rogers = new Captain(null, null, null, weatherAnalyst, coordinator);
+        rogers = new Captain(null, null, null, weatherAnalyst, coordinator,null);
 
         when(weatherAnalyst.additionalSpeedExists()).thenReturn(false);
 
@@ -284,7 +284,7 @@ public class CaptainTest {
 
         WeatherAnalyst weatherAnalyst = mock(WeatherAnalyst.class);
 
-        rogers = new Captain(null, null, null, weatherAnalyst, coordinator);
+        rogers = new Captain(null, null, null, weatherAnalyst, coordinator,null);
 
         when(weatherAnalyst.additionalSpeedExists()).thenReturn(true);
         when(weatherAnalyst.potentialSpeedAcquirable()).thenReturn(200.56);

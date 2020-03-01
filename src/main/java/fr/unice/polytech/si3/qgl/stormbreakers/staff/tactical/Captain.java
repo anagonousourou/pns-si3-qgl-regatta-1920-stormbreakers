@@ -8,10 +8,10 @@ import java.util.stream.Stream;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.ActionType;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.SailorAction;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Checkpoint;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Boat;
 import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.CheckpointsManager;
 import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.OarsConfig;
+import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.TargetDefiner;
 import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.WeatherAnalyst;
 
 public class Captain {
@@ -26,13 +26,16 @@ public class Captain {
 
     private WeatherAnalyst weatherAnalyst;
 
+    private TargetDefiner targetDefiner;
+
     public Captain(Boat boat, CheckpointsManager checkpointsManager, Navigator navigator, WeatherAnalyst weatherAnalyst,
-            Coordinator coordinator) {
+            Coordinator coordinator,TargetDefiner targetDefiner) {
         this.boat = boat;
         this.checkpointsManager = checkpointsManager;
         this.navigator = navigator;
         this.coordinator = coordinator;
         this.weatherAnalyst = weatherAnalyst;
+        this.targetDefiner=targetDefiner;
 
     }
 
@@ -44,21 +47,23 @@ public class Captain {
         this.coordinator.resetAvailability();
         this.checkpointsManager.updateCheckpoint(boat.getPosition());
 
-        Checkpoint chpoint = this.checkpointsManager.nextCheckpoint();
-        if (chpoint == null) {
+        var destination= this.targetDefiner.defineNextTarget();
+        
+        if (destination == null) {
             return List.of();
         }
 
-        double orientation = this.navigator.additionalOrientationNeeded(boat.getPosition(),
-                chpoint.getPosition().getPoint2D());
-        double distance = boat.getPosition().distanceTo(chpoint.getPosition());
+        double orientation = destination.getOrientation();
+        double distance = destination.getDistance();
 
         List<SailorAction> actionsOrientation = this.actionsToOrientate(orientation);
 
         double currentSpeed = this.calculateSpeedFromOarsAction(actionsOrientation);
         List<SailorAction> actionsToAdjustSpeed = this.adjustSpeed(distance, currentSpeed);
 
-        return Captain.<SailorAction>concatenate(actionsOrientation, actionsToAdjustSpeed);
+        List<SailorAction> actionsForUnusedSailors=this.validateActions(this.coordinator.manageUnusedSailors() );
+
+        return Captain.<SailorAction>concatenate(actionsOrientation, actionsToAdjustSpeed,actionsForUnusedSailors);
 
     }
 
@@ -244,5 +249,9 @@ public class Captain {
     /** Generic function to concatenate 2 lists in Java */
     private static <T> List<T> concatenate(List<T> list1, List<T> list2) {
         return Stream.of(list1, list2).flatMap(List::stream).collect(Collectors.toList());
+    }
+    /** Generic function to concatenate 3 lists in Java */
+    private static <T> List<T> concatenate(List<T> list1, List<T> list2,List<T> list3) {
+        return Stream.of(list1, list2,list3).flatMap(List::stream).collect(Collectors.toList());
     }
 }

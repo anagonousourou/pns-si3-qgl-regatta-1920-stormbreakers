@@ -3,7 +3,6 @@ package fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.List;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -26,7 +25,7 @@ public class StreamManager implements PropertyChangeListener {
     private InputParser parser;
     private Boat boat;
 
-    private static final double EPS = 0.001;
+    
 
     public StreamManager(InputParser parser, Boat boat) {
         this.parser = parser;
@@ -69,7 +68,7 @@ public class StreamManager implements PropertyChangeListener {
 
     }
 
-    public Courant firstStreamBetween(Position destination){
+    public Courant firstStreamBetween(IPoint destination){
         LineSegment2D segment2d = new LineSegment2D(destination, boat.getPosition());
         List<Courant> streamsOnTrajectory=this.courants.stream().filter(courant->courant.intersectsWith(segment2d))
         .collect(Collectors.toList());
@@ -78,7 +77,9 @@ public class StreamManager implements PropertyChangeListener {
             return streamsOnTrajectory.get(0);
         }
         else if(streamsOnTrajectory.size()>1){
-            //TODO 
+            return streamsOnTrajectory.stream().min(
+                (a,b)-> Double.compare(destination.distanceTo(a.getPosition()), destination.distanceTo(b.getPosition()))
+            ).get();
         }
         return null;
     }
