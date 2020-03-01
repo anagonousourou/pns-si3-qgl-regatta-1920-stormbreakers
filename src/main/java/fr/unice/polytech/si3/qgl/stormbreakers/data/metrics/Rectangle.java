@@ -114,18 +114,13 @@ public class Rectangle extends Shape {
 		}else if(orientation<0.0001||orientation-(2*Math.PI)<0.0001) {
 			return new Point2D(other.getX(), rectangle.getY());
 		}else {
-			/*LineSegment2D sRect= new LineSegment2D(
-					Math.cos(orientation)*(rectangle.getX()+(this.height/2)),
-					Math.sin(orientation)*rectangle.getY()+(this.width/2),
-					Math.cos(orientation)*other.getX()-(this.height/2),
-					Math.sin(orientation)*rectangle.getY()-(this.width/2));*/
 			
 			EquationDroite droiteRect= new EquationDroite(Math.cos(orientation)*(rectangle.getX()+(this.height/2)),
 					Math.sin(orientation)*rectangle.getY()+(this.width/2),
 					Math.cos(orientation)*other.getX()-(this.height/2),
 					Math.sin(orientation)*rectangle.getY()-(this.width/2));
 			
-			return null;//sRect.getIntersection(other);
+			return droiteRect.findPointIntersectPerpendicularLineByPos(other);
 		}
 		
 	}

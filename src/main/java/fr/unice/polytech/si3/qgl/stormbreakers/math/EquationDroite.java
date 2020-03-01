@@ -14,17 +14,18 @@ public class EquationDroite {
 	public EquationDroite(Position p1, Position p2) {
 		a=(p2.getY()-p1.getY())/(p2.getX()-p1.getX()); 
 		EquationDroite e= new EquationDroite(-a, p1.getY());
-		b=resolutionValeurB(p1.getX());
+		b=e.resolutionValeurB(p1.getX());
 	}
 	
 	
 	public EquationDroite(double x1, double y1, double x2, double y2) {
 		a=(y2-y1)/(x2-x1); 
 		EquationDroite e= new EquationDroite(-a, y1);
-		b=resolutionValeurB(x1);
+		b=e.resolutionValeurB(x1);
 	}
 	
-	public double resolutionValeurB(double c) {
+	private double resolutionValeurB(double c) {
+		System.out.println("ABC:("+a+","+b+","+c+")");
 		return this.a*c+this.b;
 	}
 	/**
@@ -38,17 +39,18 @@ public class EquationDroite {
 	
 	EquationDroite findEqPerpendicularLineByPos(Position p) {
 		double lineA= -(1/a);
-		EquationDroite e= new EquationDroite(-a, p.getY());
+		EquationDroite e= new EquationDroite(-lineA, p.getY());
+		System.out.println("AB:("+e.getA()+","+e.getB()+")");
 		double lineB=e.resolutionValeurB(p.getX()); 
 		return new EquationDroite(lineA, lineB);
 	}
 	
-	public Position findPointIntersectPerpendicularLineByPos(Position p) {
+	public Point2D findPointIntersectPerpendicularLineByPos(Position p) {
 		EquationDroite perpendicular =findEqPerpendicularLineByPos(p);
 		EquationDroite intersectPerpAndThis = new EquationDroite(perpendicular.getA()-this.getA(),perpendicular.getB()-this.getB());
 		double x= intersectPerpAndThis.foundValueX();
 		double y= intersectPerpAndThis.resolutionValeurB(x);
-		return new Position(x, y);
+		return new Point2D(x, y);
 	}
 
 	double getA() {
