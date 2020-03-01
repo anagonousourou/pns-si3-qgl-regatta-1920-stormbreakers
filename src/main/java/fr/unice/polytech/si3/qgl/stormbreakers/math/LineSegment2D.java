@@ -50,28 +50,6 @@ public class LineSegment2D {
 
 	public final static double ACCURACY = 1e-12;
 
-	// ===================================================================
-	// static constructors
-
-	
-	/**
-	 * Checks if two line segment intersect. Uses the Point2D.ccw() method, which is
-	 * based on Sedgewick algorithm.
-	 * 
-	 * @param edge1 a line segment
-	 * @param edge2 a line segment
-	 * @return true if the 2 line segments intersect
-	 */
-	public static boolean intersects(LineSegment2D edge1, LineSegment2D edge2) {
-		Point2D e1p1 = edge1.firstPoint();
-		Point2D e1p2 = edge1.lastPoint();
-		Point2D e2p1 = edge2.firstPoint();
-		Point2D e2p2 = edge2.lastPoint();
-
-		boolean b1 = Point2D.ccw(e1p1, e1p2, e2p1) * Point2D.ccw(e1p1, e1p2, e2p2) <= 0;
-		boolean b2 = Point2D.ccw(e2p1, e2p2, e1p1) * Point2D.ccw(e2p1, e2p2, e1p2) <= 0;
-		return b1 && b2;
-	}
 
 	/**
 	 * Checks if two line segment intersect. Uses the Point2D.ccw() method, which is
@@ -93,6 +71,27 @@ public class LineSegment2D {
 	}
 
 	/**
+     * Checks if two line segment intersect. Uses the Point2D.ccw() method,
+     * which is based on Sedgewick algorithm.
+     * 
+     * @param edge1 a line segment
+     * @param edge2 a line segment
+     * @return true if the 2 line segments intersect
+     */
+	public static boolean intersects(LineSegment2D edge1, LineSegment2D edge2) {
+		Point2D e1p1 = edge1.firstPoint();
+		Point2D e1p2 = edge1.lastPoint();
+		Point2D e2p1 = edge2.firstPoint();
+		Point2D e2p2 = edge2.lastPoint();
+
+		boolean b1 = Point2D.ccw(e1p1, e1p2, e2p1)
+				* Point2D.ccw(e1p1, e1p2, e2p2) <= 0;
+		boolean b2 = Point2D.ccw(e2p1, e2p2, e1p1)
+				* Point2D.ccw(e2p1, e2p2, e1p2) <= 0;
+		return b1 &&b2;
+    }
+
+	/**
      * Returns the unique intersection of two straight objects. If the intersection
      * doesn't exist (parallel lines, short edge), return null.
      */
@@ -104,7 +103,12 @@ public class LineSegment2D {
 
         // Compute position of intersection point
         double t = ((this.y0 - line2.y0) * line2.dx - (this.x0 - line2.x0) * line2.dy) / denom;
-        return new Point2D(this.x0 + t * this.dx, this.y0 + t * this.dy);
+		Point2D point= new Point2D(this.x0 + t * this.dx, this.y0 + t * this.dy);
+		
+		// check if point is inside the bounds of the object
+        if (this.contains(point) && line2.contains(point))
+            return point;
+        return null;
     }
 
 	// ===================================================================
@@ -241,7 +245,7 @@ public class LineSegment2D {
 		return (Math.abs((x - x0) * dy - (y - y0) * dx) / (denom * denom) < LineSegment2D.ACCURACY);
 	}
 
-	/*public boolean contains(double xp, double yp) {
+	public boolean contains(double xp, double yp) {
 		if (!this.supportContains(xp, yp))
 			return false;
 
@@ -254,7 +258,18 @@ public class LineSegment2D {
 			return false;
 
 		return true;
-	}*/
+	}
+
+	public boolean contains(IPoint point){
+		return this.contains(point.x(),point.y());
+	}
+
+	public double positionOnLine(double x, double y) {
+        double denom = dx * dx + dy * dy;
+        if (Math.abs(denom) < LineSegment2D.ACCURACY)
+            throw new DegeneratedLine2DException("");
+        return ((y - y0) * dy + (x - x0) * dx) / denom;
+    }
 
 	
 
@@ -281,6 +296,10 @@ public class LineSegment2D {
 		
 		// return distance to projected point
 		return proj.getDistanceTo(new Point2D(x, y));
+	}
+
+	double distance(IPoint point){
+		return this.distance(point.x(),point.y());
 	}
 
 	private Line2D supportingLine() {

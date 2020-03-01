@@ -1,6 +1,11 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.staff.tactical;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.ActionType;
@@ -461,13 +466,13 @@ public class Coordinator {
         List<Sailor> availableSailors = crewManager.getAvailableSailors();
         List<SailorAction> moves = new ArrayList<>();
 
-        if (rudderIsPresent() && equipmentsManager.isRudderUsed()) {
+        if (rudderIsPresent() && !equipmentsManager.isRudderUsed()) {
             moves.add(crewManager.bringClosestSailorCloserTo(availableSailors,rudderPosition()));
         }
         moves.addAll(bringSailorsCloserToEquipments(availableSailors,new ArrayList<Equipment>(equipmentsManager.unusedOars())));
         moves.addAll(bringSailorsCloserToEquipments(availableSailors,new ArrayList<Equipment>(equipmentsManager.sails())));
 
-        return moves;
+        return moves.stream().filter(m->m!=null).collect(Collectors.toList());
     }
 
     /**

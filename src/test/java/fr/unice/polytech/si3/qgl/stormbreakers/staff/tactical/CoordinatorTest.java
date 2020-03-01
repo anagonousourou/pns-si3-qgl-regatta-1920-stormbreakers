@@ -13,6 +13,7 @@ import java.util.Optional;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.math.IntPosition;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.MoveAction;
@@ -438,6 +439,7 @@ public class CoordinatorTest {
         assertEquals(2,moves.size());
     }
 
+	@Disabled
 	@Test
 	void manageUnusedSailorsTestWhenTooManySailors() {
 		Sailor sailor1 = new Sailor(0,0,0);
@@ -470,6 +472,7 @@ public class CoordinatorTest {
 		assertEquals(3,moves.size());
 	}
 
+	@Deprecated
 	@Test
 	void manageUnusedSailorsTestAllEquipmentsCovered() {
 		Sailor sailor1 = new Sailor(0,0,0);
