@@ -9,6 +9,7 @@ import java.util.stream.Stream;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.ActionType;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.SailorAction;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Boat;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.Utils;
 import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.CheckpointsManager;
 import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.OarsConfig;
 import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.TargetDefiner;
@@ -63,7 +64,7 @@ public class Captain {
 
         List<SailorAction> actionsForUnusedSailors=this.validateActions(this.coordinator.manageUnusedSailors() );
 
-        return Captain.<SailorAction>concatenate(actionsOrientation, actionsToAdjustSpeed,actionsForUnusedSailors);
+        return Utils.<SailorAction>concatenate(actionsOrientation, actionsToAdjustSpeed,actionsForUnusedSailors);
 
     }
 
@@ -87,57 +88,43 @@ public class Captain {
             return List.of();
         }
         
-        // Find an "exact" match of the orientation within the angles possible with oars only
-        Optional<OarsConfig> possibleOarsConfig = navigator.possibleOarConfigs(coordinator.nbLeftOars(), coordinator.nbRightOars())
-        		.stream()
-        		.filter(oc -> oc.getAngle() == orientation)
-        		.findFirst();
-        if(possibleOarsConfig.isPresent()) {
-        	int diff = this.navigator.fromAngleToDiff(orientation, this.coordinator.nbLeftOars(),
-                    this.coordinator.nbRightOars());
-            return this.validateActions(this.coordinator.activateOarsNotStrict(diff));
+        else if(this.coordinator.rudderIsPresent() && this.coordinator.rudderIsAccesible() && Math.abs(orientation)<=Math.PI/4 ){
+            return this.validateActions(this.coordinator.activateRudder(orientation));
         }
-        
-        List<SailorAction> actions = List.of(); 
-        
-        // No match found, so we take the greatest angle possible (with oars only) as a reference for later
-    	Optional<OarsConfig> maxOarsConfig = navigator.possibleOarConfigs(coordinator.nbLeftOars(),
-                coordinator.nbRightOars())
-    			.stream()
-        		.filter(oc -> oc.getAngle() > 0 && orientation > 0 || oc.getAngle() < 0 && orientation < 0)
-        		.max((oc1, oc2) -> (int)(Math.abs(oc1.getAngle()) - Math.abs(oc2.getAngle())));   
-    	// If the rudder is present, accessible, and there is at least 1 OarsConfig possible
-		if (maxOarsConfig.isPresent()) {
-			double chosenAngleOarsConfig = 0;
-			int diff;
-			
-			// If "orientation" is smaller than the maxOarsConfig angle,
-			// then we choose the closest oarsConfig angle
-			if(Math.abs(orientation) < Math.abs(maxOarsConfig.get().getAngle())){
-				Optional<OarsConfig> closestOarsConfig = navigator.possibleOarConfigs(coordinator.nbLeftOars(),
-		                coordinator.nbRightOars())
-		    			.stream()
-		    			.filter(oc -> oc.getAngle() > 0 && orientation > 0 || oc.getAngle() < 0 && orientation < 0)
-		        		.min((oc1, oc2) -> (int)(Math.abs(oc1.getAngle()) - Math.abs(oc2.getAngle() - (Math.abs(orientation)))));
-				diff = (closestOarsConfig.isPresent() ? closestOarsConfig.get().getOarSidesDifference(): 0);
-				chosenAngleOarsConfig = (closestOarsConfig.isPresent() ? closestOarsConfig.get().getAngle(): 0);
-				actions = new ArrayList<>(validateActions(coordinator.activateOarsNotStrict(diff)));
-				
-			// If "orientation" is bigger than the maxOarsConfig angle,
-			// then we use maxOarsConfig alongside the rudder for a bigger orientation.
-			} else {
-				diff = maxOarsConfig.get().getOarSidesDifference();
-				chosenAngleOarsConfig = maxOarsConfig.get().getAngle();
-				actions = new ArrayList<>(validateActions(coordinator.activateOarsNotStrict(diff)));	
-			}
-			double restOrientation = orientation - chosenAngleOarsConfig;
 
-			// If the rudder is necessary, then we use it alongside the chosen OarsConfig
-			if(coordinator.rudderIsPresent() && coordinator.rudderIsAccesible() && restOrientation != 0 && !actions.isEmpty()) {
-				actions.addAll(validateActions(this.coordinator.activateRudder(restOrientation)));
-			}
-		}
-		return actions;
+        else if(this.coordinator.rudderIsPresent() && this.coordinator.rudderIsAccesible() &&  !Utils.within(orientation, Utils.MAX_RUDDER_ROTATION) ){
+            if(this.coordinator.nbOars()==0){
+                return this.validateActions(this.coordinator.activateRudder(Utils.MAX_RUDDER_ROTATION));
+            }
+            else{
+                
+                Optional<OarsConfig> possibleOarsConfig=this.navigator.possibleOarConfigs(coordinator.nbLeftOars(),coordinator.nbRightOars()).stream()
+                .filter(oc-> oc.getAngle() * orientation > 0 )
+                .max((oc1,oc2)->Double.compare(oc1.getAngle(), oc2.getAngle()));
+                
+                if(possibleOarsConfig.isPresent()) {
+                    
+                    int diff = this.navigator.fromAngleToDiff(possibleOarsConfig.get().getAngle() , this.coordinator.nbLeftOars(),
+                            this.coordinator.nbRightOars());
+                            var rudderActions=this.validateActions(this.coordinator.activateRudder(Math.min(orientation-possibleOarsConfig.get().getAngle(), Utils.MAX_RUDDER_ROTATION) ));
+                            var oarsActions=this.validateActions(this.coordinator.activateOarsNotStrict(diff));
+                    return Utils.<SailorAction>concatenate(rudderActions,oarsActions);
+                }
+                else{
+                    
+                    int diff = this.navigator.fromAngleToDiff(orientation, this.coordinator.nbLeftOars(),
+                    this.coordinator.nbRightOars());
+                    List<SailorAction> actions = this.coordinator.activateOarsNotStrict(diff);
+                    return this.validateActions(actions);
+                }
+            }
+        }
+        else{
+            int diff = this.navigator.fromAngleToDiff(orientation, this.coordinator.nbLeftOars(),
+                    this.coordinator.nbRightOars());
+            List<SailorAction> actions = this.coordinator.activateOarsNotStrict(diff);
+            return this.validateActions(actions);
+        }
 	}
 
     /**
@@ -168,7 +155,7 @@ public class Captain {
                 int nbOpenned = this.coordinator.liftSailsPartially(actionsToUseWeather);
                 this.validateActions(actionsToUseWeather);
                 double expectedSpeedFromWind = this.weatherAnalyst.externalSpeedGivenNbOpennedSails(nbOpenned);
-                return Captain.<SailorAction>concatenate(
+                return Utils.<SailorAction>concatenate(
 
                         actionsToUseWeather,
                         this.accelerate(distance, currentSpeed + expectedSpeedFromWind));
@@ -183,7 +170,7 @@ public class Captain {
 
                 double expectedSpeedFromWind = this.weatherAnalyst.externalSpeedGivenNbOpennedSails(nbOpenned);
 
-                return Captain.<SailorAction>concatenate(
+                return Utils.<SailorAction>concatenate(
 
                         actionsToCancelWeather,
                         this.accelerate(distance, currentSpeed + expectedSpeedFromWind));
@@ -235,7 +222,7 @@ public class Captain {
         double minAdditionalSpeed = SPEED * (2.0 / this.coordinator.nbOars());
         if (currentSpeed + minAdditionalSpeed <= distance) {
             List<SailorAction> actions = this.validateActions(this.coordinator.addOaringSailorsOnEachSide());
-            return Captain.<SailorAction>concatenate(actions,
+            return Utils.<SailorAction>concatenate(actions,
                     this.accelerate(distance, currentSpeed + minAdditionalSpeed));
 
         }
@@ -246,12 +233,5 @@ public class Captain {
         
     }
 
-    /** Generic function to concatenate 2 lists in Java */
-    private static <T> List<T> concatenate(List<T> list1, List<T> list2) {
-        return Stream.of(list1, list2).flatMap(List::stream).collect(Collectors.toList());
-    }
-    /** Generic function to concatenate 3 lists in Java */
-    private static <T> List<T> concatenate(List<T> list1, List<T> list2,List<T> list3) {
-        return Stream.of(list1, list2,list3).flatMap(List::stream).collect(Collectors.toList());
-    }
+    
 }

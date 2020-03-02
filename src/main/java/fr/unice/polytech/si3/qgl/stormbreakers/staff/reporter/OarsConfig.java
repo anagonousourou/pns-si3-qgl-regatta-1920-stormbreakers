@@ -51,4 +51,9 @@ public class OarsConfig {
     public int hashCode() {
         return Objects.hash(fractionOfPi, oarSidesDifference);
     }
+    
+    @Override
+    public String toString() {
+        return String.format("%s(fraction:%s,diff:%d)", this.getClass().getSimpleName(),fractionOfPi,oarSidesDifference );
+    }
 }

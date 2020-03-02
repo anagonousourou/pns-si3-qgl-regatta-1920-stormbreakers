@@ -355,6 +355,7 @@ public class LineSegment2D {
 	}
 	/**
 	 * Renvoie le point du segment de droite qui est le plus proche 
+	 * @author Patrick
 	 * @param point2d
 	 * @return
 	 */

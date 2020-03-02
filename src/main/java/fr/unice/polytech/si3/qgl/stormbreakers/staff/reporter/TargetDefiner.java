@@ -111,9 +111,9 @@ public class TargetDefiner  {
         }
 
         else if(helpness < 0){
-            // TODO Afin de rester cohérent avec la "politique" qui fait foncer le bateau tout droit 
+            // TODO Afin de rester cohérent avec la "stratégie" qui fait foncer le bateau tout droit 
             //dans le checkpoint meme si il y a un courant défavorable on continue notre chemin
-            //quand  la "politique" aura changé on changera cette partie
+            //quand  la "stratégie" aura changé on changera cette partie
             double orientation=navigator.additionalOrientationNeeded(boat.getPosition(), cpPoint);
             double distance=boat.getPosition().getPoint2D().distanceTo(cpPoint);
             return new TupleDistanceOrientation(distance, orientation);

@@ -45,7 +45,8 @@ public class CaptainTest {
     @Test
     void accelerateTest() {
         Coordinator coordinator = mock(Coordinator.class);
-        rogers = new Captain(null, null, null, null, coordinator,null);
+        TargetDefiner targetDefiner=new TargetDefiner(null, null, null, null);
+        rogers = new Captain(null, null, null, null, coordinator,targetDefiner);
         List<SailorAction> sailorsActions = List.of(new OarAction(1), new OarAction(3));
         when(coordinator.nbOars()).thenReturn(4);
 
@@ -168,19 +169,22 @@ public class CaptainTest {
     			new Oar(0, 1),
     			new Oar(1, 1),
     			new Gouvernail(2, 2));
-    	EquipmentsManager equipmentsManager = new EquipmentsManager(equipments, 2);
+    	EquipmentsManager equipmentsManager = new EquipmentsManager(equipments, 3);
     	Coordinator coordinator = new Coordinator(crewManager, equipmentsManager);
         Navigator navigator = new Navigator();
         rogers = new Captain(null, null, navigator, null, coordinator,null);
         
-        List<SailorAction> actions = List.of(sailors.get(0).howToMoveTo(equipments.get(0).getPosition()),
-        		new OarAction(0),
-        		sailors.get(3).howToMoveTo(equipments.get(4).getPosition()));
+        
         List<SailorAction> actualActions = rogers.actionsToOrientate(-Math.PI/5);
-        assertEquals(4, actualActions.size());
-        assertEquals(-Math.PI/5 + Math.PI/4, ((Turn)actualActions.remove(3)).getRotation());
-      //The orientation wanted isn't a possible OarsConfig, so the rudder is also used
-        assertEquals(actions.toString(), actualActions.toString());
+        
+        assertEquals(2, actualActions.size(),"L'angle est suffisamment petit pour le gouvernail");
+        
+        var optTurnAction=actualActions.stream().filter(action->action.getType().equals(ActionType.TURN.actionCode )).findFirst();
+        if(optTurnAction.isPresent()){
+            var turnAction=(Turn)optTurnAction.get();
+            
+            assertEquals(-Math.PI/5,turnAction.getRotation() ,1e-3, "doit etre -pi/5 ");
+        }
     }
     
     @Test
@@ -196,22 +200,22 @@ public class CaptainTest {
     			new Oar(1, 0),
     			new Oar(0, 1),
     			new Oar(1, 1),
-    			new Gouvernail(2, 2));
+    			new Gouvernail(0, 2));
     	EquipmentsManager equipmentsManager = new EquipmentsManager(equipments, 2);
     	Coordinator coordinator = new Coordinator(crewManager, equipmentsManager);
         Navigator navigator = new Navigator();
         rogers = new Captain(null, null, navigator, null, coordinator,null);
         
-        List<SailorAction> actions = List.of(sailors.get(0).howToMoveTo(equipments.get(2).getPosition()),
-        		new OarAction(0),
-        		sailors.get(1).howToMoveTo(equipments.get(3).getPosition()),
-        		new OarAction(1),
-        		sailors.get(3).howToMoveTo(equipments.get(4).getPosition()));
-        List<SailorAction> actualActions = rogers.actionsToOrientate(2 * Math.PI);
+        
+        List<SailorAction> actualActions = rogers.actionsToOrientate(Math.PI);
+        
         assertEquals(6, actualActions.size());
-        assertEquals(2 * Math.PI - Math.PI/2, ((Turn)actualActions.remove(5)).getRotation());
-      //The orientation wanted isn't a possible OarsConfig, so the rudder is also used
-        assertEquals(actions.toString(), actualActions.toString());
+        var optTurnAction=actualActions.stream().filter(action->action.getType().equals(ActionType.TURN.actionCode )).findFirst();
+        if(optTurnAction.isPresent()){
+            var turnAction=(Turn)optTurnAction.get();
+            
+            assertEquals(Math.PI/4,turnAction.getRotation() ,1e-3, "doit etre pi/4 ");
+        }
     }
     
     @Test
@@ -233,14 +237,9 @@ public class CaptainTest {
         Navigator navigator = new Navigator();
         rogers = new Captain(null, null, navigator, null, coordinator,null);
         
-        List<SailorAction> actions = List.of(sailors.get(0).howToMoveTo(equipments.get(2).getPosition()),
-        		new OarAction(0),
-        		sailors.get(3).howToMoveTo(equipments.get(4).getPosition()));
+        
         List<SailorAction> actualActions = rogers.actionsToOrientate(Math.PI/10);
-        assertEquals(4, actualActions.size());
-        assertEquals(Math.PI/10 - Math.PI/4, ((Turn)actualActions.remove(3)).getRotation());
-      //The orientation wanted isn't a possible OarsConfig, so the rudder is also used
-        assertEquals(actions.toString(), actualActions.toString()); 
+        assertEquals(2, actualActions.size());
         }
     
     @Test
