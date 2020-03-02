@@ -72,13 +72,13 @@ public class StreamManager implements PropertyChangeListener {
         LineSegment2D segment2d = new LineSegment2D(destination, boat.getPosition());
         List<Courant> streamsOnTrajectory=this.courants.stream().filter(courant->courant.intersectsWith(segment2d))
         .collect(Collectors.toList());
-        System.out.println(streamsOnTrajectory);
+        
         if(streamsOnTrajectory.size()==1){
-            System.out.println("Hello");
+            
             return streamsOnTrajectory.get(0);
         }
         else if(streamsOnTrajectory.size()>1){
-            System.out.println("Hello size>1");
+           
             var tmp= streamsOnTrajectory.stream().min(
                 (a,b)-> Double.compare(boat.getPosition().distanceTo(a.getPosition()), boat.getPosition().distanceTo(b.getPosition()))
             );

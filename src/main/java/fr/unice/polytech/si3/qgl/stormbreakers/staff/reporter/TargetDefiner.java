@@ -1,6 +1,5 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter;
 
-import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Shape;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Checkpoint;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Boat;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Courant;
@@ -31,7 +30,6 @@ public class TargetDefiner  {
 
     Courant nextStreamOnTrajectory(){
         if(thereIsStreamOnTrajectory()){
-            System.out.println("if");
             return this.streamManager.firstStreamBetween(checkpointsManager.nextCheckpoint().getPosition());
         }
         return null;
@@ -91,13 +89,14 @@ public class TargetDefiner  {
         if(Math.abs(helpness)<=TargetDefiner.EPS){
             //calculer l'orientation en fonction du déplacement engendre par le courant
             double orientation = navigator.additionalOrientationNeeded(boat.getPosition(), cpPoint);
-            double distance = boat.getPosition().getPoint2D().distanceTo(cpPoint)+streamAround.getStrength();
+            double distance = boat.getPosition().distanceTo(cpPoint)+streamAround.getStrength();
 
             return new TupleDistanceOrientation(distance, orientation);
         }
         else if(helpness > 0){
             //LATER distinguer si le courant nous aide temporairement seulement
-            Point2D pointToLeave=this.maximalPointToStay(boat.getPosition().getPoint2D(), cpPoint, courantVector, streamAround.getShape());
+            Point2D pointToLeave=this.maximalPointToStay(boat.getPosition().getPoint2D(), cpPoint, courantVector, streamAround);
+            //System.out.println(pointToLeave);
             if(pointToLeave.distanceTo(boat.getPosition().getPoint2D()) <= streamAround.getStrength()){
                 double orientation=navigator.additionalOrientationNeeded(boat.getPosition(), cpPoint);
                 double distance=boat.getPosition().getPoint2D().distanceTo(cpPoint);
@@ -132,13 +131,20 @@ public class TargetDefiner  {
      * @param surface
      * @return
      */
-    Point2D maximalPointToStay(Point2D depart, Point2D destination, Vector courant,Shape surface){
+    Point2D maximalPointToStay(Point2D depart, Point2D destination, Vector courant,Courant surface){
         Point2D current=depart;
         Point2D prev=current;
         Vector biggerStreamVector=courant.scaleVector(2);
-        while(helpness(courant, current, destination)>0 && surface.isPtInside(current)){
+        while(helpness(courant, current, destination) > 0 && surface.isPtInside(current)){
+            
             prev=current;
+            System.out.println(current);
+            System.out.println("Surface contains current: "+surface.isPtInside(current));
             current=current.getTranslatedBy(biggerStreamVector);
+            System.out.println(current);
+            
+            System.out.println("Surface contains current: "+surface.isPtInside(current));
+            
             
         }
         return prev;

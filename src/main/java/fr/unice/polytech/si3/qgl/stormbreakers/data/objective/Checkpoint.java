@@ -1,5 +1,7 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.data.objective;
 
+import java.util.Objects;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -8,8 +10,6 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.IPoint;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Shape;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
-
-import java.util.Objects;
 
 public class Checkpoint implements Logable {
     private Position position;
@@ -31,7 +31,7 @@ public class Checkpoint implements Logable {
         return shape;
     }
 
-    //LATER turn this to a interface method
+    // LATER turn this to a interface method
     public boolean isPtInside(IPoint pt) {
         return this.isPtInside(pt.x(), pt.y());
     }
@@ -41,31 +41,33 @@ public class Checkpoint implements Logable {
         Point2D pt = new Point2D(x - position.x(), y - position.y());
         double orientation = position.getOrientation();
         // On compense l'orientation du checkpoint
-        if (orientation != 0) pt = pt.getRotatedBy(-orientation);
+        if (orientation != 0)
+            pt = pt.getRotatedBy(-orientation);
         return shape.isPtInside(pt);
     }
 
     @Override
     public boolean equals(Object obj) {
-        if (this==obj) return true;
-        if (!(obj instanceof Checkpoint)) return false;
+        if (this == obj)
+            return true;
+        if (!(obj instanceof Checkpoint))
+            return false;
         Checkpoint other = (Checkpoint) obj;
-        return position.equals(other.position)
-                && shape.equals(other.shape);
+        return position.equals(other.position) && shape.equals(other.shape);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(position,shape);
+        return Objects.hash(position, shape);
     }
 
     @Override
     public String toString() {
-        return position.toString()+" "+shape.toString();
+        return position.toString() + " " + shape.toString();
     }
 
     @Override
     public String toLogs() {
-        return "{"+ position.toLogs()+","+shape.toLogs()+"}";
+        return "{" + position.toLogs() + "," + shape.toLogs() + "}";
     }
 }
