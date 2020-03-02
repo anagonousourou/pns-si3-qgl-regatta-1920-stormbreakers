@@ -24,10 +24,6 @@ public class EquationDroiteTest {
 
 	@Test
 	void findEqPerpendicularLineByPosTest() {
-		System.out.println("1 : (" + eqD1.getA() + ", " + eqD1.getB() + ")");
-		System.out.println("2 : (" + eqD2.getA() + ", " + eqD2.getB() + ")");
-		System.out.println("3 : (" + eqD3.getA() + ", " + eqD3.getB() + ")");
-		
 		EquationDroite tmp = new EquationDroite(5, -16);
 		EquationDroite result = eqD1.findEqPerpendicularLineByPos(c);
 		assertEquals(tmp.getA(), result.getA());

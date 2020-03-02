@@ -25,7 +25,6 @@ public class EquationDroite {
 	}
 	
 	private double resolutionValeurB(double c) {
-		System.out.println("ABC:("+a+","+b+","+c+")");
 		return this.a*c+this.b;
 	}
 	/**
@@ -40,8 +39,7 @@ public class EquationDroite {
 	EquationDroite findEqPerpendicularLineByPos(Position p) {
 		double lineA= -(1/a);
 		EquationDroite e= new EquationDroite(-lineA, p.y());
-		System.out.println("AB:("+e.getA()+","+e.getB()+")");
-		double lineB=e.resolutionValeurB(p.x()); 
+		double lineB=e.resolutionValeurB(p.x());
 		return new EquationDroite(lineA, lineB);
 	}
 	
