@@ -12,8 +12,6 @@ import java.util.Objects;
 
 import org.junit.jupiter.api.Test;
 
-import fr.unice.polytech.si3.qgl.stormbreakers.math.Fraction;
-
 class FractionTest {
 
     @Test

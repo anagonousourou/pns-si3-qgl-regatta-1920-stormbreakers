@@ -11,7 +11,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.math.IntPosition;
 /**
  * classe qui représente un marin
  */
-public class Sailor implements Logable{
+public class Sailor implements Logable {
     private final int id;
     private IntPosition position;
     private boolean onEquipment = false;
@@ -57,7 +57,7 @@ public class Sailor implements Logable{
      */
     public void move(int xdistance, int ydistance) {
         if (Math.abs(xdistance) + Math.abs(ydistance) <= MAX_MOVEMENT_DISTANCE) {
-            // Le deplacement respecte la contraite de distance
+            // Le deplacement respecte la contrainte de distance
             position.add(xdistance, ydistance);
         }
     }
@@ -82,10 +82,6 @@ public class Sailor implements Logable{
         return position;
     }
 
-    public void setPosition(IntPosition position) {
-        this.position = position;
-    }
-
     /**
      * To Know wether a Marine is used or not alternative to List of busy Marines
      */
@@ -102,25 +98,26 @@ public class Sailor implements Logable{
     }
 
     public MoveAction howToMoveTo(IntPosition pos) {
-        return new MoveAction(id, position.getPathTo(pos));
+        return new MoveAction(id, pos.getX() - this.position.getX(), pos.getY() - this.position.getY());
     }
 
     public int getDistanceTo(IntPosition pos) {
-        return Math.abs(pos.getX() - this.getPosition().getX()) + Math.abs(pos.getY() - this.getPosition().getY());
+        return Math.abs(pos.getX() - this.position.getX()) + Math.abs(pos.getY() - this.position.getY());
     }
 
     public boolean canReach(IntPosition pos) {
         return getDistanceTo(pos) <= MAX_MOVEMENT_DISTANCE;
     }
-    
-	@Override
-	public boolean equals(Object obj) {
-		if (this==obj) return true;
-		if (!(obj instanceof Sailor)) return false;
-		Sailor other = (Sailor) obj;
-		return other.id == id
-				&& other.name.equals(name);
-	}
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (!(obj instanceof Sailor))
+            return false;
+        Sailor other = (Sailor) obj;
+        return other.id == id && other.name.equals(name);
+    }
 
     @Override
     public int hashCode() {
@@ -129,11 +126,12 @@ public class Sailor implements Logable{
 
     @Override
     public String toString() {
-        return this.getClass().getSimpleName()+"(id: " + id + ", \n" + "nom: " + name + ", \n" + "position:" + position + " ) ";
+        return this.getClass().getSimpleName() + "(id: " + id + ", \n" + "nom: " + name + ", \n" + "position:"
+                + position + " ) ";
     }
 
     public String toLogs() {
-		return "M(id:" + id+ "position:" + position + ")";
-	}
+        return "M(id:" + id + "position:" + position + ")";
+    }
 
 }

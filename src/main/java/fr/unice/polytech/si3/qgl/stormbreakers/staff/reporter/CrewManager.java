@@ -29,7 +29,7 @@ public class CrewManager {
     }
 
     
-
+    
     public void executeMoves(List<MoveAction> moves){
         for(MoveAction m:moves){
             var optMarin=this.getMarinById(m.getSailorId());

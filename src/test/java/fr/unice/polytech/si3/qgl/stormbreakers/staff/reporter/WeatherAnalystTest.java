@@ -11,7 +11,6 @@ import org.junit.jupiter.api.Test;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Boat;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Wind;
-import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.EquipmentsManager;
 
 public class WeatherAnalystTest {
     
