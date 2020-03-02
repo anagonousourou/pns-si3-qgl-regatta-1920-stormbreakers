@@ -32,7 +32,7 @@ public class EquationDroite {
 	 * @return
 	 */
 	public double foundValueX() {
-		//TODO Trouver meilleur nom
+		//LATER Trouver meilleur nom
 		return -(this.b)/this.a;
 	}
 	

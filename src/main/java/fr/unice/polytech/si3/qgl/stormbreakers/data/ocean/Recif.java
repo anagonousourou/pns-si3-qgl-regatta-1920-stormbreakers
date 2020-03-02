@@ -17,7 +17,7 @@ public class Recif extends OceanEntity {
 
     @Override
     public boolean intersectsWith(LineSegment2D lineSegment2D) {
-        // TODO Auto-generated method stub
+        // LATER Auto-generated method stub
         return false;
     }
 

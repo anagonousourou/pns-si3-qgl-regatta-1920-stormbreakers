@@ -3,8 +3,6 @@ package fr.unice.polytech.si3.qgl.stormbreakers.staff.tactical;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.ActionType;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.SailorAction;

@@ -140,12 +140,12 @@ public class InputParser {
 
 	/**
 	 * Renvoie les courants
-	 * TODO
+	 * LATER
 	 * @param jString
 	 * @return
 	 * @throws JsonProcessingException
 	 */
-	@SuppressWarnings("unchecked")
+	
 	public List<Courant> fetchStreams(String jString) throws JsonProcessingException{
 
 		JsonNode visibleEntities=mapper.readTree(jString).get("visibleEntities");
@@ -153,7 +153,7 @@ public class InputParser {
 			return List.of();
 		}
 		else{
-			return (List<Courant>)mapper.readValue(visibleEntities.toString(), mapper.getTypeFactory().constructCollectionType(List.class, Courant.class));
+			return mapper.readValue(visibleEntities.toString(), mapper.getTypeFactory().constructCollectionType(List.class, Courant.class));
 		}
 	}
 

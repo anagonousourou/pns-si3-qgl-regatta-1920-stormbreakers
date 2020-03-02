@@ -41,14 +41,16 @@ public class LineSegment2D {
 	/**
 	 * Coordinates of starting point of the line
 	 */
-	protected double x0, y0;
+	protected double x0;
+	protected double  y0;
 
 	/**
 	 * Direction vector of the line. dx and dy should not be both zero.
 	 */
-	protected double dx, dy;
+	protected double dx;
+	protected double  dy;
 
-	public final static double ACCURACY = 1e-12;
+	public static final  double ACCURACY = 1e-12;
 
 
 	/**
@@ -196,19 +198,7 @@ public class LineSegment2D {
 		return new Point2D(x0 + dx, y0 + dy);
 	}
 
-	/**
-	 * Returns the parameter of the first point of the edge, equals to 0.
-	 */
-	public double t0() {
-		return 0.0;
-	}
-
-	/**
-	 * Returns the parameter of the last point of the edge, equals to 1.
-	 */
-	public double t1() {
-		return 1.0;
-	}
+	
 
 	public Point2D point(double t) {
 		t = Math.min(Math.max(t, 0), 1);
@@ -235,7 +225,7 @@ public class LineSegment2D {
 
 	/**
 	 * Returns true if the point (x, y) lies on the line covering the object, with
-	 * precision given by Shape2D.ACCURACY.
+	 * precision given by ACCURACY.
 	 */
 	protected boolean supportContains(double x, double y) {
 		double denom = Math.hypot(dx, dy);
@@ -254,10 +244,13 @@ public class LineSegment2D {
 
 		if (t < -ACCURACY)
 			return false;
-		if (t - 1 > ACCURACY)
-			return false;
 
-		return true;
+		else if (t - 1 > ACCURACY)
+			return false;
+		else{
+			return true;
+		}
+		
 	}
 
 	public boolean contains(IPoint point){
@@ -341,7 +334,7 @@ public class LineSegment2D {
 
 	@Override
 	public String toString() {
-		return new String("LineSegment2D[(" + x0 + "," + y0 + ")-(" + (x0 + dx) + "," + (y0 + dy) + ")]");
+		return "LineSegment2D[(" + x0 + "," + y0 + ")-(" + (x0 + dx) + "," + (y0 + dy) + ")]";
 	}
 
 	@Override
@@ -364,7 +357,12 @@ public class LineSegment2D {
 		DoubleStream.iterate(0, d-> d <= 1.0, d-> d+0.05).forEach(d->
 			points.add( this.point(d) )
 		);
-		return points.stream().min((p,pother)-> Double.compare(p.distanceTo(point2d),pother.distanceTo(point2d) )).get();
+		var tmp=points.stream().min((p,pother)-> Double.compare(p.distanceTo(point2d),pother.distanceTo(point2d) ));
+		if(tmp.isPresent()){
+			return tmp.get();
+		}
+		//should never happen
+		return null;
 		
 	}
 

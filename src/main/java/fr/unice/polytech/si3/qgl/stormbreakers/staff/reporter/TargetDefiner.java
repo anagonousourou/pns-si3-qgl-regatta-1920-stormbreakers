@@ -58,7 +58,7 @@ public class TargetDefiner  {
                         , navigator.additionalOrientationNeeded(boat.getPosition(), checkpoint.getPosition().getPoint2D()));
                 }
                 else{
-                    //TODO eviter le courant pour le moment on fonce droit dedans en augmentant juste la distance/vitesse à prendre
+                    //LATER eviter le courant pour le moment on fonce droit dedans en augmentant juste la distance/vitesse à prendre
                     return new TupleDistanceOrientation(boat.getPosition().distanceTo(checkpoint.getPosition())+courant.getStrength()
                         , navigator.additionalOrientationNeeded(boat.getPosition(), checkpoint.getPosition().getPoint2D()));
                 }
@@ -95,7 +95,7 @@ public class TargetDefiner  {
             return new TupleDistanceOrientation(distance, orientation);
         }
         else if(helpness > 0){
-            //TODO distinguer si le courant nous aide temporairement seulement
+            //LATER distinguer si le courant nous aide temporairement seulement
             Point2D pointToLeave=this.maximalPointToStay(boat.getPosition().getPoint2D(), cpPoint, courantVector, streamAround.getShape());
             if(pointToLeave.distanceTo(boat.getPosition().getPoint2D()) <= streamAround.getStrength()){
                 double orientation=navigator.additionalOrientationNeeded(boat.getPosition(), cpPoint);
@@ -110,7 +110,7 @@ public class TargetDefiner  {
         }
 
         else if(helpness < 0){
-            // TODO Afin de rester cohérent avec la "stratégie" qui fait foncer le bateau tout droit 
+            // LATER Afin de rester cohérent avec la "stratégie" qui fait foncer le bateau tout droit 
             //dans le checkpoint meme si il y a un courant défavorable on continue notre chemin
             //quand  la "stratégie" aura changé on changera cette partie
             double orientation=navigator.additionalOrientationNeeded(boat.getPosition(), cpPoint);
@@ -150,11 +150,9 @@ public class TargetDefiner  {
     }
 
     Point2D calculateEscapePoint(Courant courant,Point2D position){
-        //TODO LATER add strength consideration etc ...
+        //LATER add strength consideration etc ...
         return courant.closestPointTo(position);
     }
 
     
-   
-
-}
+}  

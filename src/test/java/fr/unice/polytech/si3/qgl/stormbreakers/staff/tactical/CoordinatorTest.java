@@ -243,7 +243,7 @@ public class CoordinatorTest {
 
 		assertEquals(4,resultActions.size());
 
-		// TODO: 24/02/2020 MoveAction equals
+		// LATER: 24/02/2020 MoveAction equals
 		MoveAction move1 = (MoveAction) resultActions.get(0);
 		assertAll(
 				() -> assertEquals(sailorGoingLeft.getId(),move1.getSailorId()),
@@ -251,7 +251,7 @@ public class CoordinatorTest {
 				() -> assertEquals(-1, move1.getYdistance())
 		);
 
-		// TODO: 24/02/2020 MoveAction equals
+		
 		MoveAction move2 = (MoveAction) resultActions.get(2);
 		assertAll(
 				() -> assertEquals(sailorGoingRight.getId(),move2.getSailorId()),
@@ -287,7 +287,7 @@ public class CoordinatorTest {
 		List<SailorAction> resultActions = coordinator2.addOaringSailorsOnEachSide();
 		assertEquals(4,resultActions.size());
 
-		// TODO: 24/02/2020 MoveAction equals
+		
 		MoveAction move1 = (MoveAction) resultActions.get(0);
 		assertAll(
 				() -> assertEquals(sailorGoingLeft.getId(),move1.getSailorId()),
@@ -295,7 +295,7 @@ public class CoordinatorTest {
 				() -> assertEquals(0, move1.getYdistance())
 		);
 
-		// TODO: 24/02/2020 MoveAction equals
+		
 		MoveAction move2 = (MoveAction) resultActions.get(2);
 		assertAll(
 				() -> assertEquals(sailorGoingRight.getId(),move2.getSailorId()),

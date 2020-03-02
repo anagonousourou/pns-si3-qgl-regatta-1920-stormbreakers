@@ -107,7 +107,7 @@ public class Rectangle extends Shape {
     }
 
     public Point2D findPointNearestToPosition(Position other, Position rectangle) {
-        // TODO Auto-generated method stub
+        
         if (Math.abs(orientation - Math.PI / 2) < 0.0001 || Math.abs(orientation - (2 * Math.PI / 2)) < 0.0001) {
             if (Math.abs(other.y() - rectangle.y()) < (height / 2)) {
                 return new Point2D(rectangle.x(), other.y());
@@ -151,11 +151,8 @@ public class Rectangle extends Shape {
     	//tourner la plan pour que le courant est un angle 0
     	Point2D ptCp = cp.getPosition().getPoint2D().getRotatedBy(-orientation);
     	Point2D ptBoat = boatposition.getRotatedBy(-orientation);
-    	if(ptCp.x()>0 && ptCp.x()>ptBoat.x()) {
-    		return true;
-    	}else {
-        	return false;	
-    	}
+    	return ptCp.x()>0 && ptCp.x()>ptBoat.x(); 
+    		
     }
 
 }

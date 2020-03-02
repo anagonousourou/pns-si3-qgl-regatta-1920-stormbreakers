@@ -42,12 +42,17 @@ public class Courant extends OceanEntity {
     }
 
     public Point2D closestPointTo(Point2D point2d) {
-        return new RectanglePositioned((Rectangle) this.shape, this.position).closestPointTo(point2d).get();
+        var tmp=new RectanglePositioned((Rectangle) this.shape, this.position).closestPointTo(point2d);
+        if(tmp.isPresent()){
+            return tmp.get();
+        }
+        //should never happen
+        return null;
     }
 
     
 
-    // LATER turn this into a interface method to implement TODO
+    // LATER turn this into a interface method to implement
     public boolean isPtInside(IPoint pt) {
         return this.isPtInside(pt.x(), pt.y());
     }
@@ -63,7 +68,6 @@ public class Courant extends OceanEntity {
     }
 	
 	public boolean bringCloserCp(Checkpoint cp, Boat boat) {
-		
 		Rectangle r=(Rectangle)this.shape;
 		Point2D nearestPoint=r.findPointNearestToPosition(cp.getPosition(),this.position);
 		Point2D cpPoint2D = cp.getPosition().getPoint2D();
