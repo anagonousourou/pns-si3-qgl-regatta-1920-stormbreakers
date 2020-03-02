@@ -80,19 +80,6 @@ public class Logger {
         clearCurrentLogLine();
     }
 
-    /**
-     * Stores msg as logs without using current log line by creating a new line
-     * 
-     * @param msg to push
-     */
-    private void directPush(String msg) {
-        if ("".equals(msg))
-            return; // No need to push empty line
-        if (allLogs.size() < MAX_LOG_LINES) {
-            allLogs.add(msg);
-        }
-    }
-
     private void clearCurrentLogLine() {
         currentLogLine = new StringBuilder();
     }

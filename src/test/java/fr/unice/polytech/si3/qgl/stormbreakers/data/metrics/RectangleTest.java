@@ -12,7 +12,6 @@ import static org.junit.jupiter.api.Assertions.*;
 class RectangleTest {
 
     private Rectangle rectangle;
-    private Rectangle rectangle1;
     private Point2D courant;
     
     private Checkpoint cp1;
@@ -116,7 +115,6 @@ class RectangleTest {
 		
 		//rectangle
 		 courant = new Point2D(6,6);
-		 rectangle1 =new Rectangle(10,5,Math.PI/4);
 		//boat
 		 boat1 = new Point2D(4,6);
 		 boat2 = new Point2D(15,6);
