@@ -89,4 +89,25 @@ public class StreamManagerTest {
 
 
     }
+    @Test
+    void firstStreamBetweenTest(){
+
+        Boat boat=mock(Boat.class);
+        List<Courant> courants=List.of(
+            courant1,courant2
+        );
+        manager=new StreamManager(parser, boat);
+        manager.setCourants(courants);
+
+        when( boat.getPosition() ).thenReturn(new Position(700, -300.0));
+
+        assertEquals(courant1, manager.firstStreamBetween(Position.create(700, 1500)));
+
+        assertEquals(null, manager.firstStreamBetween(Position.create(1800, 300)));
+
+        when( boat.getPosition() ).thenReturn(new Position(700, 1300.0));
+
+        assertEquals(courant2, manager.firstStreamBetween(Position.create(700, 600)));
+
+    }
 }

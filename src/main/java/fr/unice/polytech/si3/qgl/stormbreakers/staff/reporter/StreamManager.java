@@ -74,11 +74,12 @@ public class StreamManager implements PropertyChangeListener {
         .collect(Collectors.toList());
 
         if(streamsOnTrajectory.size()==1){
+            
             return streamsOnTrajectory.get(0);
         }
         else if(streamsOnTrajectory.size()>1){
             var tmp= streamsOnTrajectory.stream().min(
-                (a,b)-> Double.compare(destination.distanceTo(a.getPosition()), destination.distanceTo(b.getPosition()))
+                (a,b)-> Double.compare(boat.getPosition().distanceTo(a.getPosition()), boat.getPosition().distanceTo(b.getPosition()))
             );
 
             if(tmp.isPresent()){
