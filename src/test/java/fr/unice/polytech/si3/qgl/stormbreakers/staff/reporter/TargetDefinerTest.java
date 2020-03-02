@@ -1,5 +1,6 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -60,5 +61,20 @@ public class TargetDefinerTest {
         when(boat.getPosition()).thenReturn(Position.create(300, 300));
         assertFalse(targetDefiner.thereIsStreamOnTrajectory());
     }
+
+    @Test
+    void nextStreamOnTrajectoryTest() {
+
+        checkpointsManager=new CheckpointsManager(List.of(cp1,cp2,cp3) );
+        
+        boat=mock(Boat.class);
+        streamManager=new StreamManager(parser, boat);
+        navigator=new Navigator();
+        streamManager.setCourants(List.of(courant1,courant2) );
+        targetDefiner=new TargetDefiner(checkpointsManager, streamManager, boat, navigator);
+
+        when(boat.getPosition()).thenReturn(Position.create(0, 0));
+        assertEquals(courant1, targetDefiner.nextStreamOnTrajectory());
+      }
     
 }

@@ -31,7 +31,8 @@ public class TargetDefiner  {
 
     Courant nextStreamOnTrajectory(){
         if(thereIsStreamOnTrajectory()){
-            return this.streamManager.firstStreamBetween(boat.getPosition());
+            System.out.println("if");
+            return this.streamManager.firstStreamBetween(checkpointsManager.nextCheckpoint().getPosition());
         }
         return null;
     }
