@@ -7,7 +7,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.math.MovementPath;
 
-public class MoveAction extends SailorAction{
+public class MoveAction extends SailorAction {
+  
     private int xdistance;
     private int ydistance;
 

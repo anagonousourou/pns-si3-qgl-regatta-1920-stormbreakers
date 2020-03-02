@@ -105,7 +105,7 @@ public class Sailor implements Logable {
     public int getDistanceTo(IntPosition pos) {
         return Math.abs(pos.x() - this.position.x()) + Math.abs(pos.y() - this.position.y());
     }
-
+  
     public boolean canReach(IntPosition pos) {
         return getDistanceTo(pos) <= MAX_MOVEMENT_DISTANCE;
     }
