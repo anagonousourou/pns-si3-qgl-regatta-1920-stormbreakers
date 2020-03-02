@@ -31,7 +31,7 @@ public class CheckpointsManager {
     }
 
     private boolean isPosInCheckpoint(Position position) {
-        return checkpoints.get(0).isPtInside(position.getPoint2D());
+        return checkpoints.get(0).isPtInside(position);
     }
 
 

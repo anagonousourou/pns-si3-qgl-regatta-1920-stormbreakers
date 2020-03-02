@@ -17,11 +17,11 @@ public class IntPosition {
         this.y = other.y;
     }
 
-    public int getX() {
+    public int x() {
         return x;
     }
 
-    public int getY() {
+    public int y() {
         return y;
     }
 
@@ -50,7 +50,7 @@ public class IntPosition {
         if (!(obj instanceof IntPosition))
             return false;
         IntPosition other = (IntPosition) obj;
-        return other.getX() == x && other.getY() == y;
+        return other.x() == x && other.y() == y;
     }
 
     @Override

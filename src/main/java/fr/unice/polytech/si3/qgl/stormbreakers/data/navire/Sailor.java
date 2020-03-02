@@ -7,6 +7,7 @@ import java.util.Objects;
 import fr.unice.polytech.si3.qgl.stormbreakers.Logable;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.MoveAction;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.IntPosition;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.MovementPath;
 
 /**
  * classe qui représente un marin
@@ -32,11 +33,11 @@ public class Sailor implements Logable {
     }
 
     public Sailor(int id, IntPosition pos) {
-        this(id, pos.getX(), pos.getY());
+        this(id, pos.x(), pos.y());
     }
 
     public Sailor(int id, IntPosition pos, String name) {
-        this(id, pos.getX(), pos.getY());
+        this(id, pos.x(), pos.y());
         this.name = name;
 
     }
@@ -98,13 +99,13 @@ public class Sailor implements Logable {
     }
 
     public MoveAction howToMoveTo(IntPosition pos) {
-        return new MoveAction(id, pos.getX() - this.position.getX(), pos.getY() - this.position.getY());
+        return new MoveAction(id, pos.x() - this.position.x(), pos.y() - this.position.y());
     }
 
     public int getDistanceTo(IntPosition pos) {
-        return Math.abs(pos.getX() - this.position.getX()) + Math.abs(pos.getY() - this.position.getY());
+        return Math.abs(pos.x() - this.position.x()) + Math.abs(pos.y() - this.position.y());
     }
-
+  
     public boolean canReach(IntPosition pos) {
         return getDistanceTo(pos) <= MAX_MOVEMENT_DISTANCE;
     }
@@ -134,4 +135,27 @@ public class Sailor implements Logable {
         return "M(id:" + id + "position:" + position + ")";
     }
 
+    /**
+     * Retourne un MoveAction vers la position indiquée
+     * priviliégie le déplacement selon X
+     * @param position vers laquelle se diriger
+     * @return MoveAction limité par le déplacement maximal authorisé
+     */
+    public MoveAction howToGetCloserTo(IntPosition position) {
+        int distanceShortOf = getDistanceTo(position) - MAX_MOVEMENT_DISTANCE;
+        if (distanceShortOf<=0) return howToMoveTo(position);
+        else {
+            MovementPath path = this.position.getPathTo(position);
+            int toLowerXBy = 0;
+            int toLowerYBy;
+            // lower deltaY enough
+            toLowerYBy = Math.min(distanceShortOf,path.getDeltaY());
+            distanceShortOf -= toLowerYBy;
+            // If still too far lower deltaX enough
+            if (distanceShortOf>0) {
+                toLowerXBy = Math.min(distanceShortOf,path.getDeltaX());
+            }
+            return new MoveAction(id, path.getDeltaX()-toLowerXBy, path.getDeltaY()-toLowerYBy);
+        }
+    }
 }

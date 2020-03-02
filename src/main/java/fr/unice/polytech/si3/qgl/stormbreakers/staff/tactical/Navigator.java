@@ -1,11 +1,15 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.staff.tactical;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Fraction;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
 import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.OarsConfig;
-
-import java.util.*;
 
 /**
  * Utilitaire de calcul destinés à la navigation
@@ -22,14 +26,14 @@ public class Navigator {
      */
     public double additionalOrientationNeeded(Position boatPosition, Point2D target) {
 
-        if (boatPosition.getPoint2D().getDistanceTo(target) < Math.pow(10, -10)) {
+        if (boatPosition.distanceTo(target) < Math.pow(10, -10)) {
             // On est sur la target, on n'a aucunement besoin de tourner
             return 0;
         }
 
         // On effectue un translation pour ramener virtuellement
         // Les coordonnées du bateau en (0,0)
-        Point2D target2 = target.getTranslatedBy(-boatPosition.getX(), -boatPosition.getY());
+        Point2D target2 = target.getTranslatedBy(-boatPosition.x(), -boatPosition.y());
         // On effectue une rotation pour ramener virtuellement
         // la direction du bateau sur l'axe X
         Point2D target3 = target2.getRotatedBy(-boatPosition.getOrientation());

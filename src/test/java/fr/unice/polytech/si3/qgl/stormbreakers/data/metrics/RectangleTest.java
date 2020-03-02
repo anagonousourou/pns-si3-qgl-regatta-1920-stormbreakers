@@ -4,6 +4,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Checkpoint;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Fraction;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -11,14 +12,24 @@ import static org.junit.jupiter.api.Assertions.*;
 class RectangleTest {
 
     private Rectangle rectangle;
-
+    private Point2D courant;
+    
+    private Checkpoint cp1;
+    private Checkpoint cp2;
+    
+    private Point2D boat1;
+    private Point2D boat2;
+    
+	
     @BeforeEach
     void setUp() {
         // Width is along the y axis
         rectangle = new Rectangle(10, 20, 0.0);
+        setupGoodOrientation();
     }
 
-    @Test
+
+	@Test
     void testIsInsideWhenTrue() {
         assertTrue(rectangle.isPtInside(new Point2D(0, 0)));
     }
@@ -92,6 +103,28 @@ class RectangleTest {
         Rectangle rect1 = new Rectangle(0,0,0);
         Rectangle rect2 = new Rectangle(10,10,10);
         assertNotEquals(rect1,rect2);
+    }
+    
+    
+
+    private void setupGoodOrientation() {
+    	
+    	//checkpoint 
+		 cp1= new Checkpoint(new Position(14,10 ), new Circle(10));
+		 cp2= new Checkpoint(new Position(0,10 ), new Circle(10));
+		
+		//rectangle
+		 courant = new Point2D(6,6);
+		//boat
+		 boat1 = new Point2D(4,6);
+		 boat2 = new Point2D(15,6);
+		
+	}
+    
+    @Test void testhaveGoodOrientation() {
+    	assertTrue(rectangle.haveGoodOrientation(cp1, boat1,courant));
+    	assertFalse(rectangle.haveGoodOrientation(cp1, boat2,courant));
+    	assertFalse(rectangle.haveGoodOrientation(cp2, boat1,courant));
     }
 
     /*

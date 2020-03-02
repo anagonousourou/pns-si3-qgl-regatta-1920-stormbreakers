@@ -2,14 +2,15 @@ package fr.unice.polytech.si3.qgl.stormbreakers.staff.tactical;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.Optional;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.ActionType;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.SailorAction;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Checkpoint;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Boat;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.Utils;
 import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.CheckpointsManager;
+import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.OarsConfig;
+import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.TargetDefiner;
 import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.WeatherAnalyst;
 
 public class Captain {
@@ -24,13 +25,16 @@ public class Captain {
 
     private WeatherAnalyst weatherAnalyst;
 
+    private TargetDefiner targetDefiner;
+
     public Captain(Boat boat, CheckpointsManager checkpointsManager, Navigator navigator, WeatherAnalyst weatherAnalyst,
-            Coordinator coordinator) {
+            Coordinator coordinator,TargetDefiner targetDefiner) {
         this.boat = boat;
         this.checkpointsManager = checkpointsManager;
         this.navigator = navigator;
         this.coordinator = coordinator;
         this.weatherAnalyst = weatherAnalyst;
+        this.targetDefiner=targetDefiner;
 
     }
 
@@ -42,21 +46,23 @@ public class Captain {
         this.coordinator.resetAvailability();
         this.checkpointsManager.updateCheckpoint(boat.getPosition());
 
-        Checkpoint chpoint = this.checkpointsManager.nextCheckpoint();
-        if (chpoint == null) {
+        var destination= this.targetDefiner.defineNextTarget();
+        
+        if (destination == null) {
             return List.of();
         }
 
-        double orientation = this.navigator.additionalOrientationNeeded(boat.getPosition(),
-                chpoint.getPosition().getPoint2D());
-        double distance = boat.getPosition().distanceTo(chpoint.getPosition());
+        double orientation = destination.getOrientation();
+        double distance = destination.getDistance();
 
         List<SailorAction> actionsOrientation = this.actionsToOrientate(orientation);
 
         double currentSpeed = this.calculateSpeedFromOarsAction(actionsOrientation);
         List<SailorAction> actionsToAdjustSpeed = this.adjustSpeed(distance, currentSpeed);
 
-        return Captain.<SailorAction>concatenate(actionsOrientation, actionsToAdjustSpeed);
+        List<SailorAction> actionsForUnusedSailors=this.validateActions(this.coordinator.manageUnusedSailors() );
+
+        return Utils.<SailorAction>concatenate(actionsOrientation, actionsToAdjustSpeed,actionsForUnusedSailors);
 
     }
 
@@ -75,27 +81,49 @@ public class Captain {
      * @return
      */
     List<SailorAction> actionsToOrientate(double orientation) {
-        if (Math.abs(orientation) < Captain.EPS) {// pas besoin de pivoter
+    	// NO ORIENTATION NEEDED
+        if (Math.abs(orientation) < Captain.EPS) {
             return List.of();
         }
-        // le gouvernail existe, est accessible et suffit
-        else if (coordinator.rudderIsPresent() && coordinator.rudderIsAccesible()
-                && (Math.abs(orientation) <= Math.PI / 4)) {
+        
+        else if(this.coordinator.rudderIsPresent() && this.coordinator.rudderIsAccesible() && Math.abs(orientation)<=Math.PI/4 ){
             return this.validateActions(this.coordinator.activateRudder(orientation));
-            /**
-             * Plus tard, rajouter le cas où le gouvernail existe, est accessible mais ne
-             * suffit pas
-             */
-
         }
-        // le gouvernail n'existe pas
-        else {
+
+        else if(this.coordinator.rudderIsPresent() && this.coordinator.rudderIsAccesible() &&  !Utils.within(orientation, Utils.MAX_RUDDER_ROTATION) ){
+            if(this.coordinator.nbOars()==0){
+                return this.validateActions(this.coordinator.activateRudder(Utils.MAX_RUDDER_ROTATION));
+            }
+            else{
+                
+                Optional<OarsConfig> possibleOarsConfig=this.navigator.possibleOarConfigs(coordinator.nbLeftOars(),coordinator.nbRightOars()).stream()
+                .filter(oc-> oc.getAngle() * orientation > 0 )
+                .max((oc1,oc2)->Double.compare(oc1.getAngle(), oc2.getAngle()));
+                
+                if(possibleOarsConfig.isPresent()) {
+                    
+                    int diff = this.navigator.fromAngleToDiff(possibleOarsConfig.get().getAngle() , this.coordinator.nbLeftOars(),
+                            this.coordinator.nbRightOars());
+                            var rudderActions=this.validateActions(this.coordinator.activateRudder(Math.min(orientation-possibleOarsConfig.get().getAngle(), Utils.MAX_RUDDER_ROTATION) ));
+                            var oarsActions=this.validateActions(this.coordinator.activateOarsNotStrict(diff));
+                    return Utils.<SailorAction>concatenate(rudderActions,oarsActions);
+                }
+                else{
+                    
+                    int diff = this.navigator.fromAngleToDiff(orientation, this.coordinator.nbLeftOars(),
+                    this.coordinator.nbRightOars());
+                    List<SailorAction> actions = this.coordinator.activateOarsNotStrict(diff);
+                    return this.validateActions(actions);
+                }
+            }
+        }
+        else{
             int diff = this.navigator.fromAngleToDiff(orientation, this.coordinator.nbLeftOars(),
                     this.coordinator.nbRightOars());
             List<SailorAction> actions = this.coordinator.activateOarsNotStrict(diff);
             return this.validateActions(actions);
         }
-    }
+	}
 
     /**
      * Fonction qui envoie des actions pour ajouter des marins pour faire avancer le
@@ -125,7 +153,7 @@ public class Captain {
                 int nbOpenned = this.coordinator.liftSailsPartially(actionsToUseWeather);
                 this.validateActions(actionsToUseWeather);
                 double expectedSpeedFromWind = this.weatherAnalyst.externalSpeedGivenNbOpennedSails(nbOpenned);
-                return Captain.<SailorAction>concatenate(
+                return Utils.<SailorAction>concatenate(
 
                         actionsToUseWeather,
                         this.accelerate(distance, currentSpeed + expectedSpeedFromWind));
@@ -140,7 +168,7 @@ public class Captain {
 
                 double expectedSpeedFromWind = this.weatherAnalyst.externalSpeedGivenNbOpennedSails(nbOpenned);
 
-                return Captain.<SailorAction>concatenate(
+                return Utils.<SailorAction>concatenate(
 
                         actionsToCancelWeather,
                         this.accelerate(distance, currentSpeed + expectedSpeedFromWind));
@@ -192,7 +220,7 @@ public class Captain {
         double minAdditionalSpeed = SPEED * (2.0 / this.coordinator.nbOars());
         if (currentSpeed + minAdditionalSpeed <= distance) {
             List<SailorAction> actions = this.validateActions(this.coordinator.addOaringSailorsOnEachSide());
-            return Captain.<SailorAction>concatenate(actions,
+            return Utils.<SailorAction>concatenate(actions,
                     this.accelerate(distance, currentSpeed + minAdditionalSpeed));
 
         }
@@ -203,8 +231,5 @@ public class Captain {
         
     }
 
-    /** Generic function to concatenate 2 lists in Java */
-    private static <T> List<T> concatenate(List<T> list1, List<T> list2) {
-        return Stream.of(list1, list2).flatMap(List::stream).collect(Collectors.toList());
-    }
+    
 }

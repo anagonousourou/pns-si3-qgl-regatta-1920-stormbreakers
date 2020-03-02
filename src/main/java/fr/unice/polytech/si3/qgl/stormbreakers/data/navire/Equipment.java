@@ -35,12 +35,12 @@ public abstract class Equipment implements Logable {
     }
 
     @JsonProperty("x")
-    public int getX() {
+    public int x() {
         return x;
     }
 
     @JsonProperty("y")
-    public int getY() {
+    public int y() {
         return y;
     }
 
