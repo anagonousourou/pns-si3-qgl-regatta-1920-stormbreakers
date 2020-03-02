@@ -3,7 +3,7 @@ package fr.unice.polytech.si3.qgl.stormbreakers.math;
 import java.util.List;
 import java.util.Optional;
 
-import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.IPoint;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Rectangle;
 
 public class RectanglePositioned {
@@ -13,7 +13,7 @@ public class RectanglePositioned {
     private LineSegment2D longueur1;
     private LineSegment2D longueur2;
 
-    public RectanglePositioned(Rectangle rectangle, Position position) {
+    public RectanglePositioned(Rectangle rectangle, IPoint position) {
 
         this.largeur1 = new LineSegment2D(pointA(rectangle, position), pointB(rectangle, position));
         this.largeur2 = new LineSegment2D(pointC(rectangle, position), pointD(rectangle, position));
@@ -22,7 +22,7 @@ public class RectanglePositioned {
 
     }
 
-    Point2D pointA(Rectangle rectangle, Position position) {
+    Point2D pointA(Rectangle rectangle, IPoint position) {
         double radius = Math.hypot(rectangle.getHeight() / 2, rectangle.getWidth() / 2);
         double beta = Math.atan(rectangle.getWidth() / rectangle.getHeight());
 
@@ -36,7 +36,7 @@ public class RectanglePositioned {
         return new Point2D(xpoint, ypoint);
     }
 
-    Point2D pointB(Rectangle rectangle, Position position) {
+    Point2D pointB(Rectangle rectangle, IPoint position) {
         double radius = Math.hypot(rectangle.getHeight() / 2, rectangle.getWidth() / 2);
         double beta = Math.atan(rectangle.getWidth() / rectangle.getHeight());
 
@@ -50,7 +50,7 @@ public class RectanglePositioned {
         return new Point2D(xpoint, ypoint);
     }
 
-    Point2D pointC(Rectangle rectangle, Position position) {
+    Point2D pointC(Rectangle rectangle, IPoint position) {
         double radius = Math.hypot(rectangle.getHeight() / 2, rectangle.getWidth() / 2);
         double beta = Math.atan(rectangle.getWidth() / rectangle.getHeight());
 
@@ -64,7 +64,7 @@ public class RectanglePositioned {
         return new Point2D(xpoint, ypoint);
     }
 
-    Point2D pointD(Rectangle rectangle, Position position) {
+    Point2D pointD(Rectangle rectangle, IPoint position) {
         double radius = Math.hypot(rectangle.getHeight() / 2, rectangle.getWidth() / 2);
         double beta = Math.atan(rectangle.getWidth() / rectangle.getHeight());
 

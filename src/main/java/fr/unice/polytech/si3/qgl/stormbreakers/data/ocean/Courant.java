@@ -8,12 +8,11 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Rectangle;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Shape;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Checkpoint;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
-import fr.unice.polytech.si3.qgl.stormbreakers.math.LineSegment2D;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.RectanglePositioned;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Utils;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Vector;
 
-public class Courant extends OceanEntity {
+public class Courant extends OceanEntity{
     private double strength;
 
     public Courant(@JsonProperty("position") Position position, @JsonProperty("shape") Shape shape,
@@ -32,15 +31,6 @@ public class Courant extends OceanEntity {
                 position.toString(), shape.toString());
     }
 
-    @Override
-    public boolean intersectsWith(LineSegment2D lineSegment2D) {
-        if (this.shape.getType().equals("rectangle")) {
-            return new RectanglePositioned((Rectangle) shape, this.position).intersectsWith(lineSegment2D);
-        } else {
-            return false;
-        }
-    }
-
     public Point2D closestPointTo(Point2D point2d) {
         var tmp=new RectanglePositioned((Rectangle) this.shape, this.position).closestPointTo(point2d);
         if(tmp.isPresent()){
@@ -52,20 +42,7 @@ public class Courant extends OceanEntity {
 
     
 
-    // LATER turn this into a interface method to implement
-    public boolean isPtInside(IPoint pt) {
-        return this.isPtInside(pt.x(), pt.y());
-    }
-
-    private boolean isPtInside(double x, double y) {
-        // On se replace par rapport au centre de la forme
-        Point2D pt = new Point2D(x - position.x(), y - position.y());
-        double orientation = position.getOrientation();
-        // On compense l'orientation du checkpoint
-        if (orientation != 0)
-            pt = pt.getRotatedBy(-orientation);
-        return shape.isPtInside(pt);
-    }
+    
 	
 	public boolean bringCloserCp(Checkpoint cp, Boat boat) {
 		Rectangle r=(Rectangle)this.shape;
@@ -91,6 +68,11 @@ public class Courant extends OceanEntity {
         double helpness=courantVector.scal(trajectoirVector);
         return helpness >= Utils.EPSILON;
 	}
+
+    @Override
+    public double getOrientation() {
+        return this.position.getOrientation();
+    }
 
 
 

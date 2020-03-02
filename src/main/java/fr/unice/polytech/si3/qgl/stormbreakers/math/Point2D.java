@@ -187,9 +187,4 @@ public class Point2D implements IPoint{
     public double x() {
         return x;
     }
-
-    @Override
-    public double distanceTo(IPoint other) {
-        return Math.sqrt((other.x() - this.x) * (other.x() - this.x) + (other.y() - this.y) * (other.y() - this.y));
-    }
 }

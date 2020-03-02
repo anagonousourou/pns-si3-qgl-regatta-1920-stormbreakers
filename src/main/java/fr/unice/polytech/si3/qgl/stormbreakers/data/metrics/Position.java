@@ -44,17 +44,6 @@ public class Position implements Logable,IPoint {
 
     
 
-    public double distanceTo(IPoint other){
-        return Math.sqrt((other.x() - this.x) * (other.x() - this.x) + (other.y() - this.y) * (other.y() - this.y));
-    }
-    public double distanceTo(Position pos) {
-        return Math.sqrt((pos.x - this.x) * (pos.x - this.x) + (pos.y - this.y) * (pos.y - this.y));
-    }
-
-    public static double distance(double x1, double y1, double x2, double y2) {
-        return Math.hypot(x2 - x1, y2 - y1);
-    }
-
     public double getOrientation() {
         return this.orientation;
     }

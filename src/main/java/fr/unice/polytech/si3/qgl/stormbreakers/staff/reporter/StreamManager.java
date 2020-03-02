@@ -39,7 +39,7 @@ public class StreamManager implements PropertyChangeListener {
      * @return
      */
     public boolean insideStream() {
-        return this.courants.stream().anyMatch(courant -> courant.isPtInside(boat.getPosition()));
+        return this.courants.stream().anyMatch(courant -> courant.isPtInside(boat));
     }
 
     /**
@@ -47,7 +47,7 @@ public class StreamManager implements PropertyChangeListener {
      * @return
      */
     public Courant streamAroundBoat() {
-        var optCourant = this.courants.stream().filter(courant -> courant.isPtInside(boat.getPosition()))
+        var optCourant = this.courants.stream().filter(courant -> courant.isPtInside(boat))
                 .findAny();
         if (optCourant.isPresent()) {
             return optCourant.get();
@@ -63,13 +63,13 @@ public class StreamManager implements PropertyChangeListener {
      * @return
      */
     public boolean thereIsStreamBetween(Position position) {
-        LineSegment2D segment2d = new LineSegment2D(position, boat.getPosition());
+        LineSegment2D segment2d = new LineSegment2D(position, boat);
         return this.courants.stream().anyMatch(courant -> courant.intersectsWith(segment2d));
 
     }
 
     public Courant firstStreamBetween(IPoint destination){
-        LineSegment2D segment2d = new LineSegment2D(destination, boat.getPosition());
+        LineSegment2D segment2d = new LineSegment2D(destination, boat);
         List<Courant> streamsOnTrajectory=this.courants.stream().filter(courant->courant.intersectsWith(segment2d))
         .collect(Collectors.toList());
         
@@ -80,7 +80,7 @@ public class StreamManager implements PropertyChangeListener {
         else if(streamsOnTrajectory.size()>1){
            
             var tmp= streamsOnTrajectory.stream().min(
-                (a,b)-> Double.compare(boat.getPosition().distanceTo(a.getPosition()), boat.getPosition().distanceTo(b.getPosition()))
+                (a,b)-> Double.compare(boat.distanceTo(a.getPosition()), boat.distanceTo(b.getPosition()))
             );
 
             if(tmp.isPresent()){

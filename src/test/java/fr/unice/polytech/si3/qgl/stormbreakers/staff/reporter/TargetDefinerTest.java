@@ -43,23 +43,30 @@ public class TargetDefinerTest {
     
     @BeforeEach
     void setUp(){
-        
+      navigator=new Navigator();
     }
 
     @Test
     void streamOnTrajectoryTest(){
         checkpointsManager=new CheckpointsManager(List.of(cp1,cp2,cp3) );
         
-        boat=mock(Boat.class);
+        boat=new Boat(Position.create(0.0, 0.0,0.0), 2, 2, 100, null);
         streamManager=new StreamManager(parser, boat);
-        navigator=new Navigator();
+        
+        streamManager.setCourants(List.of(courant1,courant2) );
+        targetDefiner=new TargetDefiner(checkpointsManager, streamManager, boat, navigator);
+    
+        
+        assertTrue(targetDefiner.thereIsStreamOnTrajectory());
+        
+
+        //clear 
+
+        boat=new Boat(Position.create(300.0, 300.0,0.0), 2, 2, 100, null);
+        streamManager=new StreamManager(parser, boat);
         streamManager.setCourants(List.of(courant1,courant2) );
         targetDefiner=new TargetDefiner(checkpointsManager, streamManager, boat, navigator);
 
-        when(boat.getPosition()).thenReturn(Position.create(0, 0));
-        assertTrue(targetDefiner.thereIsStreamOnTrajectory());
-
-        when(boat.getPosition()).thenReturn(Position.create(300, 300));
         assertFalse(targetDefiner.thereIsStreamOnTrajectory());
     }
 
@@ -83,13 +90,15 @@ public class TargetDefinerTest {
       void caseInsideAStreamPerpendiculaireTest(){
         checkpointsManager=new CheckpointsManager(List.of(cp4,cp1,cp2,cp3) );
         
-        boat=mock(Boat.class);
+        boat=new Boat(Position.create(300.0, 100.0,0.0), 2, 2, 100, null);
+
         streamManager=new StreamManager(parser, boat);
         navigator=new Navigator();
         streamManager.setCourants(List.of(courant1,courant2) );
         targetDefiner=new TargetDefiner(checkpointsManager, streamManager, boat, navigator);
 
-        when(boat.getPosition()).thenReturn(Position.create(300, 100,0.0));
+        
+       
         var result=targetDefiner.caseInsideAStream();
         assertEquals(Math.PI/2,result.getOrientation() ,1e-3 );
         assertEquals(240,result.getDistance() ,1e-3 );
@@ -99,13 +108,13 @@ public class TargetDefinerTest {
       void caseInsideAHelpingStreamTest(){
         checkpointsManager=new CheckpointsManager(List.of(cp1,cp2,cp3) );
         
-        boat=mock(Boat.class);
+        boat=new Boat(Position.create(300.0, 100.0,0.0), 2, 2, 100, null);
         streamManager=new StreamManager(parser, boat);
         navigator=new Navigator();
         streamManager.setCourants(List.of(courant1,courant2) );
         targetDefiner=new TargetDefiner(checkpointsManager, streamManager, boat, navigator);
 
-        when(boat.getPosition()).thenReturn(Position.create(300, 100,0));
+        
         var result=targetDefiner.caseInsideAStream();
         assertEquals(0,result.getOrientation() ,1e-3 );
       }

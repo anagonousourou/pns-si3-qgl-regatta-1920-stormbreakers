@@ -35,15 +35,25 @@ public class StreamManagerTest {
         manager=new StreamManager(parser, boat);
         manager.setCourants(courants);
 
-        when( boat.getPosition() ).thenReturn(new Position(300, 300));
+       
+        when( boat.x() ).thenReturn(300.0);
+        when( boat.y() ).thenReturn(300.0);
+        when( boat.getOrientation() ).thenReturn(0.0);
 
         assertFalse(manager.insideStream());
 
-        when( boat.getPosition() ).thenReturn(new Position(300, 100));
+        
+        when( boat.x() ).thenReturn(300.0);
+        when( boat.y() ).thenReturn(100.0);
+        
+
 
         assertTrue(manager.insideStream());
 
-        when( boat.getPosition() ).thenReturn(new Position(500, 0.0));
+        when( boat.x() ).thenReturn(500.0);
+        when( boat.y() ).thenReturn(0.0);
+        
+        
 
         assertTrue(manager.insideStream());
     }
@@ -57,15 +67,23 @@ public class StreamManagerTest {
         manager=new StreamManager(parser, boat);
         manager.setCourants(courants);
 
-        when( boat.getPosition() ).thenReturn(new Position(300, 300));
+        
+        when( boat.x() ).thenReturn(300.0);
+        when( boat.y() ).thenReturn(300.0);
 
         assertEquals(null,manager.streamAroundBoat());
 
-        when( boat.getPosition() ).thenReturn(new Position(800, 100));
+        when( boat.x() ).thenReturn(800.0);
+        when( boat.y() ).thenReturn(100.0);
+
+        
 
         assertEquals(courant1,manager.streamAroundBoat());
 
-        when( boat.getPosition() ).thenReturn(new Position(500, 0.0));
+        when( boat.x() ).thenReturn(500.0);
+        when( boat.y() ).thenReturn(0.0);
+
+        
 
         assertEquals(courant1,manager.streamAroundBoat());
         
@@ -99,13 +117,18 @@ public class StreamManagerTest {
         manager=new StreamManager(parser, boat);
         manager.setCourants(courants);
 
-        when( boat.getPosition() ).thenReturn(new Position(700, -300.0));
+        when( boat.x() ).thenReturn(700.0);
+        when( boat.y() ).thenReturn(-300.0);
+
+        
 
         assertEquals(courant1, manager.firstStreamBetween(Position.create(700, 1500)));
 
         assertEquals(null, manager.firstStreamBetween(Position.create(1800, 300)));
 
-        when( boat.getPosition() ).thenReturn(new Position(700, 1300.0));
+        when( boat.x() ).thenReturn(700.0);
+        when( boat.y() ).thenReturn(1300.0);
+        
 
         assertEquals(courant2, manager.firstStreamBetween(Position.create(700, 600)));
 

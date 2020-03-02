@@ -21,4 +21,10 @@ public class Recif extends OceanEntity {
         return false;
     }
 
+    @Override
+    public double getOrientation() {
+        
+        return this.position.getOrientation();
+    }
+
 }

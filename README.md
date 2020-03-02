@@ -1,8 +1,9 @@
 # Equipe StormBreakers
 
-![](flag.png?raw=true)
+![Drapeau de l'équipe](flag.png?raw=true)
 
 Membres de l'équipe :
+
 - BOUZIDI Héba
 - STRIEBEL Florian
 - ANAGONOU Patrick

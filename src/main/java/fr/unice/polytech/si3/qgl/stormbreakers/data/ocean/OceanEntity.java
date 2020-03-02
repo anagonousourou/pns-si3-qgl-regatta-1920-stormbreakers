@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Shape;
-import fr.unice.polytech.si3.qgl.stormbreakers.math.LineSegment2D;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.Surface;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
 
@@ -15,7 +15,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.math.LineSegment2D;
   @JsonSubTypes.Type(value = Courant.class, name="stream"),
 })
 
-public abstract class OceanEntity {
+public abstract class OceanEntity implements Surface{
   private String type;
   protected Position position;
   protected Shape shape;
@@ -36,7 +36,7 @@ public abstract class OceanEntity {
 
   @JsonProperty("position")
   public Position getPosition() {
-    return position;
+    return this.position;
   }
 
   @JsonProperty("shape")
@@ -44,5 +44,15 @@ public abstract class OceanEntity {
     return shape;
   }
 
-  public abstract boolean intersectsWith(LineSegment2D lineSegment2D);
+  @Override
+  public double x() {
+    return this.position.x();
+  }
+
+  @Override
+  public double y(){
+    return this.position.y();
+  }
+
+  
 }
