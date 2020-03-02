@@ -54,6 +54,8 @@ public class ElementsConstructor {
 			coordinator = new Coordinator(crewManager, equipmentsManager);
 			seaElements = new WeatherAnalyst(wind, boat, equipmentsManager);
 
+			streamManager=new StreamManager(parser, boat);
+
 			targetDefiner=new TargetDefiner(checkpointsManager, streamManager, boat, navigator);
 
 			captain = new Captain(boat, checkpointsManager, navigator, seaElements,
