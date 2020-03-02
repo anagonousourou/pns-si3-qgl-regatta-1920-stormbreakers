@@ -37,8 +37,8 @@ public class Segment2DLineTest {
         LineSegment2D edge = new LineSegment2D(p1, p2);
         
         assertEquals(p2, edge.opposite(p1));    
-        assertEquals(p1, edge.opposite(p2));    
-        assertEquals(null, edge.opposite(p3));    
+        assertEquals(p1, edge.opposite(p2));
+        assertEquals(null, edge.opposite(p3));
 	}
 	@Test
 	public void testLength() {
@@ -65,24 +65,24 @@ public class Segment2DLineTest {
 	public void testIntersection(){
 		LineSegment2D edge1 = new LineSegment2D(1, 1, 3, 2);
 		LineSegment2D edge2 = new LineSegment2D(1, 1, 0, 4);
-		assertTrue(edge1.intersection(edge2).equals(new Point2D(1, 1)));
-		assertTrue(edge2.intersection(edge1).equals(new Point2D(1, 1)));
+		assertEquals(new Point2D(1, 1), edge1.intersection(edge2));
+		assertEquals(new Point2D(1, 1), edge2.intersection(edge1));
 		
 		LineSegment2D edge3 = new LineSegment2D(3, 2, 0, 4);
-		assertTrue(edge1.intersection(edge3).equals(new Point2D(3, 2)));
-		assertTrue(edge3.intersection(edge1).equals(new Point2D(3, 2)));
-		assertTrue(edge2.intersection(edge3).equals(new Point2D(0, 4)));
-		assertTrue(edge3.intersection(edge2).equals(new Point2D(0, 4)));
+		assertEquals(new Point2D(3, 2), edge1.intersection(edge3));
+		assertEquals(new Point2D(3, 2), edge3.intersection(edge1));
+		assertEquals(new Point2D(0, 4), edge2.intersection(edge3));
+		assertEquals(new Point2D(0, 4), edge3.intersection(edge2));
 		
 		LineSegment2D edge4 = new LineSegment2D(0, 0, 5, 1);
-		assertEquals(null,edge1.intersection(edge4));
-		assertEquals(edge2.intersection(edge4), null);
-		assertEquals(edge3.intersection(edge4), null);
+		assertEquals(null, edge1.intersection(edge4));
+		assertEquals(null, edge2.intersection(edge4));
+		assertEquals(null, edge3.intersection(edge4));
 		
 		edge1 = new LineSegment2D(1, 1, 5, 5);
 		edge2 = new LineSegment2D(1, 5, 5, 1);
-		assertTrue(edge1.intersection(edge2).equals(new Point2D(3, 3)));
-		assertTrue(edge2.intersection(edge1).equals(new Point2D(3, 3)));
+		assertEquals(new Point2D(3, 3), edge1.intersection(edge2));
+		assertEquals(new Point2D(3, 3), edge2.intersection(edge1));
 	}
 
 	

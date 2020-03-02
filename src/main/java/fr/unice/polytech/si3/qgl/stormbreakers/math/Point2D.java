@@ -13,7 +13,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.exceptions.ImpossibleAngleError;
 public class Point2D implements IPoint{
     private double x;
     private double y;
-    private static double EPS=0.0001;
+    private static final double EPS=0.0001;
 
     public Point2D(double x, double y) {
         this.x = x;
