@@ -96,7 +96,7 @@ public class TargetDefiner  {
         else if(helpness > 0){
             //LATER distinguer si le courant nous aide temporairement seulement
             Point2D pointToLeave=this.maximalPointToStay(boat.getPosition().getPoint2D(), cpPoint, courantVector, streamAround);
-            //System.out.println(pointToLeave);
+            
             if(pointToLeave.distanceTo(boat.getPosition().getPoint2D()) <= streamAround.getStrength()){
                 double orientation=navigator.additionalOrientationNeeded(boat.getPosition(), cpPoint);
                 double distance=boat.getPosition().getPoint2D().distanceTo(cpPoint);
@@ -138,12 +138,10 @@ public class TargetDefiner  {
         while(helpness(courant, current, destination) > 0 && surface.isPtInside(current)){
             
             prev=current;
-            System.out.println(current);
-            System.out.println("Surface contains current: "+surface.isPtInside(current));
-            current=current.getTranslatedBy(biggerStreamVector);
-            System.out.println(current);
             
-            System.out.println("Surface contains current: "+surface.isPtInside(current));
+           
+            current=current.getTranslatedBy(biggerStreamVector);
+            
             
             
         }
