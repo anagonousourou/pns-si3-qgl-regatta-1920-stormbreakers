@@ -107,11 +107,9 @@ public class Rectangle extends Shape {
     }
 
     public Point2D findPointNearestToPosition(Position other, Position rectangle) {
-
         	RectanglePositioned rect = new RectanglePositioned(this, rectangle);
             Point2D p = new Point2D(other.x(), other.y());
-            return rect.closestPointTo(p).get();
-
+            return rect.closestPointTo(p).isPresent() ? rect.closestPointTo(p).get() : null;
     }
 
     public boolean haveGoodOrientation(Checkpoint cp, Point2D boatposition,Point2D courantPos) {
@@ -120,11 +118,7 @@ public class Rectangle extends Shape {
     	ptCp = ptCp.getRotatedBy(-orientation);
     	Point2D ptBoat = boatposition.getTranslatedBy(boatposition.x()-courantPos.x(), boatposition.y()-courantPos.y());
     	ptBoat = ptBoat.getRotatedBy(-orientation);
-    	if(ptCp.x()>0 && ptCp.x()>ptBoat.x()) {
-    		return true;
-    	}else {
-        	return false;	
-    	}
+   		return ptCp.x()>0 && ptCp.x()>ptBoat.x();
     }
 
 }
