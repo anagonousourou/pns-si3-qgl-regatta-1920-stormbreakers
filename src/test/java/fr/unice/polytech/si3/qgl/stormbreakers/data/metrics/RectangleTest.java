@@ -4,6 +4,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Checkpoint;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Fraction;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -16,9 +17,11 @@ class RectangleTest {
     void setUp() {
         // Width is along the y axis
         rectangle = new Rectangle(10, 20, 0.0);
+        setupGoodOrientation();
     }
 
-    @Test
+
+	@Test
     void testIsInsideWhenTrue() {
         assertTrue(rectangle.isPtInside(new Point2D(0, 0)));
     }
@@ -92,6 +95,25 @@ class RectangleTest {
         Rectangle rect1 = new Rectangle(0,0,0);
         Rectangle rect2 = new Rectangle(10,10,10);
         assertNotEquals(rect1,rect2);
+    }
+    
+    
+
+    private void setupGoodOrientation() {
+    	
+    	//checkpoint 
+		Checkpoint cp1= new Checkpoint(new Position(14,10 ), new Circle(10));
+		
+		//rectangle
+		Point2D rect1 = new Point2D(6,6);
+		
+		//boat
+		Point2D boat1 = new Point2D(4,6);
+		
+	}
+    
+    @Test void testhaveGoodOrientation() {
+    	
     }
 
     /*
