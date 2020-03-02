@@ -48,7 +48,7 @@ public class LineSegment2D {
 	 */
 	protected double dx, dy;
 
-	public final static double ACCURACY = 1e-12;
+	public static final double ACCURACY = 1e-12;
 
 
 	/**

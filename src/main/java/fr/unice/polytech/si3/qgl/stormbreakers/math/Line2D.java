@@ -8,12 +8,14 @@ public class Line2D {
     /**
      * Coordinates of starting point of the line
      */
-    protected double x0, y0;
+    protected double x0;
+    protected double y0;
 
     /**
      * Direction vector of the line. dx and dy should not be both zero.
      */
-    protected double dx, dy;
+    protected double dx;
+    protected double dy;
 
     // ===================================================================
     /** Defines a new Straight line going through the two given points. */
