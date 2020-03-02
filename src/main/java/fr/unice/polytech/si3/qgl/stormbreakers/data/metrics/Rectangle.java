@@ -107,52 +107,24 @@ public class Rectangle extends Shape {
     }
 
     public Point2D findPointNearestToPosition(Position other, Position rectangle) {
-        
-        if (Math.abs(orientation - Math.PI / 2) < 0.0001 || Math.abs(orientation - (2 * Math.PI / 2)) < 0.0001) {
-            if (Math.abs(other.y() - rectangle.y()) < (height / 2)) {
-                return new Point2D(rectangle.x(), other.y());
-            } else if (other.x() - rectangle.y() < (-height / 2)) {
-                return new Point2D(rectangle.x(), rectangle.y() - (height / 2));
-            } else {
-                return new Point2D(rectangle.x(), rectangle.y() + (height / 2));
-            }
-        } else if (Math.abs(orientation) < 0.0001 || Math.abs(orientation) - (2 * Math.PI) < 0.0001) {
 
-            if (Math.abs(other.x() - rectangle.x()) < (height / 2)) {
-                return new Point2D(other.x(), rectangle.y());
-            } else if (other.x() - rectangle.x() < (-height / 2)) {
-                return new Point2D(rectangle.x() - (height / 2), rectangle.y());
-            } else {
-                return new Point2D(rectangle.x() + (height / 2), rectangle.y());
-            }
-
-        } else {
-            /*
-             * EquationDroite droiteRect= new
-             * EquationDroite(Math.cos(orientation)*(rectangle.x()+(this.height/2)),
-             * Math.sin(orientation)*rectangle.y()+(this.width/2),
-             * Math.cos(orientation)*other.x()-(this.height/2),
-             * Math.sin(orientation)*rectangle.y()-(this.width/2));
-             */
-
-            // droiteRect.findPointIntersectPerpendicularLineByPos(other);
-            RectanglePositioned rect = new RectanglePositioned(this, rectangle);
-            /*
-             * if(this.isPtInRectangle0(p)) { return p; }else if(other.x()<rectangle.x() ||
-             * other.y()<)
-             */
+        	RectanglePositioned rect = new RectanglePositioned(this, rectangle);
             Point2D p = new Point2D(other.x(), other.y());
             return rect.closestPointTo(p).get();
-        }
 
     }
 
-    public boolean haveGoodOrientation(Checkpoint cp, Point2D boatposition) {
+    public boolean haveGoodOrientation(Checkpoint cp, Point2D boatposition,Point2D courantPos) {
     	//tourner la plan pour que le courant est un angle 0
-    	Point2D ptCp = cp.getPosition().getPoint2D().getRotatedBy(-orientation);
-    	Point2D ptBoat = boatposition.getRotatedBy(-orientation);
-    	return ptCp.x()>0 && ptCp.x()>ptBoat.x(); 
-    		
+    	Point2D ptCp = cp.getPosition().getPoint2D().getTranslatedBy(cp.getPosition().x()-courantPos.x(), cp.getPosition().y()-courantPos.y());
+    	ptCp = ptCp.getRotatedBy(-orientation);
+    	Point2D ptBoat = boatposition.getTranslatedBy(boatposition.x()-courantPos.x(), boatposition.y()-courantPos.y());
+    	ptBoat = ptBoat.getRotatedBy(-orientation);
+    	if(ptCp.x()>0 && ptCp.x()>ptBoat.x()) {
+    		return true;
+    	}else {
+        	return false;	
+    	}
     }
 
 }
