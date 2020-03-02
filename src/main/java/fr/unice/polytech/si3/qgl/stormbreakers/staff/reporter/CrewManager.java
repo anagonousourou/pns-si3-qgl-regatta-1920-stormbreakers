@@ -128,7 +128,7 @@ public class CrewManager {
      * @return déplacement généré, null si aucun
      */
     public MoveAction bringClosestSailorCloserTo(List<Sailor> sailors, IntPosition position) {
-        // TODO: 27/02/2020 Test
+        // TODO: 27/02/2020 Verify Tests
         MoveAction move = null;
         Optional<Sailor> closestSailorOpt = marineClosestTo(position,sailors);
 

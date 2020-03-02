@@ -13,7 +13,6 @@ import java.util.Optional;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.math.IntPosition;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.MoveAction;
@@ -439,7 +438,6 @@ public class CoordinatorTest {
         assertEquals(2,moves.size());
     }
 
-	@Disabled
 	@Test
 	void manageUnusedSailorsTestWhenTooManySailors() {
 		Sailor sailor1 = new Sailor(0,0,0);
@@ -451,8 +449,8 @@ public class CoordinatorTest {
 		CrewManager crew2 = new CrewManager(sailors);
 
 		// Rudder
-		when(equipmentsManager.rudderIsPresent()).thenReturn(true);
-		when(equipmentsManager.isRudderUsed()).thenReturn(true);
+		when(equipmentsManager.rudderIsPresent()).thenReturn(true); // Rudder
+		when(equipmentsManager.isRudderUsed()).thenReturn(false);   // Needs someone
 		IntPosition rudderPos = new IntPosition(5,3);
 		when(equipmentsManager.rudderPosition()).thenReturn(rudderPos);
 
@@ -472,7 +470,6 @@ public class CoordinatorTest {
 		assertEquals(3,moves.size());
 	}
 
-	@Disabled
 	@Test
 	void manageUnusedSailorsTestAllEquipmentsCovered() {
 		Sailor sailor1 = new Sailor(0,0,0);
@@ -484,8 +481,8 @@ public class CoordinatorTest {
 		CrewManager crew2 = new CrewManager(sailors);
 
 		// Rudder
-		when(equipmentsManager.rudderIsPresent()).thenReturn(true);
-		when(equipmentsManager.isRudderUsed()).thenReturn(true);
+		when(equipmentsManager.rudderIsPresent()).thenReturn(true); // Rudder
+		when(equipmentsManager.isRudderUsed()).thenReturn(false);   // Needs someone
 		when(equipmentsManager.rudderPosition()).thenReturn(new IntPosition(5,3));
 
 		// Oars
@@ -536,5 +533,49 @@ public class CoordinatorTest {
 		List<SailorAction> moves = coordinator2.manageUnusedSailors();
 
 		assertEquals(sailors.size()-1,moves.size());
+	}
+
+	@Test
+	void manageUnusedSailorsTestWhenRudderFree() {
+		Sailor sailor1 = new Sailor(0,0,0);
+		Sailor sailor2 = new Sailor(1,0,0);
+		List<Sailor> sailors = List.of(sailor1,sailor2);
+		CrewManager crew2 = new CrewManager(sailors);
+
+		// Rudder
+		when(equipmentsManager.rudderIsPresent()).thenReturn(true);
+		when(equipmentsManager.isRudderUsed()).thenReturn(false);
+		when(equipmentsManager.rudderPosition()).thenReturn(new IntPosition(5,3));
+
+		// No Oars or Sails
+		when(equipmentsManager.unusedOars()).thenReturn(List.of());
+		when(equipmentsManager.sails()).thenReturn(List.of());
+
+		Coordinator coordinator2 =  new Coordinator(crew2, equipmentsManager);
+		List<SailorAction> moves = coordinator2.manageUnusedSailors();
+
+		assertEquals(1,moves.size());
+	}
+
+	@Test
+	void manageUnusedSailorsTestWhenRudderUsed() {
+		Sailor sailor1 = new Sailor(0,0,0);
+		Sailor sailor2 = new Sailor(1,0,0);
+		List<Sailor> sailors = List.of(sailor1,sailor2);
+		CrewManager crew2 = new CrewManager(sailors);
+
+		// Rudder
+		when(equipmentsManager.rudderIsPresent()).thenReturn(true);
+		when(equipmentsManager.isRudderUsed()).thenReturn(true);
+		when(equipmentsManager.rudderPosition()).thenReturn(new IntPosition(5,3));
+
+		// No Oars or Sails
+		when(equipmentsManager.unusedOars()).thenReturn(List.of());
+		when(equipmentsManager.sails()).thenReturn(List.of());
+
+		Coordinator coordinator2 =  new Coordinator(crew2, equipmentsManager);
+		List<SailorAction> moves = coordinator2.manageUnusedSailors();
+
+		assertEquals(0,moves.size());
 	}
 }

@@ -1,11 +1,6 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.staff.tactical;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.ActionType;
@@ -343,7 +338,7 @@ public class Coordinator {
         List<Sailor> sailors = new ArrayList<>();
         for (Oar oar : equipmentsManager.allLeftOars()) {
             Optional<Sailor> theSailor = this.crewManager.marineAtPosition(oar.getPosition());
-            theSailor.ifPresent(sailor -> sailors.add(sailor));
+            theSailor.ifPresent(sailors::add);
         }
 
         return sailors;
@@ -358,7 +353,7 @@ public class Coordinator {
         List<Sailor> sailors = new ArrayList<>();
         for (Oar oar : equipmentsManager.allRightOars()) {
             Optional<Sailor> theSailor = this.crewManager.marineAtPosition(oar.getPosition());
-            theSailor.ifPresent(sailor -> sailors.add(sailor));
+            theSailor.ifPresent(sailors::add);
         }
 
         return sailors;
@@ -472,7 +467,7 @@ public class Coordinator {
         moves.addAll(bringSailorsCloserToEquipments(availableSailors,new ArrayList<Equipment>(equipmentsManager.unusedOars())));
         moves.addAll(bringSailorsCloserToEquipments(availableSailors,new ArrayList<Equipment>(equipmentsManager.sails())));
 
-        return moves.stream().filter(m->m!=null).collect(Collectors.toList());
+        return moves.stream().filter(Objects::nonNull).collect(Collectors.toList());
     }
 
     /**
@@ -486,7 +481,7 @@ public class Coordinator {
         List<MoveAction> moves = new ArrayList<>();
         Iterator<Equipment> it = equipments.iterator();
 
-        for ( ; it.hasNext(); ) {
+        while (it.hasNext()) {
             Equipment currentEquipment = it.next();
             MoveAction generatedMove = crewManager.bringClosestSailorCloserTo(sailors,currentEquipment.getPosition());
             if (generatedMove!=null) moves.add(generatedMove);

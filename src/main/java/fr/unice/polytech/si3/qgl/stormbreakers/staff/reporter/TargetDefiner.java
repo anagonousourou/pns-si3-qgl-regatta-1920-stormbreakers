@@ -16,7 +16,6 @@ public class TargetDefiner  {
     private Boat boat;
     private Navigator navigator;
     private static final double EPS = 0.001;
-    private static final double ARBITRARY_DISTANCE=300;
 
     public TargetDefiner(CheckpointsManager checkpointsManager, StreamManager streamManager,Boat boat,Navigator navigator) {
         

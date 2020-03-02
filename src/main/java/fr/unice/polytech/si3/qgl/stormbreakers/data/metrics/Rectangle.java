@@ -147,41 +147,15 @@ public class Rectangle extends Shape {
 
     }
 
-    public boolean haveGoodOrientation(Checkpoint cp, IPoint rectanglePosition, IPoint boatposition) {
-        // TODO add comments and doc and change the type of parameter Checkpoint
-        if (0 <= orientation && orientation < (Math.PI) / 2) {
-            if (cp.getPosition().y() > rectanglePosition.y() - Math.sin(orientation) * width / 4
-                    && cp.getPosition().x() - Math.cos(orientation) * height / 4 >= rectanglePosition.x()
-                    && boatposition.x() < cp.getPosition().x() && boatposition.y() < cp.getPosition().y()) {
-                return true;
-            } else {
-                return false;
-            }
-        } else if ((Math.PI / 2) <= orientation && orientation < Math.PI) {
-            if (cp.getPosition().y() > rectanglePosition.y() - Math.sin(orientation) * width / 4
-                    && cp.getPosition().x() - Math.cos(orientation) * height / 4 <= rectanglePosition.x()
-                    && boatposition.x() < cp.getPosition().x() && boatposition.y() > cp.getPosition().y()) {
-                return true;
-            } else {
-                return false;
-            }
-        } else if ((Math.PI) <= orientation && orientation < ((3 * Math.PI) / 2)) {
-            if (cp.getPosition().x() < rectanglePosition.x() - Math.cos(orientation) * height / 4
-                    && cp.getPosition().x() - Math.cos(orientation) * height / 4 <= rectanglePosition.x()
-                    && boatposition.x() > cp.getPosition().x() && boatposition.y() > cp.getPosition().y()) {
-                return true;
-            } else {
-                return false;
-            }
-        } else {
-            if (cp.getPosition().x() > rectanglePosition.x() - Math.cos(orientation) * height / 4
-                    && cp.getPosition().x() - Math.cos(orientation) * height / 4 >= rectanglePosition.x()
-                    && boatposition.x() > cp.getPosition().x() && boatposition.y() < cp.getPosition().y()) {
-                return true;
-            } else {
-                return false;
-            }
-        }
+    public boolean haveGoodOrientation(Checkpoint cp, Point2D boatposition) {
+    	//tourner la plan pour que le courant est un angle 0
+    	Point2D ptCp = cp.getPosition().getPoint2D().getRotatedBy(-orientation);
+    	Point2D ptBoat = boatposition.getRotatedBy(-orientation);
+    	if(ptCp.x()>0 && ptCp.x()>ptBoat.x()) {
+    		return true;
+    	}else {
+        	return false;	
+    	}
     }
 
 }
