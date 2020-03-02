@@ -13,6 +13,8 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Wind;
 import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.CheckpointsManager;
 import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.CrewManager;
 import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.EquipmentsManager;
+import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.StreamManager;
+import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.TargetDefiner;
 import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.WeatherAnalyst;
 import fr.unice.polytech.si3.qgl.stormbreakers.staff.tactical.Captain;
 import fr.unice.polytech.si3.qgl.stormbreakers.staff.tactical.Coordinator;
@@ -31,6 +33,8 @@ public class ElementsConstructor {
 	private Wind wind;
 	private Coordinator coordinator;
 	private ObservableData observableData = new ObservableData();
+	private TargetDefiner targetDefiner;
+	private StreamManager streamManager;
     
     public ElementsConstructor(String game){
         try {
@@ -50,12 +54,17 @@ public class ElementsConstructor {
 			coordinator = new Coordinator(crewManager, equipmentsManager);
 			seaElements = new WeatherAnalyst(wind, boat, equipmentsManager);
 
+			streamManager=new StreamManager(parser, boat);
+
+			targetDefiner=new TargetDefiner(checkpointsManager, streamManager, boat, navigator);
+
 			captain = new Captain(boat, checkpointsManager, navigator, seaElements,
-					coordinator);
+					coordinator,targetDefiner);
 
 			this.observableData.addPropertyChangeListener(this.wind);
 			this.observableData.addPropertyChangeListener(this.equipmentsManager);
 			this.observableData.addPropertyChangeListener(this.boat);
+			this.observableData.addPropertyChangeListener(this.streamManager);
 
 		} catch (JsonProcessingException e) {
 			Logger.getInstance().log(e.getMessage());

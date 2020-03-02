@@ -23,7 +23,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.Logable;
         @JsonSubTypes.Type(value = UseWatch.class, name="USE_WATCH")
 })
 public abstract  class SailorAction implements Logable {
-    private int sailorId;
+    protected int sailorId;
     private String type;
 
 

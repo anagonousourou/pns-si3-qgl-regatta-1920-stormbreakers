@@ -13,7 +13,6 @@ import org.junit.jupiter.api.Test;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Boat;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Wind;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.processing.ObservableData;
 import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.EquipmentsManager;
 
 public class ObservableDataTest {

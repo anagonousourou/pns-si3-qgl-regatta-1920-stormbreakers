@@ -31,11 +31,10 @@ public class EquipmentsManager implements PropertyChangeListener {
         this.parser = parser;
         setUp(equipments, widthship);
     }
+
     public EquipmentsManager(List<Equipment> equipments, int widthship) {
         setUp(equipments, widthship);
     }
-
-
 
     void setUp(List<Equipment> equipments, int widthship) {
         this.equipments = equipments;
@@ -44,17 +43,15 @@ public class EquipmentsManager implements PropertyChangeListener {
         this.oars = this.equipments.stream().filter(e -> e.getType().equals("oar")).map(e -> (Oar) e)
                 .collect(Collectors.toList());
         if (widthship % 2 == 1) {// impair
-            this.leftOars = this.oars.stream().filter(oar -> oar.getY() < widthship / 2).collect(Collectors.toList());
-            this.rightOars = this.oars.stream().filter(oar -> oar.getY() > widthship / 2).collect(Collectors.toList());
+            this.leftOars = this.oars.stream().filter(oar -> oar.y() < widthship / 2).collect(Collectors.toList());
+            this.rightOars = this.oars.stream().filter(oar -> oar.y() > widthship / 2).collect(Collectors.toList());
         } else {
-            this.leftOars = this.oars.stream().filter(oar -> oar.getY() < widthship / 2).collect(Collectors.toList());
-            this.rightOars = this.oars.stream().filter(oar -> oar.getY() >= widthship / 2).collect(Collectors.toList());
+            this.leftOars = this.oars.stream().filter(oar -> oar.y() < widthship / 2).collect(Collectors.toList());
+            this.rightOars = this.oars.stream().filter(oar -> oar.y() >= widthship / 2).collect(Collectors.toList());
         }
         var optRuddder = this.equipments.stream().filter(e -> e.getType().equals("rudder")).map(e -> (Gouvernail) e)
                 .findFirst();
-        if (optRuddder.isPresent()) {
-            this.rudder = optRuddder.get();
-        }
+        optRuddder.ifPresent(gouvernail -> this.rudder = gouvernail);
     }
 
     /**
@@ -64,6 +61,10 @@ public class EquipmentsManager implements PropertyChangeListener {
      */
     public boolean rudderIsPresent() {
         return this.rudder != null;
+    }
+
+    public boolean isRudderUsed() {
+        return rudder.isUsed();
     }
 
     public List<Oar> allLeftOars() {
@@ -90,12 +91,16 @@ public class EquipmentsManager implements PropertyChangeListener {
         return leftOars.stream().filter(Oar::isUsed).collect(Collectors.toList());
     }
 
+    public List<Oar> unusedOars() {
+        return oars.stream().filter(Predicate.not(Oar::isUsed)).collect(Collectors.toList());
+    }
+
     public List<Oar> unusedLeftOars() {
-        return leftOars.stream().filter(Predicate.not(Oar::isUsed )).collect(Collectors.toList());
+        return leftOars.stream().filter(Predicate.not(Oar::isUsed)).collect(Collectors.toList());
     }
 
     public List<Oar> unusedRightOars() {
-        return rightOars.stream().filter(Predicate.not(Oar::isUsed )).collect(Collectors.toList());
+        return rightOars.stream().filter(Predicate.not(Oar::isUsed)).collect(Collectors.toList());
     }
 
     List<Oar> toList() {
@@ -103,15 +108,15 @@ public class EquipmentsManager implements PropertyChangeListener {
     }
 
     boolean oarPresentAt(IntPosition pos) {
-        return this.oars.stream().anyMatch(oar -> oar.getX() == pos.getX() && oar.getY() == pos.getY());
+        return this.oars.stream().anyMatch(oar -> oar.x() == pos.x() && oar.y() == pos.y());
     }
 
     Optional<Oar> oarAt(IntPosition pos) {
-        return this.oars.stream().filter(oar -> oar.getX() == pos.getX() && oar.getY() == pos.getY()).findFirst();
+        return this.oars.stream().filter(oar -> oar.x() == pos.x() && oar.y() == pos.y()).findFirst();
     }
 
     public IntPosition rudderPosition() {
-        return new IntPosition(rudder.getX(), rudder.getY());
+        return new IntPosition(rudder.x(), rudder.y());
     }
 
     public int nbSails() {
@@ -121,51 +126,58 @@ public class EquipmentsManager implements PropertyChangeListener {
     public int nbOpennedSails() {
         return (int) this.sails.stream().filter(Sail::isOpenned).count();
     }
-    
+
     /**
      * Permet de récupérer les voiles soit ouverte soit baisse
+     * 
      * @param isOpened
-     * @return List<Sail> - liste de voile ouverte si true sinon retourne les voiles baisse 
+     * @return List<Sail> - liste de voile ouverte si true sinon retourne les voiles
+     *         baisse
      */
     public List<Sail> sails(boolean isOpened) {
-    	if(isOpened) {
-    		return  this.sails.stream().filter(Sail::isOpenned).collect(Collectors.toList());
-    	}
-        return  this.sails.stream().filter(Predicate.not(Sail::isOpenned)).collect(Collectors.toList());
+        if (isOpened) {
+            return this.sails.stream().filter(Sail::isOpenned).collect(Collectors.toList());
+        }
+        return this.sails.stream().filter(Predicate.not(Sail::isOpenned)).collect(Collectors.toList());
     }
-    
+
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         String jString = (String) evt.getNewValue();
         try {
-            this.setUp(this.parser.fetchEquipments(jString), this.parser.fetchBoatWidth(jString) );
+            this.setUp(this.parser.fetchEquipments(jString), this.parser.fetchBoatWidth(jString));
         } catch (JsonProcessingException e) {
-           Logger.getInstance().log(e.getMessage());
+            Logger.getInstance().log(e.getMessage());
         }
 
     }
-	public int nbLeftOars() {
-		return this.leftOars.size();
-	}
-	public int nbRightOars() {
-		return this.rightOars.size();
-	}
-	public List<Sail> sails() {
-		return sails;
-	}
-	public List<Sail> opennedSails() {
-		return this.sails.stream().filter(Sail::isOpenned).collect(Collectors.toList());
-	}
-	public List<Sail> closedSails() {
-		return this.sails.stream().filter(s-> !s.isOpenned() ).collect(Collectors.toList());
+
+    public int nbLeftOars() {
+        return this.leftOars.size();
     }
-    
-    public void resetUsedStatus(){
+
+    public int nbRightOars() {
+        return this.rightOars.size();
+    }
+
+    public List<Sail> sails() {
+        return sails;
+    }
+
+    public List<Sail> opennedSails() {
+        return this.sails.stream().filter(Sail::isOpenned).collect(Collectors.toList());
+    }
+
+    public List<Sail> closedSails() {
+        return this.sails.stream().filter(s -> !s.isOpenned()).collect(Collectors.toList());
+    }
+
+    public void resetUsedStatus() {
         this.equipments.forEach(Equipment::resetUsed);
     }
 
-    public Optional<Equipment> equipmentAt(IntPosition pos){
-        return this.equipments.stream().filter(e-> e.getX()==pos.getX() && e.getY()==pos.getY()).findFirst();
+    public Optional<Equipment> equipmentAt(IntPosition pos) {
+        return this.equipments.stream().filter(e -> e.x() == pos.x() && e.y() == pos.y()).findFirst();
     }
 
 }

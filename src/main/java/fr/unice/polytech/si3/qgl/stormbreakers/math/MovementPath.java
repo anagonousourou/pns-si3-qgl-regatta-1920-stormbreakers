@@ -15,8 +15,8 @@ public class MovementPath {
     }
 
     MovementPath(IntPosition start, IntPosition end) {
-        this.deltaX = end.getX() - start.getX();
-        this.deltaY = end.getY() - start.getY();
+        this.deltaX = end.x() - start.x();
+        this.deltaY = end.y() - start.y();
     }
 
     public int getDeltaX() {

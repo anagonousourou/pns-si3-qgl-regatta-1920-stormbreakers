@@ -27,6 +27,10 @@ public class OarsConfig {
     public double getAngle() {
         return Math.PI * fractionOfPi.eval();
     }
+    
+    public int getOarSidesDifference() {
+    	return oarSidesDifference;
+    }
 
     public Fraction getAngleFraction(){
         return fractionOfPi;
@@ -46,5 +50,10 @@ public class OarsConfig {
     @Override
     public int hashCode() {
         return Objects.hash(fractionOfPi, oarSidesDifference);
+    }
+    
+    @Override
+    public String toString() {
+        return String.format("%s(fraction:%s,diff:%d)", this.getClass().getSimpleName(),fractionOfPi,oarSidesDifference );
     }
 }

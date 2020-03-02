@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import org.junit.jupiter.api.Test;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Fraction;
-import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.OarsConfig;
 
 class OarsConfigTest {
     private static Fraction HALF = new Fraction(1,2);

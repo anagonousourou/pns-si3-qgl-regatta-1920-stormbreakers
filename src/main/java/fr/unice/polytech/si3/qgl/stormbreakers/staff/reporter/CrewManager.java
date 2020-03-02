@@ -29,13 +29,11 @@ public class CrewManager {
     }
 
     
-
+    
     public void executeMoves(List<MoveAction> moves){
         for(MoveAction m:moves){
             var optMarin=this.getMarinById(m.getSailorId());
-            if(optMarin.isPresent()){
-                optMarin.get().move(m);
-            }
+            optMarin.ifPresent(sailor -> sailor.move(m));
         }
     }
     /**
@@ -50,10 +48,8 @@ public class CrewManager {
                 .collect(Collectors.toList());
 
         for (MoveAction move : moves) {
-            Optional<Sailor> sailor = getMarinById(move.getSailorId());
-            if(sailor.isPresent()){
-                sailor.get().move(move );
-            }
+            Optional<Sailor> sailorOpt = getMarinById(move.getSailorId());
+            sailorOpt.ifPresent(sailor -> sailor.move(move));
             
         }
         
@@ -74,7 +70,10 @@ public class CrewManager {
     public Optional<Sailor> marineAtPosition(IntPosition position){
         return marins.stream().filter(m -> m.getPosition().distanceTo(position) == 0).findFirst();
     }
-
+    
+    public Optional<Sailor> availableSailorAtPosition(IntPosition position){
+        return getAvailableSailors().stream().filter(m -> m.getPosition().distanceTo(position) == 0).findFirst();
+    }
 
     /**
      *
@@ -84,10 +83,19 @@ public class CrewManager {
     public Optional<Sailor> marineClosestTo(IntPosition position){
         return marineClosestTo(position, marins);
     }
+    
+    public Optional<Sailor> availableSailorClosestTo(IntPosition position){
+        return marineClosestTo(position, getAvailableSailors());
+    }
 
+    /**
+     * Gets the sailor which is closest to the given position
+     * @param position target
+     * @param sailors list of sailors
+     * @return Optional which contains the closest sailors if there is any
+     */
     public Optional<Sailor> marineClosestTo(IntPosition position, List<Sailor> sailors){
-        return sailors.stream().min(
-                Comparator.comparingInt(a -> a.getDistanceTo(position)));
+        return sailors.stream().min(Comparator.comparingInt(a -> a.getDistanceTo(position)));
     }
 
     public void resetAvailability(){
@@ -109,5 +117,27 @@ public class CrewManager {
 
     public List<Sailor> getSailorsWhoCanReach(List<Sailor> sailors, IntPosition position) {
         return sailors.stream().filter(s -> s.canReach(position)).collect(Collectors.toList());
+    }
+
+
+    /**
+     * Rapproche le marin le plus proche d'une position donnée, de celle-ci
+     * NB: modifie la liste de marins (retire celui déplacé s'il existe)
+     * @param sailors Liste de marins
+     * @param position à approcher
+     * @return déplacement généré, null si aucun
+     */
+    public MoveAction bringClosestSailorCloserTo(List<Sailor> sailors, IntPosition position) {
+        // LATER: 27/02/2020 Verify Tests
+        MoveAction move = null;
+        Optional<Sailor> closestSailorOpt = marineClosestTo(position,sailors);
+
+        if (closestSailorOpt.isPresent()) {
+            Sailor closestSailor = closestSailorOpt.get();
+            move = closestSailor.howToGetCloserTo(position);
+            sailors.remove(closestSailor); // Already assigned
+        }
+
+        return move;
     }
 }

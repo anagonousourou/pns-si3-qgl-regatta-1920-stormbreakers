@@ -7,11 +7,12 @@ import java.util.Objects;
 import fr.unice.polytech.si3.qgl.stormbreakers.Logable;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.MoveAction;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.IntPosition;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.MovementPath;
 
 /**
  * classe qui représente un marin
  */
-public class Sailor implements Logable{
+public class Sailor implements Logable {
     private final int id;
     private IntPosition position;
     private boolean onEquipment = false;
@@ -32,11 +33,11 @@ public class Sailor implements Logable{
     }
 
     public Sailor(int id, IntPosition pos) {
-        this(id, pos.getX(), pos.getY());
+        this(id, pos.x(), pos.y());
     }
 
     public Sailor(int id, IntPosition pos, String name) {
-        this(id, pos.getX(), pos.getY());
+        this(id, pos.x(), pos.y());
         this.name = name;
 
     }
@@ -57,7 +58,7 @@ public class Sailor implements Logable{
      */
     public void move(int xdistance, int ydistance) {
         if (Math.abs(xdistance) + Math.abs(ydistance) <= MAX_MOVEMENT_DISTANCE) {
-            // Le deplacement respecte la contraite de distance
+            // Le deplacement respecte la contrainte de distance
             position.add(xdistance, ydistance);
         }
     }
@@ -82,10 +83,6 @@ public class Sailor implements Logable{
         return position;
     }
 
-    public void setPosition(IntPosition position) {
-        this.position = position;
-    }
-
     /**
      * To Know wether a Marine is used or not alternative to List of busy Marines
      */
@@ -102,25 +99,26 @@ public class Sailor implements Logable{
     }
 
     public MoveAction howToMoveTo(IntPosition pos) {
-        return new MoveAction(id, position.getPathTo(pos));
+        return new MoveAction(id, pos.x() - this.position.x(), pos.y() - this.position.y());
     }
 
     public int getDistanceTo(IntPosition pos) {
-        return Math.abs(pos.getX() - this.getPosition().getX()) + Math.abs(pos.getY() - this.getPosition().getY());
+        return Math.abs(pos.x() - this.position.x()) + Math.abs(pos.y() - this.position.y());
     }
-
+  
     public boolean canReach(IntPosition pos) {
         return getDistanceTo(pos) <= MAX_MOVEMENT_DISTANCE;
     }
-    
-	@Override
-	public boolean equals(Object obj) {
-		if (this==obj) return true;
-		if (!(obj instanceof Sailor)) return false;
-		Sailor other = (Sailor) obj;
-		return other.id == id
-				&& other.name.equals(name);
-	}
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (!(obj instanceof Sailor))
+            return false;
+        Sailor other = (Sailor) obj;
+        return other.id == id && other.name.equals(name);
+    }
 
     @Override
     public int hashCode() {
@@ -129,11 +127,35 @@ public class Sailor implements Logable{
 
     @Override
     public String toString() {
-        return this.getClass().getSimpleName()+"(id: " + id + ", \n" + "nom: " + name + ", \n" + "position:" + position + " ) ";
+        return this.getClass().getSimpleName() + "(id: " + id + ", \n" + "nom: " + name + ", \n" + "position:"
+                + position + " ) ";
     }
 
     public String toLogs() {
-		return "M(id:" + id+ "position:" + position + ")";
-	}
+        return "M(id:" + id + "position:" + position + ")";
+    }
 
+    /**
+     * Retourne un MoveAction vers la position indiquée
+     * priviliégie le déplacement selon X
+     * @param position vers laquelle se diriger
+     * @return MoveAction limité par le déplacement maximal authorisé
+     */
+    public MoveAction howToGetCloserTo(IntPosition position) {
+        int distanceShortOf = getDistanceTo(position) - MAX_MOVEMENT_DISTANCE;
+        if (distanceShortOf<=0) return howToMoveTo(position);
+        else {
+            MovementPath path = this.position.getPathTo(position);
+            int toLowerXBy = 0;
+            int toLowerYBy;
+            // lower deltaY enough
+            toLowerYBy = Math.min(distanceShortOf,path.getDeltaY());
+            distanceShortOf -= toLowerYBy;
+            // If still too far lower deltaX enough
+            if (distanceShortOf>0) {
+                toLowerXBy = Math.min(distanceShortOf,path.getDeltaX());
+            }
+            return new MoveAction(id, path.getDeltaX()-toLowerXBy, path.getDeltaY()-toLowerYBy);
+        }
+    }
 }

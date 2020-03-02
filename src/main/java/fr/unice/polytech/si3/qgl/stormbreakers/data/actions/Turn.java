@@ -31,4 +31,9 @@ public class Turn extends SailorAction {
     public String compatibleEquipmentType() {
         return EquipmentType.RUDDER.code;
     }
+
+    @Override
+    public String toString() {
+        return String.format("%s( id:%d, orientation:%f )", this.getClass().getSimpleName(),this.sailorId,this.rotation);
+    }
 }

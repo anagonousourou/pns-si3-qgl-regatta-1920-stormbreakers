@@ -2,10 +2,10 @@ package fr.unice.polytech.si3.qgl.stormbreakers.data.actions;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import fr.unice.polytech.si3.qgl.stormbreakers.Logable;
+
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.EquipmentType;
 
-public class OarAction extends SailorAction implements Logable {
+public class OarAction extends SailorAction {
 
     @JsonCreator
     public OarAction(@JsonProperty("sailorId") int sailorId) {
