@@ -3,6 +3,7 @@ package fr.unice.polytech.si3.qgl.stormbreakers.math;
 import java.util.Objects;
 import static java.lang.Math.hypot;
 
+import fr.unice.polytech.si3.qgl.stormbreakers.Logable;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.IPoint;
 import fr.unice.polytech.si3.qgl.stormbreakers.exceptions.ImpossibleAngleError;
 
@@ -10,7 +11,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.exceptions.ImpossibleAngleError;
  * Un point 2D dans une espace reel
  */
 
-public class Point2D implements IPoint{
+public class Point2D implements Logable, IPoint{
     private double x;
     private double y;
     private static final double EPS=0.0001;
@@ -186,5 +187,10 @@ public class Point2D implements IPoint{
     @Override
     public double x() {
         return x;
+    }
+
+    @Override
+    public String toLogs() {
+        return String.format("%f %f",x,y);
     }
 }
