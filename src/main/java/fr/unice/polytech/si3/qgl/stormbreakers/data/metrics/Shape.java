@@ -17,7 +17,8 @@ import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
         property="type")
 @JsonSubTypes({
         @JsonSubTypes.Type(value = Circle.class, name="circle"),
-        @JsonSubTypes.Type(value = Rectangle.class, name="rectangle")
+        @JsonSubTypes.Type(value = Rectangle.class, name="rectangle"),
+        @JsonSubTypes.Type(value = Polygon.class, name="polygon")
 })
 public abstract class Shape implements Logable {
     private String type;

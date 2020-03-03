@@ -1,5 +1,7 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.data.metrics;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import fr.unice.polytech.si3.qgl.stormbreakers.Logable;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.LineSegment2D;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Orientable;
@@ -15,7 +17,9 @@ public class Polygon extends Shape implements CanCollide, Orientable {
     private List<Point2D> vertices;
     private List<LineSegment2D> borders;
 
-    Polygon(double orientation, List<Point2D> vertices) {
+    @JsonCreator
+    Polygon(@JsonProperty("orientation") double orientation,
+            @JsonProperty("vertices") List<Point2D> vertices) {
         super("polygon");
         this.orientation = orientation;
         this.vertices = vertices;
@@ -68,10 +72,12 @@ public class Polygon extends Shape implements CanCollide, Orientable {
         return borders;
     }
 
+    @JsonProperty("vertices")
     public List<Point2D> getVertices() {
         return new ArrayList<>(vertices);
     }
 
+    @JsonProperty("orientation")
     public double getOrientation() {
         return orientation;
     }

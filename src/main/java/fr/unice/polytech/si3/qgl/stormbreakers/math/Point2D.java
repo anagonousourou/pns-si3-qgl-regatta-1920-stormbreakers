@@ -3,6 +3,8 @@ package fr.unice.polytech.si3.qgl.stormbreakers.math;
 import java.util.Objects;
 import static java.lang.Math.hypot;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import fr.unice.polytech.si3.qgl.stormbreakers.Logable;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.IPoint;
 import fr.unice.polytech.si3.qgl.stormbreakers.exceptions.ImpossibleAngleError;
@@ -16,7 +18,8 @@ public class Point2D implements Logable, IPoint{
     private double y;
     private static final double EPS=0.0001;
 
-    public Point2D(double x, double y) {
+    @JsonCreator
+    public Point2D(@JsonProperty("x") double x, @JsonProperty("y") double y) {
         this.x = x;
         this.y = y;
     }
@@ -180,11 +183,11 @@ public class Point2D implements Logable, IPoint{
         return 0;
     }
 
-    @Override
+    @Override @JsonProperty("y")
     public double y() {
         return y;
     }
-    @Override
+    @Override @JsonProperty("x")
     public double x() {
         return x;
     }

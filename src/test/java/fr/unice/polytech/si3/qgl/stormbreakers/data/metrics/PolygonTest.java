@@ -1,10 +1,12 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.data.metrics;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.LineSegment2D;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -14,8 +16,12 @@ class PolygonTest {
     private Polygon rectangle;
     private Polygon triangle;
 
+    private String polygonJsonExample;
+
     @BeforeEach
-    void setUp() {
+    void setUp() throws IOException {
+        polygonJsonExample = new String(this.getClass().getResourceAsStream("/polygonTest/example.json").readAllBytes());
+
         Point2D rectA = new Point2D(10,5);
         Point2D rectB = new Point2D(-10,5);
         Point2D rectC = new Point2D(-10,-5);
@@ -34,5 +40,13 @@ class PolygonTest {
         List<LineSegment2D> rectangleHull = rectangle.getHull();
         assertEquals(rectangleHull.get(0).firstPoint(),rectangleHull.get(rectangleHull.size()-1).lastPoint());
     }
+
+    @Test
+    void testDeserialization() {
+        ObjectMapper mapper = new ObjectMapper();
+        assertDoesNotThrow(() -> {mapper.readValue(polygonJsonExample,Polygon.class);});
+    }
+
+    // TODO: 03/03/2020 Test collision scenarii
 
 }
