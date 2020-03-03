@@ -28,6 +28,8 @@ public class Polygon extends Shape implements CanCollide, Orientable {
      */
     private List<LineSegment2D> generateBorders() {
         List<LineSegment2D> borders = new ArrayList<>();
+        List<Point2D> vertices = new ArrayList<>(this.vertices);
+        vertices.add(vertices.get(0)); // Close the hull
 
         Iterator<Point2D> it = vertices.iterator();
         Point2D lastPoint = null;
@@ -37,6 +39,7 @@ public class Polygon extends Shape implements CanCollide, Orientable {
             borders.add(new LineSegment2D(lastPoint,currentPoint));
             lastPoint = currentPoint;
         }
+
         return borders;
     }
 
@@ -59,6 +62,10 @@ public class Polygon extends Shape implements CanCollide, Orientable {
             }
         }
         return doesIntersect;
+    }
+
+    List<LineSegment2D> getHull() {
+        return borders;
     }
 
     public List<Point2D> getVertices() {
