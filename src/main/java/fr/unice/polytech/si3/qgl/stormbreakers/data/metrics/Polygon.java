@@ -63,7 +63,7 @@ public class Polygon extends Shape implements CanCollide, Orientable {
      */
     @Override
     public boolean isPtInside(Point2D pointToTest) {
-        // TODO: 04/03/2020 Tests
+        // TODO: 04/03/2020 Tests avec orientation
         Iterator<Point2D> it = vertices.iterator();
         Point2D lastPoint = null;
 
