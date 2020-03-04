@@ -120,7 +120,7 @@ public class Polygon extends Shape implements CanCollide, Orientable {
      * @param lineSegment2D line for which to test collision
      */
     public boolean intersectsWith(LineSegment2D lineSegment2D) {
-        // TODO: 04/03/2020 Tests
+        // TODO: 04/03/2020 Tests avec orientation
         boolean doesIntersect = false;
         for (LineSegment2D border : borders) {
             if (border.intersects(lineSegment2D)) {

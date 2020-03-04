@@ -63,6 +63,14 @@ class PolygonTest {
 
     // TODO: 04/03/2020 isPtInsideTestWhenOrientedPolygon
 
-    // TODO: 03/03/2020 Test
+    @Test
+    void intersectsWithWhenNonOrientedPolygon() {
+        assertTrue(rectangle.intersectsWith(new LineSegment2D(new Point2D(0,0),new Point2D(0,6)))); // Crossing one edge
+        assertFalse(rectangle.intersectsWith(new LineSegment2D(new Point2D(20,20),new Point2D(30,45)))); // Completely out
+
+        assertTrue(rectangle.intersectsWith(new LineSegment2D(new Point2D(-11,0),new Point2D(0,6)))); // Crosses both upper and left edges
+    }
+
+    // TODO: 03/03/2020 Test intersectsWithWhenNonOrientedPolygonWhenOrientedPolygon
 
 }
