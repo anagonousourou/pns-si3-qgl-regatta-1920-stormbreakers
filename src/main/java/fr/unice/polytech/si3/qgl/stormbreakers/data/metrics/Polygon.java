@@ -23,7 +23,7 @@ public class Polygon extends Shape implements CanCollide, Orientable {
             @JsonProperty("vertices") List<Point2D> vertices) {
         super("polygon");
         this.orientation = orientation;
-        this.vertices = vertices;
+        this.vertices = new ArrayList<>(vertices);
         this.vertices.add(vertices.get(0)); // Close the hull
         this.borders = generateBorders();
     }
