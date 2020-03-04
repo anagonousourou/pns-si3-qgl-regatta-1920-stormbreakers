@@ -6,13 +6,14 @@ public class EquationDroite {
 	//ax+b
 	private double slope; // a
 	private double yIntercept; // b
-	
+
+    public EquationDroite(Point2D p1, Point2D p2) {
+        this(p1.x(),p1.y(), p2.x(),p2.y());
+    }
+
 	public EquationDroite(double slope, double yIntercept) {
 		this.slope = slope;
 		this.yIntercept = yIntercept;
-	}
-	public EquationDroite(Point2D p1, Point2D p2) {
-		this(p1.x(),p1.y(), p2.x(),p2.y());
 	}
 
 	public EquationDroite(double x1, double y1, double x2, double y2) {
