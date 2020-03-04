@@ -1,6 +1,10 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.math;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.IPoint;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Rectangle;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Shape;
 
@@ -36,12 +40,80 @@ public interface Surface extends IPoint,Orientable {
      * the surface
      * We assume that the SegmentLine formed by [depart,destination] intersects
      * With the surface
-     * @param depart
-     * @param destination
+     * @param depart     * @param destination
      * @return
      */
-    public default IPoint avoidPoint(IPoint depart,IPoint destination){
+    public default List<IPoint> avoidHit(IPoint depart,IPoint destination){
         //LATER
-        return null;
+    	int TAILLE_BATEAU=4;
+    	
+    	List<IPoint> list= new ArrayList<IPoint>();
+    	
+    	IPoint thisPoint= new Position(this.x(),this.y());
+    	if(this.getShape().getType().equals("rectangle")) {
+
+    		Rectangle r= (Rectangle)this.getShape();
+    		Double heightRect =(r.getHeight()/2);
+    		Double widthRect =(r.getWidth()/2 );
+    		
+    		
+    		double orientation =this.getOrientation();
+    		Point2D ptDepart= new Point2D(depart.x(),depart.y());
+    		Point2D ptDest=new Point2D(destination.x(),destination.y());
+    		Point2D ptThis = new Point2D(this.x(),this.y());
+    		
+    		Point2D PT_HG= new Point2D(ptThis.x()+heightRect+TAILLE_BATEAU,ptThis.y()-widthRect-TAILLE_BATEAU);
+    		Point2D PT_HD= new Point2D(ptThis.x()+heightRect+TAILLE_BATEAU,ptThis.y()+widthRect+TAILLE_BATEAU);
+    		Point2D PT_BG= new Point2D(ptThis.x()-heightRect-TAILLE_BATEAU,ptThis.y()-widthRect-TAILLE_BATEAU);
+    		Point2D PT_BD= new Point2D(ptThis.x()-heightRect-TAILLE_BATEAU,ptThis.y()+widthRect+TAILLE_BATEAU);
+
+    		ptDepart =ptDepart.getRotatedBy(-orientation);
+    		ptDest =ptDest.getRotatedBy(-orientation);
+    		ptThis= ptThis.getRotatedBy(-orientation); 	
+    		
+    		PT_HG= PT_HG.getRotatedBy(orientation);
+    		PT_HD= PT_HD.getRotatedBy(orientation);
+    		PT_BG= PT_BG.getRotatedBy(orientation);
+    		PT_BD= PT_BD.getRotatedBy(orientation);
+    		
+    		if(ptThis.y()+(heightRect)<depart.y()) {
+    				if(depart.x()>destination.x()) {
+    					list.add(PT_HG);
+    				}else {
+    					list.add(PT_HD);
+    				}
+    		}else if(ptThis.y()-(heightRect)>depart.y()){
+        		EquationDroite eq= new EquationDroite(ptDepart, ptDest);
+        		double yCroisementCentreRect= eq.resolutionValY(ptThis.x());
+        		if(yCroisementCentreRect>=ptThis.y()) {
+        			
+    				if(depart.x()>destination.x()) {
+    					list.add(PT_HD);
+    					list.add(PT_HG);
+    				}else {
+    					list.add(PT_HG);
+    					list.add(PT_HD);
+    				}
+        		}else {
+        			if(depart.x()>destination.x()) {
+    					list.add(PT_BD);
+    					list.add(PT_BG);
+    				}else {
+    					list.add(PT_BG);
+    					list.add(PT_BD);
+    				}
+        		}
+    		}else{
+    			if(depart.x()>destination.x()) {
+					list.add(PT_BG);
+				}else {
+					list.add(PT_BD);
+				}
+    		}
+    	}else {
+    		return getShape().avoidPoint(depart, destination, thisPoint);
+    	}
+    	
+    	return list;
     }
 }

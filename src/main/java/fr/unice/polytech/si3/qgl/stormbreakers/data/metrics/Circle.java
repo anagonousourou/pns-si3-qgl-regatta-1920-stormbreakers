@@ -53,4 +53,6 @@ public class Circle extends Shape {
     public String toLogs() {
         return "C" + radius;
     }
+		List<IPoint> list=new ArrayList<IPoint>();
+		return list;
 }

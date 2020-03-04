@@ -1,5 +1,7 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.data.metrics;
 
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
@@ -38,5 +40,7 @@ public abstract class Shape implements Logable {
      * @return true if (x,y) is inside this shape, false if not
      */
     public abstract boolean isPtInside(Point2D pt);
+    
+    public abstract List<IPoint> avoidPoint(IPoint depart, IPoint arrivee,IPoint shapePosition) ;
 
 }
