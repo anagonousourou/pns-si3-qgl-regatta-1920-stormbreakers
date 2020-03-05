@@ -85,7 +85,7 @@ public interface Surface extends IPoint,Orientable {
     				}
     		}else if(ptThis.y()-(widthRect)<depart.y()){
         		EquationDroite eq= new EquationDroite(ptDepart, ptDest);
-        		double yCroisementCentreRect= eq.resolutionValY(ptThis.x());
+        		double yCroisementCentreRect= eq.evalY(ptThis.x());
         		if(yCroisementCentreRect>=ptThis.y()) {
         			
     				if(depart.x()>destination.x()) {
