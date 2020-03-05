@@ -62,7 +62,6 @@ public class Vector {
     }
 
     public Vector getRotatedBy(double angle) {
-        // TODO: 05/03/2020 Test
         double magnitude = this.norm();
         double previousAngle = this.angleBetween(UnitX);
         Vector newUnitRotatedVector = Vector.createUnitVector(previousAngle+angle);

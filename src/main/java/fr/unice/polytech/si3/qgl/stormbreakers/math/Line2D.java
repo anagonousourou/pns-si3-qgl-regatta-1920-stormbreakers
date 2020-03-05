@@ -90,6 +90,4 @@ public class Line2D {
         }
         return projectionPoint;
     }
-
-    // TODO: 05/03/2020 implement line1.intersect(line2)
 }
