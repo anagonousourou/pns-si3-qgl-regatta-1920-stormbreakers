@@ -1,14 +1,12 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.data.metrics;
 
+import java.util.AbstractMap;
 import java.util.Objects;
 import java.util.Optional;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import fr.unice.polytech.si3.qgl.stormbreakers.math.Line2D;
-import fr.unice.polytech.si3.qgl.stormbreakers.math.LineSegment2D;
-import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
-import fr.unice.polytech.si3.qgl.stormbreakers.math.Vector;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.*;
 
 public class Circle extends Shape {
     private double radius;
@@ -40,7 +38,7 @@ public class Circle extends Shape {
      */
     public Optional<Point2D> intersect(LineSegment2D lineSegment2D){
         // TODO: 05/03/2020 Tests
-        Line2D line2D = lineSegment2D.getCorrespondingLine();
+        Line2D line2D = lineSegment2D.getSupportingLine();
         return this.intersect(line2D);
     }
 
@@ -63,8 +61,8 @@ public class Circle extends Shape {
             return Optional.of(this.projectOntoEdge(linePoint));
         } else {
             // Two Intersections
-            // TODO: 05/03/2020 Resolution par dichotomie
-            return Optional.of(origin); // CHANGE THIS
+            Point2D anIntersection = this.findFirstIntersectingPoint(line2D);
+            return Optional.of(anIntersection);
         }
     }
 
@@ -80,6 +78,131 @@ public class Circle extends Shape {
         Vector fromCenterToEdge = fromCenterToPoint.scaleVector(ratio);
         return origin.getTranslatedBy(fromCenterToEdge);
     }
+
+
+    class Point2DPair {
+        AbstractMap.SimpleImmutableEntry<Point2D,Point2D> immutableEntry;
+
+        Point2DPair(Point2D first, Point2D second) {
+            immutableEntry = new AbstractMap.SimpleImmutableEntry<>(first,second);
+        }
+
+        Point2D getFirst() {
+            return immutableEntry.getKey();
+        }
+
+        Point2D getSecond() {
+            return immutableEntry.getValue();
+        }
+    }
+
+    /**
+     * Given a line intersecting this circle
+     * computes the coordinates of one intersection point
+     * @param line2D given intersecting line
+     * @return the first intersection point found
+     *
+     * @throws UnsupportedOperationException if no intersection point found
+     *   so if the segment wasn't intersecting in the first place
+     *
+     * @author David Lebrisse - Stormbreakers
+     */
+    Point2D findFirstIntersectingPoint(Line2D line2D) {
+        // TODO: 05/03/2020 Tests
+        Point2D originProjection = line2D.projectOnto(origin);
+        Vector normalizedLineDirection = line2D.getNormalizedDirection();
+        Point2D bounding1 = originProjection.getTranslatedBy(normalizedLineDirection.scaleVector(radius));
+        LineSegment2D firstLineSegment = new LineSegment2D(originProjection,bounding1);
+
+        return findOneIntersection(firstLineSegment);
+    }
+
+    /**
+     * Given a line intersecting this circle
+     * computes the coordinates of both intersection points
+     * @param line2D given intersecting line
+     * @return the intersection points
+     *
+     * @throws UnsupportedOperationException if no intersection points found
+     *   so if the segment wasn't intersecting in the first place
+     *
+     * @author David Lebrisse - Stormbreakers
+     */
+    Point2DPair findBothIntersectingPoints(Line2D line2D) {
+        // TODO: 05/03/2020 Tests
+        Point2D originProjection = line2D.projectOnto(origin);
+        Vector normalizedLineDirection = line2D.getDirection().normalize();
+
+        Point2D bounding1 = originProjection.getTranslatedBy(normalizedLineDirection.scaleVector(radius));
+        Point2D bounding2 = originProjection.getTranslatedBy(normalizedLineDirection.scaleVector(-radius));
+
+        LineSegment2D firstLineSegment = new LineSegment2D(originProjection,bounding1);
+        LineSegment2D secondLineSegment = new LineSegment2D(originProjection,bounding2);
+
+        Point2D firstIntersection = findOneIntersection(firstLineSegment);
+        Point2D secondIntersection= findOneIntersection(secondLineSegment);
+        return new Point2DPair(firstIntersection,secondIntersection);
+    }
+
+    /**
+     * Given a segment intersecting this circle
+     * computes the coordinates of the intersection point
+     * @param lineSegment2D given intersecting line segment
+     * @return the intersection point
+     *
+     * @throws UnsupportedOperationException if no intersection point found
+     *   so if the segment wasn't intersecting in the first place
+     *
+     * @author David Lebrisse - Stormbreakers
+     */
+    private Point2D findOneIntersection(LineSegment2D lineSegment2D) {
+        // TODO: 05/03/2020 Tests
+        // Calcul de l'intersection par dichotomie
+        Line2D support = lineSegment2D.getSupportingLine();
+        Point2D start = lineSegment2D.firstPoint();
+        Point2D end = lineSegment2D.lastPoint();
+
+        if (Utils.almostEquals(radius,this.distFromCenter(start)))
+            return start;
+        double minParam = support.lineParametorOf(start);
+
+        if (Utils.almostEquals(radius,this.distFromCenter(end)))
+            return end;
+        double maxParam = support.lineParametorOf(end);
+
+        double midParam = (maxParam+minParam)*0.5;
+
+        Point2D possibleIntersection = support.point(midParam);
+        while (! Utils.almostEquals(radius,this.distFromCenter(possibleIntersection)) && (maxParam-minParam)>Utils.EPS) {
+            midParam = (maxParam+minParam)*0.5;
+            double delta = distFromCenter(possibleIntersection)-radius;
+            if (delta<0) {
+                // We're outside the circle -> try closer to radius
+                minParam = midParam;
+            } else if (delta>0) {
+                // We're inside the circle -> try further from radius
+                maxParam = midParam;
+            } else {
+                // It's a perfect match
+                // The last computed point is the one
+                return possibleIntersection;
+            }
+
+            // Recompute the guessing point
+            possibleIntersection = support.point(midParam);
+        }
+
+        // We stopped looping
+        if ((maxParam-minParam)>Utils.EPS) {
+            // because we found a close enough point
+            return possibleIntersection;
+        } else {
+            // because we didn't find any Intersection
+            throw new UnsupportedOperationException("Tried to find line-circle intersection, but there wasn't any !");
+        }
+
+    }
+
 
     @Override
     public boolean equals(Object obj) {

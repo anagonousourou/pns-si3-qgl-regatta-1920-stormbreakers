@@ -299,9 +299,48 @@ public class LineSegment2D {
 		return new Line2D(x0,y0, dx,dy);
 	}
 
-	public boolean almostEquals(double a, double b) {
-		return Math.abs(a - b) <= 0.001;
+	/**
+	 * Renvoie le point du segment de droite qui est le plus proche
+	 * @author Patrick
+	 * @param point2d
+	 * @return
+	 */
+	public Point2D closestPointTo(Point2D point2d){
+		List<Point2D> points=new ArrayList<>();
+		DoubleStream.iterate(0, d-> d <= 1.0, d-> d+0.05).forEach(d->
+				points.add( this.point(d) )
+		);
+		var tmp=points.stream().min((p,pother)-> Double.compare(p.distanceTo(point2d),pother.distanceTo(point2d) ));
+		if(tmp.isPresent()){
+			return tmp.get();
+		}
+		//should never happen
+		return null;
+
 	}
+
+	/**
+	 * Computes the line supporting this line segment
+	 * @return supporting line
+	 * @author David Lebrisse - Stormbreakers
+	 */
+	public Line2D getSupportingLine() {
+		// TODO: 05/03/2020 Tests ??
+		return new Line2D(this.firstPoint(),this.lastPoint());
+	}
+
+	public boolean almostEquals(double value, double expected) {
+		// Should be the other way around :
+		return Utils.almostOrPerfectlyEquals(expected,value,0.001);
+	}
+
+	// =================================
+	// Methods implementing the Shape interface
+
+	
+
+	// ===================================================================
+	// Methods implementing the Object interface
 
 	@Override
 	public boolean equals(Object obj) {
@@ -324,14 +363,6 @@ public class LineSegment2D {
 		return true;
 	}
 
-	// =================================
-	// Methods implementing the Shape interface
-
-	
-
-	// ===================================================================
-	// Methods implementing the Object interface
-
 	@Override
 	public String toString() {
 		return "LineSegment2D[(" + x0 + "," + y0 + ")-(" + (x0 + dx) + "," + (y0 + dy) + ")]";
@@ -346,33 +377,5 @@ public class LineSegment2D {
 		hash = hash * 31 + Double.valueOf(this.dy).hashCode();
 		return hash;
 	}
-	/**
-	 * Renvoie le point du segment de droite qui est le plus proche 
-	 * @author Patrick
-	 * @param point2d
-	 * @return
-	 */
-	public Point2D closestPointTo(Point2D point2d){
-		List<Point2D> points=new ArrayList<>();
-		DoubleStream.iterate(0, d-> d <= 1.0, d-> d+0.05).forEach(d->
-			points.add( this.point(d) )
-		);
-		var tmp=points.stream().min((p,pother)-> Double.compare(p.distanceTo(point2d),pother.distanceTo(point2d) ));
-		if(tmp.isPresent()){
-			return tmp.get();
-		}
-		//should never happen
-		return null;
-		
-	}
 
-	/**
-	 * Computes the line corresponding to this line segment
-	 * @return corresponding line
-	 * @author David Lebrisse - Stormbreakers
-	 */
-	public Line2D getCorrespondingLine() {
-		// TODO: 05/03/2020 Tests ??
-		return new Line2D(this.firstPoint(),this.lastPoint());
-	}
 }

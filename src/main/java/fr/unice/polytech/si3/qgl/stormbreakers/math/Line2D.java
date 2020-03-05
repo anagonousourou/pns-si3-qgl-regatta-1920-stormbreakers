@@ -61,6 +61,11 @@ public class Line2D {
         return ((y - y0) * dy + (x - x0) * dx) / denom;
     }
 
+    public double lineParametorOf(Point2D P) {
+        // TODO: 05/03/2020 Tests if not any
+        return lineParametorOf(P.x(),P.y());
+    }
+
     /**
      * Computes the coordinates of the point given by (x,y) where
      * x=x0+lineParameter*dx
@@ -88,7 +93,8 @@ public class Line2D {
             projectionPoint = new Point2D(anchor.x(),pointToProject.y());
         } else {
             Vector AP = new Vector(anchor,pointToProject);
-            projectionPoint = anchor.getTranslatedBy( direction.scaleVector( AP.scal(direction) / direction.scal(direction) ) );
+            // A + AB * ( AP.AB / |AB|² )
+            projectionPoint = anchor.getTranslatedBy( direction.scaleVector( AP.scal(direction) / direction.squaredNorm() ) );
         }
         return projectionPoint;
     }
@@ -147,5 +153,14 @@ public class Line2D {
     public double distance(Point2D P) {
         // TODO: 05/03/2020 Tests
         return new Vector(P,this.projectOnto(P)).norm();
+    }
+
+    public Vector getDirection() {
+        return new Vector(direction);
+    }
+
+    public Vector getNormalizedDirection() {
+        // TODO: 05/03/2020 Tests
+        return getDirection().normalize();
     }
 }
