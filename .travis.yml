@@ -1,4 +1,2 @@
 language: java
 jdk: oraclejdk11
-notifications:
-  email: heba.bouzidi@etu.univ-cotedazur.fr
