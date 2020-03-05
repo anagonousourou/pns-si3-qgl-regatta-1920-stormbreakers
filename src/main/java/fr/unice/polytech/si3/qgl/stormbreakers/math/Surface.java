@@ -62,27 +62,28 @@ public interface Surface extends IPoint,Orientable {
     		Point2D ptDest=new Point2D(destination.x(),destination.y());
     		Point2D ptThis = new Point2D(this.x(),this.y());
     		
-    		Point2D PT_HG= new Point2D(ptThis.x()+heightRect+TAILLE_BATEAU,ptThis.y()-widthRect-TAILLE_BATEAU);
-    		Point2D PT_HD= new Point2D(ptThis.x()+heightRect+TAILLE_BATEAU,ptThis.y()+widthRect+TAILLE_BATEAU);
+    		Point2D PT_BD= new Point2D(ptThis.x()+heightRect+TAILLE_BATEAU,ptThis.y()-widthRect-TAILLE_BATEAU);
     		Point2D PT_BG= new Point2D(ptThis.x()-heightRect-TAILLE_BATEAU,ptThis.y()-widthRect-TAILLE_BATEAU);
-    		Point2D PT_BD= new Point2D(ptThis.x()-heightRect-TAILLE_BATEAU,ptThis.y()+widthRect+TAILLE_BATEAU);
-
+    		Point2D PT_HD= new Point2D(ptThis.x()+heightRect+TAILLE_BATEAU,ptThis.y()+widthRect+TAILLE_BATEAU);
+    		Point2D PT_HG= new Point2D(ptThis.x()-heightRect-TAILLE_BATEAU,ptThis.y()+widthRect+TAILLE_BATEAU);
+    		
+    	/*	System.out.println("PT_HG"+PT_HG);
+    		System.out.println("PT_HD"+PT_HD);
+    		System.out.println("PT_BG"+PT_BG);
+    		System.out.println("PT_BD"+PT_BD);*/
     		ptDepart =ptDepart.getRotatedBy(-orientation);
     		ptDest =ptDest.getRotatedBy(-orientation);
     		ptThis= ptThis.getRotatedBy(-orientation); 	
     		
-    		PT_HG= PT_HG.getRotatedBy(orientation);
-    		PT_HD= PT_HD.getRotatedBy(orientation);
-    		PT_BG= PT_BG.getRotatedBy(orientation);
-    		PT_BD= PT_BD.getRotatedBy(orientation);
+    	
     		
-    		if(ptThis.y()+(heightRect)<depart.y()) {
+    		if(ptThis.y()+(widthRect)<depart.y()) {
     				if(depart.x()>destination.x()) {
     					list.add(PT_HG);
     				}else {
     					list.add(PT_HD);
     				}
-    		}else if(ptThis.y()-(heightRect)>depart.y()){
+    		}else if(ptThis.y()-(widthRect)<depart.y()){
         		EquationDroite eq= new EquationDroite(ptDepart, ptDest);
         		double yCroisementCentreRect= eq.resolutionValY(ptThis.x());
         		if(yCroisementCentreRect>=ptThis.y()) {

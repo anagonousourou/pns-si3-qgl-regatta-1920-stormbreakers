@@ -1,6 +1,7 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.data.metrics;
 
-import java.util.AbstractMap;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -228,6 +229,11 @@ public class Circle extends Shape {
     public String toLogs() {
         return "C" + radius;
     }
-		List<IPoint> list=new ArrayList<IPoint>();
-		return list;
+
+	@Override
+	public List<IPoint> avoidPoint(IPoint depart, IPoint arrivee, IPoint shapePosition) {
+		// TODO Auto-generated method stub
+		
+		return new ArrayList<IPoint>();
+	}
 }
