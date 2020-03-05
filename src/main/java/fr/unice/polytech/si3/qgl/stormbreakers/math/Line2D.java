@@ -4,7 +4,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.exceptions.DegeneratedLine2DExcep
 
 public class Line2D {
 
-    private static final Vector verticalDirection = new Vector(0,1);
+    static final Vector verticalDirection = new Vector(0,1);
 
     private Point2D anchor;
     private Vector direction;
@@ -81,12 +81,15 @@ public class Line2D {
      * @return Point2D resulting from the projection
      */
     public Point2D projectOnto(Point2D pointToProject) {
-        Point2D projectionPoint = null;
+        Point2D projectionPoint;
         if (isVerticalLine()) {
             projectionPoint = new Point2D(anchor.x(),pointToProject.y());
         } else {
-            // TODO: 04/03/2020 Equation based projection
+            Vector AP = new Vector(anchor,pointToProject);
+            projectionPoint = anchor.getTranslatedBy( direction.scaleVector( AP.scal(direction) / direction.scal(direction) ) );
         }
         return projectionPoint;
     }
+
+    // TODO: 05/03/2020 implement line1.intersect(line2)
 }
