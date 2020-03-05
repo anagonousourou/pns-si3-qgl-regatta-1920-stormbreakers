@@ -26,7 +26,7 @@ public class EquationDroite {
 	 * Returns y = f(x)
 	 * @param x f input
 	 */
-	private double evalY(double x) {
+	double evalY(double x) {
 		return this.slope *x+this.yIntercept;
 	}
 

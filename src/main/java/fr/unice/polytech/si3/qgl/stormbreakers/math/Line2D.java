@@ -2,6 +2,8 @@ package fr.unice.polytech.si3.qgl.stormbreakers.math;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.exceptions.DegeneratedLine2DException;
 
+import java.util.Optional;
+
 public class Line2D {
 
     static final Vector verticalDirection = new Vector(0,1);
@@ -89,5 +91,45 @@ public class Line2D {
             projectionPoint = anchor.getTranslatedBy( direction.scaleVector( AP.scal(direction) / direction.scal(direction) ) );
         }
         return projectionPoint;
+    }
+
+    /**
+     *
+     */
+    public Optional<Point2D> intersect(Line2D other) {
+        if (this.isVerticalLine() && other.isVerticalLine()) {
+            // Both vertical
+            if (this.anchor.x() == other.anchor.x()) {
+                // Lines are collinear -> Infinite collision points
+                return Optional.of(this.anchor);
+            } else {
+                // Lines are parallel -> No collision
+                return Optional.empty();
+            }
+        }
+
+        else if (this.isVerticalLine()) {
+            double intersectionX = this.anchor.x();
+            double intersectionY = other.equationDroite.evalY(intersectionX);
+            Point2D intersection = new Point2D(intersectionX,intersectionY);
+            return Optional.of(intersection);
+        }
+
+        else if (other.isVerticalLine())
+            // intersect relation is symmetric so why bother reimplementing it
+            return other.intersect(this);
+
+        else {
+            // Both are non vertical lines
+            EquationDroite firstEquation = this.equationDroite;
+            EquationDroite secondEquation = other.equationDroite;
+
+
+            double intersectionX = 0; // TODO: 05/03/2020 Non vertical lines intersection
+            double intersectionY = other.equationDroite.evalY(intersectionX);
+
+            Point2D intersection = new Point2D(intersectionX,intersectionY);
+            return Optional.of(intersection);
+        }
     }
 }
