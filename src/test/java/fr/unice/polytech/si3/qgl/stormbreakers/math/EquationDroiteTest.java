@@ -37,4 +37,12 @@ public class EquationDroiteTest {
 		assertEquals(tmp.getSlope(), result.getSlope());
 		assertEquals(tmp.getY_Intercept(), result.getY_Intercept());
 	}
+
+    @Test
+    void findCommonSolutionTest() {
+		// TODO: 05/03/2020 Add tests
+		EquationDroite equationDroite1 = new EquationDroite(-3,5);
+		EquationDroite equationDroite2 = new EquationDroite(1.0/3.0,3);
+		assertEquals(3.0/5.0, equationDroite1.findCommonSolution(equationDroite2));
+	}
 }

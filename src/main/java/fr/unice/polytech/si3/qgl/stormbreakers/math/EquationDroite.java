@@ -49,7 +49,6 @@ public class EquationDroite {
      * @return x the common solution
      */
     public double findCommonSolution(EquationDroite other) {
-        // TODO: 05/03/2020 Tests
         // On cherche x t.q. : y1(x) = y2(x)
         //  soit : a1*x+b1 = a2*x+b2
         //  d'où : (a1-a2) * x = (b2-b1)

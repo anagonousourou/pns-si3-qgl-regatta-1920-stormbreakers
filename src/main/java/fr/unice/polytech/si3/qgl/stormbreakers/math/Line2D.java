@@ -144,7 +144,7 @@ public class Line2D {
      * @param P the given point
      * @return the computed distance
      */
-    double distance(Point2D P) {
+    public double distance(Point2D P) {
         // TODO: 05/03/2020 Tests
         return new Vector(P,this.projectOnto(P)).norm();
     }

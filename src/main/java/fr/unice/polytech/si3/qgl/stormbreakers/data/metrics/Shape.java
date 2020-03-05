@@ -20,6 +20,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
         @JsonSubTypes.Type(value = Rectangle.class, name="rectangle")
 })
 public abstract class Shape implements Logable {
+    protected static Point2D origin = new Point2D(0,0);
     private String type;
 
     @JsonCreator

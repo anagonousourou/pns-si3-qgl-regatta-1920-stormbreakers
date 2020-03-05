@@ -366,8 +366,13 @@ public class LineSegment2D {
 		
 	}
 
-	
-
-	
-	
+	/**
+	 * Computes the line corresponding to this line segment
+	 * @return corresponding line
+	 * @author David Lebrisse - Stormbreakers
+	 */
+	public Line2D getCorrespondingLine() {
+		// TODO: 05/03/2020 Tests ??
+		return new Line2D(this.firstPoint(),this.lastPoint());
+	}
 }
