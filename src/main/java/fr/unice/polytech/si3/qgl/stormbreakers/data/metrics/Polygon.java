@@ -10,6 +10,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Polygon extends Shape implements CanCollide, Orientable {
 
@@ -18,8 +19,7 @@ public class Polygon extends Shape implements CanCollide, Orientable {
     private List<LineSegment2D> borders;
 
     @JsonCreator
-    Polygon(@JsonProperty("orientation") double orientation,
-            @JsonProperty("vertices") List<Point2D> vertices) {
+    public Polygon(@JsonProperty("orientation") double orientation, @JsonProperty("vertices") List<Point2D> vertices) {
         super("polygon");
         this.orientation = orientation;
         this.vertices = vertices;
@@ -28,6 +28,7 @@ public class Polygon extends Shape implements CanCollide, Orientable {
 
     /**
      * Generates shape's borders from it's verticies
+     * 
      * @return List of the shape borders as LineSegment2D
      */
     private List<LineSegment2D> generateBorders() {
@@ -37,10 +38,31 @@ public class Polygon extends Shape implements CanCollide, Orientable {
 
         Iterator<Point2D> it = vertices.iterator();
         Point2D lastPoint = null;
-        if (it.hasNext()) lastPoint=it.next();
+        if (it.hasNext())
+            lastPoint = it.next();
         while (it.hasNext()) {
             Point2D currentPoint = it.next();
-            borders.add(new LineSegment2D(lastPoint,currentPoint));
+            borders.add(new LineSegment2D(lastPoint, currentPoint));
+            lastPoint = currentPoint;
+        }
+
+        return borders;
+    }
+
+    public List<LineSegment2D> generateBordersInThePlan(IPoint omegaPoint) {
+        List<LineSegment2D> borders = new ArrayList<>();
+        List<Point2D> vertices = this.getVertices().stream().map(point -> point.getTranslatedBy(omegaPoint.x(), omegaPoint.y()))
+                .collect(Collectors.toList());
+
+        vertices.add(vertices.get(0)); // Close the hull
+
+        Iterator<Point2D> it = vertices.iterator();
+        Point2D lastPoint = null;
+        if (it.hasNext())
+            lastPoint = it.next();
+        while (it.hasNext()) {
+            Point2D currentPoint = it.next();
+            borders.add(new LineSegment2D(lastPoint, currentPoint));
             lastPoint = currentPoint;
         }
 
@@ -55,17 +77,11 @@ public class Polygon extends Shape implements CanCollide, Orientable {
 
     /**
      * Tells whether this lineSegment intersects or not with the shape borders
+     * 
      * @param lineSegment2D line for which to test collision
      */
     public boolean intersectsWith(LineSegment2D lineSegment2D) {
-        boolean doesIntersect = false;
-        for (LineSegment2D border : borders) {
-            if (border.intersects(lineSegment2D)) {
-                doesIntersect = true;
-                break;
-            }
-        }
-        return doesIntersect;
+        return this.borders.stream().anyMatch(border -> border.intersects(lineSegment2D));
     }
 
     List<LineSegment2D> getHull() {
@@ -82,9 +98,8 @@ public class Polygon extends Shape implements CanCollide, Orientable {
         return orientation;
     }
 
-
     @Override
     public String toLogs() {
-        return "Polygon " + Logable.listToLogs(new ArrayList<>(vertices)," ","","");
+        return "Polygon " + Logable.listToLogs(new ArrayList<>(vertices), " ", "", "");
     }
 }

@@ -13,6 +13,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.math.Surface;
 
 @JsonSubTypes({
   @JsonSubTypes.Type(value = Courant.class, name="stream"),
+  @JsonSubTypes.Type(value = Recif.class, name="reef")
 })
 
 public abstract class OceanEntity implements Surface{

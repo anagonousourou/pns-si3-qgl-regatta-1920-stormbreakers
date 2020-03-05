@@ -12,6 +12,8 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Checkpoint;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Boat;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Courant;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.OceanEntity;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Recif;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.processing.InputParser;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.processing.Logger;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.LineSegment2D;
@@ -22,10 +24,10 @@ import fr.unice.polytech.si3.qgl.stormbreakers.math.LineSegment2D;
 public class StreamManager implements PropertyChangeListener {
 
     private List<Courant> courants;
+    private List<Recif> recifs;
+    private List<OceanEntity> obstacles;
     private InputParser parser;
     private Boat boat;
-
-    
 
     public StreamManager(InputParser parser, Boat boat) {
         this.parser = parser;
@@ -47,8 +49,7 @@ public class StreamManager implements PropertyChangeListener {
      * @return
      */
     public Courant streamAroundBoat() {
-        var optCourant = this.courants.stream().filter(courant -> courant.isPtInside(boat))
-                .findAny();
+        var optCourant = this.courants.stream().filter(courant -> courant.isPtInside(boat)).findAny();
         if (optCourant.isPresent()) {
             return optCourant.get();
         } else {
@@ -68,26 +69,32 @@ public class StreamManager implements PropertyChangeListener {
 
     }
 
-    public Courant firstStreamBetween(IPoint destination){
-        LineSegment2D segment2d = new LineSegment2D(destination, boat);
-        List<Courant> streamsOnTrajectory=this.courants.stream().filter(courant->courant.intersectsWith(segment2d))
-        .collect(Collectors.toList());
-        
-        if(streamsOnTrajectory.size()==1){
-            
-            return streamsOnTrajectory.get(0);
-        }
-        else if(streamsOnTrajectory.size()>1){
-           
-            var tmp= streamsOnTrajectory.stream().min(
-                (a,b)-> Double.compare(boat.distanceTo(a.getPosition()), boat.distanceTo(b.getPosition()))
-            );
+    public boolean thereIsObstacleBetween(IPoint position){
+        LineSegment2D segment2d = new LineSegment2D(position, boat);
+        return this.obstacles.stream().anyMatch(obstacle-> obstacle.intersectsWith(segment2d));
+    }
+    
+    public List<IPoint> trajectoryToAvoidObstacles(IPoint position){
 
-            if(tmp.isPresent()){
+    }
+
+    public Courant firstStreamBetween(IPoint destination) {
+        LineSegment2D segment2d = new LineSegment2D(destination, boat);
+        List<Courant> streamsOnTrajectory = this.courants.stream().filter(courant -> courant.intersectsWith(segment2d))
+                .collect(Collectors.toList());
+
+        if (streamsOnTrajectory.size() == 1) {
+
+            return streamsOnTrajectory.get(0);
+        } else if (streamsOnTrajectory.size() > 1) {
+
+            var tmp = streamsOnTrajectory.stream()
+                    .min((a, b) -> Double.compare(boat.distanceTo(a.getPosition()), boat.distanceTo(b.getPosition())));
+
+            if (tmp.isPresent()) {
                 return tmp.get();
-            }
-            else{
-                //should never happen
+            } else {
+                // should never happen
                 return null;
             }
         }
@@ -107,7 +114,13 @@ public class StreamManager implements PropertyChangeListener {
     public void propertyChange(PropertyChangeEvent evt) {
         String s = (String) evt.getNewValue();
         try {
-            this.courants = parser.fetchStreams(s);
+            var entities = parser.fetchOceanEntities(s);
+            this.obstacles = entities;
+            this.courants = entities.stream().filter(e -> e.getType().equals("stream")).map(e -> (Courant) e)
+                    .collect(Collectors.toList());
+            this.recifs = entities.stream().filter(e -> e.getType().equals("reef")).map(e -> (Recif) e)
+                    .collect(Collectors.toList());
+
         } catch (JsonProcessingException e) {
             Logger.getInstance().log(e.getMessage());
         }
