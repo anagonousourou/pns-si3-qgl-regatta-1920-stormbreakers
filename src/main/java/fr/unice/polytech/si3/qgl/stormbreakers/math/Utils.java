@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Utils {
+    // TODO: 05/03/2020 Test All
 
     public static final double EPS = 0.001;
     public static final double MAX_RUDDER_ROTATION = Math.PI / 4;
@@ -23,17 +24,21 @@ public class Utils {
         return Math.abs(expected - result) < eps;
     }
 
+    public static boolean almostOrPerfectlyEquals(double expected, double result, double eps) {
+        return Math.abs(expected - result) <= eps;
+    }
+
     public static boolean almostEquals(Point2D expected, Point2D result) {
         return result.getDistanceTo(expected) < EPSILON;
     }
     /**
-     * Check if -bound <= d <= bound 
-     * @param d
+     * Check if -bound <= value <= bound
+     * @param value to test
      * @param bound expected to be positive 
-     * @return
+     * @return true if condition is verified
      */
-    public static boolean within(double d,double bound){
-        return Math.abs(d)<=bound;
+    public static boolean within(double value,double bound){
+        return Math.abs(value)<=bound;
     }
 
     /** Generic function to concatenate 2 lists in Java */
