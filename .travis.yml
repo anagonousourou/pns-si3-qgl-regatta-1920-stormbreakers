@@ -1,0 +1,10 @@
+language: java
+jdk: oraclejdk11
+notifications:
+  email: heba.bouzidi@etu.univ-cotedazur.fr
+  jobs:
+    include:
+      - stage: "Tests"
+        name: "PIT Test"
+        script: "mvn clean package -Pcoverage"
+  //pitest en job pour dire de lancer pitest que dans prod
