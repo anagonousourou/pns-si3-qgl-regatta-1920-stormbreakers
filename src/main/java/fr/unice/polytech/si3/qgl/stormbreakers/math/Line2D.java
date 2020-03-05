@@ -94,9 +94,12 @@ public class Line2D {
     }
 
     /**
-     *
+     * Computes the intersection point between this line and a given one
+     * @param other second line
+     * @return if it exists, the intersection point
      */
     public Optional<Point2D> intersect(Line2D other) {
+        // TODO: 05/03/2020 Tests
         if (this.isVerticalLine() && other.isVerticalLine()) {
             // Both vertical
             if (this.anchor.x() == other.anchor.x()) {
@@ -121,15 +124,28 @@ public class Line2D {
 
         else {
             // Both are non vertical lines
-            EquationDroite firstEquation = this.equationDroite;
-            EquationDroite secondEquation = other.equationDroite;
+            EquationDroite eq1 = this.equationDroite;
+            EquationDroite eq2 = other.equationDroite;
 
-
-            double intersectionX = 0; // TODO: 05/03/2020 Non vertical lines intersection
-            double intersectionY = other.equationDroite.evalY(intersectionX);
+            // On cherche x t.q. : y1(x) = y2(x)
+            //  soit : a1*x+b1 = a2*x+b2
+            //  d'où : (a1-a2) * x = (b2-b1)
+            // On obtiens : x = (b2-b1)/(a1-a2)
+            double intersectionX = eq1.findCommonSolution(eq2);
+            double intersectionY = eq2.evalY(intersectionX);
 
             Point2D intersection = new Point2D(intersectionX,intersectionY);
             return Optional.of(intersection);
         }
+    }
+
+    /**
+     * Computes the distance for a given point to this Line
+     * @param P the given point
+     * @return the computed distance
+     */
+    double distance(Point2D P) {
+        // TODO: 05/03/2020 Tests
+        return new Vector(P,this.projectOnto(P)).norm();
     }
 }

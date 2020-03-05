@@ -42,10 +42,25 @@ public class EquationDroite {
 		return new EquationDroite(lineA, lineB);
 	}
 
-	double getSlope() {
-		return slope;
-	}
-	double getY_Intercept() {
-		return yIntercept;
-	}
+    /**
+     * Finds x solution of y1(x)=y2(x)
+     * where y1(x) is this equation
+     * @param other y2(x)
+     * @return x the common solution
+     */
+    public double findCommonSolution(EquationDroite other) {
+        // TODO: 05/03/2020 Tests
+        // On cherche x t.q. : y1(x) = y2(x)
+        //  soit : a1*x+b1 = a2*x+b2
+        //  d'où : (a1-a2) * x = (b2-b1)
+        // On obtiens : x = (b2-b1)/(a1-a2)
+        return (other.yIntercept - this.yIntercept) / (this.slope - other.slope );
+    }
+
+    double getSlope() {
+        return slope;
+    }
+    double getY_Intercept() {
+        return yIntercept;
+    }
 }
