@@ -2,7 +2,11 @@ package fr.unice.polytech.si3.qgl.stormbreakers.math;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.IPoint;
 
+import java.util.Objects;
+
 public class Vector {
+
+    public static final Vector UnitX = new Vector(1,0);
 
     private double x;
     private double y;
@@ -50,10 +54,33 @@ public class Vector {
     /**
      * Mutiplie les coords du vecteur par le facteur passé en parametre
      * ne modifie pas le vecteur
-     * @param scaleFactor
+     * @param scaleFactor facteur
      * @return le nouveau vecteur obtenu
      */
-    public Vector scaleVector(double scaleFactor){
-        return new Vector(this.x*scaleFactor, this.y*scaleFactor);
+    public Vector scaleVector(double scaleFactor) {
+        return new Vector(x*scaleFactor,y*scaleFactor);
+    }
+
+    public Vector getRotatedBy(double angle) {
+        double magnitude = this.norm();
+        double previousAngle = this.angleBetween(UnitX);
+        Vector newUnitRotatedVector = Vector.createUnitVector(previousAngle+angle);
+        return newUnitRotatedVector.scaleVector(magnitude);
+    }
+
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (!(obj instanceof Vector))
+            return false;
+        Vector other = (Vector) obj;
+        return Utils.almostEquals(this.x,other.x) && Utils.almostEquals(this.y,other.y);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(x, y);
     }
 }

@@ -1,15 +1,16 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.math;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 class VectorTest {
 
     private Vector vect00;
-    private double EPSILON = Math.pow(10,-10);
+
+    private double EPS = Utils.EPSILON;
 
     @BeforeEach
     void setUp() {
@@ -81,7 +82,7 @@ class VectorTest {
     @Test
     void testUnitVectorIsNorm1() {
         Vector u = Vector.createUnitVector(3);
-        assertTrue(1-u.norm()<EPSILON);
+        assertTrue(Utils.almostEquals(1,u.norm()));
     }
 
     @Test
@@ -89,6 +90,84 @@ class VectorTest {
         double angle = Math.toRadians(-30);
         Vector u = Vector.createUnitVector(angle);
         Vector ux = new Vector(1,0);
-        assertTrue(angle-ux.angleBetween(u)<EPSILON);
+        assertTrue(Utils.almostEquals( Math.abs(angle) , Math.abs(ux.angleBetween(u)),EPS));
     }
+
+    @Test
+    void testScaleVector() {
+        assertEquals(new Vector(5,5),new Vector(1,1).scaleVector(5));
+        assertEquals(new Vector(1,1),new Vector(5,5).scaleVector(0.2));
+
+        assertEquals(new Vector(42,0),new Vector(1,0).scaleVector(42));
+        assertEquals(new Vector(0,42),new Vector(0,1).scaleVector(42));
+    }
+
+
+    /*
+     * Tests for equals
+     */
+
+    @Test void testEqualsWhenWrongObject() {
+        Vector vector = new Vector(0,0);
+        Integer other = 0;
+        assertNotEquals(vector,other);
+    }
+
+    @Test void testEqualsWhenNullObject() {
+        Vector vector = new Vector(0,0);
+        Vector other = null;
+        assertNotEquals(vector,other);
+    }
+
+    @Test void testEqualsWhenSameObject() {
+        Vector vector = new Vector(0,0);
+        assertEquals(vector,vector);
+    }
+
+    @Test void testEqualsWhenSameValues() {Vector vector = new Vector(0,0);
+        Vector vector2 = new Vector(0,0);
+        assertEquals(vector,vector2);
+    }
+
+    @Test void testEqualsWhenSimilarValues() {
+        double subEPSILON = EPS/10;
+
+        Vector vector = new Vector(0,0);
+
+        Vector vector2 = new Vector(subEPSILON,0);
+        assertEquals(vector,vector2);
+
+        Vector vector3 = new Vector(0, subEPSILON);
+        assertEquals(vector,vector3);
+
+        Vector vector4 = new Vector(subEPSILON, subEPSILON);
+        assertEquals(vector,vector4);
+
+        Vector vector5 = new Vector(EPS, 0);
+        assertNotEquals(vector,vector5);
+
+    }
+
+    @Test void testEqualsWhenDifferent() {Vector vector = new Vector(0,0);
+        Vector vector2 = new Vector(10,10);
+        assertNotEquals(vector,vector2);
+    }
+
+    @Test
+    void getRotatedByTestCorrectOrientation() {
+        Vector unitX = Vector.UnitX;
+        assertEquals(Vector.createUnitVector(0.5 * Math.PI),unitX.getRotatedBy(0.5 * Math.PI));
+        assertEquals(Vector.createUnitVector(Math.PI),unitX.getRotatedBy(Math.PI));
+        assertEquals(Vector.createUnitVector(0.75 * Math.PI),unitX.getRotatedBy(0.75 * Math.PI));
+        assertEquals(unitX,unitX.getRotatedBy(2 * Math.PI)); // Modulo 2 PI
+    }
+
+    @Test
+    void getRotatedByTestPreserveMagnitude() {
+        // TODO: 05/03/2020
+    }
+
+    /*
+     * End of tests for equals
+     */
 }
