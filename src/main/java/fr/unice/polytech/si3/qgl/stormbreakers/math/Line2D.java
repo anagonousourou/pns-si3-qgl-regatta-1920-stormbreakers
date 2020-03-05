@@ -45,7 +45,7 @@ public class Line2D {
      * its location is given by x=x0+t*dx and y=y0+t*dy.
      * Note: The point needs to be on the line.
      */
-    public double coordinatesOnLine(double x, double y) {
+    public double lineParametorOf(double x, double y) {
         double dx = direction.getDeltaX();
         double dy = direction.getDeltaY();
 

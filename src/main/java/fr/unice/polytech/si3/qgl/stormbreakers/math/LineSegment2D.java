@@ -279,7 +279,7 @@ public class LineSegment2D {
         
         // compute position on the supporting line
     	Line2D line = this.supportingLine();
-        double t = line.coordinatesOnLine(x, y);
+        double t = line.lineParametorOf(x, y);
 
         // clamp with parameterization bounds of edge
 		t = Math.max(Math.min(t, 1), 0);
