@@ -1,0 +1,8 @@
+language: java
+jdk: oraclejdk11
+jobs:
+  - stage: "Build"
+    script: "mvn clean package test"
+  - stage: "Tests"
+    name: "PIT Test"
+    script: "mvn clean package -Pcoverage"
