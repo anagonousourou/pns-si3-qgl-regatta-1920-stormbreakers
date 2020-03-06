@@ -5,16 +5,20 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Fraction;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.LineSegment2D;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class CircleTest {
 
     private Circle circle;
-
+    private Position d1;
+    private Position a1;
+    private Circle c1;
     @BeforeEach
     void setUp() {
         circle = new Circle(10);
+    	c1 = new Circle(50);
     }
 
     @Test
@@ -68,6 +72,14 @@ class CircleTest {
         Circle circ1 = new Circle(0);
         Circle circ2 = new Circle(10);
         assertNotEquals(circ1,circ2);
+    }
+    
+    @Test void testIntersect() {
+
+    	Position d1 = new Position(-70, 20);
+    	Position a1 = new Position(90, -40);
+    	LineSegment2D l = new LineSegment2D(d1,a1);
+    	assertFalse(c1.intersect(l).isEmpty());
     }
 
     /*
