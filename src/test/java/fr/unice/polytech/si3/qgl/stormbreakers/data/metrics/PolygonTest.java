@@ -28,6 +28,7 @@ class PolygonTest {
         Point2D rectD = new Point2D(10,-5);
         rectangle = new Polygon(0.0,List.of(rectA,rectB,rectC,rectD));
 
+        // TODO: 04/03/2020 Use more than rectangle
 
         Point2D triA = new Point2D(0,10);
         Point2D triB = new Point2D(-5,0);
@@ -47,6 +48,29 @@ class PolygonTest {
         assertDoesNotThrow(() -> {mapper.readValue(polygonJsonExample,Polygon.class);});
     }
 
-    // TODO: 03/03/2020 Test collision scenarii
+    @Test
+    void isPtInsideTestWhenNonOrientedPolygon() {
+        assertTrue(rectangle.isPtInside(new Point2D(0,0))); // Is in
+
+        assertFalse(rectangle.isPtInside(new Point2D(0,6))); // Is above
+        assertFalse(rectangle.isPtInside(new Point2D(-11,0))); // Is to the left
+        assertFalse(rectangle.isPtInside(new Point2D(0,-6))); // Is under
+        assertFalse(rectangle.isPtInside(new Point2D(11,0))); // Is to the right
+
+        assertTrue(rectangle.isPtInside(new Point2D(0,5))); // Is on upper edge
+        assertTrue(rectangle.isPtInside(new Point2D(-10,0))); // Is on left edge
+    }
+
+    // TODO: 04/03/2020 isPtInsideTestWhenOrientedPolygon
+
+    @Test
+    void intersectsWithWhenNonOrientedPolygon() {
+        assertTrue(rectangle.intersectsWith(new LineSegment2D(new Point2D(0,0),new Point2D(0,6)))); // Crossing one edge
+        assertFalse(rectangle.intersectsWith(new LineSegment2D(new Point2D(20,20),new Point2D(30,45)))); // Completely out
+
+        assertTrue(rectangle.intersectsWith(new LineSegment2D(new Point2D(-11,0),new Point2D(0,6)))); // Crosses both upper and left edges
+    }
+
+    // TODO: 03/03/2020 Test intersectsWithWhenNonOrientedPolygonWhenOrientedPolygon
 
 }
