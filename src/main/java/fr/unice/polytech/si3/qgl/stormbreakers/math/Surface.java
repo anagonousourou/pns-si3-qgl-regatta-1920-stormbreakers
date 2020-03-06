@@ -1,6 +1,7 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.math;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.IPoint;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Polygon;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Rectangle;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Shape;
 
@@ -25,7 +26,13 @@ public interface Surface extends IPoint,Orientable {
     public default boolean intersectsWith(LineSegment2D lineSegment2D) {
         if (this.getShape().getType().equals("rectangle")) {
             return new RectanglePositioned((Rectangle) this.getShape(), this).intersectsWith(lineSegment2D);
-        } else {
+        } 
+        else if(this.getShape().getType().equals("polygon")){
+            Polygon shape=(Polygon)this.getShape();
+            return shape.generateBordersInThePlan(this).stream().anyMatch(lineSegment2D::intersects);
+        }
+        
+        else {
             return false;
         }
     }

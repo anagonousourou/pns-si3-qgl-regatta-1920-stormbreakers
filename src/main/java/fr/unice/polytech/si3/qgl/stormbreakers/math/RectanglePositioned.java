@@ -95,7 +95,7 @@ public class RectanglePositioned {
      * @param point2d
      * @return
      */
-    public Optional<Point2D> closestPointTo(Point2D point2d){
+    public Optional<Point2D> closestPointTo(IPoint point2d){
         return List.of(largeur1,longueur1,largeur2,longueur2).stream()
         .map(l->l.closestPointTo(point2d))
         .min((p,pother)-> Double.compare(p.distanceTo(point2d),pother.distanceTo(point2d) ));

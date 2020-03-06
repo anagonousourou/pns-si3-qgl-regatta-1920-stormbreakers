@@ -76,8 +76,7 @@ public class Boat implements PropertyChangeListener,IPoint {
 
     @Override
     public double x() {
-       return this.position.x();
-        
+       return this.position.x();   
     }
 
     @Override
