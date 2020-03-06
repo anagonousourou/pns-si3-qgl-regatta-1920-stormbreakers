@@ -1,9 +1,13 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter;
 
+import java.util.List;
+
+import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.IPoint;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Checkpoint;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Boat;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Courant;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.Utils;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Vector;
 import fr.unice.polytech.si3.qgl.stormbreakers.staff.tactical.Navigator;
 
@@ -14,7 +18,6 @@ public class TargetDefiner {
     private StreamManager streamManager;
     private Boat boat;
     private Navigator navigator;
-    private static final double EPS = 0.001;
 
     public TargetDefiner(CheckpointsManager checkpointsManager, StreamManager streamManager, Boat boat,
             Navigator navigator) {
@@ -26,7 +29,10 @@ public class TargetDefiner {
     }
 
     boolean thereIsStreamOnTrajectory() {
-        return this.streamManager.thereIsStreamBetween(checkpointsManager.nextCheckpoint().getPosition());
+        return this.streamManager.thereIsStreamBetween(checkpointsManager.nextCheckpoint());
+    }
+    boolean thereIsObstaclesOnTrajectory() {
+        return this.streamManager.thereIsObstacleBetween(checkpointsManager.nextCheckpoint());
     }
 
     Courant nextStreamOnTrajectory() {
@@ -39,39 +45,43 @@ public class TargetDefiner {
     public TupleDistanceOrientation defineNextTarget() {
         Checkpoint checkpoint = checkpointsManager.nextCheckpoint();
         if (checkpoint != null) {
-            if (streamManager.insideStream()
-                    && !streamManager.streamAroundBoat().isPtInside(checkpoint.getPosition())) {
+            boolean insideStream = streamManager.insideStream();
+            
+            if (insideStream && !streamManager.streamAroundBoat().isPtInside(checkpoint)) {
+                //the boat is inside a stream but the checkpoint is not inside the same stream
                 return this.caseInsideAStream();
-            } else if (streamManager.insideStream()
-                    && streamManager.streamAroundBoat().isPtInside(checkpoint.getPosition())) {
-                // LATER affiner la distance et l'orientation et déplacer dans caseInsideAStream
-                double distance = boat.distanceTo(checkpoint.getPosition());
-                double orientation = navigator.additionalOrientationNeeded(boat.getPosition(),
-                        checkpoint.getPosition().getPoint2D());
-
-                return new TupleDistanceOrientation(distance, orientation);
+            } else if (insideStream && streamManager.streamAroundBoat().isPtInside(checkpoint)) {
+                //the boat and the stream are inside the same stream
+                List<IPoint> trajectory = streamManager
+                        .trajectoryBoatAndCheckpointInsideStream(streamManager.streamAroundBoat(), boat, checkpoint);
+                if (trajectory.size() > 1) {
+                    return new TupleDistanceOrientation(trajectory.get(1).distanceTo(boat),
+                            this.navigator.additionalOrientationNeeded(boat.getPosition(), trajectory.get(1)));
+                }
+                else{
+                    //TODO affiner en fonction de la force et la direction du courant
+                    return new TupleDistanceOrientation(boat.distanceTo(checkpoint.getPosition()),
+                            navigator.additionalOrientationNeeded(boat.getPosition(), checkpoint));
+                }
             }
 
-            else if (thereIsStreamOnTrajectory()) {
-                Courant courant = nextStreamOnTrajectory();
-
-                if (courant.isCompatibleWith(boat, checkpoint.getPosition())) {
+            else if (this.thereIsObstaclesOnTrajectory()) {
+                List<IPoint> trajectory= this.streamManager.trajectoryToAvoidObstacles(checkpoint);
+                if (trajectory.size() > 1) {
+                    return new TupleDistanceOrientation(trajectory.get(1).distanceTo(boat),
+                            this.navigator.additionalOrientationNeeded(boat.getPosition(), trajectory.get(1)));
+                }
+                else{
+                    //TODO on devrait éviter d'en venir ici puisque si l'obstacle est un récif ou un 
+                    //courant trop fort on n'arrivera jamais à destination
                     return new TupleDistanceOrientation(boat.distanceTo(checkpoint.getPosition()),
-                            navigator.additionalOrientationNeeded(boat.getPosition(),
-                                    checkpoint.getPosition().getPoint2D()));
-                } else {
-                    // LATER eviter le courant pour le moment on fonce droit dedans en augmentant
-                    // juste la distance/vitesse à prendre
-                    return new TupleDistanceOrientation(
-                            boat.distanceTo(checkpoint.getPosition()) + courant.getStrength(),
-                            navigator.additionalOrientationNeeded(boat.getPosition(),
-                                    checkpoint.getPosition().getPoint2D()));
+                            navigator.additionalOrientationNeeded(boat.getPosition(), checkpoint));
                 }
 
             } else {// pas de stream du tout ou pas de stream sur la trajectoire
-                double distance = checkpoint.getPosition().distanceTo(boat);
+                double distance = checkpoint.distanceTo(boat);
                 double orientation = navigator.additionalOrientationNeeded(boat.getPosition(),
-                        checkpoint.getPosition().getPoint2D());
+                        checkpoint);
                 return new TupleDistanceOrientation(distance, orientation);
             }
 
@@ -80,23 +90,58 @@ public class TargetDefiner {
         return null;
     }
 
+    public TupleDistanceOrientation caseStreamOnTrajectory() {
+        IPoint cpPoint = this.checkpointsManager.nextCheckpoint();
+        List<IPoint> trajectoire;
+        if (this.streamManager.pointIsInsideStream(cpPoint)) {
+            trajectoire = this.streamManager.trajectoryToReachAPointInsideStream(cpPoint);
+        } else {
+            trajectoire = this.streamManager.trajectoryToAvoidObstacles(cpPoint);
+        }
+
+        if (trajectoire.size() > 1) {
+            return new TupleDistanceOrientation(trajectoire.get(1).distanceTo(boat),
+                    this.navigator.additionalOrientationNeeded(boat.getPosition(), trajectoire.get(1)));
+        } else {
+            var optCourant = this.streamManager.streamAroundPoint(cpPoint);
+            if (optCourant.isPresent()) {
+                var courant = optCourant.get();
+
+                if (courant.isCompatibleWith(boat, cpPoint)) {
+                    return new TupleDistanceOrientation(boat.distanceTo(cpPoint),
+                            this.navigator.additionalOrientationNeeded(boat.getPosition(), cpPoint));
+                } else {
+                    return new TupleDistanceOrientation(boat.distanceTo(cpPoint) + courant.getStrength(),
+                            this.navigator.additionalOrientationNeeded(boat.getPosition(), cpPoint));
+                }
+
+            }
+
+            else {
+                return new TupleDistanceOrientation(boat.distanceTo(cpPoint),
+                        this.navigator.additionalOrientationNeeded(boat.getPosition(), cpPoint));
+            }
+        }
+
+    }
+
     public TupleDistanceOrientation caseInsideAStream() {
         Courant streamAround = this.streamManager.streamAroundBoat();
         Vector courantVector = Vector.createUnitVector(streamAround.getPosition().getOrientation());
-        // check somewhere if nextcheckpoint is null
+        
         Point2D cpPoint = this.checkpointsManager.nextCheckpoint().getPosition().getPoint2D();
-        Vector trajectoireVector = new Vector(boat, cpPoint);
+        
 
-        double helpness = courantVector.scal(trajectoireVector);
+        double helpness = this.helpness(courantVector, boat, cpPoint);
 
-        if (Math.abs(helpness) <= TargetDefiner.EPS) {
+        if (Utils.within(helpness, Utils.EPS)) {
             // calculer l'orientation en fonction du déplacement engendre par le courant
             double orientation = navigator.additionalOrientationNeeded(boat.getPosition(), cpPoint);
             double distance = boat.distanceTo(cpPoint) + streamAround.getStrength();
 
             return new TupleDistanceOrientation(distance, orientation);
         } else if (helpness > 0) {
-            // LATER distinguer si le courant nous aide temporairement seulement
+            
             Point2D pointToLeave = this.maximalPointToStay(boat.getPosition().getPoint2D(), cpPoint, courantVector,
                     streamAround);
 
@@ -106,7 +151,7 @@ public class TargetDefiner {
                 return new TupleDistanceOrientation(distance, orientation);
             } else {
                 double orientation = streamAround.getPosition().getOrientation() - boat.getOrientation();
-                double distance = pointToLeave.distanceTo(boat.getPosition().getPoint2D()) - streamAround.getStrength();
+                double distance = pointToLeave.distanceTo(boat) - streamAround.getStrength();
                 return new TupleDistanceOrientation(distance, orientation);
             }
         }
@@ -119,7 +164,7 @@ public class TargetDefiner {
             // quand la "stratégie" aura changé on changera cette partie
             double orientation = navigator.additionalOrientationNeeded(boat.getPosition(), cpPoint);
             double distance = boat.distanceTo(cpPoint);
-            return new TupleDistanceOrientation(distance, orientation);
+            return new TupleDistanceOrientation(distance+streamAround.getStrength(), orientation);
 
         }
 
@@ -150,14 +195,11 @@ public class TargetDefiner {
 
     }
 
-    double helpness(Vector streamVector, Point2D depart, Point2D destination) {
+    double helpness(Vector streamVector, IPoint depart, IPoint destination) {
         Vector trajectVector = new Vector(depart, destination);
         return streamVector.scal(trajectVector);
     }
 
-    Point2D calculateEscapePoint(Courant courant, Point2D position) {
-        // LATER add strength consideration etc ...
-        return courant.closestPointTo(position);
-    }
+    
 
 }

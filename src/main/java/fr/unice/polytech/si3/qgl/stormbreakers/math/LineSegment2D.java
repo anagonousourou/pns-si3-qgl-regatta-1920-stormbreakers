@@ -352,7 +352,7 @@ public class LineSegment2D {
 	 * @param point2d
 	 * @return
 	 */
-	public Point2D closestPointTo(Point2D point2d){
+	public Point2D closestPointTo(IPoint point2d){
 		List<Point2D> points=new ArrayList<>();
 		DoubleStream.iterate(0, d-> d <= 1.0, d-> d+0.05).forEach(d->
 			points.add( this.point(d) )

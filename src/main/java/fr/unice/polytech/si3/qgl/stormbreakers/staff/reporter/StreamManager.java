@@ -3,6 +3,7 @@ package fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -44,6 +45,10 @@ public class StreamManager implements PropertyChangeListener {
         return this.courants.stream().anyMatch(courant -> courant.isPtInside(boat));
     }
 
+    public boolean pointIsInsideStream(IPoint point){
+        return this.courants.stream().anyMatch(courant -> courant.isPtInside(point));
+    }
+
     /**
      * 
      * @return
@@ -57,13 +62,17 @@ public class StreamManager implements PropertyChangeListener {
         }
     }
 
+    public Optional<Courant> streamAroundPoint(IPoint point){
+        return this.courants.stream().filter(courant -> courant.isPtInside(point)).findAny();
+    }
+
     /**
      * Méthode to say if there is any streams from the boat to the given position
      * 
      * @param position
      * @return
      */
-    public boolean thereIsStreamBetween(Position position) {
+    public boolean thereIsStreamBetween(IPoint position) {
         LineSegment2D segment2d = new LineSegment2D(position, boat);
         return this.courants.stream().anyMatch(courant -> courant.intersectsWith(segment2d));
 
@@ -73,10 +82,41 @@ public class StreamManager implements PropertyChangeListener {
         LineSegment2D segment2d = new LineSegment2D(position, boat);
         return this.obstacles.stream().anyMatch(obstacle-> obstacle.intersectsWith(segment2d));
     }
-    
-    public List<IPoint> trajectoryToAvoidObstacles(IPoint position){
-
+    /**
+     * Lets define a trajectory as a list of points such that 
+     * 1- the last point is the destination
+     * 2- the first is the boat position
+     * 3- if we remove any point in the middle the path will collide with an obstacle
+     * 
+     * in this method we assume that both the boat and the destination are not inside a stream
+     * @param position
+     * @return
+     */
+    public List<IPoint> trajectoryToAvoidObstacles(IPoint destination){
+        return List.of();//TODO
     }
+
+    /**
+     * We assume that the destination is in a stream
+     * @param destination
+     * @return
+     */
+    public List<IPoint> trajectoryToReachAPointInsideStream(IPoint destination){
+        return List.of();//TODO
+    }
+
+    public List<IPoint> trajectoryBoatAndCheckpointInsideStream(Courant courant,IPoint boatPoint,IPoint checkPoint){
+        return List.of();//TODO
+    }
+
+    public List<IPoint> trajectoryLeaveStreamAndReachPoint(IPoint destination){
+        return List.of();//TODO
+    }
+
+    
+
+
+
 
     public Courant firstStreamBetween(IPoint destination) {
         LineSegment2D segment2d = new LineSegment2D(destination, boat);
@@ -127,10 +167,15 @@ public class StreamManager implements PropertyChangeListener {
     }
 
     /**
-     * @param courants the courants to set
+     * @param courants the streams to set
      */
     void setCourants(List<Courant> courants) {
         this.courants = courants;
+    }
+
+    IPoint calculateEscapePoint(Courant courant, IPoint position) {
+        // LATER add strength consideration etc ...
+        return courant.closestPointTo(position);
     }
 
 }

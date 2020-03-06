@@ -31,7 +31,8 @@ public class Courant extends OceanEntity{
                 position.toString(), shape.toString());
     }
 
-    public Point2D closestPointTo(Point2D point2d) {
+    public Point2D closestPointTo(IPoint point2d) {
+        //TODO check for the type of shape before cast
         var tmp=new RectanglePositioned((Rectangle) this.shape, this.position).closestPointTo(point2d);
         if(tmp.isPresent()){
             return tmp.get();

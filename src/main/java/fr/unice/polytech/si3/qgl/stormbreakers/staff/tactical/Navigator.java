@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.IPoint;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Fraction;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
@@ -24,16 +25,18 @@ public class Navigator {
      * @param target       coordonnées de la cible
      * @return double angle entre [-3Pi/4,3Pi/4]
      */
-    public double additionalOrientationNeeded(Position boatPosition, Point2D target) {
+    public double additionalOrientationNeeded(Position boatPosition, IPoint target) {
 
         if (boatPosition.distanceTo(target) < Math.pow(10, -10)) {
             // On est sur la target, on n'a aucunement besoin de tourner
             return 0;
         }
 
+        Point2D target2d= new Point2D(target );
+
         // On effectue un translation pour ramener virtuellement
         // Les coordonnées du bateau en (0,0)
-        Point2D target2 = target.getTranslatedBy(-boatPosition.x(), -boatPosition.y());
+        Point2D target2 = target2d.getTranslatedBy(-boatPosition.x(), -boatPosition.y());
         // On effectue une rotation pour ramener virtuellement
         // la direction du bateau sur l'axe X
         Point2D target3 = target2.getRotatedBy(-boatPosition.getOrientation());

@@ -24,9 +24,9 @@ public class Point2D implements Logable, IPoint{
         this.y = y;
     }
 
-    public Point2D(Point2D point2D) {
-        this.x = point2D.x;
-        this.y = point2D.y;
+    public Point2D(IPoint point) {
+        this.x = point.x();
+        this.y = point.y();
     }
 
     public Point2D(Vector fromOrigin) {
