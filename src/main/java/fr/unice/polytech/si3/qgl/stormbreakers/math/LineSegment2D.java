@@ -7,18 +7,18 @@ import java.util.stream.DoubleStream;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.IPoint;
 import fr.unice.polytech.si3.qgl.stormbreakers.exceptions.DegeneratedLine2DException;
 
-/* File LineSegment2D.java 
+/* File LineSegment2D.java
  *
  * Project : Java Geometry Library
  *
  * ===========================================
- * 
- * This library is free software; you can redistribute it and/or modify it 
+ *
+ * This library is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 2.1 of the License, or (at
  * your option) any later version.
  *
- * This library is distributed in the hope that it will be useful, but 
+ * This library is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY, without even the implied warranty of MERCHANTABILITY
  * or FITNESS FOR A PARTICULAR PURPOSE.
  *
@@ -264,31 +264,37 @@ public class LineSegment2D {
         return ((y - y0) * dy + (x - x0) * dx) / denom;
     }
 
-	
+	/**
+	 * Gets the minimum distance from the point (x, y) to any point of this segment line.
+	 * @author David Lebrisse - Stormbreakers
+	 */
+	public double distance(double x, double y) {
+		return distance(new Point2D(x,y));
+	}
 
 	/**
-	 * Get the distance of the point (x, y) to this edge.
+	 * Gets the minimum distance from the point P to any point of this segment line.
+	 * @author David Lebrisse - Stormbreakers
 	 */
+	public double distance(Point2D P) {
+        // TODO: 07/03/2020 Tests
+		Line2D support = this.getSupportingLine();
+		Point2D projectedPOntoSupport = support.projectOnto(P);
 
-	public double distance(double x, double y) {
-		// In case of line segment with same extremities, computes distance to initial point 
-        if (length() < LineSegment2D.ACCURACY)
-        {
-			return Math.hypot(this.x0-x, this.y0-y);
-        }
-        
-        // compute position on the supporting line
-    	Line2D line = this.supportingLine();
-        double t = line.lineParametorOf(x, y);
+		if (this.isCollinearPointOnSegment(projectedPOntoSupport)) {
+			// The closest point to draw distance from
+			// is in the segment line
+			return support.distance(P);
+		} else {
+			// The closest point to draw distance from
+			// is in one of the edges
+			Point2D first = firstPoint();
+			Point2D last = lastPoint();
 
-        // clamp with parameterization bounds of edge
-		t = Math.max(Math.min(t, 1), 0);
-		
-		// compute position of projected point on the edge
-		Point2D proj = line.point(t);
-		
-		// return distance to projected point
-		return proj.getDistanceTo(new Point2D(x, y));
+			double distanceFromFirst = first.distanceTo(P);
+			double distanceFromLast = last.distanceTo(P);
+			return Math.min(distanceFromFirst,distanceFromLast);
+		}
 	}
 
 	double distance(IPoint point){
@@ -300,22 +306,32 @@ public class LineSegment2D {
 	}
 
 	/**
-	 * Renvoie le point du segment de droite qui est le plus proche
-	 * @author Patrick
-	 * @param point2d
-	 * @return
+	 * Renvoie le point du segment de droite qui est le plus proche du point donné
+	 * @param point2D point donné
+	 * @author David Lebrisse - Stormbreakers
 	 */
-	public Point2D closestPointTo(Point2D point2d){
-		List<Point2D> points=new ArrayList<>();
-		DoubleStream.iterate(0, d-> d <= 1.0, d-> d+0.05).forEach(d->
-				points.add( this.point(d) )
-		);
-		var tmp=points.stream().min((p,pother)-> Double.compare(p.distanceTo(point2d),pother.distanceTo(point2d) ));
-		if(tmp.isPresent()){
-			return tmp.get();
+	public Point2D closestPointTo(Point2D point2D){
+		// TODO: 07/03/2020 Tests
+		Line2D support = this.getSupportingLine();
+		Point2D projectedPOntoSupport = support.projectOnto(point2D);
+
+		if (this.isCollinearPointOnSegment(projectedPOntoSupport)) {
+			// The closest point to draw distance from
+			// is in the segment line
+			return projectedPOntoSupport;
+		} else {
+			// The closest point to draw distance from
+			// is in one of the edges
+			Point2D first = firstPoint();
+			Point2D last = lastPoint();
+
+			double distanceFromFirst = first.distanceTo(point2D);
+			double distanceFromLast = last.distanceTo(point2D);
+			double min = Math.min(distanceFromFirst,distanceFromLast);
+
+			if (min == distanceFromFirst) return first;
+			else return last;
 		}
-		//should never happen
-		return null;
 
 	}
 

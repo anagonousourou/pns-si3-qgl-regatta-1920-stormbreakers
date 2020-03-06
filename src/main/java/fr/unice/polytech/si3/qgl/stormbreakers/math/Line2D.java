@@ -13,7 +13,7 @@ public class Line2D {
 
     private EquationDroite equationDroite;
 
-    /** Defines a new Straight line going through the two given points. */
+    /** Defines a new Straight line going through (x0,y0) with direction (dx,dy) */
     public Line2D(double x0, double y0, double dx, double dy) {
         this(new Point2D(x0,y0),new Vector(dx,dy));
     }
@@ -43,28 +43,26 @@ public class Line2D {
 
     /**
      * Computes the <i>line parameter</i> of the point given by (x,y) for this line
-     * The position is the number t such that if the point belong to the line,
-     * its location is given by x=x0+t*dx and y=y0+t*dy.
+     * The position is the number k such that if the point belong to the line,
+     * its location is given by x=x0+k*dx and y=y0+k*dy.
      * Note: The point needs to be on the line.
+     * @author David Lebrisse - Stormbreakers
      */
     public double lineParametorOf(double x, double y) {
-        // TODO: 06/03/2020 Urgent Testing
-        double dx = direction.getDeltaX();
-        double dy = direction.getDeltaY();
-
-        double denom = dx * dx + dy * dy;
-
-        if (Math.abs(denom) < LineSegment2D.ACCURACY)
-            throw new DegeneratedLine2DException("");
-
-        double x0 = anchor.x();
-        double y0 = anchor.y();
-        return ((y - y0) * dy + (x - x0) * dx) / denom;
+        return lineParametorOf(new Point2D(x,y));
     }
 
+    /**
+     * Computes the <i>line parameter</i> of the given point P for this line
+     * The position is the number k such that if the point belong to the line,
+     * its location is given by P(k)=P0+k*direction, where P0 is the anchor.
+     * Note: The point needs to be on the line.
+     * @author David Lebrisse - Stormbreakers
+     */
     public double lineParametorOf(Point2D P) {
-        // TODO: 05/03/2020 Tests if not any
-        return lineParametorOf(P.x(),P.y());
+        // TODO: 06/03/2020 Urgent Testing
+        Vector relativeTranslation = new Vector(anchor,P);
+        return relativeTranslation.norm() / direction.norm();
     }
 
     /**
@@ -72,8 +70,9 @@ public class Line2D {
      * x=x0+lineParameter*dx
      * y=y0+lineParameter*dy
      * @return the projection
+     * @author David Lebrisse - Stormbreakers
      */
-    public Point2D point(double lineParameter) {
+    public Point2D pointFromLineParameter(double lineParameter) {
         // TODO: 06/03/2020 Urgent testing
         double x0 = anchor.x();
         double y0 = anchor.y();
@@ -81,13 +80,13 @@ public class Line2D {
         double dx = direction.getDeltaX();
         double dy = direction.getDeltaY();
 
-        lineParameter = Math.min(Math.max(lineParameter, 0), 1);
         return new Point2D(x0 + dx * lineParameter, y0 + dy * lineParameter);
     }
 
     /**
      * Computes the projection on the line of the point given by (x,y).
      * @return Point2D resulting from the projection
+     * @author David Lebrisse - Stormbreakers
      */
     public Point2D projectOnto(Point2D pointToProject) {
         Point2D projectionPoint;
@@ -105,6 +104,7 @@ public class Line2D {
      * Computes the intersection point between this line and a given one
      * @param other second line
      * @return if it exists, the intersection point
+     * @author David Lebrisse - Stormbreakers
      */
     public Optional<Point2D> intersect(Line2D other) {
         // TODO: 05/03/2020 Tests

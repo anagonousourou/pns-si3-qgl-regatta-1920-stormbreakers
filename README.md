@@ -18,5 +18,4 @@ Etudiants non-apprentis
 ## Portion de code provenant partiellement de sources externes
 
 - LineSegment2D.java
-- Line2D.java
 - Fraction.java
