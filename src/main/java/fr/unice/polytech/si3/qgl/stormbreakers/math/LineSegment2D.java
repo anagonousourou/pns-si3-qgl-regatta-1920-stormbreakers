@@ -329,6 +329,31 @@ public class LineSegment2D {
 		return new Line2D(this.firstPoint(),this.lastPoint());
 	}
 
+	/**
+	 * Computes the line supporting this line segment
+	 * @return supporting line
+	 * @author David Lebrisse - Stormbreakers
+	 */
+	public Point2D getMiddle() {
+		// TODO: 06/03/2020 Tests
+		Point2D from = firstPoint();
+		Point2D to = lastPoint();
+		return new Point2D( 0.5*(from.x()+to.x()), 0.5*(from.y()+to.y()));
+	}
+
+	/**
+	 * Checks if the given collinearPoint is in this line segment
+	 * @return true if it is the case, false if not
+	 * @author David Lebrisse - Stormbreakers
+	 */
+	public boolean isCollinearPointOnSegment(Point2D collinearPoint) {
+		// TODO: 06/03/2020 Tests
+		Point2D from = firstPoint();
+		Point2D to = lastPoint();
+		double totalDistance = from.getDistanceTo(collinearPoint) + to.getDistanceTo(collinearPoint);
+		return Utils.almostOrPerfectlyEquals(this.length(),totalDistance);
+	}
+
 	public boolean almostEquals(double value, double expected) {
 		// Should be the other way around :
 		return Utils.almostOrPerfectlyEquals(expected,value,0.001);

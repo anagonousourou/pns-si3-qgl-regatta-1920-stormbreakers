@@ -39,7 +39,23 @@ public class Circle extends Shape {
     public Optional<Point2D> intersect(LineSegment2D lineSegment2D){
         // TODO: 05/03/2020 Tests
         Line2D line2D = lineSegment2D.getSupportingLine();
-        return this.intersect(line2D);
+        Optional<Point2D> lineIntersectionOpt =  this.intersect(line2D);
+
+        if (lineIntersectionOpt.isEmpty()) {
+            // No circle-line intersection
+            return Optional.empty();
+        }
+        else {
+            // Circle-line intersection
+            Point2D lineIntersection = lineIntersectionOpt.get();
+            if (lineSegment2D.isCollinearPointOnSegment(lineIntersection)) {
+                // Circle-Segment intersection
+                return Optional.of(lineIntersection);
+            } else {
+                // No Circle-Segment intersection
+                return Optional.empty();
+            }
+        }
     }
 
     /**
@@ -55,7 +71,7 @@ public class Circle extends Shape {
         if (delta > 0) {
             // No collision
             return Optional.empty();
-        } else if (delta==0) {
+        } else if (Utils.almostOrPerfectlyEquals(0,delta)) { // TODO: 06/03/2020 AlmostOrPerfectlyEquals
             // Only One Intersection
             Point2D linePoint = line2D.projectOnto(origin);
             return Optional.of(this.projectOntoEdge(linePoint));
@@ -159,43 +175,38 @@ public class Circle extends Shape {
         // TODO: 05/03/2020 Tests
         // Calcul de l'intersection par dichotomie
         Line2D support = lineSegment2D.getSupportingLine();
-        Point2D start = lineSegment2D.firstPoint();
-        Point2D end = lineSegment2D.lastPoint();
+        Point2D start = lineSegment2D.firstPoint(); // Always inside the circle
+        Point2D end = lineSegment2D.lastPoint(); // Always outside the circle
 
         if (Utils.almostEquals(radius,this.distFromCenter(start)))
             return start;
-        double minParam = support.lineParametorOf(start);
 
         if (Utils.almostEquals(radius,this.distFromCenter(end)))
             return end;
-        double maxParam = support.lineParametorOf(end);
 
-        double midParam = (maxParam+minParam)*0.5;
-
-        Point2D possibleIntersection = support.point(midParam);
-        while (! Utils.almostEquals(radius,this.distFromCenter(possibleIntersection)) && (maxParam-minParam)>Utils.EPS) {
-            midParam = (maxParam+minParam)*0.5;
-            double delta = distFromCenter(possibleIntersection)-radius;
+        Point2D testedPoint = new LineSegment2D(start,end).getMiddle();
+        while (! Utils.almostEquals(radius,this.distFromCenter(testedPoint)) && ! Utils.almostOrPerfectlyEquals(start.getDistanceTo(end),0.0,0.1)) {
+            double delta = distFromCenter(testedPoint)-radius;
             if (delta<0) {
                 // We're outside the circle -> try closer to radius
-                minParam = midParam;
+                end = testedPoint;
             } else if (delta>0) {
                 // We're inside the circle -> try further from radius
-                maxParam = midParam;
+                start = testedPoint;
             } else {
                 // It's a perfect match
                 // The last computed point is the one
-                return possibleIntersection;
+                return testedPoint;
             }
 
-            // Recompute the guessing point
-            possibleIntersection = support.point(midParam);
+            // Recompute the guessing points
+            testedPoint = new LineSegment2D(start,end).getMiddle();
         }
 
         // We stopped looping
-        if ((maxParam-minParam)>Utils.EPS) {
+        if (Utils.almostOrPerfectlyEquals(start.getDistanceTo(end),0.0,0.1)) {
             // because we found a close enough point
-            return possibleIntersection;
+            return testedPoint;
         } else {
             // because we didn't find any Intersection
             throw new UnsupportedOperationException("Tried to find line-circle intersection, but there wasn't any !");

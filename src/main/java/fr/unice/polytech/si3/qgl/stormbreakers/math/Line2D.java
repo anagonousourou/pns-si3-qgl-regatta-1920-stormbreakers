@@ -48,6 +48,7 @@ public class Line2D {
      * Note: The point needs to be on the line.
      */
     public double lineParametorOf(double x, double y) {
+        // TODO: 06/03/2020 Urgent Testing
         double dx = direction.getDeltaX();
         double dy = direction.getDeltaY();
 
@@ -73,6 +74,7 @@ public class Line2D {
      * @return the projection
      */
     public Point2D point(double lineParameter) {
+        // TODO: 06/03/2020 Urgent testing
         double x0 = anchor.x();
         double y0 = anchor.y();
 

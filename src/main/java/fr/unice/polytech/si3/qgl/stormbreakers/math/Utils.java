@@ -28,6 +28,10 @@ public class Utils {
         return Math.abs(expected - result) <= eps;
     }
 
+    public static boolean almostOrPerfectlyEquals(double expected, double result) {
+        return Math.abs(expected - result) <= EPSILON;
+    }
+
     public static boolean almostEquals(Point2D expected, Point2D result) {
         return result.getDistanceTo(expected) < EPSILON;
     }
