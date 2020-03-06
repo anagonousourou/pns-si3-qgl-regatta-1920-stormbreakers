@@ -78,8 +78,11 @@ class CircleTest {
 
     	Position d1 = new Position(-70, 20);
     	Position a1 = new Position(90, -40);
+    	Position d2 = new Position(-50, -60);
     	LineSegment2D l = new LineSegment2D(d1,a1);
+    	LineSegment2D l1 = new LineSegment2D(d2,a1);
     	assertFalse(c1.intersect(l).isEmpty());
+    	assertTrue(c1.intersect(l1).isEmpty());
     }
 
     /*
