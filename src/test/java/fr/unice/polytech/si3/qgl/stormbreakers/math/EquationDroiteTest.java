@@ -18,7 +18,14 @@ public class EquationDroiteTest {
         eqD1 = new EquationDroite(a, b);
         eqD2 = new EquationDroite(b.x(), b.y(), c.x(), c.y());
         eqD3 = new EquationDroite(1, 2);
-    }
+	}
+	
+	@Test
+	public void constructorsTest(){
+		assertEquals((double)-7/5, eqD2.getSlope() , 1e-3);
+		assertEquals((double)16/5, eqD2.getY_Intercept(), 1e-3);
+		
+	} 
 
 	@Test
 	void findEqPerpendicularLineByPosTest() {

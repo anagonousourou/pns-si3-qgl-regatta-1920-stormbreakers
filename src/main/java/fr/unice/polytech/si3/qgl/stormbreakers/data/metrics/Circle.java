@@ -30,7 +30,7 @@ public class Circle extends Shape {
     }
 
     private double distFromCenter(Point2D pt) {
-        return new Point2D(0, 0).getDistanceTo(pt);
+        return new Point2D(0, 0).distanceTo(pt);
     }
 
     /**

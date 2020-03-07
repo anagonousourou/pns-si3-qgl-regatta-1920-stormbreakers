@@ -18,9 +18,8 @@ public class EquationDroite {
 	}
 
 	public EquationDroite(double x1, double y1, double x2, double y2) {
-		slope =(y2-y1)/(x2-x1);
-		EquationDroite e= new EquationDroite(-slope, y1);
-		yIntercept = e.evalY(x1);
+		this.slope =(y2-y1)/(x2-x1);
+		this.yIntercept=y1-this.slope*x1;
 	}
   
   // CHANGE: REMOVED resolutionValeurB ?
@@ -65,7 +64,7 @@ public class EquationDroite {
 	 * going through P
 	 * @param P the base point
 	 */
-	EquationDroite findEqPerpendicularLineByPos(Point2D P) {
+	EquationDroite findEqPerpendicularLineByPos(IPoint P) {
 		double lineA= -(1/ slope);
 		EquationDroite e= new EquationDroite(-lineA, P.y());
 		double lineB=e.evalY(P.x());

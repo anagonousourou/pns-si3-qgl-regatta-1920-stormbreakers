@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.IPoint;
+
 public class Utils {
     // TODO: 05/03/2020 Test All
 
@@ -28,8 +30,8 @@ public class Utils {
         return Math.abs(expected - result) <= eps;
     }
 
-    public static boolean almostEquals(Point2D expected, Point2D result) {
-        return result.getDistanceTo(expected) < EPSILON;
+    public static boolean almostEquals(IPoint expected, IPoint result) {
+        return result.distanceTo(expected) < EPSILON;
     }
     /**
      * Check if -bound <= value <= bound

@@ -15,11 +15,7 @@ public class Recif extends OceanEntity {
         super("reef",position, shape);
     }
 
-    @Override
-    public boolean intersectsWith(LineSegment2D lineSegment2D) {
-        // LATER Auto-generated method stub
-        return false;
-    }
+    
 
     @Override
     public double getOrientation() {

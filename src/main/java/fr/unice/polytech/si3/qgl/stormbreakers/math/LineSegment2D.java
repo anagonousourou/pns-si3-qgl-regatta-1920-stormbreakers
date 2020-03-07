@@ -288,7 +288,7 @@ public class LineSegment2D {
 		Point2D proj = line.point(t);
 		
 		// return distance to projected point
-		return proj.getDistanceTo(new Point2D(x, y));
+		return proj.distanceTo(new Point2D(x, y));
 	}
 
 	double distance(IPoint point){
