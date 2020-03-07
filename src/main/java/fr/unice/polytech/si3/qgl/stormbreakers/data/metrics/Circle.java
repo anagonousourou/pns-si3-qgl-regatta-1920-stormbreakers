@@ -244,10 +244,10 @@ public class Circle extends Shape {
         Point2D testedPoint = new LineSegment2D(start,end).getMiddle();
         while (! Utils.almostEquals(radius,this.distFromCenter(testedPoint)) && ! Utils.almostOrPerfectlyEquals(start.getDistanceTo(end),0.0,0.1)) {
             double delta = distFromCenter(testedPoint)-radius;
-            if (delta<0) {
+            if (delta>0) {
                 // We're outside the circle -> try closer to radius
                 end = testedPoint;
-            } else if (delta>0) {
+            } else if (delta<0) {
                 // We're inside the circle -> try further from radius
                 start = testedPoint;
             } else {

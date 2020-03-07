@@ -95,8 +95,10 @@ class CircleTest {
     	assertFalse(c1.intersect(lInCircle).isEmpty());
        	assertTrue(Math.abs(c1.intersect(lEdgeCircle).get().x()-(-50))<Utils.EPSILON_COLLISION);
        	assertTrue(Math.abs(c1.intersect(lEdgeCircle).get().y())<Utils.EPSILON_COLLISION);
-    	assertFalse(c1.intersect(l).get().x()-(-45.83)<Utils.EPSILON_COLLISION);
-    	assertFalse(c1.intersect(l).get().y()-(20)<Utils.EPSILON_COLLISION);
+
+       	Point2D c1Xl = c1.intersect(l).get();
+        assertTrue(Utils.almostEquals(Math.abs(c1Xl.x()),Math.abs(-45.83),Utils.EPSILON_COLLISION)); // absolute values because of x symmetry
+        assertTrue(Utils.almostEquals(c1Xl.y(),(20),Utils.EPSILON_COLLISION));
        	
     	System.out.println(c1.intersect(l));
     	System.out.println(c1.intersect(l1));
