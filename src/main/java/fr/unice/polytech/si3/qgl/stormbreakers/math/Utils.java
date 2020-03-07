@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.IPoint;
+
 public class Utils {
 
     public static final double EPS = 0.001;
@@ -26,23 +28,32 @@ public class Utils {
     public static boolean almostEquals(Point2D expected, Point2D result) {
         return result.getDistanceTo(expected) < EPSILON;
     }
+
     /**
-     * Check if -bound <= d <= bound 
+     * Check if -bound <= d <= bound
+     * 
      * @param d
-     * @param bound expected to be positive 
+     * @param bound expected to be positive
      * @return
      */
-    public static boolean within(double d,double bound){
-        return Math.abs(d)<=bound;
+    public static boolean within(double d, double bound) {
+        return Math.abs(d) <= bound;
     }
 
     /** Generic function to concatenate 2 lists in Java */
     public static <T> List<T> concatenate(List<T> list1, List<T> list2) {
         return Stream.of(list1, list2).flatMap(List::stream).collect(Collectors.toList());
     }
+
     /** Generic function to concatenate 3 lists in Java */
-    public static <T> List<T> concatenate(List<T> list1, List<T> list2,List<T> list3) {
-        return Stream.of(list1, list2,list3).flatMap(List::stream).collect(Collectors.toList());
+    public static <T> List<T> concatenate(List<T> list1, List<T> list2, List<T> list3) {
+        return Stream.of(list1, list2, list3).flatMap(List::stream).collect(Collectors.toList());
+    }
+
+    public static <T> List<T> concatenate(List<T> pointsOfSegment, List<T> pointsOfSegment2, List<T> pointsOfSegment3,
+            List<T> pointsOfSegment4) {
+        return Stream.of(pointsOfSegment, pointsOfSegment2, pointsOfSegment3, pointsOfSegment4).flatMap(List::stream)
+                .collect(Collectors.toList());
     }
 
 }

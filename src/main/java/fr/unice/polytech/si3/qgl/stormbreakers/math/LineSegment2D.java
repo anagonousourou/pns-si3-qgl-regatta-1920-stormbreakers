@@ -365,6 +365,19 @@ public class LineSegment2D {
 		return null;
 		
 	}
+	/**
+	 * 
+	 * @param step must be within 0 and 1
+	 * @return
+	 */
+	public List<IPoint> pointsOfSegment(double step){
+		List<IPoint> points=new ArrayList<>();
+		DoubleStream.iterate(0, d-> d <= 1.0, d-> d+step).forEach(d->
+			points.add( this.point(d) )
+		);
+
+		return points;
+	}
 
 	
 

@@ -66,7 +66,7 @@ public class TargetDefiner {
             }
 
             else if (this.thereIsObstaclesOnTrajectory()) {
-                List<IPoint> trajectory= this.streamManager.trajectoryToAvoidObstacles(checkpoint);
+                List<IPoint> trajectory= this.streamManager.trajectoryToAvoidObstacles(boat,checkpoint);
                 if (trajectory.size() > 1) {
                     return new TupleDistanceOrientation(trajectory.get(1).distanceTo(boat),
                             this.navigator.additionalOrientationNeeded(boat.getPosition(), trajectory.get(1)));
@@ -94,9 +94,9 @@ public class TargetDefiner {
         IPoint cpPoint = this.checkpointsManager.nextCheckpoint();
         List<IPoint> trajectoire;
         if (this.streamManager.pointIsInsideStream(cpPoint)) {
-            trajectoire = this.streamManager.trajectoryToReachAPointInsideStream(cpPoint);
+            trajectoire = this.streamManager.trajectoryToReachAPointInsideStream(boat,cpPoint);
         } else {
-            trajectoire = this.streamManager.trajectoryToAvoidObstacles(cpPoint);
+            trajectoire = this.streamManager.trajectoryToAvoidObstacles(boat,cpPoint);
         }
 
         if (trajectoire.size() > 1) {

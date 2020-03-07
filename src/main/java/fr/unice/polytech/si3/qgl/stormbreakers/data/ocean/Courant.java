@@ -1,5 +1,8 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.data.ocean;
 
+import java.util.List;
+import java.util.Optional;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.IPoint;
@@ -67,8 +70,56 @@ public class Courant extends OceanEntity{
         Vector trajectoirVector= new Vector(depart, destination);
 
         double helpness=courantVector.scal(trajectoirVector);
-        return helpness >= Utils.EPSILON;
-	}
+        return helpness > Utils.EPSILON;
+    }
+    /**
+     * TODO test
+     * @param depart
+     * @param destination
+     * @return
+     */
+    public boolean isCompletelyCompatibleWith(IPoint depart,IPoint destination){
+        Vector courantVector=Vector.createUnitVector( this.getPosition().getOrientation() );
+        Vector courantComposantx= new Vector (courantVector.getDeltaX(), 0);
+        Vector courantComposanty=new Vector(0, courantVector.getDeltaY());
+
+        Vector trajectoirVector= new Vector(depart, destination);
+        
+        return courantComposantx.scal(trajectoirVector) > Utils.EPSILON && courantComposanty.scal(trajectoirVector) > Utils.EPSILON;
+
+
+    }
+
+    /**
+     * TODO test
+     * @param depart
+     * @param destination
+     * @return
+     */
+    public boolean isPartiallyCompatibleWith(IPoint depart,IPoint destination){
+        Vector courantVector=Vector.createUnitVector( this.getPosition().getOrientation() );
+        Vector courantComposantx= new Vector (courantVector.getDeltaX(), 0);
+        Vector courantComposanty=new Vector(0, courantVector.getDeltaY());
+
+        Vector trajectoirVector= new Vector(depart, destination);
+        
+        return courantComposantx.scal(trajectoirVector) > Utils.EPSILON || courantComposanty.scal(trajectoirVector) > Utils.EPSILON;
+
+
+    }
+    /**
+     * TODO test
+     * @param point
+     * @return
+     */
+    public Optional<IPoint> getAwayPoint(IPoint point){
+        var rectanglePositioned=new RectanglePositioned((Rectangle)this.shape, this.position);
+
+        List<IPoint> points= rectanglePositioned.pointsOfRectangle(0.01);
+        return points.stream().filter(p->this.isCompatibleWith(point,p) ).min(
+            (p1,p2)->Double.compare(p1.distanceTo(point), p2.distanceTo(point))
+        );
+    }
 
     @Override
     public double getOrientation() {

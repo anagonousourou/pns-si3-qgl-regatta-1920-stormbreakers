@@ -100,6 +100,15 @@ public class RectanglePositioned {
         .map(l->l.closestPointTo(point2d))
         .min((p,pother)-> Double.compare(p.distanceTo(point2d),pother.distanceTo(point2d) ));
     }
+    /**
+     * Return a list of points of the rectangle 
+     * there must me enough points 
+     */
+    public List<IPoint> pointsOfRectangle(double step){
+        
+        return Utils.concatenate(largeur1.pointsOfSegment(step), 
+        largeur2.pointsOfSegment(step),longueur1.pointsOfSegment(step),longueur2.pointsOfSegment(step));
+    }
 
 
 }
