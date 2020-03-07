@@ -38,6 +38,14 @@ class VectorTest {
     }
 
     @Test
+    void testSquaredNorm() {
+        assertEquals(0, vect00.squaredNorm());
+        assertEquals(42*42, new Vector(0,42).squaredNorm());
+        assertEquals(42*42, new Vector(42, 0).squaredNorm());
+        assertEquals(125, new Vector(10, 5).squaredNorm());
+    }
+
+    @Test
     void testScalWhenXY() {
         Vector vectA = new Vector(10,20);
         Vector vectB = new Vector(42,12);
@@ -103,6 +111,15 @@ class VectorTest {
     }
 
 
+    @Test
+    void testNormalize() {
+        assertTrue(Utils.almostEquals(1,new Vector(434,214).normalize().norm()));
+        assertTrue(Utils.almostEquals(1, new Vector( 153,0).normalize().norm()));
+        assertTrue(Utils.almostEquals(1, new Vector(243,346).normalize().norm()));
+        assertTrue(Utils.almostEquals(1, new Vector(0,622).normalize().norm()));
+    }
+
+
     /*
      * Tests for equals
      */
@@ -164,7 +181,9 @@ class VectorTest {
 
     @Test
     void getRotatedByTestPreserveMagnitude() {
-        // TODO: 05/03/2020
+        Vector vector1 = new Vector(56,43);
+        Vector rotatedVector1 = vector1.getRotatedBy(Math.PI / 6);
+        assertTrue(Utils.almostEquals(vector1.norm(),rotatedVector1.norm()));
     }
 
     /*

@@ -30,7 +30,6 @@ public class Vector {
     }
 
     public double squaredNorm() {
-        // TODO: 05/03/2020 Tests
         return this.scal(this);
     }
 
@@ -78,7 +77,6 @@ public class Vector {
     }
 
     public Vector normalize() {
-        // TODO: 05/03/2020 Tests
         double magnitude = this.norm();
         double ratio = Math.pow(magnitude,-1);
         return this.scaleVector(ratio);
