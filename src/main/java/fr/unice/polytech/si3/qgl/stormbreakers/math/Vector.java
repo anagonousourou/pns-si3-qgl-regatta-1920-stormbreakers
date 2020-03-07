@@ -25,6 +25,13 @@ public class Vector {
         this(toCopy.dx,toCopy.dy);
     }
 
+    public static boolean areCollinear(Vector vector1, Vector vector2) {
+        // TODO: 07/03/2020 Very Urgent Tests
+        // Z component of cross product
+        double crossZ = vector1.dx * vector2.dy - vector2.dx * vector1.dy;
+        return Utils.almostEquals(0,crossZ);
+    }
+
     public double norm() {
         return Math.sqrt(dx * dx + dy * dy);
     }
@@ -71,7 +78,7 @@ public class Vector {
 
     public Vector getRotatedBy(double angle) {
         double magnitude = this.norm();
-        double previousAngle = this.angleBetween(UnitX);
+        double previousAngle = this.angleBetween(UnitX); // TODO: 08/03/2020 Urgent Testing
         Vector newUnitRotatedVector = Vector.createUnitVector(previousAngle+angle);
         return newUnitRotatedVector.scaleVector(magnitude);
     }

@@ -62,7 +62,7 @@ public class Line2D {
      * @author David Lebrisse - Stormbreakers
      */
     public double lineParameterOf(Point2D P) {
-        // TODO: 06/03/2020 Urgent Testing
+        // TODO: 06/03/2020 Non Urgent Testing
         Vector relativeTranslation = new Vector(anchor,P);
         return relativeTranslation.norm() / direction.norm();
     }
@@ -75,7 +75,7 @@ public class Line2D {
      * @author David Lebrisse - Stormbreakers
      */
     public Point2D pointFromLineParameter(double lineParameter) {
-        // TODO: 06/03/2020 Urgent testing
+        // TODO: 06/03/2020 Non Urgent testing
         double x0 = anchor.x();
         double y0 = anchor.y();
 
@@ -109,7 +109,6 @@ public class Line2D {
      * @author David Lebrisse - Stormbreakers
      */
     public Optional<Point2D> intersect(Line2D other) {
-        // TODO: 05/03/2020 Tests
         if (this.isVerticalLine() && other.isVerticalLine()) {
             // Both vertical
             if (this.anchor.x() == other.anchor.x()) {
@@ -134,18 +133,28 @@ public class Line2D {
 
         else {
             // Both are non vertical lines
-            EquationDroite eq1 = this.equationDroite;
-            EquationDroite eq2 = other.equationDroite;
+            Vector thisDirection = this.direction;
+            Vector otherDirection = other.direction;
+            if (Vector.areCollinear(thisDirection,otherDirection)){
+                // Lines are parallel
+                return Optional.empty();
+            } else {
+                // Lines are intersecting
+                EquationDroite eq1 = this.equationDroite;
+                EquationDroite eq2 = other.equationDroite;
 
-            // On cherche x t.q. : y1(x) = y2(x)
-            //  soit : a1*x+b1 = a2*x+b2
-            //  d'où : (a1-a2) * x = (b2-b1)
-            // On obtiens : x = (b2-b1)/(a1-a2)
-            double intersectionX = eq1.findCommonSolution(eq2);
-            double intersectionY = eq2.evalY(intersectionX);
+                // On cherche x t.q. : y1(x) = y2(x)
+                //  soit : a1*x+b1 = a2*x+b2
+                //  d'où : (a1-a2) * x = (b2-b1)
+                // On obtiens : x = (b2-b1)/(a1-a2)
+                double intersectionX = eq1.findCommonSolution(eq2);
+                double intersectionY = eq2.evalY(intersectionX);
 
-            Point2D intersection = new Point2D(intersectionX,intersectionY);
-            return Optional.of(intersection);
+                Point2D intersection = new Point2D(intersectionX,intersectionY);
+                return Optional.of(intersection);
+            }
+
+
         }
     }
 
