@@ -1,9 +1,9 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.math;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
+import fr.unice.polytech.si3.qgl.stormbreakers.exceptions.DegeneratedLine2DException;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class LineSegment2DTest {
     
@@ -36,9 +36,9 @@ public class LineSegment2DTest {
         Point2D p3 = new Point2D(20, 30);
         LineSegment2D edge = new LineSegment2D(p1, p2);
         
-        assertEquals(p2, edge.opposite(p1));    
-        assertEquals(p1, edge.opposite(p2));
-        assertEquals(null, edge.opposite(p3));
+        assertEquals(p2, edge.oppositeBoundingPoint(p1));
+        assertEquals(p1, edge.oppositeBoundingPoint(p2));
+        assertEquals(null, edge.oppositeBoundingPoint(p3));
 	}
 	@Test
 	public void testLength() {
@@ -58,40 +58,39 @@ public class LineSegment2DTest {
     	Point2D p2p = new Point2D(2, 3);
     	LineSegment2D line1p = new LineSegment2D(p1p, p2p);
     	
-    	assertTrue(line1.parallel(1).equals(line1p));
+    	assertTrue(line1.parallel(new Vector(1,0)).equals(line1p));
 	}
 	
 	@Test
 	public void testIntersection(){
 		LineSegment2D edge1 = new LineSegment2D(1, 1, 3, 2);
 		LineSegment2D edge2 = new LineSegment2D(1, 1, 0, 4);
-		assertEquals(new Point2D(1, 1), edge1.intersection(edge2));
-		assertEquals(new Point2D(1, 1), edge2.intersection(edge1));
+		assertEquals(new Point2D(1, 1), edge1.intersection(edge2).get());
+		assertEquals(new Point2D(1, 1), edge2.intersection(edge1).get());
 		
 		LineSegment2D edge3 = new LineSegment2D(3, 2, 0, 4);
-		assertEquals(new Point2D(3, 2), edge1.intersection(edge3));
-		assertEquals(new Point2D(3, 2), edge3.intersection(edge1));
-		assertEquals(new Point2D(0, 4), edge2.intersection(edge3));
-		assertEquals(new Point2D(0, 4), edge3.intersection(edge2));
+		assertEquals(new Point2D(3, 2), edge1.intersection(edge3).get());
+		assertEquals(new Point2D(3, 2), edge3.intersection(edge1).get());
+		assertEquals(new Point2D(0, 4), edge2.intersection(edge3).get());
+		assertEquals(new Point2D(0, 4), edge3.intersection(edge2).get());
 		
 		LineSegment2D edge4 = new LineSegment2D(0, 0, 5, 1);
-		assertEquals(null, edge1.intersection(edge4));
-		assertEquals(null, edge2.intersection(edge4));
-		assertEquals(null, edge3.intersection(edge4));
+		assertTrue(edge1.intersection(edge4).isEmpty());
+		assertTrue(edge2.intersection(edge4).isEmpty());
+		assertTrue(edge3.intersection(edge4).isEmpty());
 		
 		edge1 = new LineSegment2D(1, 1, 5, 5);
 		edge2 = new LineSegment2D(1, 5, 5, 1);
-		assertEquals(new Point2D(3, 3), edge1.intersection(edge2));
-		assertEquals(new Point2D(3, 3), edge2.intersection(edge1));
+		assertEquals(new Point2D(3, 3), edge1.intersection(edge2).get());
+		assertEquals(new Point2D(3, 3), edge2.intersection(edge1).get());
 	}
 
 	
 
 	@Test
-    public void testDistancePointSameExtremities()
+    public void testLineSegmentSameExtremities()
     {
-        final LineSegment2D lineA = new LineSegment2D(2400, 1500, 2400, 1500);
-        double dist = lineA.distance(new Point2D(2440, 1530));
-        assertEquals(50, dist, .01);
+    	Point2D P = new Point2D(2400, 1500);
+        assertThrows(DegeneratedLine2DException.class,() -> new LineSegment2D(P,P));
     }
 }

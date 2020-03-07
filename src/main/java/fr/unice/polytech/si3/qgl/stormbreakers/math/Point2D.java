@@ -36,7 +36,7 @@ public class Point2D implements IPoint{
      * Donne l'angle entre l'axe x et le vecteur position retourne null si (0,0)
      * 
      * @return une angle entre ]-Pi,Pi]
-     * @throws if point is 0,0
+     * @throws ImpossibleAngleError if point is 0,0
      */
     public double getAngleFromXAxis() {
         Vector unitX = new Vector(1, 0);
@@ -142,7 +142,7 @@ public class Point2D implements IPoint{
         if (!(obj instanceof Point2D))
             return false;
         Point2D other = (Point2D) obj;
-        return Math.abs(other.x - this.x)<=Point2D.EPS  && Math.abs(other.y - this.y)<=Point2D.EPS;
+        return Utils.almostOrPerfectlyEquals(other.x,this.x,Point2D.EPS) && Utils.almostOrPerfectlyEquals(other.y,this.y,Point2D.EPS);
     }
 
     @Override

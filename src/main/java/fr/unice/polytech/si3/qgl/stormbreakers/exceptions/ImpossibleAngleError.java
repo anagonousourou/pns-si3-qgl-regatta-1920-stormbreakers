@@ -10,7 +10,6 @@ public class ImpossibleAngleError extends IllegalArgumentException {
      *
      */
     private static final long serialVersionUID = -9181605714998629370L;
+    // TODO: 07/03/2020 Remove serialUID
 
-    
-    
 }

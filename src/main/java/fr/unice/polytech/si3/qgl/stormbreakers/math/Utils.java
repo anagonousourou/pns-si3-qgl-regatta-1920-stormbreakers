@@ -24,6 +24,7 @@ public class Utils {
         return Math.abs(expected - result) < eps;
     }
 
+    // TODO: 07/03/2020 Change all almostOrPerfectlyEquals for almostEqualsBoundsIncluded
     public static boolean almostOrPerfectlyEquals(double expected, double result, double eps) {
         return Math.abs(expected - result) <= eps;
     }

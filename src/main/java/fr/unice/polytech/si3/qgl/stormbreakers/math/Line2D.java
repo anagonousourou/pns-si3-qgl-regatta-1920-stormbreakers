@@ -25,6 +25,8 @@ public class Line2D {
 
     /** Defines a new Straight line going through anchor with a given direction. */
     public Line2D(Point2D anchor, Vector direction) {
+        if (Utils.almostEquals(0.0,direction.norm())) throw new DegeneratedLine2DException("Cannot create line with direction set to null vector");
+
         if (Utils.almostEquals(direction.getDeltaX(),0)) {
             // We have a vertical line
             this.direction = verticalDirection;
@@ -48,18 +50,18 @@ public class Line2D {
      * Note: The point needs to be on the line.
      * @author David Lebrisse - Stormbreakers
      */
-    public double lineParametorOf(double x, double y) {
-        return lineParametorOf(new Point2D(x,y));
+    public double lineParameterOf(double x, double y) {
+        return lineParameterOf(new Point2D(x,y));
     }
 
     /**
      * Computes the <i>line parameter</i> of the given point P for this line
-     * The position is the number k such that if the point belong to the line,
+     * The parameter is the number k such that if the point belong to the line,
      * its location is given by P(k)=P0+k*direction, where P0 is the anchor.
      * Note: The point needs to be on the line.
      * @author David Lebrisse - Stormbreakers
      */
-    public double lineParametorOf(Point2D P) {
+    public double lineParameterOf(Point2D P) {
         // TODO: 06/03/2020 Urgent Testing
         Vector relativeTranslation = new Vector(anchor,P);
         return relativeTranslation.norm() / direction.norm();
@@ -165,4 +167,12 @@ public class Line2D {
         // TODO: 05/03/2020 Tests
         return getDirection().normalize();
     }
+
+    public boolean contains(Point2D point2D) {
+        // TODO: 07/03/2020 Tests
+        double distance = distance(point2D);
+        return Utils.almostEquals(0,distance);
+    }
+
+    // TODO: 07/03/2020 Equals && hashcode ?
 }
