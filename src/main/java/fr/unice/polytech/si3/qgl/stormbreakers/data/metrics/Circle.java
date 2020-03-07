@@ -56,7 +56,7 @@ public class Circle extends Shape {
             // Line has 2 intersection points
             Point2D firstPoint = lineSegment2D.firstPoint();
             Point2D lastPoint = lineSegment2D.lastPoint();
-            return (this.isPtInside(firstPoint) || this.isPtInside(lastPoint));
+            return (lineSegment2D.isCollinearPointOnSegment(firstPoint) || lineSegment2D.isCollinearPointOnSegment(lastPoint));
         }
     }
 

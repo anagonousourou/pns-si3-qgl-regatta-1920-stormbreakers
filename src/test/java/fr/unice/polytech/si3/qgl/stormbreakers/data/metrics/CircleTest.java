@@ -1,10 +1,13 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.data.metrics;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.Utils;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Fraction;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.Line2D;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.LineSegment2D;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -76,15 +79,53 @@ class CircleTest {
     
     @Test void testIntersect() {
 
-    	Position d1 = new Position(-70, 20);
-    	Position a1 = new Position(90, -40);
+    	Position d1 = new Position(-90, 20);
+    	Position a1 = new Position(90, 20);
     	Position d2 = new Position(-50, -60);
+    	Position dIn = new Position(40,40);
+    	Position aIn = new Position(-10, -10);
+    	Position dEdge = new Position(-50, 10);
+    	Position aEdge = new Position(-50, -50);
     	LineSegment2D l = new LineSegment2D(d1,a1);
     	LineSegment2D l1 = new LineSegment2D(d2,a1);
+    	LineSegment2D lInCircle = new LineSegment2D(dIn, aIn);
+    	LineSegment2D lEdgeCircle = new LineSegment2D(dEdge, aEdge);
     	assertFalse(c1.intersect(l).isEmpty());
     	assertTrue(c1.intersect(l1).isEmpty());
+    	assertFalse(c1.intersect(lInCircle).isEmpty());
+       	assertTrue(Math.abs(c1.intersect(lEdgeCircle).get().x()-(-50))<Utils.EPSILON_COLLISION);
+       	assertTrue(Math.abs(c1.intersect(lEdgeCircle).get().y())<Utils.EPSILON_COLLISION);
+    	assertFalse(c1.intersect(l).get().x()-(-45.83)<Utils.EPSILON_COLLISION);
+    	assertFalse(c1.intersect(l).get().y()-(20)<Utils.EPSILON_COLLISION);
+       	
+    	System.out.println(c1.intersect(l));
+    	System.out.println(c1.intersect(l1));
+    	System.out.println(c1.intersect(lInCircle));
+    	System.out.println(c1.intersect(lEdgeCircle));
     }
+    
+    @Test void testIntersects() {
 
+    	Point2D d1 = new Point2D(-70, 20);
+    	Point2D a1 = new Point2D(90, -40);
+    	Point2D d2 = new Point2D(-50, -60);
+    	Position dEdge = new Position(-50, -20);
+    	Position aEdge = new Position(-50, 20);
+    	
+    	//lineSegment
+    	LineSegment2D ls = new LineSegment2D(d1,a1);
+    	LineSegment2D ls1 = new LineSegment2D(d2,a1);
+    	LineSegment2D lsEdgeCircle = new LineSegment2D(dEdge, aEdge);
+    	assertTrue(c1.intersects(ls));
+    	assertFalse(c1.intersects(ls1));
+    	assertTrue(c1.intersects(lsEdgeCircle));
+    	
+    	//line 
+    	Line2D l = new Line2D(d1,a1);
+    	Line2D l1 = new Line2D(d2,a1);
+    	assertTrue(c1.intersects(l));
+    	assertFalse(c1.intersects(l1));
+    }
     /*
      * End of tests for equals
      */

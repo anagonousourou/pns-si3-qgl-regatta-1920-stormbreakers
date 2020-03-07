@@ -15,7 +15,7 @@ public class Utils {
     }
 
     public static final double EPSILON = Math.pow(10, -10);
-
+    public static final double EPSILON_COLLISION = Math.pow(10, -2);
     public static boolean almostEquals(double expected, double result) {
         return Math.abs(expected - result) < EPSILON;
     }
