@@ -81,20 +81,28 @@ class CircleTest {
 
     	Position d1 = new Position(-90, 20);
     	Position a1 = new Position(90, 20);
-    	Position d2 = new Position(-50, -60);
+    	Position d2 = new Position(20, -60);
     	Position dIn = new Position(40,40);
     	Position aIn = new Position(-10, -10);
     	Position dEdge = new Position(-50, 10);
     	Position aEdge = new Position(-50, -50);
+    	Position dEdge2 = new Position(-50, -10);
+    	
     	LineSegment2D l = new LineSegment2D(d1,a1);
     	LineSegment2D l1 = new LineSegment2D(d2,a1);
     	LineSegment2D lInCircle = new LineSegment2D(dIn, aIn);
     	LineSegment2D lEdgeCircle = new LineSegment2D(dEdge, aEdge);
+    	LineSegment2D lEdgeCircleNoPoint = new LineSegment2D(dEdge2, aEdge);
+    	
     	assertFalse(c1.intersect(l).isEmpty());
     	assertTrue(c1.intersect(l1).isEmpty());
     	assertFalse(c1.intersect(lInCircle).isEmpty());
-       	assertTrue(Math.abs(c1.intersect(lEdgeCircle).get().x()-(-50))<Utils.EPSILON_COLLISION);
-       	assertTrue(Math.abs(c1.intersect(lEdgeCircle).get().y())<Utils.EPSILON_COLLISION);
+    	assertTrue(c1.intersect(lEdgeCircleNoPoint).isEmpty());
+    	
+       	Point2D c1XlEdgeCircle = c1.intersect(lEdgeCircle).get();
+        assertTrue(Utils.almostEquals(Math.abs(c1XlEdgeCircle.x()),Math.abs(-50),Utils.EPSILON_COLLISION)); // absolute values because of x symmetry
+        assertTrue(Utils.almostEquals(c1XlEdgeCircle.y(),(0),Utils.EPSILON_COLLISION));
+        
 
        	Point2D c1Xl = c1.intersect(l).get();
         assertTrue(Utils.almostEquals(Math.abs(c1Xl.x()),Math.abs(-45.83),Utils.EPSILON_COLLISION)); // absolute values because of x symmetry
@@ -103,7 +111,7 @@ class CircleTest {
     	System.out.println(c1.intersect(l));
     	System.out.println(c1.intersect(l1));
     	System.out.println(c1.intersect(lInCircle));
-    	System.out.println(c1.intersect(lEdgeCircle));
+    	System.out.println(c1.intersect(lEdgeCircleNoPoint));
     }
     
     @Test void testIntersects() {
