@@ -128,4 +128,28 @@ class Line2DTest {
         assertTrue(intersectionCOpt.isPresent());
         assertEquals(new Point2D(6,9),intersectionCOpt.get());
     }
+    
+    @Test 
+    void distanceTest() {
+    	Line2D line = new Line2D(new Point2D(5,10),new Point2D(10,5));
+    	Point2D p= new Point2D(12,12);
+    	assertEquals(line.distance(p),6.36,Math.pow(10, -2));
+
+    }
+    
+    @Test
+    void containsTest() {
+    	Line2D line = new Line2D(new Point2D(5,10),new Point2D(10,5));
+    	Point2D p= new Point2D(12,12);
+    	Point2D p1= new Point2D(7.5,7.5);
+    	assertFalse(line.contains(p));
+    	assertTrue(line.contains(p1));
+    }
+    @Test
+    void lineParameterOfTest() {
+    	Line2D line = new Line2D(new Point2D(5,10),new Point2D(10,5));
+    	Point2D p= new Point2D(12,12);
+    //	assertEquals(line.pointFromLineParameter(line.lineParameterOf(p)),p);
+    //	assertEquals(line.lineParameterOf(p),p);
+    }
 }
