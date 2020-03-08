@@ -145,11 +145,61 @@ class Line2DTest {
     	assertFalse(line.contains(p));
     	assertTrue(line.contains(p1));
     }
+
+
+    private static Point2D pointPlusScaleVector(Point2D point, double scaleFactor, Vector vector) {
+        return point.getTranslatedBy( vector.scaleVector(scaleFactor) );
+    }
+
     @Test
     void lineParameterOfTest() {
-    	Line2D line = new Line2D(new Point2D(5,10),new Point2D(10,5));
-    	Point2D p= new Point2D(12,12);
-    //	assertEquals(line.pointFromLineParameter(line.lineParameterOf(p)),p);
-    //	assertEquals(line.lineParameterOf(p),p);
+        Point2D A = new Point2D(42,9);
+        Point2D B = new Point2D(6,66);
+        Vector AB = new Vector(A,B);
+        Line2D nonVerticalLine = new Line2D(A,AB);
+        assertEquals(0,nonVerticalLine.lineParameterOf(A));
+        assertEquals(0.5,nonVerticalLine.lineParameterOf(pointPlusScaleVector(A,0.5,AB)));
+        assertEquals(1,nonVerticalLine.lineParameterOf(B));
+
+
+        Point2D C = new Point2D(6,42);
+        Vector verticalDir = Line2D.verticalDirection;
+        Line2D verticalLine = new Line2D(C,verticalDir);
+        assertEquals(0,verticalLine.lineParameterOf(C));
+        assertEquals(0.5,verticalLine.lineParameterOf(pointPlusScaleVector(C,0.5,verticalDir)));
+        assertEquals(1,verticalLine.lineParameterOf(pointPlusScaleVector(C,1,verticalDir)));
+    }
+
+    @Test
+    void pointFromLineParameterTest() {
+        Point2D A = new Point2D(42,9);
+        Point2D B = new Point2D(6,66);
+        Vector AB = new Vector(A,B);
+        Line2D nonVerticalLine = new Line2D(A,AB);
+        assertEquals(A,nonVerticalLine.pointFromLineParameter(0));
+        assertEquals(pointPlusScaleVector(A,0.5,AB),nonVerticalLine.pointFromLineParameter(0.5));
+        assertEquals(B,nonVerticalLine.pointFromLineParameter(1));
+
+
+        Point2D C = new Point2D(6,42);
+        Vector verticalDir = Line2D.verticalDirection;
+        Line2D verticalLine = new Line2D(C,verticalDir);
+        assertEquals(C,verticalLine.pointFromLineParameter(0));
+        assertEquals(pointPlusScaleVector(C,0.5,verticalDir),verticalLine.pointFromLineParameter(0.5));
+        assertEquals(pointPlusScaleVector(C,1,verticalDir),verticalLine.pointFromLineParameter(1));
+    }
+
+    @Test
+    void testLineParameterReciprocity() {
+        Line2D line = new Line2D(new Point2D(5,10),new Point2D(10,5));
+        double step = 0.25;
+        for (double k = 0; k<=1; k+=step){
+            assertEquals(k, line.lineParameterOf(line.pointFromLineParameter(k)));
+        }
+
+        for (double n=0; n<=1; n+=step){
+            Point2D point2D = line.pointFromLineParameter(n);
+            assertEquals(point2D, line.pointFromLineParameter(line.lineParameterOf(point2D)));
+        }
     }
 }

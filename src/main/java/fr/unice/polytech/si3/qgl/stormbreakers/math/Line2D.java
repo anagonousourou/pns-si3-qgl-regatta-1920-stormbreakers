@@ -74,7 +74,6 @@ public class Line2D {
      * @author David Lebrisse - Stormbreakers
      */
     public Point2D pointFromLineParameter(double lineParameter) {
-        // TODO: 06/03/2020 Non Urgent testing
         double x0 = anchor.x();
         double y0 = anchor.y();
 
