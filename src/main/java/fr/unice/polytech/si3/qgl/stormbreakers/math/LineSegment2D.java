@@ -184,8 +184,10 @@ public class LineSegment2D {
 	 * @author David Lebrisse - Stormbreakers
 	 */
 	public double segmentParameterOf(Point2D P) {
-		// TODO: 07/03/2020 Implement if time
-		return 0;
+        // TODO: 08/03/2020 Clamp k in [0,1] and corresponding tests
+        Vector supportDirection = startPoint.getVectorTo(endPoint).normalize();
+	    Line2D arrangedSupport = new Line2D(startPoint,supportDirection);
+	    return arrangedSupport.lineParameterOf(P) / length;
 	}
 
 	/**
@@ -197,8 +199,10 @@ public class LineSegment2D {
 	 * @author David Lebrisse - Stormbreakers
 	 */
 	public Point2D pointFromSegmentParameter(double segmentParameter) {
-		// TODO: 06/03/2020 Implement if time
-		return null;
+        // TODO: 08/03/2020 Clamp k in [0,1] and corresponding tests
+        Vector supportDirection = startPoint.getVectorTo(endPoint).normalize();
+        Line2D arrangedSupport = new Line2D(startPoint,supportDirection);
+        return arrangedSupport.pointFromLineParameter(segmentParameter * length);
 	}
 
 	/**
