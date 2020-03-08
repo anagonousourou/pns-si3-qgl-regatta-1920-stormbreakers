@@ -65,7 +65,7 @@ public interface Surface extends IPoint, Orientable {
 
 		EquationDroite trajet = new EquationDroite(depart.x(), depart.y(), destination.x(), destination.y());
 
-		Point2D thisPoint = new Point2D(this.x(), this.y());
+		IPoint thisPoint = new Point2D(this.x(), this.y());
 		double intersectionCentreCercleEnX = trajet.evalY(this.x());
 		EquationDroite perpTrajet = trajet.findEqPerpendicularLineByPos(thisPoint);
 		double orientation = perpTrajet.orientationDroite();
@@ -79,8 +79,9 @@ public interface Surface extends IPoint, Orientable {
 			y = this.y() + (c.getRadius() + TAILLE_BATEAU) * Math.sin(orientation);
 		}
 		x = perpTrajet.calculateValueX(y);
-		Position pt = new Position(x, y);
-		LineSegment2D sD = new LineSegment2D(depart, pt);
+		IPoint pt = new Point2D(x, y);
+		LineSegment2D sD = getSegmentLineTranslation(depart, pt, thisPoint);
+		
 		if (!c.intersect(sD).isEmpty()) {
 			list.addAll(avoidHitCircle(depart, pt));
 		}
@@ -88,7 +89,7 @@ public interface Surface extends IPoint, Orientable {
 			System.out.println("notIntersect" + sD + "-" + c.toString());
 		}
 		list.add(pt);
-		LineSegment2D sF = new LineSegment2D(pt, destination);
+		LineSegment2D sF =  getSegmentLineTranslation(pt, destination,thisPoint);
 		if (!c.intersect(sF).isEmpty()) {
 			list.addAll(avoidHitCircle(pt, destination));
 		} else {
@@ -98,6 +99,12 @@ public interface Surface extends IPoint, Orientable {
 
 	}
 
+	public default LineSegment2D getSegmentLineTranslation(IPoint dep,IPoint dest, IPoint p) {
+		Point2D depart = new Point2D(dep.x()-p.x(),dep.y()-p.y());
+		Point2D destination = new Point2D(dest.x()-p.x(),dest.y()-p.y());		
+		return new LineSegment2D(depart, destination);
+	}
+	
 	public default List<IPoint> avoidHitRectangle(IPoint depart, IPoint destination) {
 
 		List<IPoint> list = new ArrayList<IPoint>();
@@ -111,22 +118,36 @@ public interface Surface extends IPoint, Orientable {
 		Point2D ptDest = new Point2D(destination.x(), destination.y());
 		Point2D ptThis = new Point2D(this.x(), this.y());
 
-		Point2D PT_BD = new Point2D(ptThis.x() + heightRect + TAILLE_BATEAU, ptThis.y() - widthRect - TAILLE_BATEAU);
-		Point2D PT_BG = new Point2D(ptThis.x() - heightRect - TAILLE_BATEAU, ptThis.y() - widthRect - TAILLE_BATEAU);
-		Point2D PT_HD = new Point2D(ptThis.x() + heightRect + TAILLE_BATEAU, ptThis.y() + widthRect + TAILLE_BATEAU);
-		Point2D PT_HG = new Point2D(ptThis.x() - heightRect - TAILLE_BATEAU, ptThis.y() + widthRect + TAILLE_BATEAU);
-
+		Point2D PT_BD = new Point2D(ptThis.x() + widthRect + TAILLE_BATEAU, ptThis.y() - heightRect - TAILLE_BATEAU);
+		Point2D PT_BG = new Point2D(ptThis.x() - widthRect - TAILLE_BATEAU, ptThis.y() - heightRect - TAILLE_BATEAU);
+		Point2D PT_HD = new Point2D(ptThis.x() + widthRect + TAILLE_BATEAU, ptThis.y() + heightRect + TAILLE_BATEAU);
+		Point2D PT_HG = new Point2D(ptThis.x() - widthRect - TAILLE_BATEAU, ptThis.y() + heightRect + TAILLE_BATEAU);
+		System.out.println("PT_BD"+PT_BD);
+		System.out.println("PT_BG"+PT_BG);
+		System.out.println("PT_HD"+PT_HD);
+		System.out.println("PT_HG"+PT_HG);
+		
 		ptDepart = ptDepart.getRotatedBy(-orientation);
 		ptDest = ptDest.getRotatedBy(-orientation);
 		ptThis = ptThis.getRotatedBy(-orientation);
 
-		if (ptThis.y() + (widthRect) < depart.y()) {
-			if (depart.x() > destination.x()) {
+		if (ptThis.y() + (heightRect) < depart.y()||ptThis.y() + (heightRect) < destination.y()) {
+			EquationDroite eq = new EquationDroite(ptDepart, ptDest);
+			double xonEq= eq.calculateValueX(ptThis.y());
+			if (xonEq < ptThis.x()) {
 				list.add(PT_HG);
 			} else {
 				list.add(PT_HD);
 			}
-		} else if (ptThis.y() - (widthRect) < depart.y()) {
+		} else if (ptThis.y() + (heightRect) > depart.y()||ptThis.y() + (heightRect) > destination.y())  {
+			EquationDroite eq = new EquationDroite(ptDepart, ptDest);
+			double xonEq= eq.calculateValueX(ptThis.y());
+			if (xonEq < ptThis.x()) {
+				list.add(PT_BG);
+			} else {
+				list.add(PT_BD);
+			}
+		} else {
 			EquationDroite eq = new EquationDroite(ptDepart, ptDest);
 			double yCroisementCentreRectEnX = eq.evalY(ptThis.x());
 			if (yCroisementCentreRectEnX >= ptThis.y()) {
@@ -147,12 +168,7 @@ public interface Surface extends IPoint, Orientable {
 					list.add(PT_BD);
 				}
 			}
-		} else {
-			if (depart.x() > destination.x()) {
-				list.add(PT_BG);
-			} else {
-				list.add(PT_BD);
-			}
+			
 		}
 		return list;
 	}
