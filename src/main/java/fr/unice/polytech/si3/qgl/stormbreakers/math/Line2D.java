@@ -62,7 +62,6 @@ public class Line2D {
      * @author David Lebrisse - Stormbreakers
      */
     public double lineParameterOf(Point2D P) {
-        // TODO: 06/03/2020 Non Urgent Testing
         Vector relativeTranslation = new Vector(anchor,P);
         return relativeTranslation.norm() / direction.norm();
     }
@@ -164,8 +163,7 @@ public class Line2D {
      * @return the computed distance
      */
     public double distance(Point2D P) {
-        // TODO: 05/03/2020 Tests
-        return new Vector(P,this.projectOnto(P)).norm();
+        return P.getDistanceTo(this.projectOnto(P));
     }
 
     public Vector getDirection() {
@@ -173,12 +171,10 @@ public class Line2D {
     }
 
     public Vector getNormalizedDirection() {
-        // TODO: 05/03/2020 Tests
         return getDirection().normalize();
     }
 
     public boolean contains(Point2D point2D) {
-        // TODO: 07/03/2020 Tests
         double distance = distance(point2D);
         return Utils.almostEquals(0,distance);
     }

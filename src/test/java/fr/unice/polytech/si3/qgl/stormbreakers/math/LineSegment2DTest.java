@@ -93,4 +93,46 @@ public class LineSegment2DTest {
     	Point2D P = new Point2D(2400, 1500);
         assertThrows(DegeneratedLine2DException.class,() -> new LineSegment2D(P,P));
     }
+	
+    @Test 
+    void distanceTest() {
+    	LineSegment2D line = new LineSegment2D(new Point2D(5,10),new Point2D(10,5));
+    	Point2D p= new Point2D(12,12);
+    	Point2D p2= new Point2D(18,6);
+    	assertEquals(line.distance(p),6.36,Math.pow(10, -2));
+    	assertEquals(line.distance(p2),8.06,Math.pow(10, -2));
+
+    }
+    
+    @Test 
+    void closestPointToTest() {
+    	LineSegment2D line = new LineSegment2D(new Point2D(5,10),new Point2D(10,5));
+    	Point2D p= new Point2D(12,12);
+    	assertEquals(line.closestPointTo(p).x(),7.5,Math.pow(10, -2));
+    	assertEquals(line.closestPointTo(p).y(),7.5,Math.pow(10, -2));
+
+    	Point2D p2= new Point2D(18,6);
+    	assertEquals(line.closestPointTo(p2).x(),10,Math.pow(10, -2));
+    	assertEquals(line.closestPointTo(p2).y(),5,Math.pow(10, -2));
+
+    }    
+    
+    @Test 
+    void getMiddleTest() {
+    	LineSegment2D line = new LineSegment2D(new Point2D(5,10),new Point2D(10,5));
+    	Point2D point = new Point2D(7.5,7.5);
+    	assertEquals(line.getMiddle(), point);
+    }
+    
+    @Test 
+    void isCollinearPointOnSegmentTest() {
+    	LineSegment2D line = new LineSegment2D(new Point2D(5,10),new Point2D(10,5));
+    	Point2D p= new Point2D(12,12);
+    	Point2D p2 = new Point2D(7.5,7.5);
+    	Point2D p3 = new Point2D(15,0);
+    	assertFalse(line.isCollinearPointOnSegment(p));
+    	assertTrue(line.isCollinearPointOnSegment(p2));
+    	assertFalse(line.isCollinearPointOnSegment(p3));
+
+    }  
 }

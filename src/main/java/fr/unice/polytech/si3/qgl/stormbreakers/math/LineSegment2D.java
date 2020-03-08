@@ -153,7 +153,6 @@ public class LineSegment2D {
 	 * @return the new line segment
 	 */
 	public LineSegment2D parallel(Vector translation) {
-		// TODO: 07/03/2020 Run tests
 		return new LineSegment2D(startPoint.getTranslatedBy(translation), endPoint.getTranslatedBy(translation));
 	}
 
@@ -247,7 +246,6 @@ public class LineSegment2D {
 	 * @author David Lebrisse - Stormbreakers
 	 */
 	public double distance(Point2D P) {
-        // TODO: 07/03/2020 Tests
 		Line2D support = this.getSupportingLine();
 		Point2D projectedPOntoSupport = support.projectOnto(P);
 
@@ -282,7 +280,6 @@ public class LineSegment2D {
 	 * @author David Lebrisse - Stormbreakers
 	 */
 	public Point2D closestPointTo(Point2D point2D){
-		// TODO: 07/03/2020 Tests
 		Line2D support = this.getSupportingLine();
 		Point2D projectedPOntoSupport = support.projectOnto(point2D);
 
@@ -312,7 +309,6 @@ public class LineSegment2D {
 	 * @author David Lebrisse - Stormbreakers
 	 */
 	public Line2D getSupportingLine() {
-		// TODO: 05/03/2020 Tests ??
 		return new Line2D(this.firstPoint(),this.lastPoint());
 	}
 
@@ -322,7 +318,6 @@ public class LineSegment2D {
 	 * @author David Lebrisse - Stormbreakers
 	 */
 	public Point2D getMiddle() {
-		// TODO: 06/03/2020 Tests
 		Point2D from = firstPoint();
 		Point2D to = lastPoint();
 		return new Point2D( 0.5*(from.x()+to.x()), 0.5*(from.y()+to.y()));
@@ -334,7 +329,6 @@ public class LineSegment2D {
 	 * @author David Lebrisse - Stormbreakers
 	 */
 	public boolean isCollinearPointOnSegment(Point2D collinearPoint) {
-		// TODO: 06/03/2020 Tests
 		Point2D from = firstPoint();
 		Point2D to = lastPoint();
 		double totalDistance = from.getDistanceTo(collinearPoint) + to.getDistanceTo(collinearPoint);
