@@ -113,7 +113,8 @@ public class Point2D implements IPoint{
      * @return Vector le vecteur
      */
     public Vector getVectorTo(Point2D other) {
-        return new Vector(x - other.x, y - other.y);
+        // TODO: 09/03/2020 Urgent Tests
+        return new Vector(other.x-this.x, other.y-this.y);
     }
 
     /**
