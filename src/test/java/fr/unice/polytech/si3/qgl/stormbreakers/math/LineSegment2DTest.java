@@ -4,6 +4,8 @@ import fr.unice.polytech.si3.qgl.stormbreakers.exceptions.DegeneratedLine2DExcep
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class LineSegment2DTest {
@@ -32,8 +34,8 @@ public class LineSegment2DTest {
 		assertTrue(LineSegment2D.intersects(edge2, edge1));
 		assertTrue(LineSegment2D.intersects(edge1, edge3));
 		assertTrue(LineSegment2D.intersects(edge3, edge1));
-		assertTrue(!LineSegment2D.intersects(edge2, edge3));
-		assertTrue(!LineSegment2D.intersects(edge3, edge2));
+        assertFalse(LineSegment2D.intersects(edge2, edge3));
+        assertFalse(LineSegment2D.intersects(edge3, edge2));
 	}
 
 	@Test
@@ -45,7 +47,7 @@ public class LineSegment2DTest {
         
         assertEquals(p2, edge.oppositeBoundingPoint(p1));
         assertEquals(p1, edge.oppositeBoundingPoint(p2));
-        assertEquals(null, edge.oppositeBoundingPoint(p3));
+        assertNull(edge.oppositeBoundingPoint(p3));
 	}
 	@Test
 	public void testLength() {
@@ -64,32 +66,49 @@ public class LineSegment2DTest {
     	Point2D p1p = new Point2D(2, 1);
     	Point2D p2p = new Point2D(2, 3);
     	LineSegment2D line1p = new LineSegment2D(p1p, p2p);
-    	
-    	assertTrue(line1.parallel(new Vector(1,0)).equals(line1p));
+
+		assertEquals(line1.parallel(new Vector(1, 0)), line1p);
 	}
 	
 	@Test
 	public void testIntersection(){
 		LineSegment2D edge1 = new LineSegment2D(1, 1, 3, 2);
 		LineSegment2D edge2 = new LineSegment2D(1, 1, 0, 4);
-		assertEquals(new Point2D(1, 1), edge1.intersection(edge2).get());
-		assertEquals(new Point2D(1, 1), edge2.intersection(edge1).get());
+
+		Optional<Point2D> intersection12Opt = edge1.intersection(edge2);
+		Optional<Point2D> intersection21Opt = edge1.intersection(edge2);
+		assertTrue(intersection12Opt.isPresent());
+		assertEquals(new Point2D(1, 1), intersection12Opt.get());
+		assertTrue(intersection21Opt.isPresent());
+		assertEquals(new Point2D(1, 1), intersection21Opt.get());
 		
 		LineSegment2D edge3 = new LineSegment2D(3, 2, 0, 4);
-		assertEquals(new Point2D(3, 2), edge1.intersection(edge3).get());
-		assertEquals(new Point2D(3, 2), edge3.intersection(edge1).get());
-		assertEquals(new Point2D(0, 4), edge2.intersection(edge3).get());
-		assertEquals(new Point2D(0, 4), edge3.intersection(edge2).get());
+		Optional<Point2D> intersection13Opt = edge1.intersection(edge3);
+		Optional<Point2D> intersection31Opt = edge3.intersection(edge1);
+		Optional<Point2D> intersection23Opt = edge2.intersection(edge3);
+		Optional<Point2D> intersection32Opt = edge3.intersection(edge2);
+		assertTrue(intersection13Opt.isPresent());
+		assertEquals(new Point2D(3, 2), intersection13Opt.get());
+		assertTrue(intersection31Opt.isPresent());
+		assertEquals(new Point2D(3, 2), intersection31Opt.get());
+		assertTrue(intersection23Opt.isPresent());
+		assertEquals(new Point2D(0, 4), intersection23Opt.get());
+		assertTrue(intersection32Opt.isPresent());
+		assertEquals(new Point2D(0, 4), intersection32Opt.get());
 		
 		LineSegment2D edge4 = new LineSegment2D(0, 0, 5, 1);
 		assertTrue(edge1.intersection(edge4).isEmpty());
 		assertTrue(edge2.intersection(edge4).isEmpty());
 		assertTrue(edge3.intersection(edge4).isEmpty());
-		
-		edge1 = new LineSegment2D(1, 1, 5, 5);
-		edge2 = new LineSegment2D(1, 5, 5, 1);
-		assertEquals(new Point2D(3, 3), edge1.intersection(edge2).get());
-		assertEquals(new Point2D(3, 3), edge2.intersection(edge1).get());
+
+		LineSegment2D edge5 = new LineSegment2D(1, 1, 5, 5);
+		LineSegment2D edge6 = new LineSegment2D(1, 5, 5, 1);
+		Optional<Point2D> intersection56Opt = edge5.intersection(edge6);
+		Optional<Point2D> intersection65Opt = edge6.intersection(edge5);
+		assertTrue(intersection56Opt.isPresent());
+		assertEquals(new Point2D(3, 3), intersection56Opt.get());
+		assertTrue(intersection65Opt.isPresent());
+		assertEquals(new Point2D(3, 3), intersection65Opt.get());
 	}
 
 	
@@ -208,11 +227,9 @@ public class LineSegment2DTest {
 			assertEquals(k, lineSegment2D.segmentParameterOf(lineSegment2D.pointFromSegmentParameter(k)),Utils.EPSILON);
 		}
 		// TODO: 08/03/2020 Replace tests with Utils.almostEqual(Point2D P1, Point2D P2, double distanceDelta )
-		/*
 		for (double n=0; n<=1; n+=step){
 			Point2D point2D = lineSegment2D.pointFromSegmentParameter(n);
 			assertEquals(point2D, lineSegment2D.pointFromSegmentParameter(lineSegment2D.segmentParameterOf(point2D)));
 		}
-		 */
 	}
 }

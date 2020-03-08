@@ -71,7 +71,6 @@ public class LineSegment2D {
 	 * @author David Lebrisse - Stormbreakers
      */
     public Optional<Point2D> intersection(LineSegment2D line2) {
-		// TODO: 07/03/2020 Run Tests
         Line2D thisSupport = this.getSupportingLine();
         Line2D otherSupport = line2.getSupportingLine();
 
