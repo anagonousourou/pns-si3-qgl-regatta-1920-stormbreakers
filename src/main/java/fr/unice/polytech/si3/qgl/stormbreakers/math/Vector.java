@@ -8,25 +8,34 @@ public class Vector {
 
     public static final Vector UnitX = new Vector(1,0);
 
-    private double x;
-    private double y;
+    private double dx;
+    private double dy;
 
-    public Vector(double x, double y) {
-        this.x = x;
-        this.y = y;
+    public Vector(double dx, double dy) {
+        this.dx = dx;
+        this.dy = dy;
     }
 
     public Vector(IPoint start, IPoint end) {
-        this.x = end.x() - start.x();
-        this.y = end.y() - start.y();
+        this.dx = end.x() - start.x();
+        this.dy = end.y() - start.y();
+    }
+
+    public Vector(Vector toCopy) {
+        this(toCopy.dx,toCopy.dy);
     }
 
     public double norm() {
-        return Math.sqrt(x * x + y * y);
+        return Math.sqrt(dx * dx + dy * dy);
+    }
+
+    public double squaredNorm() {
+        // TODO: 05/03/2020 Tests
+        return this.scal(this);
     }
 
     public double scal(Vector other) {
-        return this.x * other.x + this.y * other.y;
+        return this.dx * other.dx + this.dy * other.dy;
     }
 
     /**
@@ -45,11 +54,11 @@ public class Vector {
     }
 
     public double getDeltaX() {
-        return x;
+        return dx;
     }
 
     public double getDeltaY() {
-        return y;
+        return dy;
     }
     /**
      * Mutiplie les coords du vecteur par le facteur passé en parametre
@@ -58,7 +67,7 @@ public class Vector {
      * @return le nouveau vecteur obtenu
      */
     public Vector scaleVector(double scaleFactor) {
-        return new Vector(x*scaleFactor,y*scaleFactor);
+        return new Vector(dx *scaleFactor, dy *scaleFactor);
     }
 
     public Vector getRotatedBy(double angle) {
@@ -66,6 +75,13 @@ public class Vector {
         double previousAngle = this.angleBetween(UnitX);
         Vector newUnitRotatedVector = Vector.createUnitVector(previousAngle+angle);
         return newUnitRotatedVector.scaleVector(magnitude);
+    }
+
+    public Vector normalize() {
+        // TODO: 05/03/2020 Tests
+        double magnitude = this.norm();
+        double ratio = Math.pow(magnitude,-1);
+        return this.scaleVector(ratio);
     }
 
 
@@ -76,16 +92,16 @@ public class Vector {
         if (!(obj instanceof Vector))
             return false;
         Vector other = (Vector) obj;
-        return Utils.almostEquals(this.x,other.x) && Utils.almostEquals(this.y,other.y);
+        return Utils.almostEquals(this.dx,other.dx) && Utils.almostEquals(this.dy,other.dy);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(x, y);
+        return Objects.hash(dx, dy);
     }
 
     @Override
     public String toString() {
-        return String.format("%s(x: %f,y: %f)", this.getClass().getSimpleName(),this.x,this.y);
+        return String.format("%s(x: %f,y: %f)", this.getClass().getSimpleName(),this.dx,this.dy);
     }
 }

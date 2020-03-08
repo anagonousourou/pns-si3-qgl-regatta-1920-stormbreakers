@@ -163,4 +163,10 @@ public class Polygon extends Shape implements CanCollide, Orientable {
     public String toLogs() {
         return "Polygon " + Logable.listToLogs(new ArrayList<>(vertices), " ", "", "");
     }
+
+    @Override
+    public List<IPoint> avoidPoint(IPoint depart, IPoint arrivee, IPoint shapePosition) {
+        // TODO Auto-generated method stub important
+        return List.of();
+    }
 }

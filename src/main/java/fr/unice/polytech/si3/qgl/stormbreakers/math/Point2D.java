@@ -120,19 +120,7 @@ public class Point2D implements Logable, IPoint{
         return new Vector(x - other.x, y - other.y);
     }
 
-    /**
-     * Renvoie la distance de ce point à un point passé en parametre
-     * 
-     * @param other autre point
-     * @return double la distance
-     */
-    public double getDistanceTo(Point2D other) {
-        return getVectorTo(other).norm();
-    }
-
-    public double distanceTo(Point2D other) {
-        return getVectorTo(other).norm();
-    }
+    
 
     @Override
     public String toString() {

@@ -80,6 +80,7 @@ public class RectanglePositioned {
     }
 
     public boolean intersectsWith(LineSegment2D lineSegment2D){
+        
         return largeur1.intersects(lineSegment2D)||longueur1.intersects(lineSegment2D)||largeur2.intersects(lineSegment2D)||longueur2.intersects(lineSegment2D);
     }
 

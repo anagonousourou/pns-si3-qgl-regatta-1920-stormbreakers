@@ -9,17 +9,13 @@ import fr.unice.polytech.si3.qgl.stormbreakers.math.LineSegment2D;
 public class Recif extends OceanEntity {
 
     @JsonCreator
-    Recif(
+    public Recif(
             @JsonProperty("position") Position position,
             @JsonProperty("shape") Shape shape) {
         super("reef",position, shape);
     }
 
-    @Override
-    public boolean intersectsWith(LineSegment2D lineSegment2D) {
-        // LATER Auto-generated method stub
-        return false;
-    }
+    
 
     @Override
     public double getOrientation() {

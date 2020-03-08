@@ -18,7 +18,14 @@ public class EquationDroiteTest {
         eqD1 = new EquationDroite(a, b);
         eqD2 = new EquationDroite(b.x(), b.y(), c.x(), c.y());
         eqD3 = new EquationDroite(1, 2);
-    }
+	}
+	
+	@Test
+	public void constructorsTest(){
+		assertEquals((double)-7/5, eqD2.getSlope() , 1e-3);
+		assertEquals((double)16/5, eqD2.getY_Intercept(), 1e-3);
+		
+	} 
 
 	@Test
 	void findEqPerpendicularLineByPosTest() {
@@ -36,5 +43,13 @@ public class EquationDroiteTest {
 		result = eqD3.findEqPerpendicularLineByPos(b);
 		assertEquals(tmp.getSlope(), result.getSlope());
 		assertEquals(tmp.getY_Intercept(), result.getY_Intercept());
+	}
+
+    @Test
+    void findCommonSolutionTest() {
+		// TODO: 05/03/2020 Add tests
+		EquationDroite equationDroite1 = new EquationDroite(-3,5);
+		EquationDroite equationDroite2 = new EquationDroite(1.0/3.0,3);
+		assertEquals(3.0/5.0, equationDroite1.findCommonSolution(equationDroite2));
 	}
 }

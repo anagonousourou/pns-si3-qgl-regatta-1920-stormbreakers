@@ -69,6 +69,7 @@ public class LineSegment2D {
 
 		boolean b1 = Point2D.ccw(e1p1, e1p2, e2p1) * Point2D.ccw(e1p1, e1p2, e2p2) <= 0;
 		boolean b2 = Point2D.ccw(e2p1, e2p2, e1p1) * Point2D.ccw(e2p1, e2p2, e1p2) <= 0;
+		
 		return b1 && b2;
 	}
 
@@ -288,7 +289,7 @@ public class LineSegment2D {
 		Point2D proj = line.point(t);
 		
 		// return distance to projected point
-		return proj.getDistanceTo(new Point2D(x, y));
+		return proj.distanceTo(new Point2D(x, y));
 	}
 
 	double distance(IPoint point){
@@ -299,9 +300,48 @@ public class LineSegment2D {
 		return new Line2D(x0,y0, dx,dy);
 	}
 
-	public boolean almostEquals(double a, double b) {
-		return Math.abs(a - b) <= 0.001;
+	/**
+	 * Renvoie le point du segment de droite qui est le plus proche
+	 * @author Patrick
+	 * @param point2d
+	 * @return
+	 */
+	public Point2D closestPointTo(Point2D point2d){
+		List<Point2D> points=new ArrayList<>();
+		DoubleStream.iterate(0, d-> d <= 1.0, d-> d+0.05).forEach(d->
+				points.add( this.point(d) )
+		);
+		var tmp=points.stream().min((p,pother)-> Double.compare(p.distanceTo(point2d),pother.distanceTo(point2d) ));
+		if(tmp.isPresent()){
+			return tmp.get();
+		}
+		//should never happen
+		return null;
+
 	}
+
+	/**
+	 * Computes the line supporting this line segment
+	 * @return supporting line
+	 * @author David Lebrisse - Stormbreakers
+	 */
+	public Line2D getSupportingLine() {
+		// TODO: 05/03/2020 Tests ??
+		return new Line2D(this.firstPoint(),this.lastPoint());
+	}
+
+	public boolean almostEquals(double value, double expected) {
+		// Should be the other way around :
+		return Utils.almostOrPerfectlyEquals(expected,value,0.001);
+	}
+
+	// =================================
+	// Methods implementing the Shape interface
+
+	
+
+	// ===================================================================
+	// Methods implementing the Object interface
 
 	@Override
 	public boolean equals(Object obj) {
@@ -323,14 +363,6 @@ public class LineSegment2D {
 
 		return true;
 	}
-
-	// =================================
-	// Methods implementing the Shape interface
-
-	
-
-	// ===================================================================
-	// Methods implementing the Object interface
 
 	@Override
 	public String toString() {
@@ -379,8 +411,4 @@ public class LineSegment2D {
 		return points;
 	}
 
-	
-
-	
-	
 }

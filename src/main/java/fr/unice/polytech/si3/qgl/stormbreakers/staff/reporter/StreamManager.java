@@ -103,14 +103,17 @@ public class StreamManager implements PropertyChangeListener {
         if(this.thereIsObstacleBetween(depart, destination)){
             OceanEntity obstacleEntity= this.firstObstacleBetween(depart, destination);
             if(obstacleEntity.getType().equals("stream")){
-                
+                Courant courant=(Courant)obstacleEntity;
+                if(!courant.isCompatibleWith(depart, destination)){
+                    return courant.avoidHit(depart, destination);
+                }
             }
             else{//reef
-                //return obstacleEntity.avoidPoint(depart, destination);
+                return obstacleEntity.avoidHit(depart, destination);
             }
         }
         
-        return List.of(depart,destination);// TODO
+        return List.of(depart,destination);
     }
 
     /**
@@ -124,7 +127,7 @@ public class StreamManager implements PropertyChangeListener {
         if (optCourant.isPresent()) {
             var courant = optCourant.get();
             if (courant.isCompatibleWith(depart, destination) || courant.getStrength() <= 50.0) {
-                // TODO split this condition in completelyCompatible and partiallyCompatible
+                // LATER split this condition in completelyCompatible and partiallyCompatible
                 // Or simply implement a weighted graph
                 return List.of(depart, destination);
             }

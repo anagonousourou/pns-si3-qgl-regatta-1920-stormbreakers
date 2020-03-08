@@ -16,12 +16,11 @@ import fr.unice.polytech.si3.qgl.stormbreakers.math.Surface;
   @JsonSubTypes.Type(value = Recif.class, name="reef")
 })
 
-public abstract class OceanEntity implements Surface{
+public abstract class OceanEntity implements Surface {
   private String type;
   protected Position position;
   protected Shape shape;
 
-  
   @JsonCreator
   OceanEntity(@JsonProperty("type") String type, @JsonProperty("postion") Position position,
       @JsonProperty("shape") Shape shape) {
@@ -51,9 +50,8 @@ public abstract class OceanEntity implements Surface{
   }
 
   @Override
-  public double y(){
+  public double y() {
     return this.position.y();
   }
 
-  
 }
