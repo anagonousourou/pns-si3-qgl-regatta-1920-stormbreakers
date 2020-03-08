@@ -51,7 +51,7 @@ public class Vector {
      * @param other 2e vecteur
      * @return double entre 0 et Pi
      */
-    public double angleBetween(Vector other) {
+    public double nonOrientedAngleWith(Vector other) {
         return Math.acos(this.scal(other) / (this.norm() * other.norm()));
     }
 
@@ -76,9 +76,23 @@ public class Vector {
         return new Vector(dx *scaleFactor, dy *scaleFactor);
     }
 
+    /**
+     * Returns vector orientation in radians
+     * Bounds : [0,2Pi]
+     * @return
+     */
+    public double getOrientation() {
+        // TODO: 08/03/2020 Tests
+        double orientedAngle = Math.atan2(dy,dx);
+        if (orientedAngle<0) {
+            orientedAngle += 2*Math.PI;
+        }
+        return orientedAngle;
+    }
+
     public Vector getRotatedBy(double angle) {
         double magnitude = this.norm();
-        double previousAngle = this.angleBetween(UnitX); // TODO: 08/03/2020 Urgent Testing
+        double previousAngle = this.getOrientation(); // TODO: 08/03/2020 Urgent Testing
         Vector newUnitRotatedVector = Vector.createUnitVector(previousAngle+angle);
         return newUnitRotatedVector.scaleVector(magnitude);
     }
@@ -89,6 +103,10 @@ public class Vector {
         return this.scaleVector(ratio);
     }
 
+    @Override
+    public String toString() {
+        return String.format("(%f,%f)",dx,dy);
+    }
 
     @Override
     public boolean equals(Object obj) {

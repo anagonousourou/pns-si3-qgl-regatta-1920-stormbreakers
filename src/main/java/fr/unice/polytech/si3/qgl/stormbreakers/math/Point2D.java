@@ -42,7 +42,7 @@ public class Point2D implements IPoint{
         Vector unitX = new Vector(1, 0);
         Vector toPoint = new Vector(this.x, this.y);
         // Renvoie un angle entre [0,Pi]
-        double unorientedAngle = unitX.angleBetween(toPoint);
+        double unorientedAngle = unitX.nonOrientedAngleWith(toPoint);
 
         if (x == 0 && y == 0) {
             // L'angle n'est pas définit
