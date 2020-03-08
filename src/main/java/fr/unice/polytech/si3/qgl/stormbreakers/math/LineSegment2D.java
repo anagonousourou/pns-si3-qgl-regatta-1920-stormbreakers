@@ -70,9 +70,9 @@ public class LineSegment2D {
 	 * @return if exists the intersection point
 	 * @author David Lebrisse - Stormbreakers
      */
-    public Optional<Point2D> intersection(LineSegment2D line2) {
+    public Optional<Point2D> intersection(LineSegment2D other) {
         Line2D thisSupport = this.getSupportingLine();
-        Line2D otherSupport = line2.getSupportingLine();
+        Line2D otherSupport = other.getSupportingLine();
 
         Optional<Point2D> lineIntersectionOpt = thisSupport.intersect(otherSupport);
 
@@ -80,7 +80,7 @@ public class LineSegment2D {
         	// Supporting lines collide
         	Point2D lineIntersection = lineIntersectionOpt.get();
 
-        	if (this.isCollinearPointOnSegment(lineIntersection)) {
+        	if (this.isCollinearPointOnSegment(lineIntersection) && other.isCollinearPointOnSegment(lineIntersection)) {
         		// The collision point is on this segment
 				// -> collision point
         		return lineIntersectionOpt;
@@ -223,6 +223,7 @@ public class LineSegment2D {
 	}
 
 	public boolean contains(Point2D point2D) {
+		// TODO: 08/03/2020 Tests
 		// Compute distance between segment and point
 		double distance = this.distance(point2D);
 		return Utils.almostEquals(0,distance);
@@ -343,6 +344,7 @@ public class LineSegment2D {
 
 	@Override
 	public boolean equals(Object obj) {
+		// // TODO: 08/03/2020 Add tests for equals
 		if (this == obj)
 			return true;
 		if (!(obj instanceof LineSegment2D))

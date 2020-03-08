@@ -109,6 +109,15 @@ public class LineSegment2DTest {
 		assertEquals(new Point2D(3, 3), intersection56Opt.get());
 		assertTrue(intersection65Opt.isPresent());
 		assertEquals(new Point2D(3, 3), intersection65Opt.get());
+
+
+		// Test when two non intersection parallel line segments
+		LineSegment2D baseSegment = new LineSegment2D(new Point2D(4,4),new Point2D(4,8));
+		LineSegment2D parallelSegment1 = new LineSegment2D(new Point2D(10,4), new Point2D(10,8)); // Parallel line
+		LineSegment2D parallelSegment2 = new LineSegment2D(new Point2D(4,10),new Point2D(4,20)); // Same line
+		assertTrue(baseSegment.intersection(parallelSegment1).isEmpty());
+		assertTrue(baseSegment.intersection(parallelSegment2).isEmpty());
+		assertTrue(parallelSegment1.intersection(parallelSegment2).isEmpty());
 	}
 
 	
