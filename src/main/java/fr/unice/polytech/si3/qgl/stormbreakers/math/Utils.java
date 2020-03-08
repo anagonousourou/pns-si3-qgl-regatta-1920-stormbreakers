@@ -4,35 +4,57 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.IPoint;
-
 public class Utils {
-    // TODO: 05/03/2020 Test All
 
+
+    private Utils(){
+
+    }
     public static final double EPS = 0.001;
     public static final double MAX_RUDDER_ROTATION = Math.PI / 4;
     public static final double TAILLE_BATEAU = 50;
 
-    private Utils() {
-
-    }
-
     public static final double EPSILON = Math.pow(10, -10);
-
+    public static final double EPSILON_COLLISION = 2 * Math.pow(10, -2);
     public static boolean almostEquals(double expected, double result) {
         return Math.abs(expected - result) < EPSILON;
     }
 
+    /**
+     * Boolean function analog to JUnit <code>assertEquals(double expected, double actual, double delta)</code>
+     * without allowing bounds
+     * Bounds : actual-delta, actual+delta
+     * @param expected expected value
+     * @param result actual value
+     * @param eps delta
+     * @return true if almost equal, false if not
+     */
+    // LATER: 08/03/2020 Replace all tests usage by : assertEquals(double expected, double actual, double delta)
     public static boolean almostEquals(double expected, double result, double eps) {
-        return Math.abs(expected - result) < eps;
+        return Math.abs(expected - result) < (Math.abs(eps) - EPSILON);
     }
 
-    public static boolean almostOrPerfectlyEquals(double expected, double result, double eps) {
+
+    /**
+     * Boolean function analog to JUnit <code>assertEquals(double expected, double actual, double delta)</code>
+     * allowing bounds
+     * Bounds : actual-delta, actual+delta
+     * @param expected expected value
+     * @param result actual value
+     * @param eps delta
+     * @return true if almost equal, false if not
+     */
+    // LATER: 08/03/2020 Replace all tests usage by : assertEquals(double expected, double actual, double delta)
+    public static boolean almostEqualsBoundsIncluded(double expected, double result, double eps) {
         return Math.abs(expected - result) <= eps;
     }
 
-    public static boolean almostEquals(IPoint expected, IPoint result) {
-        return result.distanceTo(expected) < EPSILON;
+    public static boolean almostEqualsBoundsIncluded(double expected, double result) {
+        return Math.abs(expected - result) <= EPSILON;
+    }
+
+    public static boolean almostEquals(Point2D expected, Point2D result) {
+        return result.distanceTo(expected) <= EPSILON;
     }
 
     /**
@@ -42,6 +64,9 @@ public class Utils {
      * @return true if condition is verified
      */
     public static boolean within(double value,double bound){
+    	if(bound < 0) {
+    		return false;
+    	}
         return Math.abs(value)<=bound;
     }
 

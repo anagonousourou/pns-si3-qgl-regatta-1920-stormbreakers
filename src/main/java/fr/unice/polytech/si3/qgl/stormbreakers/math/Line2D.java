@@ -13,7 +13,7 @@ public class Line2D {
 
     private EquationDroite equationDroite;
 
-    /** Defines a new Straight line going through the two given points. */
+    /** Defines a new Straight line going through (x0,y0) with direction (dx,dy) */
     public Line2D(double x0, double y0, double dx, double dy) {
         this(new Point2D(x0,y0),new Vector(dx,dy));
     }
@@ -25,6 +25,8 @@ public class Line2D {
 
     /** Defines a new Straight line going through anchor with a given direction. */
     public Line2D(Point2D anchor, Vector direction) {
+        if (Utils.almostEquals(0.0,direction.norm())) throw new DegeneratedLine2DException("Cannot create line with direction set to null vector");
+
         if (Utils.almostEquals(direction.getDeltaX(),0)) {
             // We have a vertical line
             this.direction = verticalDirection;
@@ -43,27 +45,25 @@ public class Line2D {
 
     /**
      * Computes the <i>line parameter</i> of the point given by (x,y) for this line
-     * The position is the number t such that if the point belong to the line,
-     * its location is given by x=x0+t*dx and y=y0+t*dy.
+     * The position is the number k such that if the point belong to the line,
+     * its location is given by x=x0+k*dx and y=y0+k*dy.
      * Note: The point needs to be on the line.
+     * @author David Lebrisse - Stormbreakers
      */
-    public double lineParametorOf(double x, double y) {
-        double dx = direction.getDeltaX();
-        double dy = direction.getDeltaY();
-
-        double denom = dx * dx + dy * dy;
-
-        if (Math.abs(denom) < LineSegment2D.ACCURACY)
-            throw new DegeneratedLine2DException("");
-
-        double x0 = anchor.x();
-        double y0 = anchor.y();
-        return ((y - y0) * dy + (x - x0) * dx) / denom;
+    public double lineParameterOf(double x, double y) {
+        return lineParameterOf(new Point2D(x,y));
     }
 
-    public double lineParametorOf(Point2D P) {
-        // TODO: 05/03/2020 Tests if not any
-        return lineParametorOf(P.x(),P.y());
+    /**
+     * Computes the <i>line parameter</i> of the given point P for this line
+     * The parameter is the number k such that if the point belong to the line,
+     * its location is given by P(k)=P0+k*direction, where P0 is the anchor.
+     * Note: The point needs to be on the line.
+     * @author David Lebrisse - Stormbreakers
+     */
+    public double lineParameterOf(Point2D P) {
+        Vector relativeTranslation = new Vector(anchor,P);
+        return relativeTranslation.norm() / direction.norm();
     }
 
     /**
@@ -71,21 +71,22 @@ public class Line2D {
      * x=x0+lineParameter*dx
      * y=y0+lineParameter*dy
      * @return the projection
+     * @author David Lebrisse - Stormbreakers
      */
-    public Point2D point(double lineParameter) {
+    public Point2D pointFromLineParameter(double lineParameter) {
         double x0 = anchor.x();
         double y0 = anchor.y();
 
         double dx = direction.getDeltaX();
         double dy = direction.getDeltaY();
 
-        lineParameter = Math.min(Math.max(lineParameter, 0), 1);
         return new Point2D(x0 + dx * lineParameter, y0 + dy * lineParameter);
     }
 
     /**
      * Computes the projection on the line of the point given by (x,y).
      * @return Point2D resulting from the projection
+     * @author David Lebrisse - Stormbreakers
      */
     public Point2D projectOnto(Point2D pointToProject) {
         Point2D projectionPoint;
@@ -103,9 +104,9 @@ public class Line2D {
      * Computes the intersection point between this line and a given one
      * @param other second line
      * @return if it exists, the intersection point
+     * @author David Lebrisse - Stormbreakers
      */
     public Optional<Point2D> intersect(Line2D other) {
-        // TODO: 05/03/2020 Tests
         if (this.isVerticalLine() && other.isVerticalLine()) {
             // Both vertical
             if (this.anchor.x() == other.anchor.x()) {
@@ -130,18 +131,28 @@ public class Line2D {
 
         else {
             // Both are non vertical lines
-            EquationDroite eq1 = this.equationDroite;
-            EquationDroite eq2 = other.equationDroite;
+            Vector thisDirection = this.direction;
+            Vector otherDirection = other.direction;
+            if (Vector.areCollinear(thisDirection,otherDirection)){
+                // Lines are parallel
+                return Optional.empty();
+            } else {
+                // Lines are intersecting
+                EquationDroite eq1 = this.equationDroite;
+                EquationDroite eq2 = other.equationDroite;
 
-            // On cherche x t.q. : y1(x) = y2(x)
-            //  soit : a1*x+b1 = a2*x+b2
-            //  d'où : (a1-a2) * x = (b2-b1)
-            // On obtiens : x = (b2-b1)/(a1-a2)
-            double intersectionX = eq1.findCommonSolution(eq2);
-            double intersectionY = eq2.evalY(intersectionX);
+                // On cherche x t.q. : y1(x) = y2(x)
+                //  soit : a1*x+b1 = a2*x+b2
+                //  d'où : (a1-a2) * x = (b2-b1)
+                // On obtiens : x = (b2-b1)/(a1-a2)
+                double intersectionX = eq1.findCommonSolution(eq2);
+                double intersectionY = eq2.evalY(intersectionX);
 
-            Point2D intersection = new Point2D(intersectionX,intersectionY);
-            return Optional.of(intersection);
+                Point2D intersection = new Point2D(intersectionX,intersectionY);
+                return Optional.of(intersection);
+            }
+
+
         }
     }
 
@@ -151,8 +162,7 @@ public class Line2D {
      * @return the computed distance
      */
     public double distance(Point2D P) {
-        // TODO: 05/03/2020 Tests
-        return new Vector(P,this.projectOnto(P)).norm();
+        return P.distanceTo(this.projectOnto(P));
     }
 
     public Vector getDirection() {
@@ -160,7 +170,13 @@ public class Line2D {
     }
 
     public Vector getNormalizedDirection() {
-        // TODO: 05/03/2020 Tests
         return getDirection().normalize();
     }
+
+    public boolean contains(Point2D point2D) {
+        double distance = distance(point2D);
+        return Utils.almostEquals(0,distance);
+    }
+
+    // LATER: 07/03/2020 Equals && hashcode ?
 }

@@ -1,6 +1,5 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.math;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -150,7 +149,7 @@ public class SurfaceTest {
 
 		// test Circle
 
-		assertTrue(avoidHitCircleHelper(surfaceCircle, depart, d3));
+		assertTrue(avoidHitRectangleHelper(surfaceCircle, depart, d3));
 
 	}
 
@@ -168,29 +167,5 @@ public class SurfaceTest {
 		return true;
 	}
 
-	private boolean avoidHitCircleHelper(Surface surface,Position depart, Position destination) {
-		IPoint thisPoint = new Point2D(surface.x(), surface.y());
-		List<IPoint> list = surface.avoidHit(depart, destination);
-		list.add(0, depart);
-		list.add(destination);
-		for (int i = 0; i < list.size() - 1; i++) {
-			LineSegment2D l = surface.getSegmentLineTranslation(list.get(i), list.get(i + 1), thisPoint);
-			if (surface.intersectsWith(l)) {
-				return false;
-			}
-		}
-		return true;
-	}
-
-	@Test
-	public void testgetSegmentLineTranslation() {
-		IPoint depart = new Point2D(5, 5);
-		IPoint destination = new Point2D(-10, -10);
-		IPoint thisPoint = new Point2D(s.x(), s.y());
-		assertEquals(s.getSegmentLineTranslation(depart, destination, thisPoint).firstPoint().x(), (-995));
-		assertEquals(s.getSegmentLineTranslation(depart, destination, thisPoint).firstPoint().y(), (-495));
-
-		assertEquals(s.getSegmentLineTranslation(depart, destination, thisPoint).lastPoint().x(), (-1010));
-		assertEquals(s.getSegmentLineTranslation(depart, destination, thisPoint).lastPoint().y(), (-510));
-	}
+	
 }

@@ -25,12 +25,17 @@ public class Vector {
         this(toCopy.dx,toCopy.dy);
     }
 
+    public static boolean areCollinear(Vector vector1, Vector vector2) {
+        // Z component of cross product
+        double crossZ = vector1.dx * vector2.dy - vector2.dx * vector1.dy;
+        return Utils.almostEquals(0,crossZ);
+    }
+
     public double norm() {
         return Math.sqrt(dx * dx + dy * dy);
     }
 
     public double squaredNorm() {
-        // TODO: 05/03/2020 Tests
         return this.scal(this);
     }
 
@@ -50,7 +55,7 @@ public class Vector {
      * @param other 2e vecteur
      * @return double entre 0 et Pi
      */
-    public double angleBetween(Vector other) {
+    public double nonOrientedAngleWith(Vector other) {
         return Math.acos(this.scal(other) / (this.norm() * other.norm()));
     }
 
@@ -75,20 +80,31 @@ public class Vector {
         return new Vector(dx *scaleFactor, dy *scaleFactor);
     }
 
+    /**
+     * Returns vector orientation in radians
+     * Bounds : [0,2Pi]
+     * @return the angle from the x unitVector
+     */
+    public double getOrientation() {
+        double orientedAngle = Math.atan2(dy,dx);
+        if (orientedAngle<0) {
+            orientedAngle += 2*Math.PI;
+        }
+        return orientedAngle;
+    }
+
     public Vector getRotatedBy(double angle) {
         double magnitude = this.norm();
-        double previousAngle = this.angleBetween(UnitX);
+        double previousAngle = this.getOrientation();
         Vector newUnitRotatedVector = Vector.createUnitVector(previousAngle+angle);
         return newUnitRotatedVector.scaleVector(magnitude);
     }
 
     public Vector normalize() {
-        // TODO: 05/03/2020 Tests
         double magnitude = this.norm();
         double ratio = Math.pow(magnitude,-1);
         return this.scaleVector(ratio);
     }
-
 
     @Override
     public boolean equals(Object obj) {

@@ -39,7 +39,7 @@ public class Polygon extends Shape implements CanCollide, Orientable {
      * @return List of the shape borders as LineSegment2D
      */
     private List<LineSegment2D> generateBorders() {
-        List<LineSegment2D> borders = new ArrayList<>();
+        List<LineSegment2D> cotes = new ArrayList<>();
         Iterator<Point2D> it = vertices.iterator();
 
         Point2D lastPoint = null;
@@ -47,31 +47,34 @@ public class Polygon extends Shape implements CanCollide, Orientable {
             lastPoint = it.next();
         while (it.hasNext()) {
             Point2D currentPoint = it.next();
-            borders.add(new LineSegment2D(lastPoint, currentPoint));
+            cotes.add(new LineSegment2D(lastPoint, currentPoint));
             lastPoint = currentPoint;
         }
 
-        return borders;
+        return cotes;
     }
 
     public List<LineSegment2D> generateBordersInThePlan(IPoint omegaPoint) {
-        List<LineSegment2D> borders = new ArrayList<>();
-        List<Point2D> vertices = this.getVertices().stream().map(point -> point.getTranslatedBy(omegaPoint.x(), omegaPoint.y()))
+        List<LineSegment2D> cotes = new ArrayList<>();
+        List<Point2D> sommets = this.getVertices().stream().map(point -> point.getTranslatedBy(omegaPoint.x(), omegaPoint.y()))
                 .collect(Collectors.toList());
 
-        vertices.add(vertices.get(0)); // Close the hull
+        
+         
 
-        Iterator<Point2D> it = vertices.iterator();
+        Iterator<Point2D> it = sommets.iterator();
         Point2D lastPoint = null;
         if (it.hasNext())
             lastPoint = it.next();
         while (it.hasNext()) {
             Point2D currentPoint = it.next();
-            borders.add(new LineSegment2D(lastPoint, currentPoint));
+            
+
+            cotes.add(new LineSegment2D(lastPoint, currentPoint));
             lastPoint = currentPoint;
         }
 
-        return borders;
+        return cotes;
     }
 
 
@@ -86,7 +89,7 @@ public class Polygon extends Shape implements CanCollide, Orientable {
      */
     @Override
     public boolean isPtInside(Point2D pointToTest) {
-        // TODO: 04/03/2020 Tests avec orientation
+        // LATER: 04/03/2020 Tests avec orientation
         Iterator<Point2D> it = vertices.iterator();
         Point2D lastPoint = null;
 
@@ -117,14 +120,14 @@ public class Polygon extends Shape implements CanCollide, Orientable {
     /**
      * Returns for a given vector AB the side to which the tested point T is
      * NB: Left and Right are determined by considering the Vector facing Front
-     * @param A start point of border
-     * @param B end point of border
+     * @param a start point of border
+     * @param b end point of border
      * @param T point to test
      * @return Side of the vector to which the point is
      */
-    private Side getPointSideComparedToBorder(Point2D A, Point2D B, Point2D T) {
-        Vector borderVector = new Vector(A,B);
-        Vector toCompare = new Vector(A,T);
+    private Side getPointSideComparedToBorder(Point2D a, Point2D b, Point2D t) {
+        Vector borderVector = new Vector(a,b);
+        Vector toCompare = new Vector(a,t);
 
         double scal = borderVector.scal(toCompare);
 
@@ -164,9 +167,14 @@ public class Polygon extends Shape implements CanCollide, Orientable {
         return "Polygon " + Logable.listToLogs(new ArrayList<>(vertices), " ", "", "");
     }
 
-    @Override
-    public List<IPoint> avoidPoint(IPoint depart, IPoint arrivee, IPoint shapePosition) {
-        // TODO Auto-generated method stub important
-        return List.of();
+    public double getMaxRadius(){
+        IPoint center=new Point2D(0,0);
+        var optfarPt= this.vertices.stream().max((a,b)->Double.compare(center.distanceTo(a),center.distanceTo(a)));
+        if(optfarPt.isPresent()){
+            return center.distanceTo(optfarPt.get());
+        }
+		return 0.0;
     }
+
+    
 }

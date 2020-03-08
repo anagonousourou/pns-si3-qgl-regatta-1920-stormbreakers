@@ -16,7 +16,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.exceptions.ImpossibleAngleError;
 public class Point2D implements Logable, IPoint{
     private double x;
     private double y;
-    private static final double EPS=0.0001;
+    
 
     @JsonCreator
     public Point2D(@JsonProperty("x") double x, @JsonProperty("y") double y) {
@@ -40,13 +40,13 @@ public class Point2D implements Logable, IPoint{
      * Donne l'angle entre l'axe x et le vecteur position retourne null si (0,0)
      * 
      * @return une angle entre ]-Pi,Pi]
-     * @throws if point is 0,0
+     * @throws ImpossibleAngleError if point is 0,0
      */
     public double getAngleFromXAxis() {
         Vector unitX = new Vector(1, 0);
         Vector toPoint = new Vector(this.x, this.y);
         // Renvoie un angle entre [0,Pi]
-        double unorientedAngle = unitX.angleBetween(toPoint);
+        double unorientedAngle = unitX.nonOrientedAngleWith(toPoint);
 
         if (x == 0 && y == 0) {
             // L'angle n'est pas définit
@@ -134,7 +134,7 @@ public class Point2D implements Logable, IPoint{
         if (!(obj instanceof Point2D))
             return false;
         Point2D other = (Point2D) obj;
-        return Math.abs(other.x - this.x)<=Point2D.EPS  && Math.abs(other.y - this.y)<=Point2D.EPS;
+        return Utils.almostEqualsBoundsIncluded(other.x,this.x,Utils.EPSILON_COLLISION) && Utils.almostEqualsBoundsIncluded(other.y,this.y,Utils.EPSILON_COLLISION);
     }
 
     @Override

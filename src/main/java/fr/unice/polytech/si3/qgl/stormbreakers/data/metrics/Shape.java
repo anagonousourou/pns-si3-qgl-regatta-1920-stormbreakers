@@ -1,11 +1,10 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.data.metrics;
 
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+
 import fr.unice.polytech.si3.qgl.stormbreakers.Logable;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
 
@@ -23,7 +22,8 @@ import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
         @JsonSubTypes.Type(value = Polygon.class, name="polygon")
 })
 public abstract class Shape implements Logable {
-    protected static Point2D origin = new Point2D(0,0);
+    protected static Point2D origin = new Point2D(0,0); // For internal context
+    protected static Position anchor; // For external context
     private String type;
 
     @JsonCreator
@@ -43,6 +43,6 @@ public abstract class Shape implements Logable {
      */
     public abstract boolean isPtInside(Point2D pt);
     
-    public abstract List<IPoint> avoidPoint(IPoint depart, IPoint arrivee,IPoint shapePosition) ;
+    
 
 }

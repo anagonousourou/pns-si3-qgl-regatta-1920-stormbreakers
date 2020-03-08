@@ -1,7 +1,5 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.data.metrics;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -123,11 +121,6 @@ public class Rectangle extends Shape {
    		return ptCp.x()>0 && ptCp.x()>ptBoat.x();
     }
 
-	@Override
-	public List<IPoint> avoidPoint(IPoint depart, IPoint arrivee,IPoint shapePosition) {
-		// TODO Auto-generated method stub
-		
-		return new ArrayList<IPoint>();
-	}
+	
 
 }

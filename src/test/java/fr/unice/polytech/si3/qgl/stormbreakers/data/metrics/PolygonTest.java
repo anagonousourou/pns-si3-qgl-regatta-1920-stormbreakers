@@ -28,7 +28,7 @@ class PolygonTest {
         Point2D rectD = new Point2D(10,-5);
         rectangle = new Polygon(0.0,List.of(rectA,rectB,rectC,rectD));
 
-        // TODO: 04/03/2020 Use more than rectangle
+        // LATER: 04/03/2020 Use more than rectangle
 
         Point2D triA = new Point2D(0,10);
         Point2D triB = new Point2D(-5,0);
@@ -61,7 +61,7 @@ class PolygonTest {
         assertTrue(rectangle.isPtInside(new Point2D(-10,0))); // Is on left edge
     }
 
-    // TODO: 04/03/2020 isPtInsideTestWhenOrientedPolygon
+    // LATER: 04/03/2020 isPtInsideTestWhenOrientedPolygon
 
     @Test
     void intersectsWithWhenNonOrientedPolygon() {
@@ -71,6 +71,6 @@ class PolygonTest {
         assertTrue(rectangle.intersectsWith(new LineSegment2D(new Point2D(-11,0),new Point2D(0,6)))); // Crosses both upper and left edges
     }
 
-    // TODO: 03/03/2020 Test intersectsWithWhenNonOrientedPolygonWhenOrientedPolygon
+    // LATER: 03/03/2020 Test intersectsWithWhenNonOrientedPolygonWhenOrientedPolygon
 
 }

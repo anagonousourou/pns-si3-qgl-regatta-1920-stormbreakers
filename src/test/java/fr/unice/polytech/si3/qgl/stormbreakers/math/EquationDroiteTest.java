@@ -47,9 +47,24 @@ public class EquationDroiteTest {
 
     @Test
     void findCommonSolutionTest() {
-		// TODO: 05/03/2020 Add tests
 		EquationDroite equationDroite1 = new EquationDroite(-3,5);
 		EquationDroite equationDroite2 = new EquationDroite(1.0/3.0,3);
 		assertEquals(3.0/5.0, equationDroite1.findCommonSolution(equationDroite2));
+
+
+		EquationDroite equationDroite3 = new EquationDroite(8,3);
+		EquationDroite equationDroite4 = new EquationDroite(12,3);
+		assertEquals(0.0, equationDroite3.findCommonSolution(equationDroite4),Utils.EPSILON);
+
+		EquationDroite equationDroite5 = new EquationDroite(0,3);
+		EquationDroite equationDroite6 = new EquationDroite(12,0);
+		assertEquals(0.25, equationDroite5.findCommonSolution(equationDroite6),Utils.EPSILON);
+		assertEquals(0.25, equationDroite6.findCommonSolution(equationDroite5),Utils.EPSILON);
+
+		EquationDroite equationDroite7 = new EquationDroite(8,3);
+		EquationDroite equationDroite8 = new EquationDroite(0,0);
+		assertEquals(-0.38, equationDroite7.findCommonSolution(equationDroite8),Utils.EPSILON_COLLISION);
+		assertEquals(-0.38, equationDroite8.findCommonSolution(equationDroite7),Utils.EPSILON_COLLISION);
+
 	}
 }

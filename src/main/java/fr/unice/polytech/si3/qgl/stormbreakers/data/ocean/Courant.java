@@ -35,7 +35,7 @@ public class Courant extends OceanEntity{
     }
 
     public Point2D closestPointTo(IPoint point2d) {
-        //TODO check for the type of shape before cast
+        //LATER check for the type of shape before cast
         var tmp=new RectanglePositioned((Rectangle) this.shape, this.position).closestPointTo(point2d);
         if(tmp.isPresent()){
             return tmp.get();
@@ -116,7 +116,7 @@ public class Courant extends OceanEntity{
 
     }
     /**
-     * TODO test
+     * LATER test
      * @param point
      * @return
      */

@@ -146,7 +146,7 @@ public class StreamManager implements PropertyChangeListener {
      */
     public List<IPoint> trajectoryBoatAndCheckpointInsideStream(Courant courant, IPoint boatPoint, IPoint checkPoint) {
         if (courant.isCompatibleWith(boatPoint, checkPoint) || courant.getStrength() <= 50.0) {
-            // TODO est-ce qu'on peut avoir un récif à l'intérieur d'un courant ?
+            // LATER est-ce qu'on peut avoir un récif à l'intérieur d'un courant ?
             return List.of(boatPoint, checkPoint);
         } else {
             return this.trajectoryLeaveStreamAndReachPoint(boatPoint, checkPoint);
@@ -179,7 +179,7 @@ public class StreamManager implements PropertyChangeListener {
                 return List.of(departPoint,destination);
             }
         }
-        return List.of(departPoint,destination);// TODO
+        return List.of(departPoint,destination);// LATER
     }
 
     

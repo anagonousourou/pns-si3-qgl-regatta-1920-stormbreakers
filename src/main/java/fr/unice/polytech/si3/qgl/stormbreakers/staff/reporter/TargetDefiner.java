@@ -59,7 +59,7 @@ public class TargetDefiner {
                             this.navigator.additionalOrientationNeeded(boat.getPosition(), trajectory.get(1)));
                 }
                 else{
-                    //TODO affiner en fonction de la force et la direction du courant
+                    //LATER affiner en fonction de la force et la direction du courant
                     return new TupleDistanceOrientation(boat.distanceTo(checkpoint.getPosition()),
                             navigator.additionalOrientationNeeded(boat.getPosition(), checkpoint));
                 }
@@ -72,7 +72,7 @@ public class TargetDefiner {
                             this.navigator.additionalOrientationNeeded(boat.getPosition(), trajectory.get(1)));
                 }
                 else{
-                    //TODO on devrait éviter d'en venir ici puisque si l'obstacle est un récif ou un 
+                    //LATER on devrait éviter d'en venir ici puisque si l'obstacle est un récif ou un 
                     //courant trop fort on n'arrivera jamais à destination
                     return new TupleDistanceOrientation(boat.distanceTo(checkpoint.getPosition()),
                             navigator.additionalOrientationNeeded(boat.getPosition(), checkpoint));

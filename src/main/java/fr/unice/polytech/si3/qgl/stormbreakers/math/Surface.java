@@ -10,9 +10,10 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Polygon;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Rectangle;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Shape;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Recif;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.processing.Logger;
 
 public interface Surface extends IPoint, Orientable {
-	
 
 	public Shape getShape();
 
@@ -50,22 +51,7 @@ public interface Surface extends IPoint, Orientable {
 		return this.intersectsWith(segment2d);
 
 	}
-
-	/**
-	 * This methode must return the point to aim for so that you can go from depart
-	 * to destination such that you will avoid Surface of course an effort must be
-	 * made to reduce the distance to go round the surface We assume that the
-	 * SegmentLine formed by [depart,destination] intersects With the surface
-	 * 
-	 * @param depart
-	 * @param destination
-	 * @return
-	 */
-	public default IPoint avoidPoint(IPoint depart, IPoint destination) {
-		// LATER
-		return null;
-	}
-
+	
 	/**
 	 * This methode must return the point to aim for so that you can go from depart
 	 * to destination such that you will avoid Surface of course an effort must be
@@ -78,84 +64,88 @@ public interface Surface extends IPoint, Orientable {
 	public default List<IPoint> avoidHit(IPoint depart, IPoint destination) {
 		// LATER
 		if (this.getShape().getType().equals("rectangle")) {
-			return this.avoidHitRectangle(depart, destination);
+			return Surface.avoidHitRectangle(this, depart, destination);
 		} else if (this.getShape().getType().equals("circle")) {
-			return this.avoidHitCircle(depart, destination);
+			Position position = new Position(this.x(), this.y());
+			Circle c = (Circle) this.getShape();
+			Recif recif = new Recif(position, new Rectangle(c.getRadius() * 2, c.getRadius() * 2, 0));
+			return Surface.avoidHitRectangle(recif, depart, destination);
 		} else {
-			IPoint thisPoint = new Position(this.x(), this.y());
-			return getShape().avoidPoint(depart, destination, thisPoint);
+			Polygon polygon = (Polygon) this.getShape();
+			double r = polygon.getMaxRadius();
+			Position position = new Position(this.x(), this.y());
+			Recif recif = new Recif(position, new Rectangle(r * 2, r * 2, 0));
+			return Surface.avoidHitRectangle(recif, depart, destination);
 		}
 	}
 
-	public default List<IPoint> avoidHitCircle(IPoint depart, IPoint destination) {
+	private static List<IPoint> avoidHitCircle(Surface self, IPoint depart, IPoint destination) {
 		List<IPoint> list = new ArrayList<>();
 
 		EquationDroite trajet = new EquationDroite(depart.x(), depart.y(), destination.x(), destination.y());
 
-		IPoint thisPoint = new Point2D(this.x(), this.y());
-		double intersectionCentreCercleEnX = trajet.evalY(this.x());
+		IPoint thisPoint = new Point2D(self.x(), self.y());
+		double intersectionCentreCercleEnX = trajet.evalY(self.x());
 		EquationDroite perpTrajet = trajet.findEqPerpendicularLineByPos(thisPoint);
 		double orientation = perpTrajet.orientationDroite();
 
-		Circle c = (Circle) this.getShape();
+		Circle c = (Circle) self.getShape();
 		double y;
 		double x;
-		if (intersectionCentreCercleEnX <= this.y()) {
-			y = this.y() - (c.getRadius() + Utils.TAILLE_BATEAU) * Math.sin(orientation);
+		if (intersectionCentreCercleEnX <= self.y()) {
+			y = self.y() - (c.getRadius() + Utils.TAILLE_BATEAU) * Math.sin(orientation);
 		} else {
-			y = this.y() + (c.getRadius() + Utils.TAILLE_BATEAU) * Math.sin(orientation);
+			y = self.y() + (c.getRadius() + Utils.TAILLE_BATEAU) * Math.sin(orientation);
 		}
 		x = perpTrajet.calculateValueX(y);
 		IPoint pt = new Point2D(x, y);
-		LineSegment2D sD = getSegmentLineTranslation(depart, pt, thisPoint);
+		LineSegment2D sD = Surface.getSegmentLineTranslation(depart, pt, thisPoint);
 
 		if (!c.intersect(sD).isEmpty()) {
-			list.addAll(avoidHitCircle(depart, pt));
+			list.addAll(Surface.avoidHitCircle(self, depart, pt));
 		}
-		
+
 		list.add(pt);
-		LineSegment2D sF = getSegmentLineTranslation(pt, destination, thisPoint);
+		LineSegment2D sF = Surface.getSegmentLineTranslation(pt, destination, thisPoint);
 		if (!c.intersect(sF).isEmpty()) {
-			list.addAll(avoidHitCircle(pt, destination));
+			list.addAll(Surface.avoidHitCircle(self, pt, destination));
 		} else {
-			System.out.println("notIntersect" + sF + "-" + c.toString());
+			Logger.getInstance().log("notIntersect" + sF + "-" + c.toString());
 		}
-		list.add(0,depart);
+		list.add(0, depart);
 		list.add(destination);
 		return list;
 
 	}
 
-	public default LineSegment2D getSegmentLineTranslation(IPoint dep, IPoint dest, IPoint p) {
+	private static LineSegment2D getSegmentLineTranslation(IPoint dep, IPoint dest, IPoint p) {
 		Point2D depart = new Point2D(dep.x() - p.x(), dep.y() - p.y());
 		Point2D destination = new Point2D(dest.x() - p.x(), dest.y() - p.y());
 		return new LineSegment2D(depart, destination);
 	}
 
-	public default List<IPoint> avoidHitRectangle(IPoint depart, IPoint destination) {
+	private static List<IPoint> avoidHitRectangle(Surface self, IPoint depart, IPoint destination) {
 
 		Point2D ptDest = new Point2D(destination);
 		Point2D ptDepart = new Point2D(depart);
-		Rectangle r = (Rectangle) this.getShape();
+		Rectangle r = (Rectangle) self.getShape();
 
-		Position ptThis = new Position(this.x(), this.y(), this.getOrientation());
+		Position ptThis = new Position(self.x(), self.y(), self.getOrientation());
 
-		RectanglePositioned rectPos = new RectanglePositioned(
-				new Rectangle(r.getWidth() + Utils.TAILLE_BATEAU, r.getHeight() + Utils.TAILLE_BATEAU, r.getOrientation()), ptThis);
+		RectanglePositioned rectPos = new RectanglePositioned(new Rectangle(r.getWidth() + Utils.TAILLE_BATEAU,
+				r.getHeight() + Utils.TAILLE_BATEAU, r.getOrientation()), ptThis);
 
 		Vector trajetVector = new Vector(depart, destination);
-		Optional<Point2D> firstPt = rectPos.corners().stream().filter(corner -> !this.intersectsWith(depart, corner))
+		Optional<Point2D> firstPt = rectPos.corners().stream().filter(corner -> !self.intersectsWith(depart, corner))
 				.max((a, b) -> Double.compare(trajetVector.scal(depart, a), trajetVector.scal(depart, b)));
 
 		if (firstPt.isPresent()) {
 			Point2D fpt = firstPt.get();
 			LineSegment2D ls1 = new LineSegment2D(destination, fpt);
 
-			if (this.intersectsWith(ls1)) {
-				var secondPt = rectPos.corners().stream()
-						.filter(corner -> !this.intersectsWith(corner, destination)
-								&& Point2D.ccw(ptDepart, fpt, ptDest) == Point2D.ccw(fpt, corner, ptDest))
-						.findAny();
+			if (self.intersectsWith(ls1)) {
+				var secondPt = rectPos.corners().stream().filter(corner -> !self.intersectsWith(corner, destination)
+						&& Point2D.ccw(ptDepart, fpt, ptDest) == Point2D.ccw(fpt, corner, ptDest)).findAny();
 				if (secondPt.isPresent()) {
 					return List.of(depart, fpt, secondPt.get(), destination);
 				}
