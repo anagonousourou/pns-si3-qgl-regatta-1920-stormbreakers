@@ -185,7 +185,7 @@ public class LineSegment2D {
 	 * @author David Lebrisse - Stormbreakers
 	 */
 	public double segmentParameterOf(Point2D P) {
-		// TODO: 07/03/2020 Implement
+		// TODO: 07/03/2020 Implement if time
 		return 0;
 	}
 
@@ -198,7 +198,7 @@ public class LineSegment2D {
 	 * @author David Lebrisse - Stormbreakers
 	 */
 	public Point2D pointFromSegmentParameter(double segmentParameter) {
-		// TODO: 06/03/2020 Implement
+		// TODO: 06/03/2020 Implement if time
 		return null;
 	}
 
