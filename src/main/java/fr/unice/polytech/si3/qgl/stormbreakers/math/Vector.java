@@ -38,6 +38,11 @@ public class Vector {
         return this.dx * other.dx + this.dy * other.dy;
     }
 
+    public double scal(IPoint startOtherVector,IPoint endOtherVector){
+        Vector otherVector=new Vector(startOtherVector, endOtherVector);
+        return this.scal(otherVector);
+    }
+
     /**
      * Renvoie la valeur absolue de l'angle non orienté entre les deux vecteurs
      * comprise entre [0,Pi]

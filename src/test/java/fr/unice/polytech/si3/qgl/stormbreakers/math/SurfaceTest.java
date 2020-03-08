@@ -19,14 +19,17 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Recif;
 
 public class SurfaceTest {
 	private Surface s;
-	private Surface s2;
+	private Surface surfaceCircle;
 	private Surface orientedSurface;
 	private Position depart;
 	private Position destination;
 	private Position d1;
 	private Position a1;
 	private Position d2;
+	private Position d3;
 	private Position a2;
+	
+	
 	private Rectangle rectangle;
 	private Rectangle rectangleOriented;
 	private Circle cercle;
@@ -46,14 +49,15 @@ public class SurfaceTest {
 		rectangle = new Rectangle(1000.0, 800.0, 0.0);
 		rectangleOriented=new Rectangle(500, 500, 0.78539);
 		orientedSurface= new Recif(new Position(1000, 500), rectangleOriented );
-		cercle = new Circle(50);
+		cercle = new Circle(300);
 		s = new Recif(new Position(1000, 500.0), rectangle);
-		s2 = new Recif(new Position(500, 0), cercle);
+		surfaceCircle = new Recif(new Position(1000, 500), cercle);
 		depart = new Position(0, 0);
 		destination = new Position(1200.0, 1200.0);
 		d1 = new Position(400, 900);
 		a1 = new Position(1500, 900);
 		d2 = new Position(300, 500);
+		d3 = new Position(1300, 800);
 		a2 = new Position(1800, 0);
 
 		triangle = new Surface() {
@@ -127,14 +131,16 @@ public class SurfaceTest {
 	}
 
 	@Test
-	public void avoidHitRectangleTest() {
+	public void avoidHitTest() {
 		// Test Rectangle
-
-		assertTrue(avoidHitRectangleHelper(s, depart, destination));
-		assertTrue(avoidHitRectangleHelper(s, destination, depart));
-		assertTrue(avoidHitRectangleHelper(s, d1, a1));
-		assertTrue(avoidHitRectangleHelper(s, d2, a2));
-		assertTrue(avoidHitRectangleHelper(s, a2, d2));
+		
+		assertTrue(avoidHitRectangleHelper(s,depart, destination));
+		assertTrue(avoidHitRectangleHelper(s,d1, a1));
+		assertTrue(avoidHitRectangleHelper(s,a1, d1));
+		assertTrue(avoidHitRectangleHelper(s,a2, d2));
+		assertTrue(avoidHitRectangleHelper(s,d2, a2));
+		assertTrue(avoidHitRectangleHelper(s,a2, d2));
+		
 		assertFalse(orientedSurface.isPtInside(d2));
 		assertFalse(orientedSurface.isPtInside(a2));
 		var segment = new LineSegment2D(a2, d2);
@@ -144,17 +150,17 @@ public class SurfaceTest {
 
 		// test Circle
 
+		assertTrue(avoidHitCircleHelper(surfaceCircle, depart, d3));
+
 	}
 
 	private boolean avoidHitRectangleHelper(Surface surface, Position depart, Position destination) {
 		List<IPoint> list = surface.avoidHit(depart, destination);
-		list.add(0, depart);
-		list.add(destination);
-		System.out.println("-----\n" + list + "\n-----");
+		
 		for (int i = 0; i < list.size() - 1; i++) {
 			LineSegment2D l = new LineSegment2D(list.get(i), list.get(i + 1));
 			if (surface.intersectsWith(l)) {
-				System.out.println(l);
+				
 				return false;
 			}
 
@@ -162,14 +168,14 @@ public class SurfaceTest {
 		return true;
 	}
 
-	private boolean avoidHitCircleHelper(Position depart, Position destination) {
-		IPoint thisPoint = new Point2D(s2.x(), s2.y());
-		List<IPoint> list = s2.avoidHit(depart, destination);
+	private boolean avoidHitCircleHelper(Surface surface,Position depart, Position destination) {
+		IPoint thisPoint = new Point2D(surface.x(), surface.y());
+		List<IPoint> list = surface.avoidHit(depart, destination);
 		list.add(0, depart);
 		list.add(destination);
 		for (int i = 0; i < list.size() - 1; i++) {
-			LineSegment2D l = s2.getSegmentLineTranslation(list.get(i), list.get(i + 1), thisPoint);
-			if (s.intersectsWith(l)) {
+			LineSegment2D l = surface.getSegmentLineTranslation(list.get(i), list.get(i + 1), thisPoint);
+			if (surface.intersectsWith(l)) {
 				return false;
 			}
 		}

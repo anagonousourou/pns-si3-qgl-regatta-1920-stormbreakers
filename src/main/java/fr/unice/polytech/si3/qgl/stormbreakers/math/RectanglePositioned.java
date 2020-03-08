@@ -13,13 +13,22 @@ public class RectanglePositioned {
     private LineSegment2D largeur2;
     private LineSegment2D longueur1;
     private LineSegment2D longueur2;
+    
+    private Point2D a;
+    private Point2D b;
+    private Point2D c;
+    private Point2D d;
 
     public RectanglePositioned(Rectangle rectangle, Position position) {
-
-        this.largeur1 = new LineSegment2D(pointA(rectangle, position), pointB(rectangle, position));
-        this.largeur2 = new LineSegment2D(pointC(rectangle, position), pointD(rectangle, position));
-        this.longueur1 = new LineSegment2D(pointD(rectangle, position), pointA(rectangle, position));
-        this.longueur2 = new LineSegment2D(pointB(rectangle, position), pointC(rectangle, position));
+    	a= pointA(rectangle, position);
+    	b=pointB(rectangle, position);
+    	c=pointC(rectangle, position);
+    	d=pointD(rectangle, position);
+        this.largeur1 = new LineSegment2D(a, b);
+        this.largeur2 = new LineSegment2D(c, d);
+        this.longueur1 = new LineSegment2D(d, a);
+        this.longueur2 = new LineSegment2D(b, c);
+       
 
     }
 
@@ -113,4 +122,20 @@ public class RectanglePositioned {
     }
 
 
+    
+    public Point2D getA() {
+		return a;
+	}
+    public Point2D getB() {
+  		return b;
+  	} 
+    public Point2D getC() {
+		return c;
+	}
+  	public Point2D getD() {
+		return d;
+	}
+  	public List<Point2D> corners(){
+  		return List.of(a,b,c,d); 
+  	}
 }

@@ -11,6 +11,7 @@ public class Utils {
 
     public static final double EPS = 0.001;
     public static final double MAX_RUDDER_ROTATION = Math.PI / 4;
+    public static final double TAILLE_BATEAU = 50;
 
     private Utils() {
 
