@@ -39,7 +39,6 @@ public class Circle extends Shape {
      * Note: The given line should be given relative to this shape's coordinates
      */
     public boolean intersects(LineSegment2D lineSegment2D){
-        // TODO: 05/03/2020 Tests
         Line2D support = lineSegment2D.getSupportingLine();
         double distanceToCenter = support.distance(origin);
         double delta = distanceToCenter - radius;
@@ -82,7 +81,7 @@ public class Circle extends Shape {
      * @return an intersection point if it exists
      */
     public Optional<Point2D> intersect(LineSegment2D lineSegment2D){
-        // TODO: 05/03/2020 Tests
+    	//TODO Test
         Line2D support = lineSegment2D.getSupportingLine();
         double distanceToCenter = support.distance(origin);
         double delta = distanceToCenter - radius;
@@ -145,7 +144,6 @@ public class Circle extends Shape {
      * @return the new point, on the edge of the shape
      */
     private Point2D projectOntoEdge(Point2D point2D) {
-        // TODO: 05/03/2020 Tests
         Vector fromCenterToPoint = new Vector(origin,point2D);
         double ratio = fromCenterToPoint.norm() / radius;
         Vector fromCenterToEdge = fromCenterToPoint.scaleVector(ratio);
@@ -202,7 +200,6 @@ public class Circle extends Shape {
      * @author David Lebrisse - Stormbreakers
      */
     Point2DPair findBothIntersectingPoints(Line2D line2D) {
-        // TODO: 05/03/2020 Tests
         Point2D originProjection = line2D.projectOnto(origin);
         Vector normalizedLineDirection = line2D.getDirection().normalize();
 
@@ -229,7 +226,6 @@ public class Circle extends Shape {
      * @author David Lebrisse - Stormbreakers
      */
     private Point2D findOneIntersection(LineSegment2D lineSegment2D) {
-        // TODO: 05/03/2020 Tests
         // Calcul de l'intersection par dichotomie
         Line2D support = lineSegment2D.getSupportingLine();
         Point2D start = lineSegment2D.firstPoint(); // Always inside the circle
