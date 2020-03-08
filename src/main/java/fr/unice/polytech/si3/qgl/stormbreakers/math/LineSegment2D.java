@@ -338,7 +338,7 @@ public class LineSegment2D {
 		Point2D from = firstPoint();
 		Point2D to = lastPoint();
 		double totalDistance = from.getDistanceTo(collinearPoint) + to.getDistanceTo(collinearPoint);
-		return Utils.almostOrPerfectlyEquals(this.length(),totalDistance);
+		return Utils.almostEqualsBoundsIncluded(this.length(),totalDistance);
 	}
 
 	// ===================================================================

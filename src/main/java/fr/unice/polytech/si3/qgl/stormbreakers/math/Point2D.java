@@ -142,7 +142,7 @@ public class Point2D implements IPoint{
         if (!(obj instanceof Point2D))
             return false;
         Point2D other = (Point2D) obj;
-        return Utils.almostOrPerfectlyEquals(other.x,this.x,Utils.EPSILON_COLLISION) && Utils.almostOrPerfectlyEquals(other.y,this.y,Utils.EPSILON_COLLISION);
+        return Utils.almostEqualsBoundsIncluded(other.x,this.x,Utils.EPSILON_COLLISION) && Utils.almostEqualsBoundsIncluded(other.y,this.y,Utils.EPSILON_COLLISION);
     }
 
     @Override

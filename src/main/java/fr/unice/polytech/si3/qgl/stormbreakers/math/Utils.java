@@ -20,16 +20,36 @@ public class Utils {
         return Math.abs(expected - result) < EPSILON;
     }
 
+    /**
+     * Boolean function analog to JUnit <code>assertEquals(double expected, double actual, double delta)</code>
+     * without allowing bounds
+     * Bounds : actual-delta, actual+delta
+     * @param expected expected value
+     * @param result actual value
+     * @param eps delta
+     * @return true if almost equal, false if not
+     */
+    // TODO: 08/03/2020 Replace all tests usage by : assertEquals(double expected, double actual, double delta)
     public static boolean almostEquals(double expected, double result, double eps) {
         return Math.abs(expected - result) < eps;
     }
 
-    // TODO: 07/03/2020 Change all almostOrPerfectlyEquals for almostEqualsBoundsIncluded
-    public static boolean almostOrPerfectlyEquals(double expected, double result, double eps) {
+
+    /**
+     * Boolean function analog to JUnit <code>assertEquals(double expected, double actual, double delta)</code>
+     * allowing bounds
+     * Bounds : actual-delta, actual+delta
+     * @param expected expected value
+     * @param result actual value
+     * @param eps delta
+     * @return true if almost equal, false if not
+     */
+    // TODO: 08/03/2020 Replace all tests usage by : assertEquals(double expected, double actual, double delta)
+    public static boolean almostEqualsBoundsIncluded(double expected, double result, double eps) {
         return Math.abs(expected - result) <= eps;
     }
 
-    public static boolean almostOrPerfectlyEquals(double expected, double result) {
+    public static boolean almostEqualsBoundsIncluded(double expected, double result) {
         return Math.abs(expected - result) <= EPSILON;
     }
 

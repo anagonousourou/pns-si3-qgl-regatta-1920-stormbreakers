@@ -46,7 +46,7 @@ public class Circle extends Shape {
         if (delta > 0) {
             // No collision
             return false;
-        } else if (Utils.almostOrPerfectlyEquals(0,delta)) {
+        } else if (Utils.almostEqualsBoundsIncluded(0,delta)) {
             // Line has only one intersection point
             // We need to compute said point
             Optional<Point2D> collisionPointOpt = this.intersect(support);
@@ -86,7 +86,7 @@ public class Circle extends Shape {
         Line2D support = lineSegment2D.getSupportingLine();
         double distanceToCenter = support.distance(origin);
         double delta = distanceToCenter - radius;
-        if (delta > 0 || Utils.almostOrPerfectlyEquals(0,delta)) {
+        if (delta > 0 || Utils.almostEqualsBoundsIncluded(0,delta)) {
             // Max 1 collision point
             Optional<Point2D> intersectionOpt = this.intersect(support);
             if (intersectionOpt.isPresent()) {
@@ -128,7 +128,7 @@ public class Circle extends Shape {
         if (delta > 0) {
             // No collision
             return Optional.empty();
-        } else if (Utils.almostOrPerfectlyEquals(0,delta)) {
+        } else if (Utils.almostEqualsBoundsIncluded(0,delta)) {
             // Only One Intersection
             Point2D linePoint = line2D.projectOnto(origin);
             return Optional.of(this.projectOntoEdge(linePoint));
@@ -242,7 +242,7 @@ public class Circle extends Shape {
             return end;
 
         Point2D testedPoint = new LineSegment2D(start,end).getMiddle();
-        while (! Utils.almostEquals(radius,this.distFromCenter(testedPoint)) && ! Utils.almostOrPerfectlyEquals(start.getDistanceTo(end),0.0,0.1)) {
+        while (! Utils.almostEquals(radius,this.distFromCenter(testedPoint)) && ! Utils.almostEqualsBoundsIncluded(start.getDistanceTo(end),0.0,0.1)) {
             double delta = distFromCenter(testedPoint)-radius;
             if (delta>0) {
                 // We're outside the circle -> try closer to radius
@@ -261,7 +261,7 @@ public class Circle extends Shape {
         }
 
         // We stopped looping
-        if (Utils.almostOrPerfectlyEquals(start.getDistanceTo(end),0.0,0.1)) {
+        if (Utils.almostEqualsBoundsIncluded(start.getDistanceTo(end),0.0,0.1)) {
             // because we found a close enough point
             return testedPoint;
         } else {
