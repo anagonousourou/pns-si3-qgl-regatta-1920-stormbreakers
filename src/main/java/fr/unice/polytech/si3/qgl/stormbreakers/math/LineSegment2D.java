@@ -69,6 +69,7 @@ public class LineSegment2D {
 
 		boolean b1 = Point2D.ccw(e1p1, e1p2, e2p1) * Point2D.ccw(e1p1, e1p2, e2p2) <= 0;
 		boolean b2 = Point2D.ccw(e2p1, e2p2, e1p1) * Point2D.ccw(e2p1, e2p2, e1p2) <= 0;
+		
 		return b1 && b2;
 	}
 
