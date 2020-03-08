@@ -1,7 +1,9 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.math;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Circle;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.IPoint;
@@ -10,7 +12,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Rectangle;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Shape;
 
 public interface Surface extends IPoint, Orientable {
-	static int TAILLE_BATEAU = 4;
+	static int TAILLE_BATEAU = 50;
 
 	public Shape getShape();
 
@@ -117,12 +119,13 @@ public interface Surface extends IPoint, Orientable {
 		Point2D ptDepart = new Point2D(depart.x(), depart.y());
 		Point2D ptDest = new Point2D(destination.x(), destination.y());
 		Point2D ptThis = new Point2D(this.x(), this.y());
-
+/*
 		Point2D PT_BD = new Point2D(heightRect + TAILLE_BATEAU, - widthtRect - TAILLE_BATEAU);
 		Point2D PT_BG = new Point2D( - heightRect - TAILLE_BATEAU, - widthtRect - TAILLE_BATEAU);
 		Point2D PT_HD = new Point2D( heightRect + TAILLE_BATEAU,  widthtRect + TAILLE_BATEAU);
 		Point2D PT_HG = new Point2D(- heightRect - TAILLE_BATEAU, widthtRect + TAILLE_BATEAU);
-		
+*/		
+		/*
 		PT_BD= PT_BD.getRotatedBy(orientation);
 		PT_HG= PT_HG.getRotatedBy(orientation);
 		PT_BG= PT_BG.getRotatedBy(orientation);		
@@ -132,19 +135,29 @@ public interface Surface extends IPoint, Orientable {
 		PT_BG= PT_BG.getTranslatedBy(ptThis.x(),ptThis.y());
 		PT_HD=PT_HD.getTranslatedBy(ptThis.x(),ptThis.y());
 		PT_HG= PT_HG.getTranslatedBy(ptThis.x(),ptThis.y());
+		*/
+		RectanglePositioned rectPos = new RectanglePositioned(new Rectangle(r.getWidth()+TAILLE_BATEAU, r.getHeight()+TAILLE_BATEAU, r.getOrientation()), ptThis);
+		Comparator<Point2D> compDepart= (a,b)-> Double.compare(a.distanceTo(ptDepart), b.distanceTo(ptDepart));
+		Comparator<Point2D> compDest= (a,b)-> Double.compare(a.distanceTo(ptDest), b.distanceTo(ptDest));
+		Optional<Point2D> firstPt= rectPos.listCornerRectangle().stream().min(compDepart.thenComparing(compDest));
 		
-		if(r.getOrientation()>0) {
-		System.out.println("PT_BD"+PT_BD);
-		System.out.println("PT_BG"+PT_BG);
-		System.out.println("PT_HD"+PT_HD);
-		System.out.println("PT_HG"+PT_HG);
+		LineSegment2D ls1 = new LineSegment2D(ptDepart, firstPt.get());
+		LineSegment2D ls2 = new LineSegment2D(firstPt.get(), ptDest);
+		if(this.intersectsWith(ls1)) {
+			/*Comparator<Point2D> compFirst= (a,b)-> Double.compare(a.distanceTo(firstPt.get()), b.distanceTo(firstPt.get()));
+			Optional<Point2D> secondPt= rectPos.listCornerRectangle().stream().filter(a-> !a.equals(firstPt.get())).min(compDepart.thenComparing(compDest));
+			list.add(secondPt.get());
+			list.add(firstPt.get());
+			*/
+		}else {
+			
 		}
-		
+		/*
 		ptDepart = ptDepart.getRotatedBy(-orientation);
 		ptDest = ptDest.getRotatedBy(-orientation);
 		ptThis = ptThis.getRotatedBy(-orientation);
-
-		
+		 */
+		/*
 		if (ptThis.y() + (widthtRect) < depart.y()||ptThis.y() + (widthtRect) < destination.y()) {
 			EquationDroite eq = new EquationDroite(ptDepart, ptDest);
 			double xonEq= eq.calculateValueX(ptThis.y());
@@ -183,7 +196,7 @@ public interface Surface extends IPoint, Orientable {
 				}
 			}
 			
-		}
+		}*/
 		return list;
 	}
 }
