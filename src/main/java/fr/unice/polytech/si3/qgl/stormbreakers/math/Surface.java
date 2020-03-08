@@ -113,21 +113,38 @@ public interface Surface extends IPoint, Orientable {
 		Double heightRect = (r.getHeight() / 2);
 		Double widthtRect = (r.getWidth() / 2);
 
-		double orientation = this.getOrientation();
+		double orientation = this.getOrientation()+r.getOrientation();
 		Point2D ptDepart = new Point2D(depart.x(), depart.y());
 		Point2D ptDest = new Point2D(destination.x(), destination.y());
 		Point2D ptThis = new Point2D(this.x(), this.y());
 
-		Point2D PT_BD = new Point2D(ptThis.x() + heightRect + TAILLE_BATEAU, ptThis.y() - widthtRect - TAILLE_BATEAU);
-		Point2D PT_BG = new Point2D(ptThis.x() - heightRect - TAILLE_BATEAU, ptThis.y() - widthtRect - TAILLE_BATEAU);
-		Point2D PT_HD = new Point2D(ptThis.x() + heightRect + TAILLE_BATEAU, ptThis.y() + widthtRect + TAILLE_BATEAU);
-		Point2D PT_HG = new Point2D(ptThis.x() - heightRect - TAILLE_BATEAU, ptThis.y() + widthtRect + TAILLE_BATEAU);
+		Point2D PT_BD = new Point2D(heightRect + TAILLE_BATEAU, - widthtRect - TAILLE_BATEAU);
+		Point2D PT_BG = new Point2D( - heightRect - TAILLE_BATEAU, - widthtRect - TAILLE_BATEAU);
+		Point2D PT_HD = new Point2D( heightRect + TAILLE_BATEAU,  widthtRect + TAILLE_BATEAU);
+		Point2D PT_HG = new Point2D(- heightRect - TAILLE_BATEAU, widthtRect + TAILLE_BATEAU);
 		
+		PT_BD= PT_BD.getRotatedBy(orientation);
+		PT_HG= PT_HG.getRotatedBy(orientation);
+		PT_BG= PT_BG.getRotatedBy(orientation);		
+		PT_HD= PT_HD.getRotatedBy(orientation);
+		
+		PT_BD= PT_BD.getTranslatedBy(ptThis.x(),ptThis.y());
+		PT_BG= PT_BG.getTranslatedBy(ptThis.x(),ptThis.y());
+		PT_HD=PT_HD.getTranslatedBy(ptThis.x(),ptThis.y());
+		PT_HG= PT_HG.getTranslatedBy(ptThis.x(),ptThis.y());
+		
+		if(r.getOrientation()>0) {
+		System.out.println("PT_BD"+PT_BD);
+		System.out.println("PT_BG"+PT_BG);
+		System.out.println("PT_HD"+PT_HD);
+		System.out.println("PT_HG"+PT_HG);
+		}
 		
 		ptDepart = ptDepart.getRotatedBy(-orientation);
 		ptDest = ptDest.getRotatedBy(-orientation);
 		ptThis = ptThis.getRotatedBy(-orientation);
 
+		
 		if (ptThis.y() + (widthtRect) < depart.y()||ptThis.y() + (widthtRect) < destination.y()) {
 			EquationDroite eq = new EquationDroite(ptDepart, ptDest);
 			double xonEq= eq.calculateValueX(ptThis.y());

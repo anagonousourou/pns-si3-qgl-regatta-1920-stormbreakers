@@ -25,6 +25,9 @@ public class SurfaceTest {
 	private Position a1;
 	private Position d2;
 	private Position a2;
+	private Position d3;
+	private Position a3;
+	
 	private Rectangle rectangle;
 	private Rectangle rectangleOriented;
 	private Circle cercle;
@@ -43,7 +46,9 @@ public class SurfaceTest {
 		a1 = new Position(1500, 900);
 		d2 = new Position(300, 500);
 		a2 = new Position(1800, 0);
-		
+
+		d3 = new Position(0, -750);
+		a3 = new Position(1500, 200);
 	}
 
 	@Test
@@ -51,10 +56,12 @@ public class SurfaceTest {
 		// Test Rectangle
 		
 		assertTrue(avoidHitRectangleHelper(s,depart, destination));
-		assertTrue(avoidHitRectangleHelper(s,destination, depart));
 		assertTrue(avoidHitRectangleHelper(s,d1, a1));
+		assertTrue(avoidHitRectangleHelper(s,a1, d1));
+		assertTrue(avoidHitRectangleHelper(s,a2, d2));
 		assertTrue(avoidHitRectangleHelper(s,d2, a2));
 		assertTrue(avoidHitRectangleHelper(s,a2, d2));
+		assertTrue(avoidHitRectangleHelper(s, d3, a3));
 		assertFalse(orientedSurface.isPtInside(d2));
 		assertFalse(orientedSurface.isPtInside(a2));
 		var segment=new LineSegment2D(a2, d2);
@@ -74,7 +81,7 @@ public class SurfaceTest {
 		List<IPoint> list = surface.avoidHit(depart, destination);
 		list.add(0, depart);
 		list.add(destination);
-		System.out.println("-----\n"+list+"\n-----");
+		System.out.println(list);
 		for (int i = 0; i < list.size() - 1; i++) {
 			LineSegment2D l =  new LineSegment2D(list.get(i), list.get(i + 1));
 			if (surface.intersectsWith(l)) {
