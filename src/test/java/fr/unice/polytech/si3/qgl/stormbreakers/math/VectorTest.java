@@ -98,7 +98,7 @@ class VectorTest {
         double angle = Math.toRadians(-30);
         Vector u = Vector.createUnitVector(angle);
         Vector ux = new Vector(1,0);
-        assertTrue(Utils.almostEquals( Math.abs(angle) , Math.abs(ux.nonOrientedAngleWith(u)),EPS));
+        assertTrue(Utils.almostEquals( Math.abs(angle) , Math.abs(ux.nonOrientedAngleWith(u))));
     }
 
     @Test
@@ -253,13 +253,13 @@ class VectorTest {
 
         // Premier quart
         assertEquals(0,new Vector(1,0).getOrientation());
-        assertEquals(Math.PI/6, new Vector(halfSqrt3,half1).getOrientation(),Utils.EPS);
-        assertEquals(Math.PI/4, new Vector(halfSqrt2,halfSqrt2).getOrientation(),Utils.EPS);
-        assertEquals(Math.PI/3, new Vector(half1,halfSqrt3).getOrientation(),Utils.EPS);
+        assertEquals(Math.PI/6, new Vector(halfSqrt3,half1).getOrientation(), EPS);
+        assertEquals(Math.PI/4, new Vector(halfSqrt2,halfSqrt2).getOrientation(), EPS);
+        assertEquals(Math.PI/3, new Vector(half1,halfSqrt3).getOrientation(), EPS);
         assertEquals(Math.PI/2, new Vector(0,1).getOrientation());
 
         // Second quart
-        assertEquals(3*Math.PI/4, new Vector(-halfSqrt2,halfSqrt2).getOrientation(),Utils.EPS);
+        assertEquals(3*Math.PI/4, new Vector(-halfSqrt2,halfSqrt2).getOrientation(), EPS);
         assertEquals(Math.PI, new Vector(-1,0).getOrientation());
 
         // Troisième quart

@@ -5,14 +5,9 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Utils {
-    // TODO: 05/03/2020 Test All
 
     public static final double EPS = 0.001;
     public static final double MAX_RUDDER_ROTATION = Math.PI / 4;
-
-    private Utils() {
-
-    }
 
     public static final double EPSILON = Math.pow(10, -10);
     public static final double EPSILON_COLLISION = 2 * Math.pow(10, -2);
@@ -31,7 +26,7 @@ public class Utils {
      */
     // TODO: 08/03/2020 Replace all tests usage by : assertEquals(double expected, double actual, double delta)
     public static boolean almostEquals(double expected, double result, double eps) {
-        return Math.abs(expected - result) < eps;
+        return Math.abs(expected - result) < (Math.abs(eps) - EPSILON);
     }
 
 
@@ -63,6 +58,9 @@ public class Utils {
      * @return true if condition is verified
      */
     public static boolean within(double value,double bound){
+    	if(bound < 0) {
+    		return false;
+    	}
         return Math.abs(value)<=bound;
     }
 
