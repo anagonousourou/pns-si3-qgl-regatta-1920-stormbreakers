@@ -83,4 +83,9 @@ public class Vector {
     public int hashCode() {
         return Objects.hash(x, y);
     }
+
+    @Override
+    public String toString() {
+        return String.format("%s(x: %f,y: %f)", this.getClass().getSimpleName(),this.x,this.y);
+    }
 }

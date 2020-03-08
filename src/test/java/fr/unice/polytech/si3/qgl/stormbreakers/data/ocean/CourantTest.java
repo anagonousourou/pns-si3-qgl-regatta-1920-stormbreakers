@@ -37,6 +37,16 @@ public class CourantTest {
 
     @Test
     void isCompletelyCompatibleWithTest(){
-        Courant courant=new Courant(new Position(,900, y),new Rectangle(300, 600, 0), 100);
+        Courant courant=new Courant(new Position(0,0),new Rectangle(300, 300, 0), 100);
+        assertTrue(courant.isCompletelyCompatibleWith(new Position(-150, -150), new Position(350, 350)));
+        assertFalse(courant.isCompletelyCompatibleWith(new Position(0, -200), new Position(0, 400)));
+    }
+
+    @Test
+    void isPartiallyCompatibleWithTest(){
+        Courant courant=new Courant(new Position(0,0,0.15),new Rectangle(300, 300, 0), 100);
+        assertFalse(courant.isCompletelyCompatibleWith(new Position(-200, 160), new Position(350, 77.5)));
+        assertTrue(courant.isPartiallyCompatibleWith(new Position(-200, 160), new Position(350, 77.5)));
+        assertTrue(courant.isCompatibleWith(new Position(-200, 160), new Position(350, 77.5)));
     }
 }

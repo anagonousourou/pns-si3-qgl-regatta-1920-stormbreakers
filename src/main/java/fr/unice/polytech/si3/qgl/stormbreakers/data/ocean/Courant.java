@@ -73,7 +73,7 @@ public class Courant extends OceanEntity{
         return helpness > Utils.EPSILON;
     }
     /**
-     * TODO test
+     * 
      * @param depart
      * @param destination
      * @return
@@ -82,16 +82,24 @@ public class Courant extends OceanEntity{
         Vector courantVector=Vector.createUnitVector( this.getPosition().getOrientation() );
         Vector courantComposantx= new Vector (courantVector.getDeltaX(), 0);
         Vector courantComposanty=new Vector(0, courantVector.getDeltaY());
+        
 
         Vector trajectoirVector= new Vector(depart, destination);
-        
-        return courantComposantx.scal(trajectoirVector) > Utils.EPSILON && courantComposanty.scal(trajectoirVector) > Utils.EPSILON;
+        double helpx=courantComposantx.scal(trajectoirVector);
+        double helpy=courantComposanty.scal(trajectoirVector);
+        if( Utils.within(helpx, Utils.EPSILON)){
+            return helpy> Utils.EPSILON;
+        }
+        else if(Utils.within(helpy, Utils.EPSILON)){
+            return helpx> Utils.EPSILON;
+        }
+        return  helpx> Utils.EPSILON &&  helpy> Utils.EPSILON;
 
 
     }
 
     /**
-     * TODO test
+     * 
      * @param depart
      * @param destination
      * @return

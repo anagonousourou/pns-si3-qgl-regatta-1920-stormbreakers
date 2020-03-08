@@ -79,9 +79,14 @@ public class StreamManager implements PropertyChangeListener {
     }
 
     public boolean thereIsObstacleBetween(IPoint position) {
-        LineSegment2D segment2d = new LineSegment2D(position, boat);
+        return this.thereIsObstacleBetween(this.boat, position);
+    }
+
+    public boolean thereIsObstacleBetween(IPoint depart, IPoint destination) {
+        LineSegment2D segment2d = new LineSegment2D(depart, destination);
         return this.obstacles.stream().anyMatch(obstacle -> obstacle.intersectsWith(segment2d));
     }
+
 
     /**
      * Lets define a trajectory as a list of points such that 1- the last point is
@@ -95,6 +100,16 @@ public class StreamManager implements PropertyChangeListener {
      * @return
      */
     public List<IPoint> trajectoryToAvoidObstacles(IPoint depart, IPoint destination) {
+        if(this.thereIsObstacleBetween(depart, destination)){
+            OceanEntity obstacleEntity= this.firstObstacleBetween(depart, destination);
+            if(obstacleEntity.getType().equals("stream")){
+                
+            }
+            else{//reef
+                //return obstacleEntity.avoidPoint(depart, destination);
+            }
+        }
+        
         return List.of(depart,destination);// TODO
     }
 
@@ -178,6 +193,30 @@ public class StreamManager implements PropertyChangeListener {
 
             var tmp = streamsOnTrajectory.stream()
                     .min((a, b) -> Double.compare(boat.distanceTo(a.getPosition()), boat.distanceTo(b.getPosition())));
+
+            if (tmp.isPresent()) {
+                return tmp.get();
+            } else {
+                // should never happen
+                return null;
+            }
+        }
+        return null;
+    }
+
+    public OceanEntity firstObstacleBetween(IPoint depart,IPoint destination) {
+        LineSegment2D segment2d = new LineSegment2D(destination, depart);
+        List<OceanEntity> obstaclesOnTrajectory = this.obstacles.stream().filter(obstacle -> obstacle.intersectsWith(segment2d))
+                .collect(Collectors.toList());
+
+        if (obstaclesOnTrajectory.size() == 1) {
+
+            return obstaclesOnTrajectory.get(0);
+        } else if (obstaclesOnTrajectory.size() > 1) {
+
+            var tmp = obstaclesOnTrajectory
+                    .stream()
+                    .min((a, b) -> Double.compare(depart.distanceTo(a.getPosition()), depart.distanceTo(b.getPosition())));
 
             if (tmp.isPresent()) {
                 return tmp.get();
