@@ -34,4 +34,9 @@ public class CourantTest {
         LineSegment2D othersegment=new LineSegment2D( Position.create(500, 500),Position.create(0, 900) );
         assertFalse(courant.intersectsWith(othersegment));
     }
+
+    @Test
+    void isCompletelyCompatibleWithTest(){
+        Courant courant=new Courant(new Position(,900, y),new Rectangle(300, 600, 0), 100);
+    }
 }
