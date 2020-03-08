@@ -136,7 +136,7 @@ public interface Surface extends IPoint, Orientable {
 			} else {
 				list.add(PT_HD);
 			}
-		} else if (ptThis.y() + (widthtRect) > depart.y()||ptThis.y() + (widthtRect) > destination.y())  {
+		} else if (ptThis.y() - (widthtRect) > depart.y()||ptThis.y() - (widthtRect) > destination.y())  {
 			EquationDroite eq = new EquationDroite(ptDepart, ptDest);
 			double xonEq= eq.calculateValueX(ptThis.y());
 			if (xonEq < ptThis.x()) {
