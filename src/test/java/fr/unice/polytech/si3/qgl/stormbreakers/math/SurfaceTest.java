@@ -35,8 +35,8 @@ public class SurfaceTest {
 		s2 = new Recif(new Position(0, 0), cercle);
 		depart = new Position(0, 0);
 		destination = new Position(1200.0, 1200.0);
-		d1 = new Position(-70, 20);
-		a1 = new Position(90, -40);
+		d1 = new Position(400, 900);
+		a1 = new Position(1500, 900);
 		d2 = new Position(-7, 7);
 		d3 = new Position(7, -7);
 	}
@@ -44,11 +44,10 @@ public class SurfaceTest {
 	@Test
 	public void avoidHitRectangleTest() {
 		// Test Rectangle
-		LineSegment2D l =  new LineSegment2D(new Position(496, 904),new Position(1200,1200));
-		//assertFalse(s.intersectsWith(l));
+		
 		assertTrue(avoidHitRectangleTest(depart, destination));
-		//assertTrue(avoidHitRectangleTest(destination, depart));
-		//assertTrue(avoidHitRectangleTest(d1, a1));
+		assertTrue(avoidHitRectangleTest(destination, depart));
+		assertTrue(avoidHitRectangleTest(d1, a1));
 		//assertTrue(avoidHitRectangleTest(d2, a1));
 		//assertTrue(avoidHitRectangleTest(a1, d2));
 		///assertTrue(avoidHitRectangleTest(d3, a1));

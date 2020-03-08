@@ -122,10 +122,7 @@ public interface Surface extends IPoint, Orientable {
 		Point2D PT_BG = new Point2D(ptThis.x() - heightRect - TAILLE_BATEAU, ptThis.y() - widthtRect - TAILLE_BATEAU);
 		Point2D PT_HD = new Point2D(ptThis.x() + heightRect + TAILLE_BATEAU, ptThis.y() + widthtRect + TAILLE_BATEAU);
 		Point2D PT_HG = new Point2D(ptThis.x() - heightRect - TAILLE_BATEAU, ptThis.y() + widthtRect + TAILLE_BATEAU);
-		System.out.println("PT_BD"+PT_BD);
-		System.out.println("PT_BG"+PT_BG);
-		System.out.println("PT_HD"+PT_HD);
-		System.out.println("PT_HG"+PT_HG);
+		
 		
 		ptDepart = ptDepart.getRotatedBy(-orientation);
 		ptDest = ptDest.getRotatedBy(-orientation);
