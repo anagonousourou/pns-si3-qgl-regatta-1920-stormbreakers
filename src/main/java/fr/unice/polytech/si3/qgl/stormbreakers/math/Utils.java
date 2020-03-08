@@ -48,8 +48,12 @@ public class Utils {
         return Math.abs(expected - result) <= EPSILON;
     }
 
-    public static boolean almostEquals(Point2D expected, Point2D result) {
-        return result.getDistanceTo(expected) < EPSILON;
+    public static boolean almostEquals(Point2D p1, Point2D p2) {
+        return p1.getDistanceTo(p2) < EPSILON;
+    }
+    
+    public static boolean almostEquals(Point2D p1, Point2D p2, double delta) {
+    	return p1.getDistanceTo(p2) < (Math.abs(delta) - EPSILON);
     }
     /**
      * Check if -bound <= value <= bound

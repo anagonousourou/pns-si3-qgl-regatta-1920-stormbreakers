@@ -13,7 +13,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.exceptions.ImpossibleAngleError;
 public class Point2D implements IPoint{
     private double x;
     private double y;
-    private static final double EPS=0.0001;
+    private static final double EPS = Utils.EPSILON_COLLISION;
 
     public Point2D(double x, double y) {
         this.x = x;
@@ -142,7 +142,7 @@ public class Point2D implements IPoint{
         if (!(obj instanceof Point2D))
             return false;
         Point2D other = (Point2D) obj;
-        return Utils.almostEqualsBoundsIncluded(other.x,this.x,Utils.EPSILON_COLLISION) && Utils.almostEqualsBoundsIncluded(other.y,this.y,Utils.EPSILON_COLLISION);
+        return Utils.almostEqualsBoundsIncluded(other.x,this.x, EPS) && Utils.almostEqualsBoundsIncluded(other.y,this.y, EPS);
     }
 
     @Override

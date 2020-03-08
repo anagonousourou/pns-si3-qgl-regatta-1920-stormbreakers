@@ -98,6 +98,26 @@ public class UtilsTest {
     }
     
     @Test
+    void almostEqualsPoints2DDeltaTest() {
+    	Point2D p1 = new Point2D(d1, d1);
+    	Point2D p2 = new Point2D(d0, d0);
+    	
+    	Point2D p3 = new Point2D(d6,  d6);
+    	Point2D p4 = new Point2D(d7,  d7);
+    	
+    	Point2D p5 = new Point2D(-d1,  -d1);
+    	Point2D p6 = new Point2D(d0,  d0);
+    	
+    	//Basic tests
+    	assertTrue(Utils.almostEquals(p1, p2, 0.000000001));
+    	assertTrue(Utils.almostEquals(p3, p4, 0.15));
+    	assertFalse(Utils.almostEquals(p5, p6, 0.1));
+    	
+    	//Strict test
+    	assertFalse(Utils.almostEquals(p3, p3, 0));
+    }
+    
+    @Test
     void withinTest() {
     	//Basic tests
     	assertTrue(Utils.within(d1, d0));

@@ -98,6 +98,7 @@ class VectorTest {
         double angle = Math.toRadians(-30);
         Vector u = Vector.createUnitVector(angle);
         Vector ux = new Vector(1,0);
+        
         assertTrue(Utils.almostEquals( Math.abs(angle) , Math.abs(ux.nonOrientedAngleWith(u))));
     }
 
