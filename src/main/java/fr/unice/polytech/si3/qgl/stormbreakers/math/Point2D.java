@@ -16,7 +16,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.exceptions.ImpossibleAngleError;
 public class Point2D implements Logable, IPoint{
     private double x;
     private double y;
-    
+    private static final double EPS = Utils.EPSILON_COLLISION;
 
     @JsonCreator
     public Point2D(@JsonProperty("x") double x, @JsonProperty("y") double y) {
@@ -117,7 +117,8 @@ public class Point2D implements Logable, IPoint{
      * @return Vector le vecteur
      */
     public Vector getVectorTo(Point2D other) {
-        return new Vector(x - other.x, y - other.y);
+        // TODO: 09/03/2020 Urgent Tests
+        return new Vector(other.x-this.x, other.y-this.y);
     }
 
     
@@ -134,7 +135,7 @@ public class Point2D implements Logable, IPoint{
         if (!(obj instanceof Point2D))
             return false;
         Point2D other = (Point2D) obj;
-        return Utils.almostEqualsBoundsIncluded(other.x,this.x,Utils.EPSILON_COLLISION) && Utils.almostEqualsBoundsIncluded(other.y,this.y,Utils.EPSILON_COLLISION);
+        return Utils.almostEqualsBoundsIncluded(other.x,this.x, EPS) && Utils.almostEqualsBoundsIncluded(other.y,this.y, EPS);
     }
 
     @Override

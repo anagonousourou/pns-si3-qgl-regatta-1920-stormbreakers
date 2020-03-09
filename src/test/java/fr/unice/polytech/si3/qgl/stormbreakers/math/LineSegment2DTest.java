@@ -9,6 +9,8 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class LineSegment2DTest {
+	
+	Double delta = Math.pow(10, -3);
 
 	@Test
 	void testCannotCreateLineSegmentOfVectorZeroDirection() {
@@ -201,7 +203,6 @@ public class LineSegment2DTest {
 		assertEquals(0.5,nonVerticalLineSegment.segmentParameterOf(nonVerticalLineSegment.getMiddle()),Utils.EPSILON);
 		assertEquals(1,nonVerticalLineSegment.segmentParameterOf(B),Utils.EPSILON);
 
-
 		Point2D C = new Point2D(6,42);
 		Point2D D = new Point2D(6,0);
 		LineSegment2D verticalLineSegment = new LineSegment2D(C,D);
@@ -210,35 +211,35 @@ public class LineSegment2DTest {
 		assertEquals(1,verticalLineSegment.segmentParameterOf(D),Utils.EPSILON);
 	}
 
-	@Test @Disabled
+	@Test
 	void pointFromSegmentParameterTest() {
 		Point2D A = new Point2D(42,9);
 		Point2D B = new Point2D(6,66);
 		LineSegment2D nonVerticalLineSegment = new LineSegment2D(A,B);
-		// LATER: 08/03/2020 Replace tests with Utils.almostEqual(Point2D P1, Point2D P2, double distanceDelta )
-		assertEquals(A,nonVerticalLineSegment.point(0));
-		assertEquals(nonVerticalLineSegment.getMiddle(),nonVerticalLineSegment.point(0.5));
-		assertEquals(B,nonVerticalLineSegment.point(1));
+		assertTrue(Utils.almostEquals(A, nonVerticalLineSegment.point(0), delta));
+		Point2D tmp1 = nonVerticalLineSegment.getMiddle();
+		Point2D tmp2 = nonVerticalLineSegment.point(0.5);
+		assertTrue(Utils.almostEquals(tmp1, tmp2, delta));
+		assertTrue(Utils.almostEquals(B,nonVerticalLineSegment.point(1), delta));
 
 		Point2D C = new Point2D(6,42);
 		Point2D D = new Point2D(6,0);
 		LineSegment2D verticalLineSegment = new LineSegment2D(C,D);
-		assertEquals(C,verticalLineSegment.point(0));
-		assertEquals(verticalLineSegment.getMiddle(),verticalLineSegment.point(0.5));
-		assertEquals(D,verticalLineSegment.point(1));
+		assertTrue(Utils.almostEquals(C,verticalLineSegment.point(0), delta));
+		assertTrue(Utils.almostEquals(verticalLineSegment.getMiddle(),verticalLineSegment.point(0.5), delta));
+		assertTrue(Utils.almostEquals(D,verticalLineSegment.point(1), delta));
 	}
 
-	@Test @Disabled
+	@Test
 	void testSegmentParameterReciprocity() {
 		LineSegment2D lineSegment2D = new LineSegment2D(new Point2D(5,10),new Point2D(10,5));
 		double step = 0.25;
 		for (double k = 0; k<=1; k+=step){
 			assertEquals(k, lineSegment2D.segmentParameterOf(lineSegment2D.point(k)),Utils.EPSILON);
 		}
-		// LATER: 08/03/2020 Replace tests with Utils.almostEqual(Point2D P1, Point2D P2, double distanceDelta )
 		for (double n=0; n<=1; n+=step){
 			Point2D point2D = lineSegment2D.point(n);
-			assertEquals(point2D, lineSegment2D.point(lineSegment2D.segmentParameterOf(point2D)));
+			assertTrue(Utils.almostEquals(point2D, lineSegment2D.point(lineSegment2D.segmentParameterOf(point2D)), delta));
 		}
 	}
 }

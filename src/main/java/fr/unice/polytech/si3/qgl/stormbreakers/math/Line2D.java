@@ -29,7 +29,8 @@ public class Line2D {
 
         if (Utils.almostEquals(direction.getDeltaX(),0)) {
             // We have a vertical line
-            this.direction = verticalDirection;
+            this.direction = verticalDirection; // facing up
+            if (direction.getDeltaY()<0) this.direction = this.direction.scaleVector(-1); // facing down
             equationDroite = null;
         } else {
             // Not a vertical line
@@ -40,7 +41,7 @@ public class Line2D {
     }
 
     private boolean isVerticalLine() {
-        return direction.equals(verticalDirection);
+        return Vector.areCollinear(this.direction,Line2D.verticalDirection);
     }
 
     /**
@@ -74,13 +75,7 @@ public class Line2D {
      * @author David Lebrisse - Stormbreakers
      */
     public Point2D pointFromLineParameter(double lineParameter) {
-        double x0 = anchor.x();
-        double y0 = anchor.y();
-
-        double dx = direction.getDeltaX();
-        double dy = direction.getDeltaY();
-
-        return new Point2D(x0 + dx * lineParameter, y0 + dy * lineParameter);
+        return anchor.getTranslatedBy(direction.scaleVector(lineParameter));
     }
 
     /**
