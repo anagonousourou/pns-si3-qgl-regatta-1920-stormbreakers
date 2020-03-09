@@ -41,7 +41,7 @@ public class Line2D {
     }
 
     private boolean isVerticalLine() {
-        return direction.equals(verticalDirection);
+        return Vector.areCollinear(this.direction,Line2D.verticalDirection);
     }
 
     /**
