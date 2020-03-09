@@ -10,11 +10,9 @@ import java.util.stream.Collectors;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.IPoint;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Checkpoint;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Boat;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Courant;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.OceanEntity;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Recif;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.processing.InputParser;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.processing.Logger;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.LineSegment2D;
@@ -25,7 +23,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.math.LineSegment2D;
 public class StreamManager implements PropertyChangeListener {
 
     private List<Courant> courants;
-    private List<Recif> recifs;
+    
     private List<OceanEntity> obstacles;
     private InputParser parser;
     private Boat boat;
@@ -123,16 +121,11 @@ public class StreamManager implements PropertyChangeListener {
      * @return immutable list
      */
     public List<IPoint> trajectoryToReachAPointInsideStream(IPoint depart, IPoint destination) {
-        var optCourant = this.streamAroundPoint(destination);
-        if (optCourant.isPresent()) {
-            var courant = optCourant.get();
-            if (courant.isCompatibleWith(depart, destination) || courant.getStrength() <= 50.0) {
-                // LATER split this condition in completelyCompatible and partiallyCompatible
-                // Or simply implement a weighted graph
-                return List.of(depart, destination);
-            }
-
-        }
+        // LATER  simply implement a weighted graph
+        /**due to the hassle to handle the case we the stream is not in the good direction we do nothing in
+         * this method
+         */
+        
         return List.of(depart, destination);
     }
 
@@ -144,13 +137,11 @@ public class StreamManager implements PropertyChangeListener {
      * @param checkPoint
      * @return potentially immutable list
      */
-    public List<IPoint> trajectoryBoatAndCheckpointInsideStream(Courant courant, IPoint boatPoint, IPoint checkPoint) {
-        if (courant.isCompatibleWith(boatPoint, checkPoint) || courant.getStrength() <= 50.0) {
+    public List<IPoint> trajectoryBoatAndCheckpointInsideStream(IPoint boatPoint, IPoint checkPoint) {
+        
             // LATER est-ce qu'on peut avoir un récif à l'intérieur d'un courant ?
             return List.of(boatPoint, checkPoint);
-        } else {
-            return this.trajectoryLeaveStreamAndReachPoint(boatPoint, checkPoint);
-        }
+        
     }
 
     /**
@@ -231,14 +222,7 @@ public class StreamManager implements PropertyChangeListener {
         return null;
     }
 
-    public Courant streamBringCloserCp(Checkpoint cp) {
-        for (Courant courant : courants) {
-            if (courant.bringCloserCp(cp, boat)) {
-                return courant;
-            }
-        }
-        return null;
-    }
+    
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
@@ -248,8 +232,7 @@ public class StreamManager implements PropertyChangeListener {
             this.obstacles = entities;
             this.courants = entities.stream().filter(e -> e.getType().equals("stream")).map(e -> (Courant) e)
                     .collect(Collectors.toList());
-            this.recifs = entities.stream().filter(e -> e.getType().equals("reef")).map(e -> (Recif) e)
-                    .collect(Collectors.toList());
+            
 
         } catch (JsonProcessingException e) {
             Logger.getInstance().log(e.getMessage());
@@ -261,6 +244,10 @@ public class StreamManager implements PropertyChangeListener {
      */
     void setCourants(List<Courant> courants) {
         this.courants = courants;
+    }
+
+    void setObstacles(List<OceanEntity> oceanEntities ){
+        this.obstacles=oceanEntities;
     }
 
     IPoint calculateEscapePoint(Courant courant, IPoint position) {

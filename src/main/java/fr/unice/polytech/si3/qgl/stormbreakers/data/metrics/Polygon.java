@@ -74,6 +74,7 @@ public class Polygon extends Shape implements CanCollide, Orientable {
             lastPoint = currentPoint;
         }
 
+       
         return cotes;
     }
 
@@ -174,6 +175,11 @@ public class Polygon extends Shape implements CanCollide, Orientable {
             return center.distanceTo(optfarPt.get());
         }
 		return 0.0;
+    }
+
+    @Override
+    public ShapeType getTypeEnum() {
+        return ShapeType.POLYGON;
     }
 
     

@@ -33,7 +33,9 @@ public abstract class Shape implements Logable {
     @JsonProperty("type")
 	public String getType() {
 		return type;
-	}
+    }
+    
+    public abstract ShapeType getTypeEnum();
 
     /**
      * Renvoie si oui ou non, les coordonnees passees en paramettre

@@ -1,6 +1,5 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.math;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,7 +10,6 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Rectangle;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Shape;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Recif;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.processing.Logger;
 
 public interface Surface extends IPoint, Orientable {
 
@@ -35,13 +33,15 @@ public interface Surface extends IPoint, Orientable {
 		if (this.getShape().getType().equals("rectangle")) {
 
 			return new RectanglePositioned((Rectangle) this.getShape(),
-					new Position(this.x(), this.y(), getOrientation())).intersectsWith(lineSegment2D);
+					new Position(this.x(), this.y(), this.getOrientation())).intersectsWith(lineSegment2D);
 		} else if (this.getShape().getType().equals("polygon")) {
 			Polygon shape = (Polygon) this.getShape();
+			
 			return shape.generateBordersInThePlan(this).stream().anyMatch(lineSegment2D::intersects);
 		}
 
 		else {
+			//TODO
 			return false;
 		}
 	}
@@ -77,51 +77,6 @@ public interface Surface extends IPoint, Orientable {
 			Recif recif = new Recif(position, new Rectangle(r * 2, r * 2, 0));
 			return Surface.avoidHitRectangle(recif, depart, destination);
 		}
-	}
-
-	private static List<IPoint> avoidHitCircle(Surface self, IPoint depart, IPoint destination) {
-		List<IPoint> list = new ArrayList<>();
-
-		EquationDroite trajet = new EquationDroite(depart.x(), depart.y(), destination.x(), destination.y());
-
-		IPoint thisPoint = new Point2D(self.x(), self.y());
-		double intersectionCentreCercleEnX = trajet.evalY(self.x());
-		EquationDroite perpTrajet = trajet.findEqPerpendicularLineByPos(thisPoint);
-		double orientation = perpTrajet.orientationDroite();
-
-		Circle c = (Circle) self.getShape();
-		double y;
-		double x;
-		if (intersectionCentreCercleEnX <= self.y()) {
-			y = self.y() - (c.getRadius() + Utils.TAILLE_BATEAU) * Math.sin(orientation);
-		} else {
-			y = self.y() + (c.getRadius() + Utils.TAILLE_BATEAU) * Math.sin(orientation);
-		}
-		x = perpTrajet.calculateValueX(y);
-		IPoint pt = new Point2D(x, y);
-		LineSegment2D sD = Surface.getSegmentLineTranslation(depart, pt, thisPoint);
-
-		if (!c.intersect(sD).isEmpty()) {
-			list.addAll(Surface.avoidHitCircle(self, depart, pt));
-		}
-
-		list.add(pt);
-		LineSegment2D sF = Surface.getSegmentLineTranslation(pt, destination, thisPoint);
-		if (!c.intersect(sF).isEmpty()) {
-			list.addAll(Surface.avoidHitCircle(self, pt, destination));
-		} else {
-			Logger.getInstance().log("notIntersect" + sF + "-" + c.toString());
-		}
-		list.add(0, depart);
-		list.add(destination);
-		return list;
-
-	}
-
-	private static LineSegment2D getSegmentLineTranslation(IPoint dep, IPoint dest, IPoint p) {
-		Point2D depart = new Point2D(dep.x() - p.x(), dep.y() - p.y());
-		Point2D destination = new Point2D(dest.x() - p.x(), dest.y() - p.y());
-		return new LineSegment2D(depart, destination);
 	}
 
 	private static List<IPoint> avoidHitRectangle(Surface self, IPoint depart, IPoint destination) {

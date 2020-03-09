@@ -1,7 +1,6 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.math;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.IPoint;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
 
 public class EquationDroite {
 	//ax+b
@@ -22,24 +21,12 @@ public class EquationDroite {
 		this.yIntercept=y1-this.slope*x1;
 	}
   
-  // CHANGE: REMOVED resolutionValeurB ?
-  /*
-  private double resolutionValeurB(double c) {
-		return this.slope*c+this.yIntercept;
-	}
-  */
+  
   
   public double orientationDroite() {
 		return Math.atan(slope);
 	}
 
-  //CHANGE: REMOVED OLD foundValueX | YOUR foundLeadingCoefficient
-  /*
-  public double foundLeadingCoefficient() {
-		//LATER Trouver meilleur nom
-		return -(this.yIntercept)/this.slope;
-	}
-  */
   
 	/**
 	 * Returns y = f(x)
@@ -70,18 +57,6 @@ public class EquationDroite {
 		double lineB=e.evalY(P.x());
 		return new EquationDroite(lineA, lineB);
 	}
-  
-  // CHANGE: REMOVED findPointIntersectPerpendicularLineByPos
-  /*
-  public Point2D findPointIntersectPerpendicularLineByPos(Position p) {
-		EquationDroite perpendicular =findEqPerpendicularLineByPos(p);
-		EquationDroite intersectPerpAndThis = new EquationDroite(perpendicular.getSlope()-this.getSlope(),perpendicular.getY_Intercept()-this.getY_Intercept());
-		double x= intersectPerpAndThis.foundLeadingCoefficient();
-		double y= intersectPerpAndThis.resolutionValeurB(x);
-		return new Point2D(x, y);
-	}
-  */
-  
 
     /**
      * Finds x solution of y1(x)=y2(x)

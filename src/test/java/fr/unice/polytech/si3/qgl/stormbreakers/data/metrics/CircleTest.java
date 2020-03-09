@@ -108,10 +108,7 @@ class CircleTest {
         assertTrue(Utils.almostEquals(Math.abs(c1Xl.x()),Math.abs(-45.83),Utils.EPSILON_COLLISION)); // absolute values because of x symmetry
         assertTrue(Utils.almostEquals(c1Xl.y(),(20),Utils.EPSILON_COLLISION));
        	
-    	System.out.println(c1.intersect(l));
-    	System.out.println(c1.intersect(l1));
-    	System.out.println(c1.intersect(lInCircle));
-    	System.out.println(c1.intersect(lEdgeCircleNoPoint));
+    	
     }
     
     @Test void testIntersects() {
@@ -144,7 +141,7 @@ class CircleTest {
     	Point2D result1=new Point2D(0, 50);
     	Point2D result2=new Point2D(0, -50);
     	Line2D l = new Line2D(d1,a1);
-    	System.out.println("--"+c1.findBothIntersectingPoints(l).getSecond());
+    	
     	assertEquals(c1.findBothIntersectingPoints(l).getFirst(),result1);
     	assertEquals(c1.findBothIntersectingPoints(l).getSecond(),result2);
     }

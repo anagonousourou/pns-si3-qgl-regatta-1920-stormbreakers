@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Checkpoint;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.RectanglePositioned;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.Utils;
 
 public class Rectangle extends Shape {
     private double width;
@@ -36,6 +37,11 @@ public class Rectangle extends Shape {
     @JsonProperty("orientation")
     public double getOrientation() {
         return orientation;
+    }
+
+    @Override
+    public ShapeType getTypeEnum() {
+        return ShapeType.RECTANGLE;
     }
 
     @Override
@@ -88,7 +94,10 @@ public class Rectangle extends Shape {
         if (!(obj instanceof Rectangle))
             return false;
         Rectangle other = (Rectangle) obj;
-        return other.width == width && other.height == height && other.orientation == orientation;
+
+        return Utils.within(other.width-this.width, Utils.EPSILON)
+                && Utils.within(other.height-this.height, Utils.EPSILON)
+                && Utils.within(other.orientation-this.orientation, Utils.EPS);
     }
 
     @Override
@@ -107,20 +116,21 @@ public class Rectangle extends Shape {
     }
 
     public Point2D findPointNearestToPosition(Position other, Position rectangle) {
-        	RectanglePositioned rect = new RectanglePositioned(this, rectangle);
-            Point2D p = new Point2D(other.x(), other.y());
-            return rect.closestPointTo(p).isPresent() ? rect.closestPointTo(p).get() : null;
+        RectanglePositioned rect = new RectanglePositioned(this, rectangle);
+        Point2D p = new Point2D(other.x(), other.y());
+        var tmp = rect.closestPointTo(p);
+        return tmp.isPresent() ? tmp.get() : null;
     }
 
-    public boolean haveGoodOrientation(Checkpoint cp, Point2D boatposition,Point2D courantPos) {
-    	//tourner la plan pour que le courant est un angle 0
-    	Point2D ptCp = cp.getPosition().getPoint2D().getTranslatedBy(cp.getPosition().x()-courantPos.x(), cp.getPosition().y()-courantPos.y());
-    	ptCp = ptCp.getRotatedBy(-orientation);
-    	Point2D ptBoat = boatposition.getTranslatedBy(boatposition.x()-courantPos.x(), boatposition.y()-courantPos.y());
-    	ptBoat = ptBoat.getRotatedBy(-orientation);
-   		return ptCp.x()>0 && ptCp.x()>ptBoat.x();
+    public boolean haveGoodOrientation(Checkpoint cp, Point2D boatposition, Point2D courantPos) {
+        // tourner la plan pour que le courant est un angle 0
+        Point2D ptCp = cp.getPosition().getPoint2D().getTranslatedBy(cp.getPosition().x() - courantPos.x(),
+                cp.getPosition().y() - courantPos.y());
+        ptCp = ptCp.getRotatedBy(-orientation);
+        Point2D ptBoat = boatposition.getTranslatedBy(boatposition.x() - courantPos.x(),
+                boatposition.y() - courantPos.y());
+        ptBoat = ptBoat.getRotatedBy(-orientation);
+        return ptCp.x() > 0 && ptCp.x() > ptBoat.x();
     }
-
-	
 
 }

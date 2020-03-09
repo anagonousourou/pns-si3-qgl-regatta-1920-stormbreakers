@@ -5,11 +5,14 @@ import java.util.Optional;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Circle;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.IPoint;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Polygon;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Rectangle;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Shape;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Checkpoint;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.ShapeType;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.processing.Logger;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.RectanglePositioned;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Utils;
@@ -35,12 +38,26 @@ public class Courant extends OceanEntity{
     }
 
     public Point2D closestPointTo(IPoint point2d) {
-        //LATER check for the type of shape before cast
-        var tmp=new RectanglePositioned((Rectangle) this.shape, this.position).closestPointTo(point2d);
-        if(tmp.isPresent()){
-            return tmp.get();
+        if(this.shape.getTypeEnum()==ShapeType.RECTANGLE){
+            var tmp=new RectanglePositioned((Rectangle) this.shape, this.position).closestPointTo(point2d);
+            if(tmp.isPresent()){
+                return tmp.get();
+            }
         }
-        //should never happen
+        else if(this.shape.getTypeEnum()==ShapeType.POLYGON){
+            Logger.getInstance().log(this.shape.toLogs());
+            Polygon poly=(Polygon)this.shape;
+            var point=poly.generateBordersInThePlan(this).stream()
+            .map(l->l.closestPointTo(point2d))
+            .min((p,pother)-> Double.compare(p.distanceTo(point2d),pother.distanceTo(point2d) ));
+            if(point.isPresent()){
+                return point.get();
+            }
+        }
+        //
+        
+        
+        //LATER add support for circle
         return null;
     }
 
@@ -48,16 +65,7 @@ public class Courant extends OceanEntity{
 
     
 	
-	public boolean bringCloserCp(Checkpoint cp, Boat boat) {
-		Rectangle r=(Rectangle)this.shape;
-		Point2D nearestPoint=r.findPointNearestToPosition(cp.getPosition(),this.position);
-		Point2D cpPoint2D = cp.getPosition().getPoint2D();
-		Point2D boatPoint2D = boat.getPosition().getPoint2D();
-		if(nearestPoint.distanceTo(cpPoint2D)<boatPoint2D.distanceTo(cpPoint2D)) {
-			return r.haveGoodOrientation( cp, boatPoint2D,this.getPosition().getPoint2D());
-		}
-		return false;
-	}
+	
     /**
      * Dis si le courant est compatible avec le traject défini par les parametres
      * @param depart
@@ -121,12 +129,32 @@ public class Courant extends OceanEntity{
      * @return
      */
     public Optional<IPoint> getAwayPoint(IPoint point){
-        var rectanglePositioned=new RectanglePositioned((Rectangle)this.shape, this.position);
+        Rectangle biggerRectangle;
+        if(this.shape.getTypeEnum()==ShapeType.RECTANGLE){
+            Rectangle current=(Rectangle)this.shape;
+            biggerRectangle=new Rectangle(current.getWidth()+Utils.TAILLE_BATEAU, current.getHeight()+Utils.TAILLE_BATEAU, current.getOrientation());
+            
+        }
 
-        List<IPoint> points= rectanglePositioned.pointsOfRectangle(0.01);
-        return points.stream().filter(p->this.isCompatibleWith(point,p) ).min(
-            (p1,p2)->Double.compare(p1.distanceTo(point), p2.distanceTo(point))
-        );
+        else if(this.shape.getTypeEnum()==ShapeType.POLYGON){
+            var poly=(Polygon)this.shape;
+            double r=poly.getMaxRadius();
+            biggerRectangle=new Rectangle(r*2+Utils.TAILLE_BATEAU, r*2+Utils.TAILLE_BATEAU, 0);
+        }
+        else{//circle
+            var circle=(Circle)this.shape;
+            double r=circle.getRadius();
+            biggerRectangle=new Rectangle(r*2+Utils.TAILLE_BATEAU, r*2+Utils.TAILLE_BATEAU, 0);
+        }
+
+        var rectanglePositioned=new RectanglePositioned(biggerRectangle, this.position);
+
+            List<IPoint> points= rectanglePositioned.pointsOfRectangle(0.01);
+            return points.stream().filter(p->this.isCompatibleWith(point,p) ).min(
+                (p1,p2)->Double.compare(p1.distanceTo(point), p2.distanceTo(point))
+            );
+        
+        
     }
 
     @Override

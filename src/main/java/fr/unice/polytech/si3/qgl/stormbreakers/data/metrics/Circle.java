@@ -76,7 +76,7 @@ public class Circle extends Shape {
         double delta = distanceToCenter - radius;
         // delta > 0 : No collision
         // else : Collision (even if on edge)
-        return !(delta > 0);
+        return delta <= 0;
     }
 
 
@@ -232,7 +232,6 @@ public class Circle extends Shape {
      */
     private Point2D findOneIntersection(LineSegment2D lineSegment2D) {
         // Calcul de l'intersection par dichotomie
-        Line2D support = lineSegment2D.getSupportingLine();
         Point2D start = lineSegment2D.firstPoint(); // Always inside the circle
         Point2D end = lineSegment2D.lastPoint(); // Always outside the circle
 
@@ -297,6 +296,11 @@ public class Circle extends Shape {
     @Override
     public String toLogs() {
         return "C" + radius;
+    }
+
+    @Override
+    public ShapeType getTypeEnum() {
+        return ShapeType.CIRCLE;
     }
 
 	
