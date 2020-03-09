@@ -63,7 +63,10 @@ public class TargetDefiner {
                     return new TupleDistanceOrientation(trajectory.get(1).distanceTo(boat) + courant.getStrength(),
                             this.navigator.additionalOrientationNeeded(boat.getPosition(), trajectory.get(1)));
                 }
-                return new TupleDistanceOrientation(trajectory.get(1).distanceTo(boat),
+                double speedDueToStream = Math
+                    .cos(courant.getPosition().getOrientation() - new Vector(boat, checkpoint).getOrientation())
+                    * courant.getStrength();
+                return new TupleDistanceOrientation(trajectory.get(1).distanceTo(boat) - speedDueToStream,
                         this.navigator.additionalOrientationNeeded(boat.getPosition(), trajectory.get(1)));
 
             }
