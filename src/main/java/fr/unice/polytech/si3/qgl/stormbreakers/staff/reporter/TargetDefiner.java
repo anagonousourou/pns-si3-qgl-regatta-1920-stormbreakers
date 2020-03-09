@@ -47,6 +47,7 @@ public class TargetDefiner {
     public TupleDistanceOrientation defineNextTarget() {
         Checkpoint checkpoint = checkpointsManager.nextCheckpoint();
         if (checkpoint != null) {
+            Logger.getInstance().log(checkpoint.toString());
             boolean insideStream = streamManager.insideStream();
 
             if (insideStream && !streamManager.streamAroundBoat().isPtInside(checkpoint)) {
@@ -68,7 +69,7 @@ public class TargetDefiner {
             }
 
             else if (this.thereIsObstaclesOnTrajectory()) {
-                Logger.getInstance().log("obstacleon trajet " + checkpoint);
+                Logger.getInstance().log("obstacle on trajet " + checkpoint);
                 List<IPoint> trajectory = this.streamManager.trajectoryToAvoidObstacles(boat, checkpoint);
 
                 return new TupleDistanceOrientation(trajectory.get(1).distanceTo(boat),
@@ -95,24 +96,33 @@ public class TargetDefiner {
         double helpness = this.helpness(courantVector, boat, cpPoint);
 
         if (Utils.within(helpness, Utils.EPS)) {
-
+            Logger.getInstance().log(String.valueOf(helpness));
             double orientation = navigator.additionalOrientationNeeded(boat.getPosition(), cpPoint);
             double distance = boat.distanceTo(cpPoint) + streamAround.getStrength();
 
-            return new TupleDistanceOrientation(distance, orientation);
+            var tmp = new TupleDistanceOrientation(distance, orientation);
+            Logger.getInstance().log(tmp.toString());
+            return tmp;
         } else if (helpness > 0) {
+            Logger.getInstance().log("helpness positive: " + helpness);
 
             Point2D pointToLeave = this.maximalPointToStay(boat.getPosition().getPoint2D(), cpPoint, courantVector,
                     streamAround);
-
+            double speedDueToStream = Math
+                    .cos(streamAround.getPosition().getOrientation() - new Vector(boat, cpPoint).getOrientation())
+                    * streamAround.getStrength();
             if (pointToLeave.distanceTo(boat) <= streamAround.getStrength()) {
                 double orientation = navigator.additionalOrientationNeeded(boat.getPosition(), cpPoint);
-                double distance = boat.distanceTo(cpPoint);
-                return new TupleDistanceOrientation(distance, orientation);
+                double distance = boat.distanceTo(pointToLeave) - speedDueToStream;
+                var tmp = new TupleDistanceOrientation(distance, orientation);
+                Logger.getInstance().log(tmp.toString());
+                return tmp;
             } else {
                 double orientation = streamAround.getPosition().getOrientation() - boat.getOrientation();
-                double distance = pointToLeave.distanceTo(boat) - streamAround.getStrength();
-                return new TupleDistanceOrientation(distance, orientation);
+                double distance = pointToLeave.distanceTo(boat) - speedDueToStream;
+                var tmp = new TupleDistanceOrientation(distance, orientation);
+                Logger.getInstance().log(tmp.toString());
+                return tmp;
             }
         }
 

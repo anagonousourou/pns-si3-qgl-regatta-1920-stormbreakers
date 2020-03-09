@@ -109,6 +109,6 @@ public interface Surface extends IPoint, Orientable {
 			}
 		}
 
-		return List.of();
+		return List.of(depart,destination);
 	}
 }

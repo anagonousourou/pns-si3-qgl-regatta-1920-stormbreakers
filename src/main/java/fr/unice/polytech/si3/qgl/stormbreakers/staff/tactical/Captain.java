@@ -62,6 +62,7 @@ public class Captain {
 
         List<SailorAction> actionsForUnusedSailors=this.validateActions(this.coordinator.manageUnusedSailors() );
 
+        
         return Utils.<SailorAction>concatenate(actionsOrientation, actionsToAdjustSpeed,actionsForUnusedSailors);
 
     }
