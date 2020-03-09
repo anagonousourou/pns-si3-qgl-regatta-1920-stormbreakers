@@ -68,9 +68,6 @@ public class Utils {
      * @return true if condition is verified
      */
     public static boolean within(double value,double bound){
-    	if(bound < 0) {
-    		return false;
-    	}
         return Math.abs(value)<=bound;
     }
 
@@ -88,6 +85,17 @@ public class Utils {
             List<T> pointsOfSegment4) {
         return Stream.of(pointsOfSegment, pointsOfSegment2, pointsOfSegment3, pointsOfSegment4).flatMap(List::stream)
                 .collect(Collectors.toList());
+    }
+
+    public static double clamp(double value,double min,double max){
+        if(value<=min){
+            return min;
+        }
+        if(value >=max){
+            return max;
+        }
+        return value;
+        //Math.min(Math.max(value, min), max)
     }
 
 }
