@@ -5,6 +5,7 @@ import java.beans.PropertyChangeListener;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
+import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.IPoint;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.processing.InputParser;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.processing.Logger;
@@ -12,7 +13,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.processing.Logger;
  * Le bateau implémente Propertychange listener pour permettre 
  * la mise à jour des infos du bateau notamment la vie et la position-orientation
  */
-public class Boat implements PropertyChangeListener {
+public class Boat implements PropertyChangeListener,IPoint {
     private Position position = null;
     private final int deckwidth;
     private final int decklength;
@@ -30,9 +31,7 @@ public class Boat implements PropertyChangeListener {
 
     
 
-    public Position getPosition() {
-        return position;
-    }
+    
 
     public void setPosition(Position position) {
         this.position = position;
@@ -69,6 +68,20 @@ public class Boat implements PropertyChangeListener {
         }
         
 
+    }
+
+    public Position getPosition(){
+        return position;
+    }
+
+    @Override
+    public double x() {
+       return this.position.x();   
+    }
+
+    @Override
+    public double y() {
+        return this.position.y();
     }
 
 }

@@ -6,12 +6,11 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.Logable;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.IPoint;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Shape;
-import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.Surface;
 
-public class Checkpoint implements Logable {
+public class Checkpoint implements Logable,Surface {
     private Position position;
     private Shape shape;
 
@@ -29,21 +28,6 @@ public class Checkpoint implements Logable {
     @JsonProperty("shape")
     public Shape getShape() {
         return shape;
-    }
-
-    // LATER turn this to a interface method
-    public boolean isPtInside(IPoint pt) {
-        return this.isPtInside(pt.x(), pt.y());
-    }
-
-    private boolean isPtInside(double x, double y) {
-        // On se replace par rapport au centre de la forme
-        Point2D pt = new Point2D(x - position.x(), y - position.y());
-        double orientation = position.getOrientation();
-        // On compense l'orientation du checkpoint
-        if (orientation != 0)
-            pt = pt.getRotatedBy(-orientation);
-        return shape.isPtInside(pt);
     }
 
     @Override
@@ -69,5 +53,20 @@ public class Checkpoint implements Logable {
     @Override
     public String toLogs() {
         return "{" + position.toLogs() + "," + shape.toLogs() + "}";
+    }
+
+    @Override
+    public double x() {
+       return this.position.x();
+    }
+
+    @Override
+    public double y() {
+        return this.position.y();
+    }
+
+    @Override
+    public double getOrientation() {
+        return this.position.getOrientation();
     }
 }

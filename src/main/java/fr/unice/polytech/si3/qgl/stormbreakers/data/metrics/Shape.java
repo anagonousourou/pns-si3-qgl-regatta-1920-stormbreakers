@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+
 import fr.unice.polytech.si3.qgl.stormbreakers.Logable;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
 
@@ -17,9 +18,12 @@ import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
         property="type")
 @JsonSubTypes({
         @JsonSubTypes.Type(value = Circle.class, name="circle"),
-        @JsonSubTypes.Type(value = Rectangle.class, name="rectangle")
+        @JsonSubTypes.Type(value = Rectangle.class, name="rectangle"),
+        @JsonSubTypes.Type(value = Polygon.class, name="polygon")
 })
 public abstract class Shape implements Logable {
+    protected static Point2D origin = new Point2D(0,0); // For internal context
+    protected static Position anchor; // For external context
     private String type;
 
     @JsonCreator
@@ -29,7 +33,9 @@ public abstract class Shape implements Logable {
     @JsonProperty("type")
 	public String getType() {
 		return type;
-	}
+    }
+    
+    public abstract ShapeType getTypeEnum();
 
     /**
      * Renvoie si oui ou non, les coordonnees passees en paramettre
@@ -38,5 +44,7 @@ public abstract class Shape implements Logable {
      * @return true if (x,y) is inside this shape, false if not
      */
     public abstract boolean isPtInside(Point2D pt);
+    
+    
 
 }

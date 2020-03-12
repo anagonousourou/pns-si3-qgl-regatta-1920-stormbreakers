@@ -3,6 +3,9 @@ package fr.unice.polytech.si3.qgl.stormbreakers.math;
 import java.util.Objects;
 import static java.lang.Math.hypot;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import fr.unice.polytech.si3.qgl.stormbreakers.Logable;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.IPoint;
 import fr.unice.polytech.si3.qgl.stormbreakers.exceptions.ImpossibleAngleError;
 
@@ -10,19 +13,20 @@ import fr.unice.polytech.si3.qgl.stormbreakers.exceptions.ImpossibleAngleError;
  * Un point 2D dans une espace reel
  */
 
-public class Point2D implements IPoint{
+public class Point2D implements Logable, IPoint{
     private double x;
     private double y;
-    private static final double EPS=0.0001;
+    private static final double EPS = Utils.EPSILON_COLLISION;
 
-    public Point2D(double x, double y) {
+    @JsonCreator
+    public Point2D(@JsonProperty("x") double x, @JsonProperty("y") double y) {
         this.x = x;
         this.y = y;
     }
 
-    public Point2D(Point2D point2D) {
-        this.x = point2D.x;
-        this.y = point2D.y;
+    public Point2D(IPoint point) {
+        this.x = point.x();
+        this.y = point.y();
     }
 
     public Point2D(Vector fromOrigin) {
@@ -36,18 +40,18 @@ public class Point2D implements IPoint{
      * Donne l'angle entre l'axe x et le vecteur position retourne null si (0,0)
      * 
      * @return une angle entre ]-Pi,Pi]
-     * @throws if point is 0,0
+     * @throws ImpossibleAngleError if point is 0,0
      */
     public double getAngleFromXAxis() {
         Vector unitX = new Vector(1, 0);
         Vector toPoint = new Vector(this.x, this.y);
         // Renvoie un angle entre [0,Pi]
-        double unorientedAngle = unitX.angleBetween(toPoint);
+        double unorientedAngle = unitX.nonOrientedAngleWith(toPoint);
 
-        if (x == 0 && y == 0) {
+        if (Utils.almostEquals(x, 0) && Utils.almostEquals(y, 0)) {
             // L'angle n'est pas définit
             throw new ImpossibleAngleError("Cannot define angle for 0,0");
-        } else if (y == 0) { // x!=0 et y==0
+        } else if (Utils.almostEquals(y, 0)) { // x!=0 et y==0
             // Si x > 0 l'angle est 0
             if (x > 0)
                 return 0;
@@ -113,22 +117,11 @@ public class Point2D implements IPoint{
      * @return Vector le vecteur
      */
     public Vector getVectorTo(Point2D other) {
-        return new Vector(x - other.x, y - other.y);
+        // TODO: 09/03/2020 Urgent Tests
+        return new Vector(other.x-this.x, other.y-this.y);
     }
 
-    /**
-     * Renvoie la distance de ce point à un point passé en parametre
-     * 
-     * @param other autre point
-     * @return double la distance
-     */
-    public double getDistanceTo(Point2D other) {
-        return getVectorTo(other).norm();
-    }
-
-    public double distanceTo(Point2D other) {
-        return getVectorTo(other).norm();
-    }
+    
 
     @Override
     public String toString() {
@@ -142,7 +135,7 @@ public class Point2D implements IPoint{
         if (!(obj instanceof Point2D))
             return false;
         Point2D other = (Point2D) obj;
-        return Math.abs(other.x - this.x)<=Point2D.EPS  && Math.abs(other.y - this.y)<=Point2D.EPS;
+        return Utils.almostEqualsBoundsIncluded(other.x,this.x, EPS) && Utils.almostEqualsBoundsIncluded(other.y,this.y, EPS);
     }
 
     @Override
@@ -179,17 +172,17 @@ public class Point2D implements IPoint{
         return 0;
     }
 
-    @Override
+    @Override @JsonProperty("y")
     public double y() {
         return y;
     }
-    @Override
+    @Override @JsonProperty("x")
     public double x() {
         return x;
     }
 
     @Override
-    public double distanceTo(IPoint other) {
-        return Math.sqrt((other.x() - this.x) * (other.x() - this.x) + (other.y() - this.y) * (other.y() - this.y));
+    public String toLogs() {
+        return String.format("%f %f",x,y);
     }
 }

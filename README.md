@@ -1,8 +1,9 @@
 # Equipe StormBreakers
 
-![](flag.png?raw=true)
+![Drapeau de l'équipe](flag.png?raw=true)
 
 Membres de l'équipe :
+
 - BOUZIDI Héba
 - STRIEBEL Florian
 - ANAGONOU Patrick
@@ -13,3 +14,8 @@ Nom de l'équipe : Stormbreakers
 Nom du bateau : Mjollnir
 
 Etudiants non-apprentis
+
+## Portion de code provenant partiellement de sources externes
+
+- LineSegment2D.java
+- Fraction.java

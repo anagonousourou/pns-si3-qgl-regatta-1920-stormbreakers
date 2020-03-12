@@ -2,55 +2,176 @@ package fr.unice.polytech.si3.qgl.stormbreakers.math;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.exceptions.DegeneratedLine2DException;
 
+import java.util.Optional;
+
 public class Line2D {
-    // class variables
 
-    /**
-     * Coordinates of starting point of the line
-     */
-    protected double x0;
-    protected double y0;
+    static final Vector verticalDirection = new Vector(0,1);
 
-    /**
-     * Direction vector of the line. dx and dy should not be both zero.
-     */
-    protected double dx;
-    protected double dy;
+    private Point2D anchor;
+    private Vector direction;
 
-    // ===================================================================
-    /** Defines a new Straight line going through the two given points. */
+    private EquationDroite equationDroite;
 
-    public Line2D(Point2D point1, Point2D point2) {
-        this.x0 = point1.x();
-        this.y0 = point1.y();
-        this.dx = point2.x() - point1.x();
-        this.dy = point2.y() - point1.y();
-    }
-
+    /** Defines a new Straight line going through (x0,y0) with direction (dx,dy) */
     public Line2D(double x0, double y0, double dx, double dy) {
-        this.x0 = x0;
-        this.y0 = y0;
-        this.dx = dx;
-        this.dy = dy;
+        this(new Point2D(x0,y0),new Vector(dx,dy));
+    }
+
+    /** Defines a new Straight line going through the two given points. */
+    public Line2D(Point2D P1, Point2D P2) {
+        this(P1,P1.getVectorTo(P2));
+    }
+
+    /** Defines a new Straight line going through anchor with a given direction. */
+    public Line2D(Point2D anchor, Vector direction) {
+        if (Utils.almostEquals(0.0,direction.norm())) throw new DegeneratedLine2DException("Cannot create line with direction set to null vector");
+
+        if (Utils.almostEquals(direction.getDeltaX(),0)) {
+            // We have a vertical line
+            this.direction = verticalDirection; // facing up
+            if (direction.getDeltaY()<0) this.direction = this.direction.scaleVector(-1); // facing down
+            equationDroite = null;
+        } else {
+            // Not a vertical line
+            equationDroite = new EquationDroite(anchor,anchor.getTranslatedBy(direction));
+            this.direction = direction;
+        }
+        this.anchor = anchor;
+    }
+
+    private boolean isVerticalLine() {
+        return Vector.areCollinear(this.direction,Line2D.verticalDirection);
     }
 
     /**
-     * Computes position on the line of the point given by (x,y). The position is
-     * the number t such that if the point belong to the line, it location is given
-     * by x=x0+t*dx and y=y0+t*dy.
-     * <p>
-     * If the point does not belong to the line, the method returns the position of
-     * its projection on the line.
+     * Computes the <i>line parameter</i> of the point given by (x,y) for this line
+     * The position is the number k such that if the point belong to the line,
+     * its location is given by x=x0+k*dx and y=y0+k*dy.
+     * Note: The point needs to be on the line.
+     * @author David Lebrisse - Stormbreakers
      */
-    public double positionOnLine(double x, double y) {
-        double denom = dx * dx + dy * dy;
-        if (Math.abs(denom) < LineSegment2D.ACCURACY)
-            throw new DegeneratedLine2DException("");
-        return ((y - y0) * dy + (x - x0) * dx) / denom;
+    public double lineParameterOf(double x, double y) {
+        return lineParameterOf(new Point2D(x,y));
     }
 
-    public Point2D point(double t) {
-        t = Math.min(Math.max(t, 0), 1);
-        return new Point2D(x0 + dx * t, y0 + dy * t);
+    /**
+     * Computes the <i>line parameter</i> of the given point P for this line
+     * The parameter is the number k such that if the point belong to the line,
+     * its location is given by P(k)=P0+k*direction, where P0 is the anchor.
+     * Note: The point needs to be on the line.
+     * @author David Lebrisse - Stormbreakers
+     */
+    public double lineParameterOf(Point2D P) {
+        Vector relativeTranslation = new Vector(anchor,P);
+        return relativeTranslation.norm() / direction.norm();
     }
+
+    /**
+     * Computes the coordinates of the point given by (x,y) where
+     * x=x0+lineParameter*dx
+     * y=y0+lineParameter*dy
+     * @return the projection
+     * @author David Lebrisse - Stormbreakers
+     */
+    public Point2D pointFromLineParameter(double lineParameter) {
+        return anchor.getTranslatedBy(direction.scaleVector(lineParameter));
+    }
+
+    /**
+     * Computes the projection on the line of the point given by (x,y).
+     * @return Point2D resulting from the projection
+     * @author David Lebrisse - Stormbreakers
+     */
+    public Point2D projectOnto(Point2D pointToProject) {
+        Point2D projectionPoint;
+        if (isVerticalLine()) {
+            projectionPoint = new Point2D(anchor.x(),pointToProject.y());
+        } else {
+            Vector AP = new Vector(anchor,pointToProject);
+            // A + AB * ( AP.AB / |AB|² )
+            projectionPoint = anchor.getTranslatedBy( direction.scaleVector( AP.scal(direction) / direction.squaredNorm() ) );
+        }
+        return projectionPoint;
+    }
+
+    /**
+     * Computes the intersection point between this line and a given one
+     * @param other second line
+     * @return if it exists, the intersection point
+     * @author David Lebrisse - Stormbreakers
+     */
+    public Optional<Point2D> intersect(Line2D other) {
+        if (this.isVerticalLine() && other.isVerticalLine()) {
+            // Both vertical
+            if (Utils.almostEquals(this.anchor.x(), other.anchor.x())) {
+                // Lines are collinear -> Infinite collision points
+                return Optional.of(this.anchor);
+            } else {
+                // Lines are parallel -> No collision
+                return Optional.empty();
+            }
+        }
+
+        else if (this.isVerticalLine()) {
+            double intersectionX = this.anchor.x();
+            double intersectionY = other.equationDroite.evalY(intersectionX);
+            Point2D intersection = new Point2D(intersectionX,intersectionY);
+            return Optional.of(intersection);
+        }
+
+        else if (other.isVerticalLine())
+            // intersect relation is symmetric so why bother reimplementing it
+            return other.intersect(this);
+
+        else {
+            // Both are non vertical lines
+            Vector thisDirection = this.direction;
+            Vector otherDirection = other.direction;
+            if (Vector.areCollinear(thisDirection,otherDirection)){
+                // Lines are parallel
+                return Optional.empty();
+            } else {
+                // Lines are intersecting
+                EquationDroite eq1 = this.equationDroite;
+                EquationDroite eq2 = other.equationDroite;
+
+                // On cherche x t.q. : y1(x) = y2(x)
+                //  soit : a1*x+b1 = a2*x+b2
+                //  d'où : (a1-a2) * x = (b2-b1)
+                // On obtiens : x = (b2-b1)/(a1-a2)
+                double intersectionX = eq1.findCommonSolution(eq2);
+                double intersectionY = eq2.evalY(intersectionX);
+
+                Point2D intersection = new Point2D(intersectionX,intersectionY);
+                return Optional.of(intersection);
+            }
+
+
+        }
+    }
+
+    /**
+     * Computes the distance for a given point to this Line
+     * @param P the given point
+     * @return the computed distance
+     */
+    public double distance(Point2D P) {
+        return P.distanceTo(this.projectOnto(P));
+    }
+
+    public Vector getDirection() {
+        return new Vector(direction);
+    }
+
+    public Vector getNormalizedDirection() {
+        return getDirection().normalize();
+    }
+
+    public boolean contains(Point2D point2D) {
+        double distance = distance(point2D);
+        return Utils.almostEquals(0,distance);
+    }
+
+    // LATER: 07/03/2020 Equals && hashcode ?
 }

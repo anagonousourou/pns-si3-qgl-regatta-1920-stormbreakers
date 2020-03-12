@@ -3,8 +3,9 @@ package fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter;
 import java.util.ArrayList;
 import java.util.List;
 
-import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.IPoint;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Checkpoint;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.processing.Logger;
 
 public class CheckpointsManager {
 
@@ -20,9 +21,9 @@ public class CheckpointsManager {
      * et retire le nextCheckpoint si c'est le cas
      * @param position
      */
-	public void updateCheckpoint(Position position) {
-        if (hasNextCheckpoint() && isPosInCheckpoint(position)) {
-                checkpoints.remove(0);
+	public void updateCheckpoint(IPoint point) {
+        if (hasNextCheckpoint() && isPosInCheckpoint(point)) {
+                Logger.getInstance().log(checkpoints.remove(0).toString());
         }
 	}
 
@@ -30,7 +31,7 @@ public class CheckpointsManager {
         return (this.checkpoints!=null && !checkpoints.isEmpty());
     }
 
-    private boolean isPosInCheckpoint(Position position) {
+    private boolean isPosInCheckpoint(IPoint position) {
         return checkpoints.get(0).isPtInside(position);
     }
 

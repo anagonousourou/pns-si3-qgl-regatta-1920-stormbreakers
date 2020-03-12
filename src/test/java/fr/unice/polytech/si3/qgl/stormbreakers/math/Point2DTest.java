@@ -13,7 +13,7 @@ class Point2DTest {
     }
 
     private boolean almostEquals(Point2D expected, Point2D result) {
-        return result.getDistanceTo(expected) < EPSILON;
+        return result.distanceTo(expected) < EPSILON;
     }
 
     @Test

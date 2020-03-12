@@ -7,6 +7,7 @@ import java.util.Optional;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.ActionType;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.SailorAction;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Boat;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.processing.Logger;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Utils;
 import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.CheckpointsManager;
 import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.OarsConfig;
@@ -28,13 +29,13 @@ public class Captain {
     private TargetDefiner targetDefiner;
 
     public Captain(Boat boat, CheckpointsManager checkpointsManager, Navigator navigator, WeatherAnalyst weatherAnalyst,
-            Coordinator coordinator,TargetDefiner targetDefiner) {
+            Coordinator coordinator, TargetDefiner targetDefiner) {
         this.boat = boat;
         this.checkpointsManager = checkpointsManager;
         this.navigator = navigator;
         this.coordinator = coordinator;
         this.weatherAnalyst = weatherAnalyst;
-        this.targetDefiner=targetDefiner;
+        this.targetDefiner = targetDefiner;
 
     }
 
@@ -44,10 +45,10 @@ public class Captain {
     public List<SailorAction> nextRoundActions() {
         // On remet le statut doneTurn de tous les marins à false
         this.coordinator.resetAvailability();
-        this.checkpointsManager.updateCheckpoint(boat.getPosition());
+        this.checkpointsManager.updateCheckpoint(boat);
 
-        var destination= this.targetDefiner.defineNextTarget();
-        
+        var destination = this.targetDefiner.defineNextTarget();
+
         if (destination == null) {
             return List.of();
         }
@@ -60,9 +61,9 @@ public class Captain {
         double currentSpeed = this.calculateSpeedFromOarsAction(actionsOrientation);
         List<SailorAction> actionsToAdjustSpeed = this.adjustSpeed(distance, currentSpeed);
 
-        List<SailorAction> actionsForUnusedSailors=this.validateActions(this.coordinator.manageUnusedSailors() );
+        List<SailorAction> actionsForUnusedSailors = this.validateActions(this.coordinator.manageUnusedSailors());
 
-        return Utils.<SailorAction>concatenate(actionsOrientation, actionsToAdjustSpeed,actionsForUnusedSailors);
+        return Utils.<SailorAction>concatenate(actionsOrientation, actionsToAdjustSpeed, actionsForUnusedSailors);
 
     }
 
@@ -81,49 +82,53 @@ public class Captain {
      * @return
      */
     List<SailorAction> actionsToOrientate(double orientation) {
-    	// NO ORIENTATION NEEDED
+        // NO ORIENTATION NEEDED
         if (Math.abs(orientation) < Captain.EPS) {
             return List.of();
         }
-        
-        else if(this.coordinator.rudderIsPresent() && this.coordinator.rudderIsAccesible() && Math.abs(orientation)<=Math.PI/4 ){
-            return this.validateActions(this.coordinator.activateRudder(orientation));
-        }
 
-        else if(this.coordinator.rudderIsPresent() && this.coordinator.rudderIsAccesible() &&  !Utils.within(orientation, Utils.MAX_RUDDER_ROTATION) ){
-            if(this.coordinator.nbOars()==0){
-                return this.validateActions(this.coordinator.activateRudder(Utils.MAX_RUDDER_ROTATION));
-            }
-            else{
-                
-                Optional<OarsConfig> possibleOarsConfig=this.navigator.possibleOarConfigs(coordinator.nbLeftOars(),coordinator.nbRightOars()).stream()
-                .filter(oc-> oc.getAngle() * orientation > 0 )
-                .max((oc1,oc2)->Double.compare(oc1.getAngle(), oc2.getAngle()));
-                
-                if(possibleOarsConfig.isPresent()) {
-                    
-                    int diff = this.navigator.fromAngleToDiff(possibleOarsConfig.get().getAngle() , this.coordinator.nbLeftOars(),
-                            this.coordinator.nbRightOars());
-                            var rudderActions=this.validateActions(this.coordinator.activateRudder(Math.min(orientation-possibleOarsConfig.get().getAngle(), Utils.MAX_RUDDER_ROTATION) ));
-                            var oarsActions=this.validateActions(this.coordinator.activateOarsNotStrict(diff));
-                    return Utils.<SailorAction>concatenate(rudderActions,oarsActions);
+        else if (this.coordinator.rudderIsPresent() && this.coordinator.rudderIsAccesible()) {
+            if (Math.abs(orientation) <= Math.PI / 4) {
+                // rudder suffisant
+                return this.validateActions(this.coordinator.activateRudder(orientation));
+            } else {// rudder insuffisant
+                if (this.coordinator.nbOars() == 0) {
+                    // pas de rames
+                    return this.validateActions(
+                            this.coordinator.activateRudder(Utils.MAX_RUDDER_ROTATION * Math.signum(orientation)));
+                } else {
+                    // on a des rames et le rudder
+                    Optional<OarsConfig> possibleOarsConfig = this.navigator
+                            .possibleOarConfigs(coordinator.nbLeftOars(), coordinator.nbRightOars()).stream()
+                            .filter(oc -> oc.getAngle() * orientation > 0)
+                            .max((oc1, oc2) -> Double.compare(oc1.getAngle(), oc2.getAngle()));
+
+                    if (possibleOarsConfig.isPresent()) {
+                        Logger.getInstance().log(possibleOarsConfig.toString());
+                        int diff = this.navigator.fromAngleToDiff(possibleOarsConfig.get().getAngle(),
+                                this.coordinator.nbLeftOars(), this.coordinator.nbRightOars());
+
+                        var rudderActions = this.validateActions(this.coordinator.activateRudder(Utils.clamp
+                                (orientation - possibleOarsConfig.get().getAngle(),-Utils.MAX_RUDDER_ROTATION,Utils.MAX_RUDDER_ROTATION )));
+                                
+                        var oarsActions = this.validateActions(this.coordinator.activateOarsNotStrict(diff));
+                        return Utils.<SailorAction>concatenate(rudderActions, oarsActions);
+                    } else {
+
+                        int diff = this.navigator.fromAngleToDiff(orientation, this.coordinator.nbLeftOars(),
+                                this.coordinator.nbRightOars());
+                        List<SailorAction> actions = this.coordinator.activateOarsNotStrict(diff);
+                        return this.validateActions(actions);
+                    }
                 }
-                else{
-                    
-                    int diff = this.navigator.fromAngleToDiff(orientation, this.coordinator.nbLeftOars(),
-                    this.coordinator.nbRightOars());
-                    List<SailorAction> actions = this.coordinator.activateOarsNotStrict(diff);
-                    return this.validateActions(actions);
-                }
             }
-        }
-        else{
+        } else {
             int diff = this.navigator.fromAngleToDiff(orientation, this.coordinator.nbLeftOars(),
                     this.coordinator.nbRightOars());
             List<SailorAction> actions = this.coordinator.activateOarsNotStrict(diff);
             return this.validateActions(actions);
         }
-	}
+    }
 
     /**
      * Fonction qui envoie des actions pour ajouter des marins pour faire avancer le
@@ -155,8 +160,7 @@ public class Captain {
                 double expectedSpeedFromWind = this.weatherAnalyst.externalSpeedGivenNbOpennedSails(nbOpenned);
                 return Utils.<SailorAction>concatenate(
 
-                        actionsToUseWeather,
-                        this.accelerate(distance, currentSpeed + expectedSpeedFromWind));
+                        actionsToUseWeather, this.accelerate(distance, currentSpeed + expectedSpeedFromWind));
 
             }
 
@@ -170,8 +174,7 @@ public class Captain {
 
                 return Utils.<SailorAction>concatenate(
 
-                        actionsToCancelWeather,
-                        this.accelerate(distance, currentSpeed + expectedSpeedFromWind));
+                        actionsToCancelWeather, this.accelerate(distance, currentSpeed + expectedSpeedFromWind));
 
             }
 
@@ -181,7 +184,7 @@ public class Captain {
                 return this.accelerate(distance, currentSpeed + currentExternalSpeed);
             }
             // voiles fermées et les ouvrir vous ralentissent
-            if (currentExternalSpeed == 0.0 && this.weatherAnalyst.potentialSpeedAcquirable() <= 0.0) {
+            if (Utils.almostEquals(currentExternalSpeed, 0.0) && this.weatherAnalyst.potentialSpeedAcquirable() <= 0.0) {
                 return this.accelerate(distance, currentSpeed);
             }
 
@@ -205,8 +208,8 @@ public class Captain {
     }
 
     /**
-     * Cette méthode permet d'augmenter la vitesse du bateau tout en
-     * respectant la distance
+     * Cette méthode permet d'augmenter la vitesse du bateau tout en respectant la
+     * distance
      * 
      * @param distance
      * @param currentSpeed
@@ -224,12 +227,11 @@ public class Captain {
                     this.accelerate(distance, currentSpeed + minAdditionalSpeed));
 
         }
-        if(currentSpeed==0){
+        if (Utils.almostEquals(currentSpeed, 0)) {
             return this.validateActions(this.coordinator.addOaringSailorsOnEachSide());
         }
         return List.of();
-        
+
     }
 
-    
 }
