@@ -6,6 +6,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.Logable;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.LineSegment2D;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Orientable;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.Utils;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Vector;
 
 import java.util.ArrayList;
@@ -135,7 +136,7 @@ public class Polygon extends Shape implements CanCollide, Orientable {
         Side side = null;
         if (scal < 0) side=Side.LEFT;
         else if (scal > 0) side=Side.RIGHT;
-        else if (scal == 0) side=Side.MIDDLE;
+        else if (Utils.almostEquals(scal, 0)) side=Side.MIDDLE;
 
         return side;
     }

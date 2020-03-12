@@ -10,6 +10,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.IPoint;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Fraction;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.Utils;
 import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.OarsConfig;
 
 /**
@@ -45,7 +46,7 @@ public class Navigator {
 
         // Si la cible est completement derrière,
         // on dit par default qu'elle est derrière à gauche
-        if (actualAngle == Math.PI)
+        if (Utils.almostEquals(actualAngle, Math.PI))
             return 0.75 * Math.PI;
 
         if (actualAngle > 0)

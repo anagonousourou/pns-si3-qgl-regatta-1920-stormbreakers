@@ -48,10 +48,10 @@ public class Point2D implements Logable, IPoint{
         // Renvoie un angle entre [0,Pi]
         double unorientedAngle = unitX.nonOrientedAngleWith(toPoint);
 
-        if (x == 0 && y == 0) {
+        if (Utils.almostEquals(x, 0) && Utils.almostEquals(y, 0)) {
             // L'angle n'est pas définit
             throw new ImpossibleAngleError("Cannot define angle for 0,0");
-        } else if (y == 0) { // x!=0 et y==0
+        } else if (Utils.almostEquals(y, 0)) { // x!=0 et y==0
             // Si x > 0 l'angle est 0
             if (x > 0)
                 return 0;
