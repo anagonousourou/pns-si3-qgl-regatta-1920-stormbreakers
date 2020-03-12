@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.Logable;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.Utils;
 
 public class Position implements Logable,IPoint {
     private double x;
@@ -55,7 +56,7 @@ public class Position implements Logable,IPoint {
         if (!(obj instanceof Position))
             return false;
         Position other = (Position) obj;
-        return other.x == x && other.y == y && other.orientation == orientation;
+        return Utils.almostEquals(other.x, x) && Utils.almostEquals(other.y, y) && Utils.almostEquals(other.orientation, orientation);
     }
 
     @Override

@@ -2,35 +2,12 @@ package fr.unice.polytech.si3.qgl.stormbreakers.math;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.DoubleStream;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.IPoint;
 import fr.unice.polytech.si3.qgl.stormbreakers.exceptions.DegeneratedLine2DException;
-
-/* File LineSegment2D.java 
- *
- * Project : Java Geometry Library
- *
- * ===========================================
- * 
- * This library is free software; you can redistribute it and/or modify it 
- * under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 2.1 of the License, or (at
- * your option) any later version.
- *
- * This library is distributed in the hope that it will be useful, but 
- * WITHOUT ANY WARRANTY, without even the implied warranty of MERCHANTABILITY
- * or FITNESS FOR A PARTICULAR PURPOSE.
- *
- * See the GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public License
- * along with this library. if not, write to :
- * The Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307, USA.
- */
-
-// package
 
 /**
  * Line segment, defined as the set of points located between the two end
@@ -38,18 +15,14 @@ import fr.unice.polytech.si3.qgl.stormbreakers.exceptions.DegeneratedLine2DExcep
  */
 public class LineSegment2D {
 
-	/**
-	 * Coordinates of starting point of the line
-	 */
-	protected double x0;
-	protected double  y0;
 
 	/**
-	 * Direction vector of the line. dx and dy should not be both zero.
+	 *  Segment bounding points
 	 */
-	protected double dx;
-	protected double  dy;
+	private Point2D startPoint;
+	private Point2D endPoint;
 
+	private final double length;
 	public static final  double ACCURACY = 1e-12;
 
 
@@ -62,6 +35,7 @@ public class LineSegment2D {
 	 * @return true if the 2 line segments intersect
 	 */
 	public boolean intersects( LineSegment2D edge2) {
+		
 		Point2D e1p1 = this.firstPoint();
 		Point2D e1p2 = this.lastPoint();
 		Point2D e2p1 = edge2.firstPoint();
@@ -69,6 +43,7 @@ public class LineSegment2D {
 
 		boolean b1 = Point2D.ccw(e1p1, e1p2, e2p1) * Point2D.ccw(e1p1, e1p2, e2p2) <= 0;
 		boolean b2 = Point2D.ccw(e2p1, e2p2, e1p1) * Point2D.ccw(e2p1, e2p2, e1p2) <= 0;
+		
 		return b1 && b2;
 	}
 
@@ -81,6 +56,7 @@ public class LineSegment2D {
      * @return true if the 2 line segments intersect
      */
 	public static boolean intersects(LineSegment2D edge1, LineSegment2D edge2) {
+		// LATER: 07/03/2020 Rework
 		Point2D e1p1 = edge1.firstPoint();
 		Point2D e1p2 = edge1.lastPoint();
 		Point2D e2p1 = edge2.firstPoint();
@@ -94,23 +70,33 @@ public class LineSegment2D {
     }
 
 	/**
-     * Returns the unique intersection of two straight objects. If the intersection
-     * doesn't exist (parallel lines, short edge), return null.
+     * Returns the intersection with a given lineSegment
+	 * @return if exists the intersection point
+	 * @author David Lebrisse - Stormbreakers
      */
-    public Point2D intersection( LineSegment2D line2) {
-        // Compute denominator, and tests its validity
-        double denom = this.dx * line2.dy - this.dy * line2.dx;
-        if (Math.abs(denom) < LineSegment2D.ACCURACY)
-            return null;
+    public Optional<Point2D> intersection(LineSegment2D other) {
+        Line2D thisSupport = this.getSupportingLine();
+        Line2D otherSupport = other.getSupportingLine();
 
-        // Compute position of intersection point
-        double t = ((this.y0 - line2.y0) * line2.dx - (this.x0 - line2.x0) * line2.dy) / denom;
-		Point2D point= new Point2D(this.x0 + t * this.dx, this.y0 + t * this.dy);
-		
-		// check if point is inside the bounds of the object
-        if (this.contains(point) && line2.contains(point))
-            return point;
-        return null;
+        Optional<Point2D> lineIntersectionOpt = thisSupport.intersect(otherSupport);
+
+        if (lineIntersectionOpt.isPresent()) {
+        	// Supporting lines collide
+        	Point2D lineIntersection = lineIntersectionOpt.get();
+
+        	if (this.isCollinearPointOnSegment(lineIntersection) && other.isCollinearPointOnSegment(lineIntersection)) {
+        		// The collision point is on this segment
+				// -> collision point
+        		return lineIntersectionOpt;
+			} else {
+        		// The collision point is not on this segment
+				// -> no collision point
+        		return Optional.empty();
+			}
+		} else {
+        	// Even supporting lines don't collide
+        	return Optional.empty();
+		}
     }
 
 	// ===================================================================
@@ -122,87 +108,103 @@ public class LineSegment2D {
 	}
 
 	/** Defines a new Edge with two extremities. */
-	public LineSegment2D(double x1, double y1, double x2, double y2) {
-		this.x0 = x1;
-		this.y0 = y1;
-		this.dx = x2 - x1;
-		this.dy = y2 - y1;
+	public LineSegment2D(Point2D startPoint, Point2D endPoint) {
+		this.startPoint = startPoint;
+		this.endPoint = endPoint;
 
+		this.length = startPoint.distanceTo(endPoint);
+		if (Utils.almostEquals(0.0, length))
+			throw new DegeneratedLine2DException("Cannot create LineSegment of length zero !");
+	}
+
+	/** Defines a new Edge with two extremities. */
+	public LineSegment2D(double x1, double y1, double x2, double y2) {
+		this(new Point2D(x1, y1), new Point2D(x2, y2));
 	}
 
 	// ===================================================================
 	// Methods specific to LineSegment2D
 
 	/**
-	 * Returns the opposite vertex of the edge.
+	 * Given one of the bounding points returns the opposite one. Note: if any other
+	 * value is used as input returns null
 	 * 
-	 * @param point one of the vertices of the edge
-	 * @return the other vertex, or null if point is nor a vertex of the edge
+	 * @param point one of the bounding points
+	 * @return the opposite bounding point, or null if point is not a bounding point
+	 * @author David Lebrisse - Stormbreakers
 	 */
-	public Point2D opposite(Point2D point) {
-		if (point.equals(new Point2D(x0, y0)))
-			return new Point2D(x0 + dx, y0 + dy);
-		if (point.equals(new Point2D(x0 + dx, y0 + dy)))
-			return new Point2D(x0, y0);
+	public Point2D oppositeBoundingPoint(Point2D point) {
+		if (point.equals(startPoint))
+			return endPoint;
+		if (point.equals(endPoint))
+			return startPoint;
 		return null;
 	}
 
 	// ===================================================================
-	// methods implementing the CirculinearCurve2D interface
 
 	/**
 	 * Returns the length of the line segment.
 	 */
-
 	public double length() {
-		return Math.hypot(dx, dy);
+		return startPoint.distanceTo(endPoint);
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * Computes this line segment moved by a given translation
 	 * 
-	 * 
+	 * @return the new line segment
 	 */
-	public LineSegment2D parallel(double d) {
-		// Checks line segment has a valid length
-		double d2 = Math.hypot(dx, dy);
-		if (Math.abs(d2) < LineSegment2D.ACCURACY) {
-			throw new DegeneratedLine2DException("Can not compute parallel of degenerated edge");
-		}
-
-		// compute parallel line segment
-		d2 = d / d2;
-		return new LineSegment2D(x0 + dy * d2, y0 - dx * d2, x0 + dx + dy * d2, y0 + dy - dx * d2);
+	public LineSegment2D parallel(Vector translation) {
+		return new LineSegment2D(startPoint.getTranslatedBy(translation), endPoint.getTranslatedBy(translation));
 	}
 
 	// ===================================================================
-	// Methods implementing the Curve2D interface
 
 	/**
 	 * Returns the first point of the edge.
-	 * 
-	 * @return the first point of the edge
 	 */
 
 	public Point2D firstPoint() {
-		return new Point2D(x0, y0);
+		return startPoint;
 	}
 
 	/**
 	 * Returns the last point of the edge.
-	 * 
-	 * @return the last point of the edge
 	 */
 
 	public Point2D lastPoint() {
-		return new Point2D(x0 + dx, y0 + dy);
+		return endPoint;
 	}
 
-	
+	/**
+	 * Computes the <i>segment parameter</i> of the given point P for this line
+	 * segment The parameter is the number k in [0,1] such that if the point belong
+	 * to the line, its location is given by P(k)=P0+k*direction, where startPoint
+	 * is P(0) and endPoint is P(1) Note: The point needs to be on the line.
+	 * 
+	 * @author David Lebrisse - Stormbreakers
+	 */
+	public double segmentParameterOf(Point2D P) {
+		// LATER: 08/03/2020 Clamp k in [0,1] and corresponding tests
+		Vector supportDirection = startPoint.getVectorTo(endPoint).normalize();
+		Line2D arrangedSupport = new Line2D(startPoint, supportDirection);
+		return arrangedSupport.lineParameterOf(P) / length;
+	}
 
-	public Point2D point(double t) {
-		t = Math.min(Math.max(t, 0), 1);
-		return new Point2D(x0 + dx * t, y0 + dy * t);
+	/**
+	 * Computes the coordinates of the point given by (x,y) where
+	 * x=x0+segmentParameter*dx y=y0+segmentParameter*dy Where segmentParameter is
+	 * in [0,1]
+	 * 
+	 * @return the projection
+	 * @author David Lebrisse - Stormbreakers
+	 */
+	public Point2D point(double segmentParameter) {
+		// LATER: 08/03/2020 Clamp k in [0,1] and corresponding tests
+		Vector supportDirection = startPoint.getVectorTo(endPoint).normalize();
+		Line2D arrangedSupport = new Line2D(startPoint, supportDirection);
+		return arrangedSupport.pointFromLineParameter(segmentParameter * length);
 	}
 
 	/**
@@ -210,101 +212,151 @@ public class LineSegment2D {
 	 * which ends at the fist point of this last segment.
 	 */
 	public LineSegment2D reverse() {
-		return new LineSegment2D(x0 + dx, y0 + dy, x0, y0);
+		return new LineSegment2D(endPoint, startPoint);
 	}
 
 	// ===================================================================
-	// Methods implementing the Shape2D interface
-
-	/**
-	 * Returns true
-	 */
-	public boolean isBounded() {
-		return true;
-	}
 
 	/**
 	 * Returns true if the point (x, y) lies on the line covering the object, with
 	 * precision given by ACCURACY.
 	 */
-	protected boolean supportContains(double x, double y) {
-		double denom = Math.hypot(dx, dy);
-		if (denom < LineSegment2D.ACCURACY) {
-			throw new DegeneratedLine2DException("Erreur dans supportContains");
-		}
-		return (Math.abs((x - x0) * dy - (y - y0) * dx) / (denom * denom) < LineSegment2D.ACCURACY);
+	protected boolean supportContains(Point2D point2D) {
+		return getSupportingLine().contains(point2D);
 	}
 
-	public boolean contains(double xp, double yp) {
-		if (!this.supportContains(xp, yp))
-			return false;
-
-		// compute position on the line
-		double t = positionOnLine(xp, yp);
-
-		if (t < -ACCURACY)
-			return false;
-
-		else if (t - 1 > ACCURACY)
-			return false;
-		else{
-			return true;
-		}
-		
+	public boolean contains(Point2D point2D) {
+		// LATER: 08/03/2020 Tests
+		// Compute distance between segment and point
+		double distance = this.distance(point2D);
+		return Utils.almostEquals(0, distance);
 	}
 
-	public boolean contains(IPoint point){
-		return this.contains(point.x(),point.y());
+	public boolean contains(double x, double y) {
+		return this.contains(new Point2D(x, y));
 	}
 
-	public double positionOnLine(double x, double y) {
-        double denom = dx * dx + dy * dy;
-        if (Math.abs(denom) < LineSegment2D.ACCURACY)
-            throw new DegeneratedLine2DException("");
-        return ((y - y0) * dy + (x - x0) * dx) / denom;
-    }
-
-	
+	public boolean contains(IPoint point) {
+		return this.contains(point.x(), point.y());
+	}
 
 	/**
-	 * Get the distance of the point (x, y) to this edge.
+	 * Gets the minimum distance from the point (x, y) to any point of this segment
+	 * line.
+	 * 
+	 * @author David Lebrisse - Stormbreakers
 	 */
-
 	public double distance(double x, double y) {
-		// In case of line segment with same extremities, computes distance to initial point 
-        if (length() < LineSegment2D.ACCURACY)
-        {
-			return Math.hypot(this.x0-x, this.y0-y);
-        }
-        
-        // compute position on the supporting line
-    	Line2D line = this.supportingLine();
-        double t = line.lineParametorOf(x, y);
-
-        // clamp with parameterization bounds of edge
-		t = Math.max(Math.min(t, 1), 0);
-		
-		// compute position of projected point on the edge
-		Point2D proj = line.point(t);
-		
-		// return distance to projected point
-		return proj.getDistanceTo(new Point2D(x, y));
+		return distance(new Point2D(x, y));
 	}
 
-	double distance(IPoint point){
-		return this.distance(point.x(),point.y());
+	/**
+	 * Gets the minimum distance from the point P to any point of this segment line.
+	 * 
+	 * @author David Lebrisse - Stormbreakers
+	 */
+	public double distance(Point2D P) {
+		Line2D support = this.getSupportingLine();
+		Point2D projectedPOntoSupport = support.projectOnto(P);
+
+		if (this.isCollinearPointOnSegment(projectedPOntoSupport)) {
+			// The closest point to draw distance from
+			// is in the segment line
+			return support.distance(P);
+		} else {
+			// The closest point to draw distance from
+			// is in one of the edges
+			Point2D first = firstPoint();
+			Point2D last = lastPoint();
+
+			double distanceFromFirst = first.distanceTo(P);
+			double distanceFromLast = last.distanceTo(P);
+			return Math.min(distanceFromFirst, distanceFromLast);
+		}
 	}
 
-	private Line2D supportingLine() {
-		return new Line2D(x0,y0, dx,dy);
+	double distance(IPoint point) {
+		return this.distance(point.x(), point.y());
 	}
 
-	public boolean almostEquals(double a, double b) {
-		return Math.abs(a - b) <= 0.001;
+	public Line2D supportingLine() {
+		return new Line2D(startPoint, endPoint);
 	}
+
+	/**
+	 * Renvoie le point du segment de droite qui est le plus proche du point donné
+	 * Computes the line segment point closest to a given point
+	 * 
+	 * @param point2D the given point
+	 * @author David Lebrisse - Stormbreakers
+	 */
+	public Point2D closestPointTo(Point2D point2D) {
+		Line2D support = this.getSupportingLine();
+		Point2D projectedPOntoSupport = support.projectOnto(point2D);
+
+		if (this.isCollinearPointOnSegment(projectedPOntoSupport)) {
+			// The closest point to draw distance from
+			// is in the segment line
+			return projectedPOntoSupport;
+		} else {
+			// The closest point to draw distance from
+			// is in one of the edges
+			Point2D first = firstPoint();
+			Point2D last = lastPoint();
+
+			double distanceFromFirst = first.distanceTo(point2D);
+			double distanceFromLast = last.distanceTo(point2D);
+			double min = Math.min(distanceFromFirst, distanceFromLast);
+
+			if (Utils.almostEquals(min, distanceFromFirst))
+				return first;
+			else
+				return last;
+		}
+
+	}
+
+	/**
+	 * Computes the line supporting this line segment
+	 * 
+	 * @return supporting line
+	 * @author David Lebrisse - Stormbreakers
+	 */
+	public Line2D getSupportingLine() {
+		return new Line2D(this.firstPoint(), this.lastPoint());
+	}
+
+	/**
+	 * Computes the line supporting this line segment
+	 * 
+	 * @return supporting line
+	 * @author David Lebrisse - Stormbreakers
+	 */
+	public Point2D getMiddle() {
+		Point2D from = firstPoint();
+		Point2D to = lastPoint();
+		return new Point2D(0.5 * (from.x() + to.x()), 0.5 * (from.y() + to.y()));
+	}
+
+	/**
+	 * Checks if the given collinearPoint is in this line segment
+	 * 
+	 * @return true if it is the case, false if not
+	 * @author David Lebrisse - Stormbreakers
+	 */
+	public boolean isCollinearPointOnSegment(Point2D collinearPoint) {
+		Point2D from = firstPoint();
+		Point2D to = lastPoint();
+		double totalDistance = from.distanceTo(collinearPoint) + to.distanceTo(collinearPoint);
+		return Utils.almostEqualsBoundsIncluded(this.length(),totalDistance);
+	}
+
+	// ===================================================================
+	// Methods implementing the Object interface
 
 	@Override
 	public boolean equals(Object obj) {
+		// // LATER: 08/03/2020 Add tests for equals
 		if (this == obj)
 			return true;
 		if (!(obj instanceof LineSegment2D))
@@ -312,39 +364,19 @@ public class LineSegment2D {
 		LineSegment2D that = (LineSegment2D) obj;
 
 		// Compare each field
-		if (!this.almostEquals(this.x0, that.x0))
-			return false;
-		if (!this.almostEquals(this.y0, that.y0))
-			return false;
-		if (!this.almostEquals(this.dx, that.dx))
-			return false;
-		if (!this.almostEquals(this.dy, that.dy))
-			return false;
-
-		return true;
+		return this.startPoint.equals(that.startPoint)
+				&& this.endPoint.equals(that.endPoint);
 	}
-
-	// =================================
-	// Methods implementing the Shape interface
-
-	
-
-	// ===================================================================
-	// Methods implementing the Object interface
 
 	@Override
 	public String toString() {
-		return "LineSegment2D[(" + x0 + "," + y0 + ")-(" + (x0 + dx) + "," + (y0 + dy) + ")]";
+		return "LineSegment2D[(" + startPoint.x() + "," + startPoint.y() + ")-("
+				+ endPoint.x() + "," + endPoint.y() + ")]";
 	}
 
 	@Override
 	public int hashCode() {
-		int hash = 1;
-		hash = hash * 31 + Double.valueOf(this.x0).hashCode();
-		hash = hash * 31 + Double.valueOf(this.y0).hashCode();
-		hash = hash * 31 + Double.valueOf(this.dx).hashCode();
-		hash = hash * 31 + Double.valueOf(this.dy).hashCode();
-		return hash;
+		return Objects.hash(startPoint,endPoint);
 	}
 	/**
 	 * Renvoie le point du segment de droite qui est le plus proche 
@@ -352,7 +384,7 @@ public class LineSegment2D {
 	 * @param point2d
 	 * @return
 	 */
-	public Point2D closestPointTo(Point2D point2d){
+	public Point2D closestPointTo(IPoint point2d){
 		List<Point2D> points=new ArrayList<>();
 		DoubleStream.iterate(0, d-> d <= 1.0, d-> d+0.05).forEach(d->
 			points.add( this.point(d) )
@@ -365,9 +397,18 @@ public class LineSegment2D {
 		return null;
 		
 	}
+	/**
+	 * 
+	 * @param step must be within 0 and 1
+	 * @return
+	 */
+	public List<IPoint> pointsOfSegment(double step){
+		List<IPoint> points=new ArrayList<>();
+		DoubleStream.iterate(0, d-> d <= 1.0, d-> d+step).forEach(d->
+			points.add( this.point(d) )
+		);
 
-	
+		return points;
+	}
 
-	
-	
 }

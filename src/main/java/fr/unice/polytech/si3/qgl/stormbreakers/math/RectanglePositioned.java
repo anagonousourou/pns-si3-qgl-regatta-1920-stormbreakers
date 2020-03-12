@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.IPoint;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Rectangle;
 
 public class RectanglePositioned {
@@ -12,21 +13,30 @@ public class RectanglePositioned {
     private LineSegment2D largeur2;
     private LineSegment2D longueur1;
     private LineSegment2D longueur2;
+    
+    private Point2D a;
+    private Point2D b;
+    private Point2D c;
+    private Point2D d;
 
-    public RectanglePositioned(Rectangle rectangle, IPoint position) {
-
-        this.largeur1 = new LineSegment2D(pointA(rectangle, position), pointB(rectangle, position));
-        this.largeur2 = new LineSegment2D(pointC(rectangle, position), pointD(rectangle, position));
-        this.longueur1 = new LineSegment2D(pointD(rectangle, position), pointA(rectangle, position));
-        this.longueur2 = new LineSegment2D(pointB(rectangle, position), pointC(rectangle, position));
+    public RectanglePositioned(Rectangle rectangle, Position position) {
+    	a= pointA(rectangle, position);
+    	b=pointB(rectangle, position);
+    	c=pointC(rectangle, position);
+    	d=pointD(rectangle, position);
+        this.largeur1 = new LineSegment2D(a, b);
+        this.largeur2 = new LineSegment2D(c, d);
+        this.longueur1 = new LineSegment2D(d, a);
+        this.longueur2 = new LineSegment2D(b, c);
+       
 
     }
 
-    Point2D pointA(Rectangle rectangle, IPoint position) {
+    Point2D pointA(Rectangle rectangle, Position position) {
         double radius = Math.hypot(rectangle.getHeight() / 2, rectangle.getWidth() / 2);
         double beta = Math.atan(rectangle.getWidth() / rectangle.getHeight());
 
-        double alpha = rectangle.getOrientation();
+        double alpha = rectangle.getOrientation()+position.getOrientation();
 
         double theta = alpha + beta;
 
@@ -36,11 +46,11 @@ public class RectanglePositioned {
         return new Point2D(xpoint, ypoint);
     }
 
-    Point2D pointB(Rectangle rectangle, IPoint position) {
+    Point2D pointB(Rectangle rectangle, Position position) {
         double radius = Math.hypot(rectangle.getHeight() / 2, rectangle.getWidth() / 2);
         double beta = Math.atan(rectangle.getWidth() / rectangle.getHeight());
 
-        double alpha = rectangle.getOrientation();
+        double alpha = rectangle.getOrientation()+position.getOrientation();
 
         double theta = alpha - beta;
 
@@ -50,11 +60,11 @@ public class RectanglePositioned {
         return new Point2D(xpoint, ypoint);
     }
 
-    Point2D pointC(Rectangle rectangle, IPoint position) {
+    Point2D pointC(Rectangle rectangle, Position position) {
         double radius = Math.hypot(rectangle.getHeight() / 2, rectangle.getWidth() / 2);
         double beta = Math.atan(rectangle.getWidth() / rectangle.getHeight());
 
-        double alpha = rectangle.getOrientation();
+        double alpha = rectangle.getOrientation()+position.getOrientation();
 
         double theta = Math.PI + alpha + beta;
 
@@ -64,11 +74,11 @@ public class RectanglePositioned {
         return new Point2D(xpoint, ypoint);
     }
 
-    Point2D pointD(Rectangle rectangle, IPoint position) {
+    Point2D pointD(Rectangle rectangle, Position position) {
         double radius = Math.hypot(rectangle.getHeight() / 2, rectangle.getWidth() / 2);
         double beta = Math.atan(rectangle.getWidth() / rectangle.getHeight());
 
-        double alpha = rectangle.getOrientation();
+        double alpha = rectangle.getOrientation()+position.getOrientation();
 
         double theta = Math.PI + alpha - beta;
 
@@ -79,6 +89,7 @@ public class RectanglePositioned {
     }
 
     public boolean intersectsWith(LineSegment2D lineSegment2D){
+        
         return largeur1.intersects(lineSegment2D)||longueur1.intersects(lineSegment2D)||largeur2.intersects(lineSegment2D)||longueur2.intersects(lineSegment2D);
     }
 
@@ -95,11 +106,36 @@ public class RectanglePositioned {
      * @param point2d
      * @return
      */
-    public Optional<Point2D> closestPointTo(Point2D point2d){
+    public Optional<Point2D> closestPointTo(IPoint point2d){
         return List.of(largeur1,longueur1,largeur2,longueur2).stream()
         .map(l->l.closestPointTo(point2d))
         .min((p,pother)-> Double.compare(p.distanceTo(point2d),pother.distanceTo(point2d) ));
     }
+    /**
+     * Return a list of points of the rectangle 
+     * there must me enough points 
+     */
+    public List<IPoint> pointsOfRectangle(double step){
+        
+        return Utils.concatenate(largeur1.pointsOfSegment(step), 
+        largeur2.pointsOfSegment(step),longueur1.pointsOfSegment(step),longueur2.pointsOfSegment(step));
+    }
 
 
+    
+    public Point2D getA() {
+		return a;
+	}
+    public Point2D getB() {
+  		return b;
+  	} 
+    public Point2D getC() {
+		return c;
+	}
+  	public Point2D getD() {
+		return d;
+	}
+  	public List<Point2D> corners(){
+  		return List.of(a,b,c,d); 
+  	}
 }

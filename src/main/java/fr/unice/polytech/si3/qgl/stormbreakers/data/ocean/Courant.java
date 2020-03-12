@@ -1,12 +1,18 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.data.ocean;
 
+import java.util.List;
+import java.util.Optional;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Circle;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.IPoint;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Polygon;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Rectangle;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Shape;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Checkpoint;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.ShapeType;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.processing.Logger;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.RectanglePositioned;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Utils;
@@ -31,12 +37,27 @@ public class Courant extends OceanEntity{
                 position.toString(), shape.toString());
     }
 
-    public Point2D closestPointTo(Point2D point2d) {
-        var tmp=new RectanglePositioned((Rectangle) this.shape, this.position).closestPointTo(point2d);
-        if(tmp.isPresent()){
-            return tmp.get();
+    public Point2D closestPointTo(IPoint point2d) {
+        if(this.shape.getTypeEnum()==ShapeType.RECTANGLE){
+            var tmp=new RectanglePositioned((Rectangle) this.shape, this.position).closestPointTo(point2d);
+            if(tmp.isPresent()){
+                return tmp.get();
+            }
         }
-        //should never happen
+        else if(this.shape.getTypeEnum()==ShapeType.POLYGON){
+            Logger.getInstance().log(this.shape.toLogs());
+            Polygon poly=(Polygon)this.shape;
+            var point=poly.generateBordersInThePlan(this).stream()
+            .map(l->l.closestPointTo(point2d))
+            .min((p,pother)-> Double.compare(p.distanceTo(point2d),pother.distanceTo(point2d) ));
+            if(point.isPresent()){
+                return point.get();
+            }
+        }
+        //
+        
+        
+        //LATER add support for circle
         return null;
     }
 
@@ -44,16 +65,7 @@ public class Courant extends OceanEntity{
 
     
 	
-	public boolean bringCloserCp(Checkpoint cp, Boat boat) {
-		Rectangle r=(Rectangle)this.shape;
-		Point2D nearestPoint=r.findPointNearestToPosition(cp.getPosition(),this.position);
-		Point2D cpPoint2D = cp.getPosition().getPoint2D();
-		Point2D boatPoint2D = boat.getPosition().getPoint2D();
-		if(nearestPoint.getDistanceTo(cpPoint2D)<boatPoint2D.getDistanceTo(cpPoint2D)) {
-			return r.haveGoodOrientation( cp, boatPoint2D,this.getPosition().getPoint2D());
-		}
-		return false;
-	}
+	
     /**
      * Dis si le courant est compatible avec le traject défini par les parametres
      * @param depart
@@ -66,8 +78,84 @@ public class Courant extends OceanEntity{
         Vector trajectoirVector= new Vector(depart, destination);
 
         double helpness=courantVector.scal(trajectoirVector);
-        return helpness >= Utils.EPSILON;
-	}
+        return helpness > Utils.EPSILON;
+    }
+    /**
+     * 
+     * @param depart
+     * @param destination
+     * @return
+     */
+    public boolean isCompletelyCompatibleWith(IPoint depart,IPoint destination){
+        Vector courantVector=Vector.createUnitVector( this.getPosition().getOrientation() );
+        Vector courantComposantx= new Vector (courantVector.getDeltaX(), 0);
+        Vector courantComposanty=new Vector(0, courantVector.getDeltaY());
+        
+
+        Vector trajectoirVector= new Vector(depart, destination);
+        double helpx=courantComposantx.scal(trajectoirVector);
+        double helpy=courantComposanty.scal(trajectoirVector);
+        if( Utils.within(helpx, Utils.EPSILON)){
+            return helpy> Utils.EPSILON;
+        }
+        else if(Utils.within(helpy, Utils.EPSILON)){
+            return helpx> Utils.EPSILON;
+        }
+        return  helpx> Utils.EPSILON &&  helpy> Utils.EPSILON;
+
+
+    }
+
+    /**
+     * 
+     * @param depart
+     * @param destination
+     * @return
+     */
+    public boolean isPartiallyCompatibleWith(IPoint depart,IPoint destination){
+        Vector courantVector=Vector.createUnitVector( this.getPosition().getOrientation() );
+        Vector courantComposantx= new Vector (courantVector.getDeltaX(), 0);
+        Vector courantComposanty=new Vector(0, courantVector.getDeltaY());
+
+        Vector trajectoirVector= new Vector(depart, destination);
+        
+        return courantComposantx.scal(trajectoirVector) > Utils.EPSILON || courantComposanty.scal(trajectoirVector) > Utils.EPSILON;
+
+
+    }
+    /**
+     * LATER test
+     * @param point
+     * @return
+     */
+    public Optional<IPoint> getAwayPoint(IPoint point){
+        Rectangle biggerRectangle;
+        if(this.shape.getTypeEnum()==ShapeType.RECTANGLE){
+            Rectangle current=(Rectangle)this.shape;
+            biggerRectangle=new Rectangle(current.getWidth()+Utils.TAILLE_BATEAU, current.getHeight()+Utils.TAILLE_BATEAU, current.getOrientation());
+            
+        }
+
+        else if(this.shape.getTypeEnum()==ShapeType.POLYGON){
+            var poly=(Polygon)this.shape;
+            double r=poly.getMaxRadius();
+            biggerRectangle=new Rectangle(r*2+Utils.TAILLE_BATEAU, r*2+Utils.TAILLE_BATEAU, 0);
+        }
+        else{//circle
+            var circle=(Circle)this.shape;
+            double r=circle.getRadius();
+            biggerRectangle=new Rectangle(r*2+Utils.TAILLE_BATEAU, r*2+Utils.TAILLE_BATEAU, 0);
+        }
+
+        var rectanglePositioned=new RectanglePositioned(biggerRectangle, this.position);
+
+            List<IPoint> points= rectanglePositioned.pointsOfRectangle(0.01);
+            return points.stream().filter(p->this.isCompatibleWith(point,p) ).min(
+                (p1,p2)->Double.compare(p1.distanceTo(point), p2.distanceTo(point))
+            );
+        
+        
+    }
 
     @Override
     public double getOrientation() {

@@ -1,6 +1,6 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.math;
 
-import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.IPoint;
 
 public class EquationDroite {
 	//ax+b
@@ -17,17 +17,33 @@ public class EquationDroite {
 	}
 
 	public EquationDroite(double x1, double y1, double x2, double y2) {
-		slope =(y2-y1)/(x2-x1);
-		EquationDroite e= new EquationDroite(-slope, y1);
-		yIntercept = e.evalY(x1);
+		this.slope =(y2-y1)/(x2-x1);
+		this.yIntercept=y1-this.slope*x1;
+	}
+  
+  
+  
+  public double orientationDroite() {
+		return Math.atan(slope);
 	}
 
+  
 	/**
 	 * Returns y = f(x)
 	 * @param x f input
 	 */
-	private double evalY(double x) {
+ 
+  //CHANGE: YOUR resolutionValY
+	double evalY(double x) {
 		return this.slope *x+this.yIntercept;
+	}
+  
+  /**
+	 * trouve la valeur de x pour une valeur de y fixée
+	 * @return
+	 */
+	public double calculateValueX(double y) {
+		return (y/slope)-yIntercept;
 	}
 
 	/**
@@ -35,17 +51,34 @@ public class EquationDroite {
 	 * going through P
 	 * @param P the base point
 	 */
-	EquationDroite findEqPerpendicularLineByPos(Point2D P) {
+	EquationDroite findEqPerpendicularLineByPos(IPoint P) {
 		double lineA= -(1/ slope);
 		EquationDroite e= new EquationDroite(-lineA, P.y());
 		double lineB=e.evalY(P.x());
 		return new EquationDroite(lineA, lineB);
 	}
 
-	double getSlope() {
-		return slope;
-	}
-	double getY_Intercept() {
-		return yIntercept;
-	}
+    /**
+     * Finds x solution of y1(x)=y2(x)
+     * where y1(x) is this equation
+     * @param other y2(x)
+     * @return x the common solution
+     */
+    public double findCommonSolution(EquationDroite other) {
+        // On cherche x t.q. : y1(x) = y2(x)
+        //  soit : a1*x+b1 = a2*x+b2
+        //  d'où : (a1-a2) * x = (b2-b1)
+        // On obtiens : x = (b2-b1)/(a1-a2)
+        return (other.yIntercept - this.yIntercept) / (this.slope - other.slope );
+    }
+
+    // CHANGE: OLD getA
+    double getSlope() {
+        return slope;
+    }
+  
+    // CHANGE: OLD getB
+    double getY_Intercept() {
+        return yIntercept;
+    }
 }

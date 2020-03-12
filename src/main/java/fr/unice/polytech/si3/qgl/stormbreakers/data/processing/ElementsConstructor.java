@@ -83,8 +83,8 @@ public class ElementsConstructor {
 		//Log current checkpoint
 
 		// Log actions generated
-		List<Logable> logableActions = new ArrayList<>(actions);
-		Logger.getInstance().log("A:" + Logable.listToLogs(logableActions, ",", "[", "]"));
+		
+		
 
 		// Save logs and prepare for new instructions
 		

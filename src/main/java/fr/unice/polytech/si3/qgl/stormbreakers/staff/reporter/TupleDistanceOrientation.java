@@ -15,4 +15,9 @@ public class TupleDistanceOrientation {
     public double getOrientation() {
         return orientation;
     }
+
+    @Override
+    public String toString() {
+        return String.format("%s(distance: %f , orientation: %f)", this.getClass().getSimpleName(),distance,orientation);
+    }
 }

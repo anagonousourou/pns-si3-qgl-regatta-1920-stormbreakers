@@ -29,6 +29,7 @@ hs_err_pid*
 **/.idea
 **/*.exe
 .vscode
+.sonarlint
 
 **/.classpath
 **/.project

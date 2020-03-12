@@ -8,25 +8,44 @@ public class Vector {
 
     public static final Vector UnitX = new Vector(1,0);
 
-    private double x;
-    private double y;
+    private double dx;
+    private double dy;
 
-    public Vector(double x, double y) {
-        this.x = x;
-        this.y = y;
+    public Vector(double dx, double dy) {
+        this.dx = dx;
+        this.dy = dy;
     }
 
     public Vector(IPoint start, IPoint end) {
-        this.x = end.x() - start.x();
-        this.y = end.y() - start.y();
+        this.dx = end.x() - start.x();
+        this.dy = end.y() - start.y();
+    }
+
+    public Vector(Vector toCopy) {
+        this(toCopy.dx,toCopy.dy);
+    }
+
+    public static boolean areCollinear(Vector vector1, Vector vector2) {
+        // Z component of cross product
+        double crossZ = vector1.dx * vector2.dy - vector2.dx * vector1.dy;
+        return Utils.almostEquals(0,crossZ);
     }
 
     public double norm() {
-        return Math.sqrt(x * x + y * y);
+        return Math.sqrt(dx * dx + dy * dy);
+    }
+
+    public double squaredNorm() {
+        return this.scal(this);
     }
 
     public double scal(Vector other) {
-        return this.x * other.x + this.y * other.y;
+        return this.dx * other.dx + this.dy * other.dy;
+    }
+
+    public double scal(IPoint startOtherVector,IPoint endOtherVector){
+        Vector otherVector=new Vector(startOtherVector, endOtherVector);
+        return this.scal(otherVector);
     }
 
     /**
@@ -36,7 +55,7 @@ public class Vector {
      * @param other 2e vecteur
      * @return double entre 0 et Pi
      */
-    public double angleBetween(Vector other) {
+    public double nonOrientedAngleWith(Vector other) {
         return Math.acos(this.scal(other) / (this.norm() * other.norm()));
     }
 
@@ -45,11 +64,11 @@ public class Vector {
     }
 
     public double getDeltaX() {
-        return x;
+        return dx;
     }
 
     public double getDeltaY() {
-        return y;
+        return dy;
     }
     /**
      * Mutiplie les coords du vecteur par le facteur passé en parametre
@@ -58,16 +77,34 @@ public class Vector {
      * @return le nouveau vecteur obtenu
      */
     public Vector scaleVector(double scaleFactor) {
-        return new Vector(x*scaleFactor,y*scaleFactor);
+        return new Vector(dx *scaleFactor, dy *scaleFactor);
+    }
+
+    /**
+     * Returns vector orientation in radians
+     * Bounds : [0,2Pi]
+     * @return the angle from the x unitVector
+     */
+    public double getOrientation() {
+        double orientedAngle = Math.atan2(dy,dx);
+        if (orientedAngle<0) {
+            orientedAngle += 2*Math.PI;
+        }
+        return orientedAngle;
     }
 
     public Vector getRotatedBy(double angle) {
         double magnitude = this.norm();
-        double previousAngle = this.angleBetween(UnitX);
+        double previousAngle = this.getOrientation();
         Vector newUnitRotatedVector = Vector.createUnitVector(previousAngle+angle);
         return newUnitRotatedVector.scaleVector(magnitude);
     }
 
+    public Vector normalize() {
+        double magnitude = this.norm();
+        double ratio = Math.pow(magnitude,-1);
+        return this.scaleVector(ratio);
+    }
 
     @Override
     public boolean equals(Object obj) {
@@ -76,11 +113,16 @@ public class Vector {
         if (!(obj instanceof Vector))
             return false;
         Vector other = (Vector) obj;
-        return Utils.almostEquals(this.x,other.x) && Utils.almostEquals(this.y,other.y);
+        return Utils.almostEquals(this.dx,other.dx) && Utils.almostEquals(this.dy,other.dy);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(x, y);
+        return Objects.hash(dx, dy);
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s(x: %f,y: %f)", this.getClass().getSimpleName(),this.dx,this.dy);
     }
 }
