@@ -27,15 +27,16 @@ public class ShortestPathCalculator {
 		while(!selectSommet.contains(checkpointSommet)) {
 			Sommet nextSelectSommet = getLowestDistanceFromSource(notSelectSommet);
 			System.out.println("nextSommet:"+nextSelectSommet);
+			
 			notSelectSommet.remove(nextSelectSommet);
 			selectSommet.add(nextSelectSommet);
+			
 			List<Arrete> arretesPartantDeSommet= new ArrayList<Arrete>();
 			ListeDAdjacence adj = new ListeDAdjacence(boatSommet.getPoint(), nextSelectSommet.getPoint(), recifs, nextCheckpoint);//classe qui s'enfout des paramêtres
 			arretesPartantDeSommet.addAll(adj.getArreteAdjacente());
 
-			
 			for(Arrete a: arretesPartantDeSommet) {
-				System.out.println("départ :"+a.getDepart());
+				System.out.println("a:"+a);
 				if(!notSelectSommet.contains(a.getArrive())&& !selectSommet.contains(a.getArrive())) {
 					notSelectSommet.add(a.getArrive());
 					distanceToSource.put(a.getArrive(),Double.POSITIVE_INFINITY);
@@ -45,11 +46,15 @@ public class ShortestPathCalculator {
 		}
 		List<Sommet> trajetCheckpointBoat= new ArrayList<>();
 		trajetCheckpointBoat.add(checkpointSommet);
+		int i=0;
+		Sommet s;
+		do{
+			s= PreviousSommet.get(trajetCheckpointBoat.get(i));
+			trajetCheckpointBoat.add(s);
+			i++;
+		}while(!s.equals(boatSommet)); 
 		
-		for(int i=0;i<PreviousSommet.size();i++) {
-			trajetCheckpointBoat.add(PreviousSommet.get(trajetCheckpointBoat.get(0)));
-		}
-		System.out.println(PreviousSommet);
+		System.out.println(trajetCheckpointBoat);
 		Collections.reverse(trajetCheckpointBoat);//on transforme le trajet checkpoint bateau en  un trajet Bateau checkpoint
 		return trajetCheckpointBoat;
 	}

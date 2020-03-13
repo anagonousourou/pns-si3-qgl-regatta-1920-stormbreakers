@@ -21,7 +21,8 @@ public class ListeDAdjacence {
 	public ListeDAdjacence(IPoint boatPosition,IPoint currentSommet, List<Recif> recifs, Checkpoint nextCheckpoint) {
 
 		//this.currentSommet= currentSommet;
-		listAdjacence = createListArrete(currentSommet,boatPosition,recifs ,nextCheckpoint);
+		listAdjacence = new ArrayList<Arrete>();
+		listAdjacence.addAll(createListArrete(boatPosition,currentSommet,recifs ,nextCheckpoint));
 	}
 	
 	

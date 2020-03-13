@@ -37,6 +37,6 @@ public class ShortestPathCalculatorTest {
 	@Test
 	public void shortestPathFromBoatPosTest() {
 		spc.shortestPathFromBoatPos(bateau, recifs,cp);
-		spc.shortestPathFromBoatPos(bateau, recifs,cp2);
+		//spc.shortestPathFromBoatPos(bateau, recifs,cp2);
 	}
 }
