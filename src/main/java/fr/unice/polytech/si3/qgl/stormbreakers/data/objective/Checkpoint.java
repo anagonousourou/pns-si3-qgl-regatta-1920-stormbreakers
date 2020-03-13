@@ -47,7 +47,7 @@ public class Checkpoint implements Logable,Surface {
 
     @Override
     public String toString() {
-        return position.toString() + " " + shape.toString();
+        return String.format("%s(pos: %s, shape:%s)", this.getClass().getSimpleName(),position.toString(),shape.toString());
     }
 
     @Override

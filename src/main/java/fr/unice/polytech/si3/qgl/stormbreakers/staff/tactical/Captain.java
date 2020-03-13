@@ -148,6 +148,7 @@ public class Captain {
 
     List<SailorAction> adjustSpeedTakingIntoAccountWind(double distance, double currentSpeed) {
         double currentExternalSpeed = this.weatherAnalyst.currentExternalSpeed();
+        
 
         if (this.weatherAnalyst.additionalSpeedExists()) {
             double potentialSpeedAcquirable = this.weatherAnalyst.potentialSpeedAcquirable();

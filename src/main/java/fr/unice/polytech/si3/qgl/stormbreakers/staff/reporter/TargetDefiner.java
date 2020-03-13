@@ -59,10 +59,12 @@ public class TargetDefiner {
                 Logger.getInstance().log("both inside stream " + checkpoint);
                 // the boat and the stream are inside the same stream
                 List<IPoint> trajectory = streamManager.trajectoryBoatAndCheckpointInsideStream(boat, checkpoint);
+
                 if (!courant.isCompatibleWith(boat, checkpoint)) {
                     return new TupleDistanceOrientation(trajectory.get(1).distanceTo(boat) + courant.getStrength(),
                             this.navigator.additionalOrientationNeeded(boat.getPosition(), trajectory.get(1)));
                 }
+                
                 double speedDueToStream = Math
                     .cos(courant.getPosition().getOrientation() - new Vector(boat, checkpoint).getOrientation())
                     * courant.getStrength();
