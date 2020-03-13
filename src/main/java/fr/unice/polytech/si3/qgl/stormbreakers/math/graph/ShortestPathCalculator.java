@@ -11,7 +11,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.IPoint;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Checkpoint;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Recif;
 
-public class shortestPathCalculator {
+public class ShortestPathCalculator {
 
 	HashMap<Sommet, Double> distanceToSource= new HashMap<>();
 	HashMap<Sommet, Sommet> PreviousSommet =  new HashMap<>(); 
@@ -26,18 +26,21 @@ public class shortestPathCalculator {
 		Sommet checkpointSommet = new Sommet(nextCheckpoint.getPosition());
 		while(!selectSommet.contains(checkpointSommet)) {
 			Sommet nextSelectSommet = getLowestDistanceFromSource(notSelectSommet);
+			System.out.println("nextSommet:"+nextSelectSommet);
 			notSelectSommet.remove(nextSelectSommet);
 			selectSommet.add(nextSelectSommet);
-			List<Arrete> arretesPartantDeSommet= new ListeDAdjacence(boatSommet.getPoint(), nextSelectSommet.getPoint(), recifs, nextCheckpoint).getArreteAdjacente();
-//			System.out.println("distanceSource"+distanceToSource.get(boatSommet)+"\n"+"distanceNextSelectSommet"+distanceToSource.get(nextSelectSommet));
+			List<Arrete> arretesPartantDeSommet= new ArrayList<Arrete>();
+			ListeDAdjacence adj = new ListeDAdjacence(boatSommet.getPoint(), nextSelectSommet.getPoint(), recifs, nextCheckpoint);//classe qui s'enfout des paramêtres
+			arretesPartantDeSommet.addAll(adj.getArreteAdjacente());
+
+			
 			for(Arrete a: arretesPartantDeSommet) {
-				
-				if(!notSelectSommet.contains(a.getArrive())) {
+				System.out.println("départ :"+a.getDepart());
+				if(!notSelectSommet.contains(a.getArrive())&& !selectSommet.contains(a.getArrive())) {
 					notSelectSommet.add(a.getArrive());
 					distanceToSource.put(a.getArrive(),Double.POSITIVE_INFINITY);
 				}
 				calculateMinimumDistance(a);
-
 			}
 		}
 		List<Sommet> trajetCheckpointBoat= new ArrayList<>();
@@ -46,6 +49,7 @@ public class shortestPathCalculator {
 		for(int i=0;i<PreviousSommet.size();i++) {
 			trajetCheckpointBoat.add(PreviousSommet.get(trajetCheckpointBoat.get(0)));
 		}
+		System.out.println(PreviousSommet);
 		Collections.reverse(trajetCheckpointBoat);//on transforme le trajet checkpoint bateau en  un trajet Bateau checkpoint
 		return trajetCheckpointBoat;
 	}
@@ -60,11 +64,10 @@ public class shortestPathCalculator {
 
 	private Sommet getLowestDistanceFromSource(List<Sommet> notSelectSommet) {
 		// TODO Auto-generated method stub
-		if(notSelectSommet.isEmpty()) {
-			return null;
-		}
+
 		Sommet nearestSommet =notSelectSommet.get(0);
 		double lowestDistance= distanceToSource.get(nearestSommet);
+		System.out.println("notSelectSommet"+notSelectSommet.size());
 		for(int i=1;i<notSelectSommet.size();i++) {
 			if(distanceToSource.get(notSelectSommet.get(i))<lowestDistance) {
 				nearestSommet =notSelectSommet.get(i);

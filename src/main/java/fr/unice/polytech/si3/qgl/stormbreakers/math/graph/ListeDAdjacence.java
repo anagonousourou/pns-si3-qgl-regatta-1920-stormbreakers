@@ -17,12 +17,11 @@ public class ListeDAdjacence {
 	private double ecart = 50.0;
 	private int VISIBLITEMAX = 1000;
 	private List<Arrete> listAdjacence;
-	private IPoint currentSommet;
 	
 	public ListeDAdjacence(IPoint boatPosition,IPoint currentSommet, List<Recif> recifs, Checkpoint nextCheckpoint) {
 
-		this.currentSommet= currentSommet;
-		listAdjacence = createListArrete(boatPosition,recifs ,nextCheckpoint);
+		//this.currentSommet= currentSommet;
+		listAdjacence = createListArrete(currentSommet,boatPosition,recifs ,nextCheckpoint);
 	}
 	
 	
@@ -35,12 +34,11 @@ public class ListeDAdjacence {
 		return listAdjacence;
 	}
 	
-	private List<Arrete> createListArrete(IPoint boatPosition,List<Recif> recifs, Checkpoint nextCheckpoint) {
-		IPoint depart = currentSommet;
+	private List<Arrete> createListArrete(IPoint boatPosition,IPoint currentSommet, List<Recif> recifs, Checkpoint nextCheckpoint) {
 		List<Arrete> list = new ArrayList<Arrete>();
-		if (isPointOnEdge(boatPosition, depart.x(), depart.y())) {
+		if (isPointOnEdge(boatPosition, currentSommet.x(), currentSommet.y())) {
 			//list.addAll(this.listArrete(i,j));
-			list.addAll(listArretePointOnedge(boatPosition, depart, nextCheckpoint.getPosition() ,recifs));
+			list.addAll(listArretePointOnedge(boatPosition, currentSommet, nextCheckpoint.getPosition() ,recifs));
 		} else {
 			for (double x = -ecart; x <= ecart; x = x + ecart) {
 				for (double y = -ecart; y <= ecart; y = y + ecart) {
@@ -48,11 +46,12 @@ public class ListeDAdjacence {
 					if(arrive.distanceTo(nextCheckpoint)<=50) {
 						arrive=nextCheckpoint;
 					}
-					if(!(arrive.x()==depart.x()&& arrive.y()== depart.y())) {
-						if (!arreteIntersectAShape(depart, arrive, recifs)) {
-							list.add(new Arrete(depart, arrive));
+					if(!(arrive.x()==currentSommet.x() && arrive.y()== currentSommet.y())) {
+						if (!arreteIntersectAShape(currentSommet, arrive, recifs)) {
+							list.add(new Arrete(currentSommet, arrive));
 						}	
 					}
+						
 				}
 			}
 		}

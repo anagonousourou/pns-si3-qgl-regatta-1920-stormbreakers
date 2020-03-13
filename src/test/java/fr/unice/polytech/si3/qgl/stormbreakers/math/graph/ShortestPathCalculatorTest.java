@@ -15,13 +15,13 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Checkpoint;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Recif;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
 
-public class ShortPathCalculatorTest {
+public class ShortestPathCalculatorTest {
 	//ListeDAdjacence adj;
 	Sommet bateau;
 	List<Recif> recifs;
 	Checkpoint cp;
 	Checkpoint cp2;
-	shortestPathCalculator spc;
+	ShortestPathCalculator spc;
 	
 	@BeforeEach 
 	void setup() {
@@ -30,7 +30,7 @@ public class ShortPathCalculatorTest {
 		recifs= new ArrayList<Recif>();
 		cp = new Checkpoint(new Position(600, 600), new Circle(50));
 		cp2 = new Checkpoint(new Position(800, 800), new Circle(50));
-		spc= new shortestPathCalculator();
+		spc= new ShortestPathCalculator();
 		//adj= new ListeDAdjacence(bateau, other,recifs, cp);
 	}
 	
