@@ -280,7 +280,7 @@ public class Circle extends Shape {
         if (!(obj instanceof Circle))
             return false;
         Circle other = (Circle) obj;
-        return other.radius == radius;
+        return Utils.almostEquals(other.radius, radius);
     }
 
     @Override

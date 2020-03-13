@@ -104,7 +104,7 @@ public class Line2D {
     public Optional<Point2D> intersect(Line2D other) {
         if (this.isVerticalLine() && other.isVerticalLine()) {
             // Both vertical
-            if (this.anchor.x() == other.anchor.x()) {
+            if (Utils.almostEquals(this.anchor.x(), other.anchor.x())) {
                 // Lines are collinear -> Infinite collision points
                 return Optional.of(this.anchor);
             } else {

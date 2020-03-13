@@ -185,7 +185,7 @@ public class Captain {
                 return this.accelerate(distance, currentSpeed + currentExternalSpeed);
             }
             // voiles fermées et les ouvrir vous ralentissent
-            if (currentExternalSpeed == 0.0 && this.weatherAnalyst.potentialSpeedAcquirable() <= 0.0) {
+            if (Utils.almostEquals(currentExternalSpeed, 0.0) && this.weatherAnalyst.potentialSpeedAcquirable() <= 0.0) {
                 return this.accelerate(distance, currentSpeed);
             }
 
@@ -228,7 +228,7 @@ public class Captain {
                     this.accelerate(distance, currentSpeed + minAdditionalSpeed));
 
         }
-        if (currentSpeed == 0) {
+        if (Utils.almostEquals(currentSpeed, 0)) {
             return this.validateActions(this.coordinator.addOaringSailorsOnEachSide());
         }
         return List.of();

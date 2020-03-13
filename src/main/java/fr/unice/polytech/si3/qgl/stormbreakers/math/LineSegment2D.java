@@ -308,7 +308,7 @@ public class LineSegment2D {
 			double distanceFromLast = last.distanceTo(point2D);
 			double min = Math.min(distanceFromFirst, distanceFromLast);
 
-			if (min == distanceFromFirst)
+			if (Utils.almostEquals(min, distanceFromFirst))
 				return first;
 			else
 				return last;
