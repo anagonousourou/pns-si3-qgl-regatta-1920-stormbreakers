@@ -13,9 +13,16 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Recif;
 
 public class ShortestPathCalculator {
 
-	HashMap<Sommet, Double> distanceToSource= new HashMap<>();
-	HashMap<Sommet, Sommet> PreviousSommet =  new HashMap<>(); 
+	HashMap<Sommet, Double> distanceToSource= new HashMap<>();//contient la distance Sommet vers boatPosition
+	HashMap<Sommet, Sommet> PreviousSommet =  new HashMap<>(); //pour un Sommet s retourne le point précedent pour obtenir son plus court chemin  
 	
+	/**
+	 * retourne la liste des points qui font partie du plus court chemin
+	 * @param boatSommet
+	 * @param recifs
+	 * @param nextCheckpoint
+	 * @return
+	 */
 	public List<Sommet> shortestPathFromBoatPos(Sommet boatSommet,List<Recif> recifs,Checkpoint nextCheckpoint) {
 
 		List<Sommet> selectSommet= new ArrayList<>(); 
@@ -58,7 +65,10 @@ public class ShortestPathCalculator {
 		Collections.reverse(trajetCheckpointBoat);//on transforme le trajet checkpoint bateau en  un trajet Bateau checkpoint
 		return trajetCheckpointBoat;
 	}
-
+	/**
+	 * change le point précedent et la distance si depuis un autre point le trajet est plus court
+	 * @param a
+	 */
 	private void calculateMinimumDistance(Arrete a) {
 		double distanceFromBoat= distanceToSource.get(a.getDepart());
 		if(distanceFromBoat+a.getPoid()< distanceToSource.get(a.getArrive())) {
@@ -67,8 +77,12 @@ public class ShortestPathCalculator {
 		}
 	}
 
+	/**
+	 * retourne le sommet qui à la plus petite distance en partant de boatPosition
+	 * @param notSelectSommet
+	 * @return
+	 */
 	private Sommet getLowestDistanceFromSource(List<Sommet> notSelectSommet) {
-		// TODO Auto-generated method stub
 
 		Sommet nearestSommet =notSelectSommet.get(0);
 		double lowestDistance= distanceToSource.get(nearestSommet);
