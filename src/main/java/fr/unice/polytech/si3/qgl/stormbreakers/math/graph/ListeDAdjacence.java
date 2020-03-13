@@ -15,7 +15,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.math.Utils;
 
 public class ListeDAdjacence {
 	private double ecart = 50.0;//pas entre les valeur
-	private int VISIBLITEMAX = 1000;//TODO a passer en parametre ou avoir variable global qui nous dit si visibleMax change (ex: vigie activé augmente la visibilité)
+	private int VISIBLITEMAX = 5000;//TODO a passer en parametre ou avoir variable global qui nous dit si visibleMax change (ex: vigie activé augmente la visibilité)
 	private List<Arrete> listAdjacence;
 	
 	/**
