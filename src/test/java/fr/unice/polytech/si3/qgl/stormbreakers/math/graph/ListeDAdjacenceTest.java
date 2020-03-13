@@ -10,6 +10,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Circle;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.IPoint;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Checkpoint;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Recif;
@@ -24,9 +25,10 @@ public class ListeDAdjacenceTest {
 	@BeforeEach 
 	void setup() {
 		bateau= new Point2D(500.5,500.5);
+		IPoint other= new Point2D(550.5,550.5);
 		recifs= new ArrayList<Recif>();
 		cp = new Checkpoint(new Position(1200, 1200), new Circle(50));
-		adj= new ListeDAdjacence(bateau, recifs, cp);
+		adj= new ListeDAdjacence(bateau, other,recifs, cp);
 	}
 	
 	@Test
@@ -35,8 +37,8 @@ public class ListeDAdjacenceTest {
 		assertTrue(adj.isPointOnEdge(bateau, 0.5, 0.5));
 		assertTrue(adj.isPointOnEdge(bateau, 1000.5, 0.5));
 		assertTrue(adj.isPointOnEdge(bateau, 0.5, 1000.5));
-		assertTrue(adj.isPointOnEdge(bateau, 1000.5, 1000.5));
-		
+		assertTrue(adj.isPointOnEdge(bateau, 1000.5, 10));
+		assertTrue(adj.isPointOnEdge(bateau, 100, 1000.50));
 		
 	}
 }

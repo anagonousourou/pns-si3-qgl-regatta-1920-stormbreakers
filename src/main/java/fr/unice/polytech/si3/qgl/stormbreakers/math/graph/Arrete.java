@@ -14,7 +14,19 @@ public class Arrete {
 		this.poid= depart.distanceTo(arrive);
 	}
 	
+
+	
 	public String toString() {
 		return "("+depart.toString()+","+arrive.toString()+") poid :"+poid;	
+	}
+	
+	public double getPoid() {
+		return poid;
+	}
+	public Sommet getArrive() {
+		return arrive;
+	}
+	public Sommet getDepart() {
+		return depart;
 	}
 }
