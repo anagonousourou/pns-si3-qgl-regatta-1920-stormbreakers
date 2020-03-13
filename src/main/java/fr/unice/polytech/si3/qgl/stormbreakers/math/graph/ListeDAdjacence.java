@@ -44,9 +44,14 @@ public class ListeDAdjacence {
 		} else {
 			for (double x = -ecart; x <= ecart; x = x + ecart) {
 				for (double y = -ecart; y <= ecart; y = y + ecart) {
-					IPoint arrive = new Point2D(x, y);
-					if (!arreteIntersectAShape(depart, arrive, recifs)) {
-						list.add(new Arrete(depart, arrive));
+					IPoint arrive = new Point2D(boatPosition.x()+x,boatPosition.y()+y);
+					if(arrive.distanceTo(nextCheckpoint)<=50) {
+						arrive=nextCheckpoint;
+					}
+					if(!(arrive.x()==depart.x()&& arrive.y()== depart.y())) {
+						if (!arreteIntersectAShape(depart, arrive, recifs)) {
+							list.add(new Arrete(depart, arrive));
+						}	
 					}
 				}
 			}
@@ -56,7 +61,7 @@ public class ListeDAdjacence {
 
 	
 
-	private List<Arrete> listArretePointOnedge(IPoint boatPosition,IPoint depart,IPoint arrive ,List<Recif> recifs) {
+	private List<Arrete> listArretePointOnedge(IPoint boatPosition,IPoint depart,IPoint checkpoint ,List<Recif> recifs) {
 		IPoint BG = new Point2D(depart.x()-ecart,depart.y()-ecart);
 		IPoint MG = new Point2D(depart.x()-ecart,depart.y());
 		IPoint HG = new Point2D(depart.x()-ecart,depart.y()+ecart);
@@ -119,8 +124,8 @@ public class ListeDAdjacence {
 					,new Arrete(depart,MD)
 					,new Arrete(depart,MG)));
 		}
-		if (!arreteIntersectAShape(depart, arrive, recifs)) {
-			list.add(new Arrete(depart, arrive));
+		if (!arreteIntersectAShape(depart, checkpoint, recifs)) {
+			list.add(new Arrete(depart, checkpoint));
 		}
 		//System.out.println(depart+" "+list);
 		return list;

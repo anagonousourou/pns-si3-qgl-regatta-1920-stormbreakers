@@ -1,5 +1,7 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.math.graph;
 
+import java.util.Objects;
+
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.IPoint;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
 
@@ -18,8 +20,22 @@ public class Sommet {
 	public String toString() {
 		return point.toString();
 	}
-
-
+	
+	@Override
+	public boolean equals(Object other) {
+		if(!(other instanceof Sommet)) {
+			return false;
+		}
+		Sommet s= (Sommet) other;
+		if(this.getPoint().equals(s.getPoint()))
+			return true;
+		return false;
+	}
+	
+	@Override 
+	public int hashCode() {
+		return Objects.hash(point);
+	}
 		
 	
 }

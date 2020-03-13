@@ -16,24 +16,28 @@ public class shortestPathCalculator {
 	HashMap<Sommet, Double> distanceToSource= new HashMap<>();
 	HashMap<Sommet, Sommet> PreviousSommet =  new HashMap<>(); 
 	
-	public List<Sommet> shortestPathFromBoatPos(Sommet boatSommet, Sommet checkpointSommet,List<Recif> recifs,Checkpoint nextCheckpoint) {
+	public List<Sommet> shortestPathFromBoatPos(Sommet boatSommet,List<Recif> recifs,Checkpoint nextCheckpoint) {
 
 		List<Sommet> selectSommet= new ArrayList<>(); 
 		List<Sommet> notSelectSommet= new ArrayList<>(); 
 		notSelectSommet.add(boatSommet);
 		distanceToSource.put(boatSommet,0.0);
 		
+		Sommet checkpointSommet = new Sommet(nextCheckpoint.getPosition());
 		while(!selectSommet.contains(checkpointSommet)) {
 			Sommet nextSelectSommet = getLowestDistanceFromSource(notSelectSommet);
 			notSelectSommet.remove(nextSelectSommet);
 			selectSommet.add(nextSelectSommet);
 			List<Arrete> arretesPartantDeSommet= new ListeDAdjacence(boatSommet.getPoint(), nextSelectSommet.getPoint(), recifs, nextCheckpoint).getArreteAdjacente();
-			
+//			System.out.println("distanceSource"+distanceToSource.get(boatSommet)+"\n"+"distanceNextSelectSommet"+distanceToSource.get(nextSelectSommet));
 			for(Arrete a: arretesPartantDeSommet) {
-				calculateMinimumDistance(a);
+				
 				if(!notSelectSommet.contains(a.getArrive())) {
 					notSelectSommet.add(a.getArrive());
+					distanceToSource.put(a.getArrive(),Double.POSITIVE_INFINITY);
 				}
+				calculateMinimumDistance(a);
+
 			}
 		}
 		List<Sommet> trajetCheckpointBoat= new ArrayList<>();
