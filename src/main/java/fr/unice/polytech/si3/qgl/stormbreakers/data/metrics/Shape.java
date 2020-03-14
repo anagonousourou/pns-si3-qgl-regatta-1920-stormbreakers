@@ -43,7 +43,13 @@ public abstract class Shape implements Logable {
      * NB : Les coordonnees doivent etre données par rapport au CENTRE de la forme
      * @return true if (x,y) is inside this shape, false if not
      */
-    public abstract boolean isPtInside(Point2D pt);
+    public abstract boolean isPtInside(IPoint pt);
+
+
+
+    public abstract boolean isInsideOpenShape(IPoint pt);
+
+
     
     
 

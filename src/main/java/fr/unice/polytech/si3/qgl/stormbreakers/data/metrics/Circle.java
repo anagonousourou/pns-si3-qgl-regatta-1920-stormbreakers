@@ -28,11 +28,11 @@ public class Circle extends Shape {
     }
 
     @Override
-    public boolean isPtInside(Point2D pt) {
+    public boolean isPtInside(IPoint pt) {
         return distFromCenter(pt) <= radius;
     }
 
-    private double distFromCenter(Point2D pt) {
+    private double distFromCenter(IPoint pt) {
         return new Point2D(0, 0).distanceTo(pt);
     }
 
@@ -301,6 +301,11 @@ public class Circle extends Shape {
     @Override
     public ShapeType getTypeEnum() {
         return ShapeType.CIRCLE;
+    }
+
+    @Override
+    public boolean isInsideOpenShape(IPoint pt) {
+        return distFromCenter(pt) < radius;
     }
 
 	

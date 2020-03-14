@@ -45,12 +45,12 @@ public class Rectangle extends Shape {
     }
 
     @Override
-    public boolean isPtInside(Point2D pt) {
+    public boolean isPtInside(IPoint pt) {
         Point2D point2D = new Point2D(pt);
         // On ramene le plan pour que les cotes du rectangle soient sur les axes du
         // repere
         if (orientation != 0) {
-            point2D = pt.getRotatedBy(-orientation);
+            point2D = point2D.getRotatedBy(-orientation);
         }
         return isPtInRectangle0(point2D);
     }
@@ -131,6 +131,12 @@ public class Rectangle extends Shape {
                 boatposition.y() - courantPos.y());
         ptBoat = ptBoat.getRotatedBy(-orientation);
         return ptCp.x() > 0 && ptCp.x() > ptBoat.x();
+    }
+
+    @Override
+    public boolean isInsideOpenShape(IPoint pt) {
+        // TODO Auto-generated method stub
+        return this.isPtInside(pt);
     }
 
 }

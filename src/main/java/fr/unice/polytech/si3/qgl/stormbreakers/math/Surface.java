@@ -23,10 +23,20 @@ public interface Surface extends IPoint, Orientable {
 		Point2D pt = new Point2D(point.x() - this.x(), point.y() - this.y());
 
 		double orientation = this.getOrientation();
-		// On compense l'orientation du checkpoint
+		// On compense l'orientation de la surface
 		if (orientation != 0)
 			pt = pt.getRotatedBy(-orientation);
 		return this.getShape().isPtInside(pt);
+	}
+
+	public default boolean isInsideOpenSurface(IPoint point) {
+		Point2D pt = new Point2D(point.x() - this.x(), point.y() - this.y());
+
+		double orientation = this.getOrientation();
+		// On compense l'orientation de la surface
+		if (orientation != 0)
+			pt = pt.getRotatedBy(-orientation);
+		return this.getShape().isInsideOpenShape(pt);
 	}
 
 	public default boolean intersectsWith(LineSegment2D lineSegment2D) {
@@ -36,12 +46,12 @@ public interface Surface extends IPoint, Orientable {
 					new Position(this.x(), this.y(), this.getOrientation())).intersectsWith(lineSegment2D);
 		} else if (this.getShape().getType().equals("polygon")) {
 			Polygon shape = (Polygon) this.getShape();
-			
+
 			return shape.generateBordersInThePlan(this).stream().anyMatch(lineSegment2D::intersects);
 		}
 
 		else {
-			//TODO
+			// TODO
 			return false;
 		}
 	}
@@ -51,7 +61,7 @@ public interface Surface extends IPoint, Orientable {
 		return this.intersectsWith(segment2d);
 
 	}
-	
+
 	/**
 	 * This methode must return the point to aim for so that you can go from depart
 	 * to destination such that you will avoid Surface of course an effort must be
@@ -109,6 +119,6 @@ public interface Surface extends IPoint, Orientable {
 			}
 		}
 
-		return List.of(depart,destination);
+		return List.of(depart, destination);
 	}
 }

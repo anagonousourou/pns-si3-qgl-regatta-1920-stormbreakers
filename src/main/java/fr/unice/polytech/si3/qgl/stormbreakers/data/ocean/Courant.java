@@ -157,4 +157,34 @@ public class Courant extends OceanEntity {
         return Math.cos(this.getOrientation() - new Vector(depart, destination).getOrientation()) * this.getStrength();
     }
 
+    /**
+     * 
+     * @param depart
+     * @param destination
+     * @param courant
+     * @param surface
+     * @return
+     */
+    public IPoint maximalPointToStay(IPoint depart, IPoint destination) {
+        Point2D current = new Point2D(depart.x(),depart.y());
+        Point2D prev = current;
+        Vector courantVector = Vector.createUnitVector(this.getPosition().getOrientation());
+        Vector biggerStreamVector = courantVector.scaleVector(2);
+        while (helpness(current, destination) > 0 && this.isPtInside(current)) {
+
+            prev = current;
+
+            current = current.getTranslatedBy(biggerStreamVector);
+
+        }
+        return prev;
+
+    }
+
+    public double helpness(IPoint depart, IPoint destination) {
+        Vector courantVector = Vector.createUnitVector(this.getPosition().getOrientation());
+        Vector trajectVector = new Vector(depart, destination);
+        return courantVector.scal(trajectVector);
+    }
+
 }
