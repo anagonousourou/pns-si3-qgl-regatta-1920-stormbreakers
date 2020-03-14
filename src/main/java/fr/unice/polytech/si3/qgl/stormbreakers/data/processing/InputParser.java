@@ -106,6 +106,17 @@ public class InputParser {
 		result.get(POSITION_KEY).get(YKEY).asDouble(), result.get(POSITION_KEY).get(ORIENTATION_KEY).asDouble());
 	}
 
+	public Shape fetchBoatShape(String jString) throws JsonProcessingException{
+		// TODO: 12/03/2020 Tests ?
+		JsonNode shipNode = mapper.readTree(jString).get(SHIP_KEY);
+		JsonNode boatShape = shipNode.get(SHAPE_KEY);
+		if (boatShape != null) {
+			return mapper.readValue(boatShape.toString(),Shape.class);
+		}
+		return null;
+
+	}
+
 	public int fetchBoatLength(String jString) throws JsonProcessingException{
 		return mapper.readTree(jString).get(SHIP_KEY).get("deck").get("length").asInt();
 	}
