@@ -26,18 +26,18 @@ public class ShortestPathCalculatorTest {
 	
 	@BeforeEach 
 	void setup() {
-		bateau= new Sommet(550.5,550.5);
+		bateau= new Sommet(750.5,750.5);
 		//IPoint other= new Point2D(550.5,550.5);
-		r1 = new Recif(new Position(1500, 500), new Rectangle(1250, 1300, 0.78539816339));
-		r2 = new Recif(new Position(500, 1500), new Rectangle(1250, 1300, 0.78539816339));
-		r3 = new Recif(new Position(2000, 1500), new Rectangle(1250, 1300, 0.78539816339));
-		r4 = new Recif(new Position(1500, 2000), new Rectangle(1250, 1300, 0.78539816339));
+		r1 = new Recif(new Position(500, 1500), new Rectangle(1000, 500, 0.78539816339));
+		r2 = new Recif(new Position(1500, 470), new Rectangle(750, 1000, 0.78539816339));
+		r3 = new Recif(new Position(2000, 2000), new Rectangle(1250, 1300, 0.78539816339));
+		r4 = new Recif(new Position(1000, 3000), new Rectangle(1250, 1300, 0.78539816339));
 		recifs = new ArrayList<Recif>();
 		cp = new Checkpoint(new Position(600, 600), new Circle(50));
 		cp2 = new Checkpoint(new Position(800, 800), new Circle(50));
-		cp3 = new Checkpoint(new Position(500, 500), new Circle(50));
-		cp4 = new Checkpoint(new Position(1000, 1000), new Circle(50));
-		cp5 = new Checkpoint(new Position(1200, 1200), new Circle(50));
+		cp3 = new Checkpoint(new Position(1200, 1300), new Circle(50));
+		cp4 = new Checkpoint(new Position(1700, 1700), new Circle(50));
+		cp5 = new Checkpoint(new Position(1250, 2600), new Circle(50));
 		spc= new ShortestPathCalculator();
 		//adj= new ListeDAdjacence(bateau, other,recifs, cp);
 	}
