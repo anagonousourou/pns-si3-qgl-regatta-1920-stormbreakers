@@ -36,7 +36,7 @@ public class ObservableDataTest {
     void observableBehaviorTest() {
         Wind wind = new Wind(parser);
         EquipmentsManager equipmentManager = new EquipmentsManager(List.of(), 3, parser);
-        Boat boat=new Boat(new Position(45,23.6),6 , 6, 100, parser,null);
+        Boat boat=new Boat(new Position(45,23.6),6 , 6, 100, parser);
 
         observableData.addPropertyChangeListener(wind);
         observableData.addPropertyChangeListener(equipmentManager );

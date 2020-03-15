@@ -16,7 +16,7 @@ public class BoatTest {
     @BeforeEach
     void setUp(){
         parser=mock(InputParser.class);
-        boat=new Boat(new Position(400,50.6), 6, 3, 50,parser,null);
+        boat=new Boat(new Position(400,50.6), 6, 3, 50,parser);
     }
 
     @Test

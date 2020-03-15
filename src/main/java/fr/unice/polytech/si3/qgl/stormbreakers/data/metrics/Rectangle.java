@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Checkpoint;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.LineSegment2D;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.RectanglePositioned;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Utils;
@@ -14,6 +15,14 @@ public class Rectangle extends Shape {
     private double width;
     private double height;
     private double orientation;
+
+    public Rectangle(double width, double height,
+                     double orientation, Position anchor) {
+        super("rectangle", anchor);
+        this.width = width;
+        this.height = height;
+        this.orientation = orientation;
+    }
 
     @JsonCreator
     public Rectangle(@JsonProperty("width") double width, @JsonProperty("height") double height,
@@ -54,6 +63,37 @@ public class Rectangle extends Shape {
         }
         return isPtInRectangle0(point2D);
     }
+
+    // =========
+    // Methods for all shapes
+    // TODO: 12/03/2020 Make Rectangle a Polygon -> FIXES StreamManagerTests
+
+    @Override
+    public boolean collidesWith(Shape shape) {
+        return false;
+    }
+
+    @Override
+    public boolean collidesWith(Polygon polygon) {
+        return false;
+    }
+
+    @Override
+    public boolean collidesWith(Circle circle) {
+        return false;
+    }
+
+    @Override
+    public boolean collidesWith(LineSegment2D lineSegment2D) {
+        return false;
+    }
+
+    @Override
+    public Circle getBoundingCircle() {
+        return null;
+    }
+
+    // =========
 
     /**
      * Vérifie si le point est dans le rectangle d'orientation 0
@@ -115,6 +155,7 @@ public class Rectangle extends Shape {
         return "R" + "(" + width + "|" + height + "|" + orientation + ")";
     }
 
+    // TODO: 15/03/2020 KEEP ?
     public Point2D findPointNearestToPosition(Position other, Position rectangle) {
         RectanglePositioned rect = new RectanglePositioned(this, rectangle);
         Point2D p = new Point2D(other.x(), other.y());
@@ -122,6 +163,7 @@ public class Rectangle extends Shape {
         return tmp.isPresent() ? tmp.get() : null;
     }
 
+    // TODO: 15/03/2020 KEEP
     public boolean haveGoodOrientation(Checkpoint cp, Point2D boatposition, Point2D courantPos) {
         // tourner la plan pour que le courant est un angle 0
         Point2D ptCp = cp.getPosition().getPoint2D().getTranslatedBy(cp.getPosition().x() - courantPos.x(),

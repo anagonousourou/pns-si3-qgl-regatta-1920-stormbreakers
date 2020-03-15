@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.Logable;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.LineSegment2D;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
 
 /**
@@ -21,18 +22,45 @@ import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
         @JsonSubTypes.Type(value = Rectangle.class, name="rectangle"),
         @JsonSubTypes.Type(value = Polygon.class, name="polygon")
 })
-public abstract class Shape implements Logable {
+public abstract class Shape implements Logable, CanCollide {
     protected static Point2D origin = new Point2D(0,0); // For internal context
-    protected static Position anchor; // For external context
+    protected Position anchor; // For external context
     private String type;
+
+
+    Shape(String type, Position anchor) {
+        this.type = type;
+        this.anchor = anchor;
+    }
 
     @JsonCreator
     Shape(@JsonProperty("type") String type) {
         this.type = type;
+        this.anchor = new Position(0,0,0);
     }
+
     @JsonProperty("type")
 	public String getType() {
 		return type;
+    }
+
+    /**
+     * Changes the shape's anchor to a given one
+     */
+    public void setAnchor(Position newAnchor) {
+        this.anchor = newAnchor;
+    }
+
+    public Position getAnchor() {
+        return anchor;
+    }
+
+    public Point2D getAnchorPoint() {
+        return anchor.getPoint2D();
+    }
+
+    public double getAnchorOrientation() {
+        return anchor.getOrientation();
     }
     
     public abstract ShapeType getTypeEnum();
@@ -44,7 +72,5 @@ public abstract class Shape implements Logable {
      * @return true if (x,y) is inside this shape, false if not
      */
     public abstract boolean isPtInside(Point2D pt);
-    
-    
 
 }

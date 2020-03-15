@@ -5,6 +5,7 @@ import java.util.List;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.IPoint;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Checkpoint;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Boat;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.processing.Logger;
 
 public class CheckpointsManager {
@@ -17,18 +18,25 @@ public class CheckpointsManager {
     }
 
     /**
-     * Verifie si la position en parametre est dans le nextCheckpoint
+     * Verifie si le bateau en parametre est dans le nextCheckpoint
      * et retire le nextCheckpoint si c'est le cas
-     * @param position
+     * @param boat le bateau en question
      */
-	public void updateCheckpoint(IPoint point) {
-        if (hasNextCheckpoint() && isPosInCheckpoint(point)) {
+	public void updateCheckpoint(Boat boat) {
+        // TODO: 14/03/2020 tests
+        if (hasNextCheckpoint() && boatCollidesWithNextCheckpoint(boat)) {
                 Logger.getInstance().log(checkpoints.remove(0).toString());
         }
 	}
 
-	private boolean hasNextCheckpoint() {
-        return (this.checkpoints!=null && !checkpoints.isEmpty());
+    boolean boatCollidesWithNextCheckpoint(Boat boat) {
+        // TODO: 14/03/2020 Tests
+        return boat.collidesWith(nextCheckpoint());
+
+    }
+
+    private boolean hasNextCheckpoint() {
+        return !checkpoints.isEmpty();
     }
 
     private boolean isPosInCheckpoint(IPoint position) {

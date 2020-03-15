@@ -11,47 +11,42 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Rectangle;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Shape;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Recif;
 
+/**
+ * Represents entities that have a positioned shape
+ */
+
 public interface Surface extends IPoint, Orientable {
 
-	public Shape getShape();
+	Shape getShape();
 
-	// Une surface a une shape, des coordonnées x,y et une orientation
-	// l'orientation ici est l'oriention de position pas celle de la shape
-	public default boolean isPtInside(IPoint point) {
-		// On se replace par rapport au centre de la forme
-
-		Point2D pt = new Point2D(point.x() - this.x(), point.y() - this.y());
-
-		double orientation = this.getOrientation();
-		// On compense l'orientation du checkpoint
-		if (orientation != 0)
-			pt = pt.getRotatedBy(-orientation);
-		return this.getShape().isPtInside(pt);
+	default boolean isPtInside(IPoint point) {
+		return getShape().isPtInside(new Point2D(point.x(),point.y()));
 	}
 
-	public default boolean intersectsWith(LineSegment2D lineSegment2D) {
+	default boolean intersectsWith(LineSegment2D lineSegment2D) {
+		return getShape().collidesWith(lineSegment2D);
+
+
+
+		// TODO: 12/03/2020 Move as override
+		/*
 		if (this.getShape().getType().equals("rectangle")) {
 
 			return new RectanglePositioned((Rectangle) this.getShape(),
 					new Position(this.x(), this.y(), this.getOrientation())).intersectsWith(lineSegment2D);
-		} else if (this.getShape().getType().equals("polygon")) {
-			Polygon shape = (Polygon) this.getShape();
-			
-			return shape.generateBordersInThePlan(this).stream().anyMatch(lineSegment2D::intersects);
 		}
-
-		else {
-			//TODO
-			return false;
-		}
+		*/
 	}
 
-	public default boolean intersectsWith(IPoint fp, IPoint sp) {
+	default boolean collidesWith(Surface other) {
+		return this.getShape().collidesWith(other.getShape());
+	}
+
+	 default boolean intersectsWith(IPoint fp, IPoint sp) {
 		LineSegment2D segment2d = new LineSegment2D(fp, sp);
 		return this.intersectsWith(segment2d);
-
 	}
-	
+
 	/**
 	 * This methode must return the point to aim for so that you can go from depart
 	 * to destination such that you will avoid Surface of course an effort must be
@@ -61,7 +56,7 @@ public interface Surface extends IPoint, Orientable {
 	 * @param depart * @param destination
 	 * @return
 	 */
-	public default List<IPoint> avoidHit(IPoint depart, IPoint destination) {
+	default List<IPoint> avoidHit(IPoint depart, IPoint destination) {
 		// LATER
 		if (this.getShape().getType().equals("rectangle")) {
 			return Surface.avoidHitRectangle(this, depart, destination);
