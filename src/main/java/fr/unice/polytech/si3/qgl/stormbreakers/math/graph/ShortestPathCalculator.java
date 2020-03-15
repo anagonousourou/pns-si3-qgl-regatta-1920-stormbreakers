@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 
 
-
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.IPoint;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Checkpoint;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Recif;
@@ -58,6 +57,8 @@ public class ShortestPathCalculator {
 		return getSortestPathForNode(checkpointSommet, boatSommet);
 	}
 	
+
+	
 	private List<Sommet> getSortestPathForNode(Sommet current,Sommet boatSommet){
 		List<Sommet> trajetCurrentBoat= new ArrayList<>();
 		trajetCurrentBoat.add(current);
@@ -107,7 +108,7 @@ public class ShortestPathCalculator {
 		return nearestSommet;
 	}
 	
-	protected void RemoveUselessNode(List<Sommet> listToCp){
+	public void RemoveUselessNode(List<Sommet> listToCp){
 		
 		for(int i=1;i<listToCp.size()-1;i++) {
 			if(orientation(listToCp.get(i-1), listToCp.get(i)).equals(orientation(listToCp.get(i), listToCp.get(i+1)))) {

@@ -30,13 +30,6 @@ public class ListeDAdjacence {
 	 * @param recifs
 	 * @param nextCheckpoint
 	 */
-	public ListeDAdjacence(IPoint boatPosition, IPoint currentSommet, List<Recif> recifs, Checkpoint nextCheckpoint,
-			StreamManager streamManager) {
-
-		listAdjacence = new ArrayList<Arrete>();
-		listAdjacence.addAll(createListArrete(boatPosition, currentSommet, recifs, nextCheckpoint, streamManager));
-	}
-
 	public ListeDAdjacence(IPoint boatPosition, IPoint currentSommet, List<Recif> recifs, Checkpoint nextCheckpoint) {
 
 		listAdjacence = new ArrayList<Arrete>();
@@ -63,48 +56,13 @@ public class ListeDAdjacence {
 	 * @return
 	 */
 	private List<Arrete> createListArrete(IPoint boatPosition, IPoint currentSommet, List<Recif> recifs,
-			Checkpoint nextCheckpoint, StreamManager streamManager) {
-		List<Arrete> list = new ArrayList<Arrete>();
-		if (isPointOnEdge(boatPosition, currentSommet.x(), currentSommet.y())) {
-			// list.addAll(this.listArrete(i,j));
-			list.addAll(listArretePointOnedge(boatPosition, currentSommet, nextCheckpoint.getPosition(), recifs));
-		} else {
-			for (double x = -ecart; x <= ecart; x = x + ecart) {
-				for (double y = -ecart; y <= ecart; y = y + ecart) {
-					IPoint arrive = new Point2D(currentSommet.x() + x, currentSommet.y() + y);
-					if (arrive.distanceTo(nextCheckpoint) <= ecart) {
-						arrive = nextCheckpoint;
-					}
-					if (!(arrive.x() == currentSommet.x() && arrive.y() == currentSommet.y())) {
-						if (!arreteIntersectAShape(currentSommet, arrive, recifs)) {
-							if (!(streamManager.pointIsInsideStream(currentSommet)
-									|| streamManager.pointIsInsideStream(arrive))) {
-								list.add(new Arrete(currentSommet, arrive));
-							} else {
-								Courant c;
-								if (streamManager.pointIsInsideStream(currentSommet)) {
-									c = streamManager.streamAroundPoint(currentSommet).get();
-								} else {
-									c = streamManager.streamAroundPoint(arrive).get();
-								}
-								list.add(new Arrete(currentSommet, arrive, c));
-
-							}
-						}
-					}
-
-				}
-			}
-		}
-		return list;
-	}
-
-	private List<Arrete> createListArrete(IPoint boatPosition, IPoint currentSommet, List<Recif> recifs,
 			Checkpoint nextCheckpoint) {
 		List<Arrete> list = new ArrayList<Arrete>();
 		if (isPointOnEdge(boatPosition, currentSommet.x(), currentSommet.y())) {
 			// list.addAll(this.listArrete(i,j));
-			list.addAll(listArretePointOnedge(boatPosition, currentSommet, nextCheckpoint.getPosition(), recifs));
+			if(!(Math.abs(currentSommet.distanceTo(nextCheckpoint))<=Utils.EPS)) {
+				list.addAll(listArretePointOnedge(boatPosition, currentSommet, nextCheckpoint.getPosition(), recifs));
+			}
 		} else {
 			for (double x = -ecart; x <= ecart; x = x + ecart) {
 				for (double y = -ecart; y <= ecart; y = y + ecart) {
@@ -180,6 +138,7 @@ public class ListeDAdjacence {
 					new Arrete(currentSommet, HD), new Arrete(currentSommet, MD), new Arrete(currentSommet, MG)));
 		}
 		if (!arreteIntersectAShape(currentSommet, checkpoint, recifs)) {
+			
 			list.add(new Arrete(currentSommet, checkpoint));
 		}
 		// System.out.println(depart+" "+list);
