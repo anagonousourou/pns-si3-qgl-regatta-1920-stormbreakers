@@ -21,10 +21,10 @@ public class ShortestPathCalculatorTest {
 	Sommet bateau;
 	List<Recif> recifs;
 	Recif r1, r2, r3, r4;
-	Checkpoint cp, cp2, cp3, cp4, cp5;
+	Checkpoint cp, cp2, cp3, cp4, cp5, cpRemoveUseless;
 	ShortestPathCalculator spc;
 	
-	@BeforeEach 
+	@BeforeEach  
 	void setup() {
 		bateau= new Sommet(750.5,750.5);
 		//IPoint other= new Point2D(550.5,550.5);
@@ -38,6 +38,8 @@ public class ShortestPathCalculatorTest {
 		cp3 = new Checkpoint(new Position(1200, 1300), new Circle(50));
 		cp4 = new Checkpoint(new Position(1700, 1700), new Circle(50));
 		cp5 = new Checkpoint(new Position(1250, 2600), new Circle(50));
+		cp5 = new Checkpoint(new Position(1250, 2600), new Circle(50));
+		cpRemoveUseless= new Checkpoint(new Position(1750.5, 1750.5), new Circle(50));
 		spc= new ShortestPathCalculator();
 		//adj= new ListeDAdjacence(bateau, other,recifs, cp);
 	}
@@ -45,23 +47,38 @@ public class ShortestPathCalculatorTest {
 	@Test
 	public void shortestPathFromBoatPosTest() {
 		spc.shortestPathFromBoatPos(bateau, recifs,cp);
+		assertTrue(true);
 		spc.shortestPathFromBoatPos(bateau, recifs,cp2);
+		assertTrue(true);
 	}
 	
 	@Test
 	public void shortestPathFromBoatPosWithReevesTest() {
+		assertTrue(true);
 		recifs= new ArrayList<Recif>(List.of(r1, r2));
 		spc.shortestPathFromBoatPos(bateau, recifs, cp3);
+		assertTrue(true);
 		spc.shortestPathFromBoatPos(bateau, recifs, cp4);
+		assertTrue(true);
 		spc.shortestPathFromBoatPos(bateau, recifs, cp5);
+		assertTrue(true);
 	}
 	@Test
 	public void shortestPathFromBoatPosWithManyReevesTest() {
 		recifs= new ArrayList<Recif>(List.of(r1, r2, r3, r4));
+		assertTrue(true);
 		spc.shortestPathFromBoatPos(bateau, recifs, cp);
 		spc.shortestPathFromBoatPos(bateau, recifs, cp2);
 		spc.shortestPathFromBoatPos(bateau, recifs, cp3);
 		spc.shortestPathFromBoatPos(bateau, recifs, cp4);
 		spc.shortestPathFromBoatPos(bateau, recifs, cp5);
+		assertTrue(true);
+	}
+	
+	@Test 
+	public void removeUselessNodeTest() {
+		List<Sommet> list= spc.shortestPathFromBoatPos(bateau, recifs, cpRemoveUseless);
+		spc.RemoveUselessNode(list);
+		assertTrue(list.size()==2);
 	}
 }

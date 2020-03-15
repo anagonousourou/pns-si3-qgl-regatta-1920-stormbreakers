@@ -3,6 +3,7 @@ package fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter;
 import java.util.List;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.IPoint;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Checkpoint;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Boat;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Courant;
@@ -10,6 +11,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.processing.Logger;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Utils;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Vector;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.graph.ShortestPathCalculator;
 import fr.unice.polytech.si3.qgl.stormbreakers.staff.tactical.Navigator;
 
 public class TargetDefiner {
@@ -19,6 +21,8 @@ public class TargetDefiner {
     private StreamManager streamManager;
     private Boat boat;
     private Navigator navigator;
+    private ShortestPathCalculator spc;
+    private Position LastupdateSpc;
 
     public TargetDefiner(CheckpointsManager checkpointsManager, StreamManager streamManager, Boat boat,
             Navigator navigator) {
@@ -27,6 +31,8 @@ public class TargetDefiner {
         this.streamManager = streamManager;
         this.boat = boat;
         this.navigator = navigator;
+        this.spc =  new ShortestPathCalculator();
+       // LastupdateSpc= boat.getPosition();
     }
 
     boolean thereIsStreamOnTrajectory() {
@@ -74,7 +80,8 @@ public class TargetDefiner {
             else if (this.thereIsObstaclesOnTrajectory()) {
                 Logger.getInstance().log("obstacle on trajet " + checkpoint);
                 List<IPoint> trajectory = this.streamManager.trajectoryToAvoidObstacles(boat, checkpoint);
-
+				
+            	//List<IPoint> trajectory = spc.shortestPathFromBoatPos(boat, recifs, nextCheckpoint)
                 return new TupleDistanceOrientation(trajectory.get(1).distanceTo(boat),
                         this.navigator.additionalOrientationNeeded(boat.getPosition(), trajectory.get(1)));
 

@@ -36,6 +36,12 @@ public class Sommet {
 	public int hashCode() {
 		return Objects.hash(point);
 	}
-		
 	
+	public double getX() {
+		return point.x();
+	}
+		
+	public double getY() {
+		return point.y();
+	}
 }

@@ -31,10 +31,14 @@ public class ShortestPathCalculator {
 		distanceToSource.put(boatSommet,0.0);
 		
 		Sommet checkpointSommet = new Sommet(nextCheckpoint.getPosition());
+		Sommet nextSelectSommet = boatSommet;
 		while(!selectSommet.contains(checkpointSommet)) {
-			Sommet nextSelectSommet = getLowestDistanceFromSource(notSelectSommet);
-			System.out.println("nextSommet:"+nextSelectSommet);
-			
+			Sommet nextSommetTmp=getLowestDistanceFromSource(notSelectSommet);
+			//System.out.println("nextSommet:"+nextSelectSommet);
+			if(nextSommetTmp==null) {
+				return getSortestPathForNode(nextSelectSommet,boatSommet);
+			}
+			nextSelectSommet = getLowestDistanceFromSource(notSelectSommet);
 			notSelectSommet.remove(nextSelectSommet);
 			selectSommet.add(nextSelectSommet);
 			
@@ -43,7 +47,7 @@ public class ShortestPathCalculator {
 			arretesPartantDeSommet.addAll(adj.getArreteAdjacente());
 
 			for(Arrete a: arretesPartantDeSommet) {
-				System.out.println("a:"+a);
+			//	System.out.println("a:"+a);
 				if(!notSelectSommet.contains(a.getArrive())&& !selectSommet.contains(a.getArrive())) {
 					notSelectSommet.add(a.getArrive());
 					distanceToSource.put(a.getArrive(),Double.POSITIVE_INFINITY);
@@ -51,20 +55,25 @@ public class ShortestPathCalculator {
 				calculateMinimumDistance(a);
 			}
 		}
-		List<Sommet> trajetCheckpointBoat= new ArrayList<>();
-		trajetCheckpointBoat.add(checkpointSommet);
+		return getSortestPathForNode(checkpointSommet, boatSommet);
+	}
+	
+	private List<Sommet> getSortestPathForNode(Sommet current,Sommet boatSommet){
+		List<Sommet> trajetCurrentBoat= new ArrayList<>();
+		trajetCurrentBoat.add(current);
 		int i=0;
 		Sommet s;
 		do{
-			s= PreviousSommet.get(trajetCheckpointBoat.get(i));
-			trajetCheckpointBoat.add(s);
+			s= PreviousSommet.get(trajetCurrentBoat.get(i));
+			trajetCurrentBoat.add(s);
 			i++;
 		}while(!s.equals(boatSommet)); 
 		
-		System.out.println(trajetCheckpointBoat);
-		Collections.reverse(trajetCheckpointBoat);//on transforme le trajet checkpoint bateau en  un trajet Bateau checkpoint
-		return trajetCheckpointBoat;
+		//System.out.println(trajetCheckpointBoat);
+		Collections.reverse(trajetCurrentBoat);//on transforme le trajet checkpoint bateau en  un trajet Bateau checkpoint
+		return trajetCurrentBoat;
 	}
+	
 	/**
 	 * change le point précedent et la distance si depuis un autre point le trajet est plus court
 	 * @param a
@@ -83,10 +92,12 @@ public class ShortestPathCalculator {
 	 * @return
 	 */
 	private Sommet getLowestDistanceFromSource(List<Sommet> notSelectSommet) {
-
+		if(notSelectSommet.size()==0) {
+			return null;
+		}
 		Sommet nearestSommet =notSelectSommet.get(0);
 		double lowestDistance= distanceToSource.get(nearestSommet);
-		System.out.println("notSelectSommet"+notSelectSommet.size());
+		//System.out.println("notSelectSommet"+notSelectSommet.size());
 		for(int i=1;i<notSelectSommet.size();i++) {
 			if(distanceToSource.get(notSelectSommet.get(i))<lowestDistance) {
 				nearestSommet =notSelectSommet.get(i);
@@ -96,5 +107,34 @@ public class ShortestPathCalculator {
 		return nearestSommet;
 	}
 	
+	protected void RemoveUselessNode(List<Sommet> listToCp){
+		
+		for(int i=1;i<listToCp.size()-1;i++) {
+			if(orientation(listToCp.get(i-1), listToCp.get(i)).equals(orientation(listToCp.get(i), listToCp.get(i+1)))) {
+				listToCp.remove(i);
+				i--;
+			}
+		}
+	}
 	
+	private String orientation(Sommet prec, Sommet current) {
+		if(current.getX()>prec.getX()) {
+			if(current.getY()>prec.getY()) {
+				return "HD"; //deplacement en haut à gauche par rapport a prec
+			}else if(current.getY()==prec.getY()) {
+				return "H"; //deplacement en haut par rapport a prec
+			}else {
+				return "HG";//deplacement en haut a gauche par rapport a prec
+			}
+		}else {
+			if(current.getY()>prec.getY()) {
+				return "BD"; 
+			}else if(current.getY()==prec.getY()) {
+				return "B"; 
+			}else {
+				return "BG";
+			}
+		}
+		
+	}
 }
