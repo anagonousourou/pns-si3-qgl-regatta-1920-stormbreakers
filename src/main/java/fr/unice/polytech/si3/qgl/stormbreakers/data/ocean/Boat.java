@@ -17,7 +17,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.math.Surface;
  * Le bateau implémente Propertychange listener pour permettre 
  * la mise à jour des infos du bateau notamment la vie et la position-orientation
  */
-public class Boat implements PropertyChangeListener,IPoint, Surface {
+public class Boat implements PropertyChangeListener, Surface {
     private final Shape boatShape;
     private Position position;
     private final int deckwidth;
