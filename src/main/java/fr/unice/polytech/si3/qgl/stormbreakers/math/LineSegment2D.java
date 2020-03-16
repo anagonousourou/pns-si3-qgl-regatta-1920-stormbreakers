@@ -56,7 +56,7 @@ public class LineSegment2D {
      * @return true if the 2 line segments intersect
      */
 	public static boolean intersects(LineSegment2D edge1, LineSegment2D edge2) {
-		// LATER: 07/03/2020 Rework
+		// TODO: 07/03/2020 Rework
 		Point2D e1p1 = edge1.firstPoint();
 		Point2D e1p2 = edge1.lastPoint();
 		Point2D e2p1 = edge2.firstPoint();
@@ -186,7 +186,7 @@ public class LineSegment2D {
 	 * @author David Lebrisse - Stormbreakers
 	 */
 	public double segmentParameterOf(Point2D P) {
-		// LATER: 08/03/2020 Clamp k in [0,1] and corresponding tests
+		// TODO: 08/03/2020 Clamp k in [0,1] and corresponding tests
 		Vector supportDirection = startPoint.getVectorTo(endPoint).normalize();
 		Line2D arrangedSupport = new Line2D(startPoint, supportDirection);
 		return arrangedSupport.lineParameterOf(P) / length;
@@ -201,7 +201,7 @@ public class LineSegment2D {
 	 * @author David Lebrisse - Stormbreakers
 	 */
 	public Point2D point(double segmentParameter) {
-		// LATER: 08/03/2020 Clamp k in [0,1] and corresponding tests
+		// TODO: 08/03/2020 Clamp k in [0,1] and corresponding tests
 		Vector supportDirection = startPoint.getVectorTo(endPoint).normalize();
 		Line2D arrangedSupport = new Line2D(startPoint, supportDirection);
 		return arrangedSupport.pointFromLineParameter(segmentParameter * length);
@@ -226,7 +226,6 @@ public class LineSegment2D {
 	}
 
 	public boolean contains(Point2D point2D) {
-		// LATER: 08/03/2020 Tests
 		// Compute distance between segment and point
 		double distance = this.distance(point2D);
 		return Utils.almostEquals(0, distance);
@@ -356,7 +355,7 @@ public class LineSegment2D {
 
 	@Override
 	public boolean equals(Object obj) {
-		// // LATER: 08/03/2020 Add tests for equals
+		// // TODO: 08/03/2020 Add tests for equals
 		if (this == obj)
 			return true;
 		if (!(obj instanceof LineSegment2D))

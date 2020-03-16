@@ -17,6 +17,12 @@ public class Circle extends Shape {
     private double radius;
 
     @JsonCreator
+    public Circle(double radius, Position anchor) {
+        super("circle",anchor);
+        this.radius = radius;
+    }
+
+    @JsonCreator
     public Circle(@JsonProperty("radius") double radius) {
         super("circle");
         this.radius = radius;
@@ -33,7 +39,32 @@ public class Circle extends Shape {
     }
 
     private double distFromCenter(Point2D pt) {
-        return new Point2D(0, 0).distanceTo(pt);
+        return getAnchorPoint().distanceTo(pt);
+    }
+
+
+    // =========
+    // Methods for all shapes
+
+    public Circle getBoundingCircle() {
+        return this;
+    }
+
+    @Override
+    public boolean collidesWith(Shape shape) {
+        return shape.collidesWith(this); // Collision with circle
+    }
+
+    @Override
+    public boolean collidesWith(Polygon polygon) {
+        return polygon.collidesWith(this); // Collision with circle
+    }
+
+    @Override
+    public boolean collidesWith(Circle circle) {
+        double distBetweenCenters = distFromCenter(circle.getAnchorPoint());
+        double combinedRadiuses = this.radius + circle.radius;
+        return distBetweenCenters <= combinedRadiuses;
     }
 
 
@@ -43,9 +74,10 @@ public class Circle extends Shape {
      * @return true if it collides, false if not
      * Note: The given line should be given relative to this shape's coordinates
      */
-    public boolean intersects(LineSegment2D lineSegment2D){
+    public boolean collidesWith(LineSegment2D lineSegment2D){
+        // TODO: 14/03/2020 Tests
         Line2D support = lineSegment2D.getSupportingLine();
-        double distanceToCenter = support.distance(origin);
+        double distanceToCenter = support.distance(getAnchorPoint());
         double delta = distanceToCenter - radius;
         if (delta > 0) {
             // No collision
@@ -58,11 +90,19 @@ public class Circle extends Shape {
         }
         else {
             // Line has 2 intersection points
-            Point2D firstPoint = lineSegment2D.firstPoint();
-            Point2D lastPoint = lineSegment2D.lastPoint();
-            return (lineSegment2D.isCollinearPointOnSegment(firstPoint) || lineSegment2D.isCollinearPointOnSegment(lastPoint));
+            if (this.isPtInside(lineSegment2D.firstPoint()) || this.isPtInside(lineSegment2D.lastPoint())) {
+                // Si au moins une extremité est dans le cercle, il y a collision
+                return true;
+            }
+
+            Point2DPair bothPoints = findBothIntersectingPoints(support);
+            Point2D firstPoint = bothPoints.getFirst();
+            Point2D secondPoint = bothPoints.getSecond();
+            return (lineSegment2D.isCollinearPointOnSegment(firstPoint) || lineSegment2D.isCollinearPointOnSegment(secondPoint));
         }
     }
+
+    // =========
 
     /**
      * Checks for collision between this shape and a given line
@@ -71,8 +111,8 @@ public class Circle extends Shape {
      * Note: The given line should be given relative to this shape's coordinates
      */
     public boolean intersects(Line2D line2D){
-        // LATER: 05/03/2020 Tests
-        double distanceToCenter = line2D.distance(origin);
+        // TODO: 05/03/2020 Tests
+        double distanceToCenter = line2D.distance(getAnchorPoint());
         double delta = distanceToCenter - radius;
         // delta > 0 : No collision
         // else : Collision (even if on edge)
@@ -86,9 +126,9 @@ public class Circle extends Shape {
      * @return an intersection point if it exists
      */
     public Optional<Point2D> intersect(LineSegment2D lineSegment2D){
-    	//LATER Test
+    	//TODO Missing Test when supporting lines don't intersect and when the intersection points are not on the line segment
         Line2D support = lineSegment2D.getSupportingLine();
-        double distanceToCenter = support.distance(origin);
+        double distanceToCenter = support.distance(getAnchorPoint());
         double delta = distanceToCenter - radius;
         if (delta > 0 || Utils.almostEqualsBoundsIncluded(0,delta)) {
             // Max 1 collision point
@@ -126,15 +166,15 @@ public class Circle extends Shape {
      * Note: The given line should be given relative to this shape's coordinates
      */
     public Optional<Point2D> intersect(Line2D line2D){
-        // LATER: 05/03/2020 Tests
-        double distanceToCenter = line2D.distance(origin);
+        // TODO: 05/03/2020 Tests
+        double distanceToCenter = line2D.distance(getAnchorPoint());
         double delta = distanceToCenter - radius;
         if (delta > 0) {
             // No collision
             return Optional.empty();
         } else if (Utils.almostEqualsBoundsIncluded(0,delta)) {
             // Only One Intersection
-            Point2D linePoint = line2D.projectOnto(origin);
+            Point2D linePoint = line2D.projectOnto(getAnchorPoint());
             return Optional.of(this.projectOntoEdge(linePoint));
         } else {
             // Two Intersections
@@ -149,10 +189,10 @@ public class Circle extends Shape {
      * @return the new point, on the edge of the shape
      */
     private Point2D projectOntoEdge(Point2D point2D) {
-        Vector fromCenterToPoint = new Vector(origin,point2D);
+        Vector fromCenterToPoint = new Vector(getAnchorPoint(),point2D);
         double ratio = fromCenterToPoint.norm() / radius;
         Vector fromCenterToEdge = fromCenterToPoint.scaleVector(ratio);
-        return origin.getTranslatedBy(fromCenterToEdge);
+        return getAnchorPoint().getTranslatedBy(fromCenterToEdge);
     }
 
 
@@ -184,11 +224,11 @@ public class Circle extends Shape {
      * @author David Lebrisse - Stormbreakers
      */
     Point2D findFirstIntersectingPoint(Line2D line2D) {
-        // LATER: 05/03/2020 Tests
-        Point2D originProjection = line2D.projectOnto(origin);
+        // TODO: 05/03/2020 Tests
+        Point2D anchorProjection = line2D.projectOnto(getAnchorPoint());
         Vector normalizedLineDirection = line2D.getNormalizedDirection();
-        Point2D bounding1 = originProjection.getTranslatedBy(normalizedLineDirection.scaleVector(radius));
-        LineSegment2D firstLineSegment = new LineSegment2D(originProjection,bounding1);
+        Point2D bounding1 = anchorProjection.getTranslatedBy(normalizedLineDirection.scaleVector(radius));
+        LineSegment2D firstLineSegment = new LineSegment2D(anchorProjection,bounding1);
 
         return findOneIntersection(firstLineSegment);
     }
@@ -205,14 +245,14 @@ public class Circle extends Shape {
      * @author David Lebrisse - Stormbreakers
      */
     Point2DPair findBothIntersectingPoints(Line2D line2D) {
-        Point2D originProjection = line2D.projectOnto(origin);
+        Point2D anchorProjection = line2D.projectOnto(getAnchorPoint());
         Vector normalizedLineDirection = line2D.getDirection().normalize();
 
-        Point2D bounding1 = originProjection.getTranslatedBy(normalizedLineDirection.scaleVector(radius));
-        Point2D bounding2 = originProjection.getTranslatedBy(normalizedLineDirection.scaleVector(-radius));
+        Point2D bounding1 = anchorProjection.getTranslatedBy(normalizedLineDirection.scaleVector(radius));
+        Point2D bounding2 = anchorProjection.getTranslatedBy(normalizedLineDirection.scaleVector(-radius));
 
-        LineSegment2D firstLineSegment = new LineSegment2D(originProjection,bounding1);
-        LineSegment2D secondLineSegment = new LineSegment2D(originProjection,bounding2);
+        LineSegment2D firstLineSegment = new LineSegment2D(anchorProjection,bounding1);
+        LineSegment2D secondLineSegment = new LineSegment2D(anchorProjection,bounding2);
 
         Point2D firstIntersection = findOneIntersection(firstLineSegment);
         Point2D secondIntersection= findOneIntersection(secondLineSegment);
@@ -280,17 +320,18 @@ public class Circle extends Shape {
         if (!(obj instanceof Circle))
             return false;
         Circle other = (Circle) obj;
-        return Utils.almostEquals(other.radius, radius);
+        // orientation doesn't matter for a circle
+        return getAnchorPoint().equals(other.getAnchorPoint()) && Utils.almostEquals(other.radius, radius);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(radius);
+        return Objects.hash(anchor,radius);
     }
 
     @Override
     public String toString() {
-        return getType() + ": (" + radius + ")";
+        return getType() + " at " + anchor.toString() + " : (" + radius + ")";
     }
 
     @Override
