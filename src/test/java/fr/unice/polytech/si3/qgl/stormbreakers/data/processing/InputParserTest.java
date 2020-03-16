@@ -1,5 +1,6 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.data.processing;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -11,6 +12,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import fr.unice.polytech.si3.qgl.stormbreakers.Cockpit;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Equipment;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Oar;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Sailor;
@@ -23,7 +25,7 @@ class InputParserTest {
         private String streams1;
         private String streams2;
         private String streams3;
-
+        private String streams4;
         private List<Sailor> sailors;
         private List<Oar> oars;
         private List<Checkpoint> checkpoints;
@@ -44,6 +46,7 @@ class InputParserTest {
                 streams1 = new String(this.getClass().getResourceAsStream("/inputtest/test1.json").readAllBytes());
                 streams2 = new String(this.getClass().getResourceAsStream("/inputtest/test2.json").readAllBytes());
                 streams3 = new String(this.getClass().getResourceAsStream("/inputtest/test3.json").readAllBytes());
+                streams4 = new String(this.getClass().getResourceAsStream("/inputtest/WEEK6-FISA.json").readAllBytes());
 
         }
 
@@ -108,6 +111,13 @@ class InputParserTest {
                 var result3 = parser.fetchStreams(streams3);
 
                 assertTrue(result3.isEmpty(), "json sans clé visibleEntities on renvoie une liste vide");
+                
+
         }
+        
+        void testWeek6FISA() {
+        	Cockpit cockpit= new Cockpit();
+        	  assertDoesNotThrow(() -> cockpit.initGame(streams4));
+        	}
 
 }
