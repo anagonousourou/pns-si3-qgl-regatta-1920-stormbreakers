@@ -10,7 +10,6 @@ import static org.mockito.Mockito.when;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Circle;
@@ -141,7 +140,7 @@ public class TargetDefinerTest {
   }
 
   @Test
-  
+
   void caseInsideAStreamOnEdgeTest() {
     Boat boat = new Boat(new Position(110, 60), 2, 5, 100, parser);
 

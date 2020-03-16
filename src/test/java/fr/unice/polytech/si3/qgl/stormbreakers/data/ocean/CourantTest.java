@@ -54,7 +54,7 @@ public class CourantTest {
 
     @Test
     void speedProvidedTest(){
-        //TODO
+        //TODO add more tests
         Courant courant=new Courant(new Position(400,200),new Rectangle(200, 300, 0), 100);
         assertEquals(100.0, courant.speedProvided( new Position(100, 200) , new Position(800,200)), Utils.EPS);
         assertEquals(-100.0, courant.speedProvided(new Position(800,200),new Position(100, 200) ), Utils.EPS);
