@@ -28,7 +28,7 @@ public interface Surface extends IPoint, Orientable {
 
 
 
-		// TODO: 12/03/2020 Move as override
+		// TODO: 12/03/2020 Move as override in RECTANGLE
 		/*
 		if (this.getShape().getType().equals("rectangle")) {
 

@@ -45,7 +45,6 @@ public class Circle extends Shape {
 
     // =========
     // Methods for all shapes
-    // TODO: 14/03/2020 Tests
 
     public Circle getBoundingCircle() {
         return this;
@@ -127,7 +126,7 @@ public class Circle extends Shape {
      * @return an intersection point if it exists
      */
     public Optional<Point2D> intersect(LineSegment2D lineSegment2D){
-    	//TODO Test
+    	//TODO Missing Test when supporting lines don't intersect and when the intersection points are not on the line segment
         Line2D support = lineSegment2D.getSupportingLine();
         double distanceToCenter = support.distance(getAnchorPoint());
         double delta = distanceToCenter - radius;
