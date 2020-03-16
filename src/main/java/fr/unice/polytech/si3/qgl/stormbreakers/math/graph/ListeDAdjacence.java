@@ -172,8 +172,8 @@ public class ListeDAdjacence {
 	 * @return
 	 */
 	protected boolean isPointOnEdge(IPoint boatPosition, double x, double y) {
-		if (Utils.almostEquals(boatPosition.x() - 500, x) || Utils.almostEquals(boatPosition.x() + 500, x)
-				|| Utils.almostEquals(boatPosition.y() - 500, y) || Utils.almostEquals(boatPosition.y() + 500, y)) {
+		if (Utils.almostEquals(boatPosition.x() - VISIBLITEMAX/2, x) || Utils.almostEquals(boatPosition.x() + VISIBLITEMAX/2, x)
+				|| Utils.almostEquals(boatPosition.y() - VISIBLITEMAX/2, y) || Utils.almostEquals(boatPosition.y() + VISIBLITEMAX/2, y)) {
 			return true;
 		}
 		return false;
