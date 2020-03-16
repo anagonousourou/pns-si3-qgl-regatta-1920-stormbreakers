@@ -36,7 +36,7 @@ public class ShortestPathCalculatorTest {
 		cp = new Checkpoint(new Position(600, 600), new Circle(50));
 		cp2 = new Checkpoint(new Position(800, 800), new Circle(50));
 		cp3 = new Checkpoint(new Position(1200, 1300), new Circle(50));
-		cp4 = new Checkpoint(new Position(1700, 1700), new Circle(50));
+		cp4 = new Checkpoint(new Position(2000, 1000), new Circle(50));
 		cp5 = new Checkpoint(new Position(1250, 2600), new Circle(50));
 		cp6 = new Checkpoint(new Position(2800, 1300), new Circle(50));
 		cpRemoveUseless= new Checkpoint(new Position(1750.5, 1750.5), new Circle(50));
