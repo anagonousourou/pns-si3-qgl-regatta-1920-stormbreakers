@@ -141,7 +141,7 @@ public class TargetDefinerTest {
   }
 
   @Test
-  @Disabled
+  
   void caseInsideAStreamOnEdgeTest() {
     Boat boat = new Boat(new Position(110, 60), 2, 5, 100, parser);
 

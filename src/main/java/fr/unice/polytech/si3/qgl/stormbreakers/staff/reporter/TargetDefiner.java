@@ -67,6 +67,12 @@ public class TargetDefiner {
                 double speedDueToStream = Math
                         .cos(courant.getPosition().getOrientation() - new Vector(boat, checkpoint).getOrientation())
                         * courant.getStrength();
+
+                if (trajectory.get(1).distanceTo(boat) > courant.getStrength() + Utils.MAX_SPEED_OARS
+                        && trajectory.get(1).distanceTo(boat) < 2 * courant.getStrength() + Utils.MAX_SPEED_OARS) {
+                    return new TupleDistanceOrientation(0,
+                            this.navigator.additionalOrientationNeeded(boat.getPosition(), trajectory.get(1)));
+                }
                 return new TupleDistanceOrientation(trajectory.get(1).distanceTo(boat) - speedDueToStream,
                         this.navigator.additionalOrientationNeeded(boat.getPosition(), trajectory.get(1)));
 
@@ -110,13 +116,12 @@ public class TargetDefiner {
             Logger.getInstance().log("helpness positive:" + helpness);
 
             IPoint pointToLeave = streamAround.maximalPointToStay(boat.getPosition().getPoint2D(), cpPoint);
-            
+
             double speedDueToStream = streamAround.speedProvided(boat, cpPoint);
             if (pointToLeave.distanceTo(boat) <= streamAround.getStrength()) {
                 //
                 double orientation = navigator.additionalOrientationNeeded(boat.getPosition(), cpPoint);
-                
-                
+
                 double distance = boat.distanceTo(pointToLeave) - speedDueToStream;
                 var tmp = new TupleDistanceOrientation(distance, orientation);
                 Logger.getInstance().log("PointToLeaveClose and Stream Fast:" + tmp.toString());
@@ -125,7 +130,7 @@ public class TargetDefiner {
                 double orientation = streamAround.getPosition().getOrientation() - boat.getOrientation();
                 double distance = pointToLeave.distanceTo(boat) - speedDueToStream;
                 var tmp = new TupleDistanceOrientation(distance, orientation);
-                Logger.getInstance().log("PointToLeaveNotSoClose:"+ tmp.toString());
+                Logger.getInstance().log("PointToLeaveNotSoClose:" + tmp.toString());
                 return tmp;
             }
         }
