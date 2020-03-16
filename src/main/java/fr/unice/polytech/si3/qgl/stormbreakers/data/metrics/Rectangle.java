@@ -1,5 +1,7 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.data.metrics;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -15,6 +17,7 @@ public class Rectangle extends Shape {
     private double width;
     private double height;
     private double orientation;
+    Polygon rectanglePolygon;
 
     public Rectangle(double width, double height,
                      double orientation, Position anchor) {
@@ -22,6 +25,20 @@ public class Rectangle extends Shape {
         this.width = width;
         this.height = height;
         this.orientation = orientation;
+        this.rectanglePolygon = buildAsPolygon();
+    }
+
+    private Polygon buildAsPolygon() {
+        // TODO: 16/03/2020 Quick test
+        double halfLength = height/2;
+        double halfWidth = width/2;
+
+        List<Point2D> rectangleVertices = new ArrayList<>();
+        rectangleVertices.add(new Point2D(halfLength,halfWidth));
+        rectangleVertices.add(new Point2D(-halfLength,halfWidth));
+        rectangleVertices.add(new Point2D(-halfLength,-halfWidth));
+        rectangleVertices.add(new Point2D(halfLength,-halfWidth));
+        return new Polygon(this.orientation,rectangleVertices, this.anchor);
     }
 
     @JsonCreator
@@ -31,6 +48,7 @@ public class Rectangle extends Shape {
         this.width = width;
         this.height = height;
         this.orientation = orientation;
+        this.rectanglePolygon = buildAsPolygon();
     }
 
     @JsonProperty("width")
@@ -70,27 +88,27 @@ public class Rectangle extends Shape {
 
     @Override
     public boolean collidesWith(Shape shape) {
-        return false;
+        return rectanglePolygon.collidesWith(shape);
     }
 
     @Override
     public boolean collidesWith(Polygon polygon) {
-        return false;
+        return rectanglePolygon.collidesWith(polygon);
     }
 
     @Override
     public boolean collidesWith(Circle circle) {
-        return false;
+        return rectanglePolygon.collidesWith(circle);
     }
 
     @Override
     public boolean collidesWith(LineSegment2D lineSegment2D) {
-        return false;
+        return rectanglePolygon.collidesWith(lineSegment2D);
     }
 
     @Override
     public Circle getBoundingCircle() {
-        return null;
+        return rectanglePolygon.getBoundingCircle();
     }
 
     // =========

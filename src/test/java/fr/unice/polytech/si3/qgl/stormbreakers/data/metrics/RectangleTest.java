@@ -1,5 +1,6 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.data.metrics;
 
+import fr.unice.polytech.si3.qgl.stormbreakers.exceptions.DegeneratedLine2DException;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,6 +27,13 @@ class RectangleTest {
         // Width is along the y axis
         rectangle = new Rectangle(10, 20, 0.0);
         setupGoodOrientation();
+    }
+
+    @Test
+    void testCannotCreateRectangleOfWidthOrHeightZero() {
+        assertThrows(DegeneratedLine2DException.class, () -> new Rectangle(0,1,2));
+        assertThrows(DegeneratedLine2DException.class, () -> new Rectangle(1,0,2));
+        assertDoesNotThrow(() -> new Rectangle(1,1,2));
     }
 
 
@@ -77,30 +85,30 @@ class RectangleTest {
      */
 
     @Test void testEqualsWhenWrongObject() {
-        Rectangle rectangle = new Rectangle(0,0,0);
+        Rectangle rectangle = new Rectangle(1,1,0);
         Integer other = 0;
         assertNotEquals(rectangle,other);
     }
 
     @Test void testEqualsWhenNullObject() {
-        Rectangle rectangle = new Rectangle(0,0,0);
+        Rectangle rectangle = new Rectangle(1,1,0);
         Fraction other = null;
         assertNotEquals(rectangle,other);
     }
 
     @Test void testEqualsWhenSameObject() {
-        Rectangle rectangle = new Rectangle(0,0,0);
+        Rectangle rectangle = new Rectangle(1,1,0);
         assertEquals(rectangle,rectangle);
     }
 
     @Test void testEqualsWhenSameValues() {
-        Rectangle rect1 = new Rectangle(0,0,0);
-        Rectangle rect2 = new Rectangle(0,0,0);
+        Rectangle rect1 = new Rectangle(1,1,0);
+        Rectangle rect2 = new Rectangle(1,1,0);
         assertEquals(rect1,rect2);
     }
 
     @Test void testEqualsWhenDifferent() {
-        Rectangle rect1 = new Rectangle(0,0,0);
+        Rectangle rect1 = new Rectangle(1,1,0);
         Rectangle rect2 = new Rectangle(10,10,10);
         assertNotEquals(rect1,rect2);
     }
