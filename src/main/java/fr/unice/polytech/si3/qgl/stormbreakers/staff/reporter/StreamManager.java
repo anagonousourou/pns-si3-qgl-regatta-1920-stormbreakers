@@ -40,7 +40,7 @@ public class StreamManager implements PropertyChangeListener {
      * @return
      */
     public boolean insideStream() {
-        return this.courants.stream().anyMatch(courant -> courant.isPtInside(boat));
+        return this.courants.stream().anyMatch(courant -> courant.isInsideOpenSurface(boat));
     }
 
     public boolean pointIsInsideStream(IPoint point) {

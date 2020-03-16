@@ -153,6 +153,9 @@ public class Captain {
 
     List<SailorAction> adjustSpeedTakingIntoAccountWind(double distance, double currentSpeed) {
         double currentExternalSpeed = this.weatherAnalyst.currentExternalSpeed();
+        if (distance <= Utils.EPS || distance <= currentSpeed) {
+            return List.of();
+        }
 
         if (this.weatherAnalyst.additionalSpeedExists()) {
             // si on a du vent
