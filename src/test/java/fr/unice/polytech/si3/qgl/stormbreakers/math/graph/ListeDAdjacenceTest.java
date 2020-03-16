@@ -34,11 +34,11 @@ public class ListeDAdjacenceTest {
 	@Test
 	void isPointOnEdgeTest() {
 		assertFalse(adj.isPointOnEdge(bateau, 1, 1));
-		assertTrue(adj.isPointOnEdge(bateau, 0.5, 0.5));
-		assertTrue(adj.isPointOnEdge(bateau, 1000.5, 0.5));
-		assertTrue(adj.isPointOnEdge(bateau, 0.5, 1000.5));
-		assertTrue(adj.isPointOnEdge(bateau, 1000.5, 10));
-		assertTrue(adj.isPointOnEdge(bateau, 100, 1000.50));
+		assertTrue(adj.isPointOnEdge(bateau, -1999.5, -1999.5));
+		assertTrue(adj.isPointOnEdge(bateau, 3000.5, -1999.5));
+		assertTrue(adj.isPointOnEdge(bateau, 0.5, 3000.5));
+		assertTrue(adj.isPointOnEdge(bateau, 3000.5, 10));
+		assertTrue(adj.isPointOnEdge(bateau, 100, 3000.50));
 		
 	}
 }

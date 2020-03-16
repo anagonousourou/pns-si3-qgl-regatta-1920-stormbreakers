@@ -43,7 +43,7 @@ public class ShortestPathCalculatorTest {
 		spc= new ShortestPathCalculator();
 		//adj= new ListeDAdjacence(bateau, other,recifs, cp);
 	}
-	
+
 	@Test
 	public void shortestPathFromBoatPosTest() {
 		List<Sommet> edges1 = spc.shortestPathFromBoatPos(bateau, recifs,cp);

@@ -111,15 +111,14 @@ public class ListeDAdjacence {
 				&& currentSommet.y() == boatPosition.y() - (VISIBLITEMAX / 2)) {
 			list.addAll(List.of(new Arrete(currentSommet, HC), new Arrete(currentSommet, HD),
 					new Arrete(currentSommet, MD)));
-
 		} else if (currentSommet.x() == boatPosition.x() - (VISIBLITEMAX / 2)
 				&& currentSommet.y() == boatPosition.y() + (VISIBLITEMAX / 2)) {
 			list.addAll(List.of(new Arrete(currentSommet, BC), new Arrete(currentSommet, BD),
 					new Arrete(currentSommet, MD)));
 		} else if (currentSommet.x() == boatPosition.x() + (VISIBLITEMAX / 2)
 				&& currentSommet.y() == boatPosition.y() - (VISIBLITEMAX / 2)) {
-			list.addAll(List.of(new Arrete(currentSommet, BG), new Arrete(currentSommet, HC),
-					new Arrete(currentSommet, HG)));
+			list.addAll(List.of(new Arrete(currentSommet, HG), new Arrete(currentSommet, HC),
+					new Arrete(currentSommet, MG)));
 		} else if (currentSommet.x() == boatPosition.x() + (VISIBLITEMAX / 2)
 				&& currentSommet.y() == boatPosition.y() + (VISIBLITEMAX / 2)) {
 			list.addAll(List.of(new Arrete(currentSommet, BG), new Arrete(currentSommet, BC),
@@ -130,10 +129,12 @@ public class ListeDAdjacence {
 		} else if (currentSommet.x() == boatPosition.x() + (VISIBLITEMAX / 2)) {
 			list.addAll(List.of(new Arrete(currentSommet, HC), new Arrete(currentSommet, HG),
 					new Arrete(currentSommet, MG), new Arrete(currentSommet, BG), new Arrete(currentSommet, BC)));
-		} else if (currentSommet.y() == boatPosition.y() - (VISIBLITEMAX / 2)) {
+		} 
+		
+		else if (currentSommet.y() == boatPosition.y() + (VISIBLITEMAX / 2)) {
 			list.addAll(List.of(new Arrete(currentSommet, MD), new Arrete(currentSommet, MG),
 					new Arrete(currentSommet, BG), new Arrete(currentSommet, BD), new Arrete(currentSommet, BC)));
-		} else if (currentSommet.y() == boatPosition.y() + (VISIBLITEMAX / 2)) {
+		} else if (currentSommet.y() == boatPosition.y() - (VISIBLITEMAX / 2)) {
 			list.addAll(List.of(new Arrete(currentSommet, HC), new Arrete(currentSommet, HG),
 					new Arrete(currentSommet, HD), new Arrete(currentSommet, MD), new Arrete(currentSommet, MG)));
 		}
@@ -172,8 +173,8 @@ public class ListeDAdjacence {
 	 * @return
 	 */
 	protected boolean isPointOnEdge(IPoint boatPosition, double x, double y) {
-		if (Utils.almostEquals(boatPosition.x() - VISIBLITEMAX/2, x) || Utils.almostEquals(boatPosition.x() + VISIBLITEMAX/2, x)
-				|| Utils.almostEquals(boatPosition.y() - VISIBLITEMAX/2, y) || Utils.almostEquals(boatPosition.y() + VISIBLITEMAX/2, y)) {
+		if (Utils.almostEquals(boatPosition.x() - (VISIBLITEMAX/2), x) || Utils.almostEquals(boatPosition.x() + (VISIBLITEMAX/2), x)
+				|| Utils.almostEquals(boatPosition.y() - (VISIBLITEMAX/2), y) || Utils.almostEquals(boatPosition.y() + (VISIBLITEMAX/2), y)) {
 			return true;
 		}
 		return false;
