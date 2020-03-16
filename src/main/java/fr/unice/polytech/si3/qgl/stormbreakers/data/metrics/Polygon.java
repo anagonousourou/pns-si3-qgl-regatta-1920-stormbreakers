@@ -145,6 +145,7 @@ public class Polygon extends Shape implements CanCollide, Orientable {
 
     @Override
     public boolean collidesWith(LineSegment2D lineSegment2D) {
+        // TODO: 16/03/2020 If lineSegment inside
         List<LineSegment2D> edges = bordersActualPos;
 
         for (LineSegment2D border : edges) {

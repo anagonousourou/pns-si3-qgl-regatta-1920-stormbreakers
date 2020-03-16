@@ -73,13 +73,23 @@ public class Rectangle extends Shape {
 
     @Override
     public boolean isPtInside(Point2D pt) {
+
         Point2D point2D = new Point2D(pt);
         // On ramene le plan pour que les cotes du rectangle soient sur les axes du
         // repere
-        if (orientation != 0) {
-            point2D = pt.getRotatedBy(-orientation);
+        double totalOrientation = orientation + getAnchorOrientation();
+
+        // Point relatif au centre de Rectangle 0
+        point2D = new Point2D(pt.x()-anchor.x(),pt.y()-anchor.y());
+
+        if (totalOrientation != 0) {
+            // Orientation du rectangle compensée
+            point2D = point2D.getRotatedAround(origin,-totalOrientation);
         }
         return isPtInRectangle0(point2D);
+
+
+        //return rectanglePolygon.isPtInside(pt);
     }
 
     // =========
@@ -103,7 +113,11 @@ public class Rectangle extends Shape {
 
     @Override
     public boolean collidesWith(LineSegment2D lineSegment2D) {
-        return rectanglePolygon.collidesWith(lineSegment2D);
+        //return rectanglePolygon.collidesWith(lineSegment2D);
+
+        // TODO: 12/03/2020 Figure out why polygon collision doesn't work in tests
+        return new RectanglePositioned(this, this.getAnchor()).intersectsWith(lineSegment2D);
+
     }
 
     @Override

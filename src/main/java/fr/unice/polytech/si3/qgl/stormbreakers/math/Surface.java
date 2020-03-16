@@ -25,17 +25,6 @@ public interface Surface extends IPoint, Orientable {
 
 	default boolean intersectsWith(LineSegment2D lineSegment2D) {
 		return getShape().collidesWith(lineSegment2D);
-
-
-
-		// TODO: 12/03/2020 Move as override in RECTANGLE
-		/*
-		if (this.getShape().getType().equals("rectangle")) {
-
-			return new RectanglePositioned((Rectangle) this.getShape(),
-					new Position(this.x(), this.y(), this.getOrientation())).intersectsWith(lineSegment2D);
-		}
-		*/
 	}
 
 	default boolean collidesWith(Surface other) {
@@ -57,6 +46,7 @@ public interface Surface extends IPoint, Orientable {
 	 * @return
 	 */
 	default List<IPoint> avoidHit(IPoint depart, IPoint destination) {
+		// TODO: 16/03/2020 Figure out how to fix circle test
 		// LATER
 		if (this.getShape().getType().equals("rectangle")) {
 			return Surface.avoidHitRectangle(this, depart, destination);

@@ -191,6 +191,10 @@ public class Point2D implements Logable, IPoint{
 
     public Point2D getRotatedAround(Point2D anchorPoint, double angle) {
         // TODO: 15/03/2020 Tests
+        if (Utils.almostEquals(new Point2D(0,0),anchorPoint)) {
+            return getRotatedBy(angle);
+        }
+
         Vector fromAnchorToThis = new Vector(anchorPoint,this);
         Vector rotatedVector = fromAnchorToThis.getRotatedBy(angle);
         return anchorPoint.getTranslatedBy(rotatedVector);
