@@ -3,6 +3,7 @@ package fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter;
 import java.util.List;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.IPoint;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Checkpoint;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Boat;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Courant;
@@ -10,6 +11,8 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.processing.Logger;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Utils;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Vector;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.graph.ShortestPathCalculator;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.graph.Sommet;
 import fr.unice.polytech.si3.qgl.stormbreakers.staff.tactical.Navigator;
 
 public class TargetDefiner {
@@ -19,6 +22,7 @@ public class TargetDefiner {
     private StreamManager streamManager;
     private Boat boat;
     private Navigator navigator;
+    private ShortestPathCalculator spc;
 
     public TargetDefiner(CheckpointsManager checkpointsManager, StreamManager streamManager, Boat boat,
             Navigator navigator) {
@@ -27,6 +31,7 @@ public class TargetDefiner {
         this.streamManager = streamManager;
         this.boat = boat;
         this.navigator = navigator;
+        this.spc =  new ShortestPathCalculator();
     }
 
     boolean thereIsStreamOnTrajectory() {
@@ -73,10 +78,12 @@ public class TargetDefiner {
 
             else if (this.thereIsObstaclesOnTrajectory()) {
                 Logger.getInstance().log("obstacle on trajet " + checkpoint);
-                List<IPoint> trajectory = this.streamManager.trajectoryToAvoidObstacles(boat, checkpoint);
-
-                return new TupleDistanceOrientation(trajectory.get(1).distanceTo(boat),
-                        this.navigator.additionalOrientationNeeded(boat.getPosition(), trajectory.get(1)));
+                //trajectory = this.streamManager.trajectoryToAvoidObstacles(boat, checkpoint);
+                Sommet sommetBateau= new Sommet(boat);
+                List<Sommet> trajectory = spc.shortestPathFromBoatPos(sommetBateau, streamManager.getRecifs(),checkpoint);
+                spc.RemoveUselessNode(trajectory); 
+                return new TupleDistanceOrientation(trajectory.get(1).getPoint().distanceTo(boat),
+                        this.navigator.additionalOrientationNeeded(boat.getPosition(), trajectory.get(1).getPoint()));
 
             } else {// pas de stream du tout ou pas de stream sur la trajectoire
                 Logger.getInstance().log("nothing " + checkpoint);
