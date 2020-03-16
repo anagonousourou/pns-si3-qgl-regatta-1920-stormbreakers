@@ -78,10 +78,10 @@ public class SurfaceTest {
 
             @Override
             public Shape getShape() {
-                return new Polygon(0, List.of(new Point2D(100, 100), new Point2D(0, -100),
-                        new Point2D(100, -100)
-
-                ));
+                return new Polygon(0,
+						List.of(new Point2D(100, 100), new Point2D(0, -100), new Point2D(100, -100)),
+						new Position(x(),y())
+				);
             }
 		};
 		
@@ -104,10 +104,11 @@ public class SurfaceTest {
 
             @Override
             public Shape getShape() {
-                return new Polygon(0, List.of(new Point2D(100, 100), new Point2D(-100, 100), new Point2D(-100, -100),
-                        new Point2D(100, -100)
-
-                ));
+                return new Polygon(0,
+						List.of(new Point2D(100, 100), new Point2D(-100, 100),
+								new Point2D(-100, -100), new Point2D(100, -100)),
+						new Position(x(),y())
+                );
             }
         };
 
