@@ -73,7 +73,10 @@ public class InputParser {
 						c.get(SHAPE_KEY).get("height").asDouble(), c.get(SHAPE_KEY).get(ORIENTATION_KEY).asDouble());
 			}
 			checkpoints.add(new Checkpoint(
-					new Position(c.get(POSITION_KEY).get("x").asInt(), c.get(POSITION_KEY).get("y").asInt()), shape));
+					new Position(
+							c.get(POSITION_KEY).get("x").asDouble(),
+							c.get(POSITION_KEY).get("y").asDouble()),
+					shape));
 		});
 		return checkpoints;
 	}

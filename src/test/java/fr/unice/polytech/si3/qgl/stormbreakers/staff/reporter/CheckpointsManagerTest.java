@@ -83,4 +83,37 @@ public class CheckpointsManagerTest {
         assertTrue(new CheckpointsManager(List.of(c2)).boatCollidesWithNextCheckpoint(boat));
 
     }
+
+    @Test
+    void testBoatCircleCheckpointCollisionScenario() {
+        Circle circle = new Circle(150, new Position(300, 1800));
+        Point2D A = new Point2D(2,-1.5);
+        Point2D B = new Point2D(2,1.5);
+        Point2D C = new Point2D(-2,1.5);
+        Point2D D = new Point2D(-2,-1.5);
+        List<Point2D> vertices = List.of(A,B,C,D);
+        Polygon polygon = new Polygon(0, vertices, new Position(304, 1721));
+
+        Boat boat2 = new Boat(polygon.getAnchor(),4,3,100,null,polygon);
+
+        assertTrue(new CheckpointsManager(List.of(new Checkpoint(circle.getAnchor(),circle))).boatCollidesWithNextCheckpoint(boat2));
+    }
+
+    @Test
+    void testBoatCircleCheckpointValidationScenario() {
+        Circle circle = new Circle(150, new Position(300, 1800));
+        Point2D A = new Point2D(2,-1.5);
+        Point2D B = new Point2D(2,1.5);
+        Point2D C = new Point2D(-2,1.5);
+        Point2D D = new Point2D(-2,-1.5);
+        List<Point2D> vertices = List.of(A,B,C,D);
+        Polygon polygon = new Polygon(0, vertices, new Position(304, 1721));
+
+        Boat boat2 = new Boat(polygon.getAnchor(),4,3,100,null,polygon);
+
+        CheckpointsManager checkpointsManager2 = new CheckpointsManager(List.of(new Checkpoint(circle.getAnchor(),circle)));
+        checkpointsManager2.updateCheckpoint(boat2); // No more checkpoints
+
+        assertNull(checkpointsManager2.nextCheckpoint());
+    }
 }
