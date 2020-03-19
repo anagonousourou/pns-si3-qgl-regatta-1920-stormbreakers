@@ -7,31 +7,49 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.IPoint;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Rectangle;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Shape;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.processing.InputParser;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.processing.Logger;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.Surface;
+
 /**
  * Le bateau implémente Propertychange listener pour permettre 
  * la mise à jour des infos du bateau notamment la vie et la position-orientation
  */
-public class Boat implements PropertyChangeListener,IPoint {
-    private Position position = null;
+public class Boat implements PropertyChangeListener, Surface {
+    private final Shape boatShape;
+    private Position position;
     private final int deckwidth;
     private final int decklength;
-    private int life = 0;
-    //add a Shape field
+    private int life;
     private InputParser parser;
 
+    public Boat(Position position, int decklength, int deckwidth, int life, InputParser parser, Shape boatShape) {
+        this.position = position;
+        this.decklength = decklength;
+        this.deckwidth = deckwidth;
+        this.life = life;
+        this.parser = parser;
+        this.boatShape = boatShape;
+        boatShape.setAnchor(position);
+    }
+
+    /**
+     * Constructor for test compatibility (No shape)
+     */
     public Boat(Position position, int decklength, int deckwidth, int life, InputParser parser) {
         this.position = position;
         this.decklength = decklength;
         this.deckwidth = deckwidth;
         this.life = life;
         this.parser = parser;
+        this.boatShape = new Rectangle(decklength*2,deckwidth*1.5,0,position);
     }
 
-    
-
-    
+    public Shape getShape() {
+        return boatShape;
+    }
 
     public void setPosition(Position position) {
         this.position = position;

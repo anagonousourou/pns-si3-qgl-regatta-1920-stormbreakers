@@ -173,5 +173,5 @@ public class Line2D {
         return Utils.almostEquals(0,distance);
     }
 
-    // LATER: 07/03/2020 Equals && hashcode ?
+    // TODO: 07/03/2020 Equals && hashcode ?
 }

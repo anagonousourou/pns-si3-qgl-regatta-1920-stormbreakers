@@ -18,6 +18,7 @@ public class Checkpoint implements Logable,Surface {
     public Checkpoint(@JsonProperty("position") Position pos, @JsonProperty("shape") Shape shape) {
         this.position = pos;
         this.shape = shape;
+        shape.setAnchor(pos);
     }
 
     @JsonProperty("position")

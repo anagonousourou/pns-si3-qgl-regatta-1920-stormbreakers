@@ -91,8 +91,7 @@ public class InputParser {
 
 			} else if (e.get("type").asText().equals("watch")) {
 				equipment = new Vigie(e.get(XKEY).asInt(), e.get(YKEY).asInt());
-			} else {
-				// LATER les autres equipements
+// ---
 			}
 			if (equipment != null) {
 				equipments.add(equipment);
@@ -101,6 +100,7 @@ public class InputParser {
 		});
 		return equipments;
 	}
+// ----
 
 	public Position fetchBoatPosition(String jString) throws JsonProcessingException {
 		JsonNode result = mapper.readTree(jString).get(SHIP_KEY);
@@ -109,7 +109,18 @@ public class InputParser {
 				result.get(POSITION_KEY).get(ORIENTATION_KEY).asDouble());
 	}
 
-	public int fetchBoatLength(String jString) throws JsonProcessingException {
+	public Shape fetchBoatShape(String jString) throws JsonProcessingException {
+		// TODO: 12/03/2020 Tests ?
+		JsonNode shipNode = mapper.readTree(jString).get(SHIP_KEY);
+		JsonNode boatShape = shipNode.get(SHAPE_KEY);
+		if (boatShape != null) {
+			return mapper.readValue(boatShape.toString(), Shape.class);
+		}
+		return null;
+
+	}
+
+  public int fetchBoatLength(String jString) throws JsonProcessingException {
 		return mapper.readTree(jString).get(SHIP_KEY).get("deck").get("length").asInt();
 	}
 

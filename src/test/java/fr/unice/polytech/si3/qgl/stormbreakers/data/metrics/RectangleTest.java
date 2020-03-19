@@ -1,5 +1,6 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.data.metrics;
 
+import fr.unice.polytech.si3.qgl.stormbreakers.exceptions.DegeneratedLine2DException;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,6 +29,14 @@ class RectangleTest {
     }
 
     @Test
+    void testCannotCreateRectangleOfWidthOrHeightZero() {
+        assertThrows(DegeneratedLine2DException.class, () -> new Rectangle(0,1,2));
+        assertThrows(DegeneratedLine2DException.class, () -> new Rectangle(1,0,2));
+        assertDoesNotThrow(() -> new Rectangle(1,1,2));
+    }
+
+
+	  @Test
     void testIsInsideWhenTrue() {
         assertTrue(rectangle.isPtInside(new Point2D(0, 0)));
     }
@@ -74,38 +83,33 @@ class RectangleTest {
      * Tests for equals
      */
 
-    @Test
-    void testEqualsWhenWrongObject() {
-        Rectangle rectangle = new Rectangle(0, 0, 0);
+    @Test void testEqualsWhenWrongObject() {
+        Rectangle rectangle = new Rectangle(1, 1, 0);
         Integer other = 0;
         assertNotEquals(rectangle, other);
     }
 
-    @Test
-    void testEqualsWhenNullObject() {
-        Rectangle rectangle = new Rectangle(0, 0, 0);
+    @Test void testEqualsWhenNullObject() {
+        Rectangle rectangle = new Rectangle(1, 1, 0);
         Fraction other = null;
         assertNotEquals(rectangle, other);
     }
 
-    @Test
-    void testEqualsWhenSameObject() {
-        Rectangle rectangle = new Rectangle(0, 0, 0);
-        assertEquals(rectangle, rectangle);
+    @Test void testEqualsWhenSameObject() {
+        Rectangle rectangle = new Rectangle(1, 1, 0);
+        assertEquals(rectangle,rectangle);
     }
 
-    @Test
-    void testEqualsWhenSameValues() {
-        Rectangle rect1 = new Rectangle(0, 0, 0);
-        Rectangle rect2 = new Rectangle(0, 0, 0);
-        assertEquals(rect1, rect2);
+    @Test void testEqualsWhenSameValues() {
+        Rectangle rect1 = new Rectangle(1, 1, 0);
+        Rectangle rect2 = new Rectangle(1, 1, 0);
+        assertEquals(rect1,rect2);
     }
 
-    @Test
-    void testEqualsWhenDifferent() {
-        Rectangle rect1 = new Rectangle(0, 0, 0);
+    @Test void testEqualsWhenDifferent() {
+        Rectangle rect1 = new Rectangle(1, 1, 0);
         Rectangle rect2 = new Rectangle(10, 10, 10);
-        assertNotEquals(rect1, rect2);
+        assertNotEquals(rect1,rect2);
     }
 
     private void setupGoodOrientation() {

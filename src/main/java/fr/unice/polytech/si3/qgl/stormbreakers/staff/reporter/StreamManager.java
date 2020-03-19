@@ -13,6 +13,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.IPoint;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Boat;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Courant;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.OceanEntity;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Recif;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.processing.InputParser;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.processing.Logger;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.LineSegment2D;
@@ -253,6 +254,19 @@ public class StreamManager implements PropertyChangeListener {
     IPoint calculateEscapePoint(Courant courant, IPoint position) {
         // LATER add strength consideration etc ...
         return courant.closestPointTo(position);
+    }
+    public List<Courant> getCourants() {
+    	return courants;
+    }
+    
+    public List<Recif> getRecifs(){
+    	List<Recif> recifs= new ArrayList<Recif>();
+    	for(OceanEntity o:obstacles) {
+    		if(o instanceof Recif) {
+    			recifs.add((Recif) o);
+    		}
+    	}
+    	return recifs;
     }
 
 }

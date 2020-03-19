@@ -96,6 +96,15 @@ class Point2DTest {
         assertTrue(almostEquals(expected,result));
     }
 
+    @Test
+    void getVectorToTest() {
+        assertEquals(new Vector(0,1),new Point2D(0,0).getVectorTo(new Point2D(0,1)));
+        assertEquals(new Vector(5,0),new Point2D(5,0).getVectorTo(new Point2D(10,0)));
+        assertEquals(new Vector(0,5),new Point2D(0,5).getVectorTo(new Point2D(0,10)));
+
+        assertEquals(new Vector(5,15),new Point2D(5,-5).getVectorTo(new Point2D(10,10)));
+        assertEquals(new Vector(-15,5),new Point2D(5,5).getVectorTo(new Point2D(-10,10)));
+    }
 
     /*
      * Tests for equals

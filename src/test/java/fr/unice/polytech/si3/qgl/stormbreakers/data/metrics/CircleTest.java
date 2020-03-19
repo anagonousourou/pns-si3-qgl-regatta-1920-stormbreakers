@@ -71,13 +71,24 @@ class CircleTest {
         assertEquals(circ1,circ2);
     }
 
+    @Test void testEqualsWhenDifferentOrientation() {
+        // orientation doesn't matter for a circle
+        Circle circ1 = new Circle(0, new Position(0,0,Math.PI));
+        Circle circ2 = new Circle(0, new Position(0,0,0.0));
+        assertEquals(circ1,circ2);
+    }
+
     @Test void testEqualsWhenDifferent() {
         Circle circ1 = new Circle(0);
         Circle circ2 = new Circle(10);
         assertNotEquals(circ1,circ2);
     }
-    
-    @Test void testIntersect() {
+
+    /*
+     * End of tests for equals
+     */
+
+    @Test void testIntersectSegment() {
 
     	Position d1 = new Position(-90, 20);
     	Position a1 = new Position(90, 20);
@@ -111,7 +122,7 @@ class CircleTest {
     	
     }
     
-    @Test void testIntersects() {
+    @Test void testIntersectsSegment() {
 
     	Point2D d1 = new Point2D(-70, 20);
     	Point2D a1 = new Point2D(90, -40);
@@ -123,9 +134,9 @@ class CircleTest {
     	LineSegment2D ls = new LineSegment2D(d1,a1);
     	LineSegment2D ls1 = new LineSegment2D(d2,a1);
     	LineSegment2D lsEdgeCircle = new LineSegment2D(dEdge, aEdge);
-    	assertTrue(c1.intersects(ls));
-    	assertFalse(c1.intersects(ls1));
-    	assertTrue(c1.intersects(lsEdgeCircle));
+    	assertTrue(c1.collidesWith(ls));
+    	assertFalse(c1.collidesWith(ls1));
+    	assertTrue(c1.collidesWith(lsEdgeCircle));
     	
     	//line 
     	Line2D l = new Line2D(d1,a1);
@@ -135,7 +146,7 @@ class CircleTest {
     }
     
     @Test
-    void findInterestingPointTest() {
+    void findIntersectingPointTest() {
     	Point2D d1 = new Point2D(0, -55);
     	Point2D a1 = new Point2D(0, 55);
     	Point2D result1=new Point2D(0, 50);
@@ -145,7 +156,18 @@ class CircleTest {
     	assertEquals(c1.findBothIntersectingPoints(l).getFirst(),result1);
     	assertEquals(c1.findBothIntersectingPoints(l).getSecond(),result2);
     }
-    /*
-     * End of tests for equals
-     */
+
+    @Test
+    void collidesWithTestWhenTwoCircles() {
+        Circle c1 = new Circle(50,new Position(0,0));
+
+        Circle c2 = new Circle(50,new Position(0,50)); // 1 radius apart
+        Circle c3 = new Circle(50,new Position(0,100)); // 1 diameter apart
+        assertTrue(c1.collidesWith(c2));
+        assertTrue(c1.collidesWith(c3));
+
+        Circle c4 = new Circle(50,new Position(0,100.2)); // >1 diameter apart
+        assertFalse(c1.collidesWith(c4));
+    }
+
 }

@@ -117,7 +117,6 @@ public class Point2D implements Logable, IPoint{
      * @return Vector le vecteur
      */
     public Vector getVectorTo(Point2D other) {
-        // TODO: 09/03/2020 Urgent Tests
         return new Vector(other.x-this.x, other.y-this.y);
     }
 
@@ -184,5 +183,20 @@ public class Point2D implements Logable, IPoint{
     @Override
     public String toLogs() {
         return String.format("%f %f",x,y);
+    }
+
+    public Point2D negate() {
+        return new Point2D(-x,-y);
+    }
+
+    public Point2D getRotatedAround(Point2D anchorPoint, double angle) {
+        // TODO: 15/03/2020 Tests
+        if (Utils.almostEquals(new Point2D(0,0),anchorPoint)) {
+            return getRotatedBy(angle);
+        }
+
+        Vector fromAnchorToThis = new Vector(anchorPoint,this);
+        Vector rotatedVector = fromAnchorToThis.getRotatedBy(angle);
+        return anchorPoint.getTranslatedBy(rotatedVector);
     }
 }

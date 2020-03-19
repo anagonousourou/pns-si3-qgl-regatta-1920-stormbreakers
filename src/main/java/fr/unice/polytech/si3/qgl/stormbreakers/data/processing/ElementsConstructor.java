@@ -3,6 +3,7 @@ package fr.unice.polytech.si3.qgl.stormbreakers.data.processing;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Shape;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Boat;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Wind;
 import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.CheckpointsManager;
@@ -44,7 +45,8 @@ public class ElementsConstructor {
 			int decklength = this.parser.fetchBoatLength(game);
 			int deckwidth = this.parser.fetchBoatWidth(game);
 			Position position = this.parser.fetchBoatPosition(game);
-			boat = new Boat(position, decklength, deckwidth, life, parser);
+			Shape boatShape = this.parser.fetchBoatShape(game);
+			boat = new Boat(position, decklength, deckwidth, life, parser, boatShape);
 
 			coordinator = new Coordinator(crewManager, equipmentsManager);
 			seaElements = new WeatherAnalyst(wind, boat, equipmentsManager);

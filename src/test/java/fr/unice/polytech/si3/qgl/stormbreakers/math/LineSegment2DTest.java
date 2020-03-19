@@ -247,4 +247,36 @@ public class LineSegment2DTest {
 			assertTrue(Utils.almostEquals(point2D, lineSegment2D.point(lineSegment2D.segmentParameterOf(point2D)), delta));
 		}
 	}
+
+	@Test
+	void containsPointTest() {
+		LineSegment2D lineSegmentHorizontal = new LineSegment2D(new Point2D(-5,3),new Point2D(5,3));
+		assertTrue(lineSegmentHorizontal.contains(new Point2D(0,3)));
+		assertFalse(lineSegmentHorizontal.contains(new Point2D(0,2.8)));
+		assertFalse(lineSegmentHorizontal.contains(new Point2D(0,3.2)));
+		assertTrue(lineSegmentHorizontal.contains(new Point2D(-5,3)));
+		assertFalse(lineSegmentHorizontal.contains(new Point2D(-5.2,3)));
+		assertTrue(lineSegmentHorizontal.contains(new Point2D(5,3)));
+		assertFalse(lineSegmentHorizontal.contains(new Point2D(5.2,3)));
+
+		LineSegment2D lineSegmentOblique = new LineSegment2D(new Point2D(-5,-5),new Point2D(5,5));
+		assertTrue(lineSegmentOblique.contains(new Point2D(0,0)));
+		assertFalse(lineSegmentOblique.contains(new Point2D(0,0.2)));
+		assertFalse(lineSegmentOblique.contains(new Point2D(0,-0.2)));
+		assertFalse(lineSegmentOblique.contains(new Point2D(0.2,0)));
+		assertFalse(lineSegmentOblique.contains(new Point2D(-0.2,0)));
+		assertTrue(lineSegmentOblique.contains(new Point2D(-5,-5)));
+		assertFalse(lineSegmentOblique.contains(new Point2D(-5.2,-5.2)));
+		assertTrue(lineSegmentOblique.contains(new Point2D(5,5)));
+		assertFalse(lineSegmentOblique.contains(new Point2D(5.2,5.2)));
+
+		LineSegment2D lineSegmentVertical = new LineSegment2D(new Point2D(3,-5),new Point2D(3,5));
+		assertTrue(lineSegmentVertical.contains(new Point2D(3,0)));
+		assertFalse(lineSegmentVertical.contains(new Point2D(2.8,0)));
+		assertFalse(lineSegmentVertical.contains(new Point2D(3.2,0)));
+		assertTrue(lineSegmentVertical.contains(new Point2D(3,-5)));
+		assertFalse(lineSegmentVertical.contains(new Point2D(3,-5.2)));
+		assertTrue(lineSegmentVertical.contains(new Point2D(3,5)));
+		assertFalse(lineSegmentVertical.contains(new Point2D(3,5.2)));
+	}
 }
