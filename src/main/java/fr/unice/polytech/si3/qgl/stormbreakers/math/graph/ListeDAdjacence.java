@@ -52,7 +52,6 @@ public class ListeDAdjacence {
 	 * @param currentSommet
 	 * @param recifs
 	 * @param nextCheckpoint
-	 * @param streamManager
 	 * @return
 	 */
 	private List<Arrete> createListArrete(IPoint boatPosition, IPoint currentSommet, List<Recif> recifs,

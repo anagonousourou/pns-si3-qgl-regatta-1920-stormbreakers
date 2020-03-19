@@ -157,14 +157,6 @@ public class Courant extends OceanEntity {
         return Math.cos(this.getOrientation() - new Vector(depart, destination).getOrientation()) * this.getStrength();
     }
 
-    /**
-     * 
-     * @param depart
-     * @param destination
-     * @param courant
-     * @param surface
-     * @return
-     */
     public IPoint maximalPointToStay(IPoint depart, IPoint destination) {
         Point2D current = new Point2D(depart.x(),depart.y());
         Point2D prev = current;

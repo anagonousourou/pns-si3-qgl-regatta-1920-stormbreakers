@@ -73,4 +73,5 @@ public abstract class Shape implements Logable, CanCollide {
      */
     public abstract boolean isPtInside(IPoint pt);
 
+    public abstract boolean isInsideOpenShape(IPoint pt);
 }

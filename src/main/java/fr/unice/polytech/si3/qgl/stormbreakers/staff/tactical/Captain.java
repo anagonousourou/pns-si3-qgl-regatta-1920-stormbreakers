@@ -142,7 +142,7 @@ public class Captain {
      * fonction actionsToOrientate pour régler l'angle
      * 
      * @param distance
-     * @param busy
+     * @param currentSpeed
      * @return
      */
     List<SailorAction> adjustSpeed(double distance, double currentSpeed) {
