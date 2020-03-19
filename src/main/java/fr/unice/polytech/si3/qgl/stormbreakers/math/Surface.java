@@ -19,6 +19,16 @@ public interface Surface extends IPoint, Orientable {
 
 	Shape getShape();
 
+	public default boolean isInsideOpenSurface(IPoint point) {
+		Point2D pt = new Point2D(point.x() - this.x(), point.y() - this.y());
+
+		double orientation = this.getOrientation();
+		// On compense l'orientation de la surface
+		if (orientation != 0)
+			pt = pt.getRotatedBy(-orientation);
+		return this.getShape().isInsideOpenShape(pt);
+	}
+
 	default boolean isPtInside(IPoint point) {
 		return getShape().isPtInside(new Point2D(point.x(),point.y()));
 	}
@@ -94,6 +104,6 @@ public interface Surface extends IPoint, Orientable {
 			}
 		}
 
-		return List.of(depart,destination);
+		return List.of(depart, destination);
 	}
 }

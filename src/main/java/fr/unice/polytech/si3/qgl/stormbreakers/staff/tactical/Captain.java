@@ -21,7 +21,7 @@ public class Captain {
     private CheckpointsManager checkpointsManager;
     private Coordinator coordinator;
     private Navigator navigator;
-    private static final double EPS = 0.001;
+
     private static final double SPEED = 165;
 
     private WeatherAnalyst weatherAnalyst;
@@ -74,6 +74,44 @@ public class Captain {
         return SPEED * ((double) nbActivatedOars / this.coordinator.nbOars());
     }
 
+    List<SailorAction> orientateWithRudder(double orientation) {
+        if (Utils.within(orientation, Utils.MAX_RUDDER_ROTATION)) {
+            // rudder suffisant
+            return this.validateActions(this.coordinator.activateRudder(orientation));
+        } else {// rudder insuffisant
+            if (this.coordinator.nbOars() == 0) {
+                // pas de rames
+                return this.validateActions(
+                        this.coordinator.activateRudder(Utils.MAX_RUDDER_ROTATION * Math.signum(orientation)));
+            } else {
+                // on a des rames et le rudder
+                Optional<OarsConfig> possibleOarsConfig = this.navigator
+                        .possibleOarConfigs(coordinator.nbLeftOars(), coordinator.nbRightOars()).stream()
+                        .filter(oc -> oc.getAngle() * orientation > 0)
+                        .max((oc1, oc2) -> Double.compare(oc1.getAngle(), oc2.getAngle()));
+
+                if (possibleOarsConfig.isPresent()) {
+                    Logger.getInstance().log(possibleOarsConfig.toString());
+                    int diff = this.navigator.fromAngleToDiff(possibleOarsConfig.get().getAngle(),
+                            this.coordinator.nbLeftOars(), this.coordinator.nbRightOars());
+
+                    var rudderActions = this.validateActions(this.coordinator
+                            .activateRudder(Utils.clamp(orientation - possibleOarsConfig.get().getAngle(),
+                                    -Utils.MAX_RUDDER_ROTATION, Utils.MAX_RUDDER_ROTATION)));
+
+                    var oarsActions = this.validateActions(this.coordinator.activateOarsNotStrict(diff));
+                    return Utils.<SailorAction>concatenate(rudderActions, oarsActions);
+                } else {
+
+                    int diff = this.navigator.fromAngleToDiff(orientation, this.coordinator.nbLeftOars(),
+                            this.coordinator.nbRightOars());
+                    List<SailorAction> actions = this.coordinator.activateOarsNotStrict(diff);
+                    return this.validateActions(actions);
+                }
+            }
+        }
+    }
+
     /**
      * Renvoie les actions à effectuer pour que le bateau prenne l'orientation
      * passée en parametre
@@ -83,45 +121,12 @@ public class Captain {
      */
     List<SailorAction> actionsToOrientate(double orientation) {
         // NO ORIENTATION NEEDED
-        if (Math.abs(orientation) < Captain.EPS) {
+        if (Utils.within(orientation, Utils.EPS)) {
             return List.of();
         }
 
         else if (this.coordinator.rudderIsPresent() && this.coordinator.rudderIsAccesible()) {
-            if (Math.abs(orientation) <= Math.PI / 4) {
-                // rudder suffisant
-                return this.validateActions(this.coordinator.activateRudder(orientation));
-            } else {// rudder insuffisant
-                if (this.coordinator.nbOars() == 0) {
-                    // pas de rames
-                    return this.validateActions(
-                            this.coordinator.activateRudder(Utils.MAX_RUDDER_ROTATION * Math.signum(orientation)));
-                } else {
-                    // on a des rames et le rudder
-                    Optional<OarsConfig> possibleOarsConfig = this.navigator
-                            .possibleOarConfigs(coordinator.nbLeftOars(), coordinator.nbRightOars()).stream()
-                            .filter(oc -> oc.getAngle() * orientation > 0)
-                            .max((oc1, oc2) -> Double.compare(oc1.getAngle(), oc2.getAngle()));
-
-                    if (possibleOarsConfig.isPresent()) {
-                        Logger.getInstance().log(possibleOarsConfig.toString());
-                        int diff = this.navigator.fromAngleToDiff(possibleOarsConfig.get().getAngle(),
-                                this.coordinator.nbLeftOars(), this.coordinator.nbRightOars());
-
-                        var rudderActions = this.validateActions(this.coordinator.activateRudder(Utils.clamp
-                                (orientation - possibleOarsConfig.get().getAngle(),-Utils.MAX_RUDDER_ROTATION,Utils.MAX_RUDDER_ROTATION )));
-                                
-                        var oarsActions = this.validateActions(this.coordinator.activateOarsNotStrict(diff));
-                        return Utils.<SailorAction>concatenate(rudderActions, oarsActions);
-                    } else {
-
-                        int diff = this.navigator.fromAngleToDiff(orientation, this.coordinator.nbLeftOars(),
-                                this.coordinator.nbRightOars());
-                        List<SailorAction> actions = this.coordinator.activateOarsNotStrict(diff);
-                        return this.validateActions(actions);
-                    }
-                }
-            }
+            return this.orientateWithRudder(orientation);
         } else {
             int diff = this.navigator.fromAngleToDiff(orientation, this.coordinator.nbLeftOars(),
                     this.coordinator.nbRightOars());
@@ -137,7 +142,7 @@ public class Captain {
      * fonction actionsToOrientate pour régler l'angle
      * 
      * @param distance
-     * @param busy
+     * @param currentSpeed
      * @return
      */
     List<SailorAction> adjustSpeed(double distance, double currentSpeed) {
@@ -148,11 +153,13 @@ public class Captain {
 
     List<SailorAction> adjustSpeedTakingIntoAccountWind(double distance, double currentSpeed) {
         double currentExternalSpeed = this.weatherAnalyst.currentExternalSpeed();
+        
 
         if (this.weatherAnalyst.additionalSpeedExists()) {
+            // si on a du vent
             double potentialSpeedAcquirable = this.weatherAnalyst.potentialSpeedAcquirable();
-            if (potentialSpeedAcquirable > 0.0 && (currentSpeed + potentialSpeedAcquirable) <= distance
-                    && potentialSpeedAcquirable != currentExternalSpeed) {
+            // le vent va dans le bon sens et ne nous fait pas dépasser
+            if (potentialSpeedAcquirable > 0.0 && (currentSpeed + potentialSpeedAcquirable) <= distance) {
 
                 List<SailorAction> actionsToUseWeather = new ArrayList<>();
                 int nbOpenned = this.coordinator.liftSailsPartially(actionsToUseWeather);
@@ -184,7 +191,8 @@ public class Captain {
                 return this.accelerate(distance, currentSpeed + currentExternalSpeed);
             }
             // voiles fermées et les ouvrir vous ralentissent
-            if (Utils.almostEquals(currentExternalSpeed, 0.0) && this.weatherAnalyst.potentialSpeedAcquirable() <= 0.0) {
+            if (Utils.almostEquals(currentExternalSpeed, 0.0)
+                    && this.weatherAnalyst.potentialSpeedAcquirable() <= 0.0) {
                 return this.accelerate(distance, currentSpeed);
             }
 
@@ -216,19 +224,17 @@ public class Captain {
      * @return
      */
     List<SailorAction> accelerate(double distance, double currentSpeed) {
-
-        if (distance <= currentSpeed && currentSpeed > 0) {
-            return List.of();// RIEN A FAIRE
+        // distance nulle ou inférieure à la vitesse acquise
+        if (distance <= Utils.EPS || distance <= currentSpeed) {
+            return List.of();
         }
+
         double minAdditionalSpeed = SPEED * (2.0 / this.coordinator.nbOars());
         if (currentSpeed + minAdditionalSpeed <= distance) {
             List<SailorAction> actions = this.validateActions(this.coordinator.addOaringSailorsOnEachSide());
             return Utils.<SailorAction>concatenate(actions,
                     this.accelerate(distance, currentSpeed + minAdditionalSpeed));
 
-        }
-        if (Utils.almostEquals(currentSpeed, 0)) {
-            return this.validateActions(this.coordinator.addOaringSailorsOnEachSide());
         }
         return List.of();
 

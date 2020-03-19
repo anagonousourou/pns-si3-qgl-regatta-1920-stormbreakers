@@ -14,14 +14,13 @@ class RectangleTest {
 
     private Rectangle rectangle;
     private Point2D courant;
-    
+
     private Checkpoint cp1;
     private Checkpoint cp2;
-    
+
     private Point2D boat1;
     private Point2D boat2;
-    
-	
+
     @BeforeEach
     void setUp() {
         // Width is along the y axis
@@ -37,7 +36,7 @@ class RectangleTest {
     }
 
 
-	@Test
+	  @Test
     void testIsInsideWhenTrue() {
         assertTrue(rectangle.isPtInside(new Point2D(0, 0)));
     }
@@ -85,58 +84,67 @@ class RectangleTest {
      */
 
     @Test void testEqualsWhenWrongObject() {
-        Rectangle rectangle = new Rectangle(1,1,0);
+        Rectangle rectangle = new Rectangle(1, 1, 0);
         Integer other = 0;
-        assertNotEquals(rectangle,other);
+        assertNotEquals(rectangle, other);
     }
 
     @Test void testEqualsWhenNullObject() {
-        Rectangle rectangle = new Rectangle(1,1,0);
+        Rectangle rectangle = new Rectangle(1, 1, 0);
         Fraction other = null;
-        assertNotEquals(rectangle,other);
+        assertNotEquals(rectangle, other);
     }
 
     @Test void testEqualsWhenSameObject() {
-        Rectangle rectangle = new Rectangle(1,1,0);
+        Rectangle rectangle = new Rectangle(1, 1, 0);
         assertEquals(rectangle,rectangle);
     }
 
     @Test void testEqualsWhenSameValues() {
-        Rectangle rect1 = new Rectangle(1,1,0);
-        Rectangle rect2 = new Rectangle(1,1,0);
+        Rectangle rect1 = new Rectangle(1, 1, 0);
+        Rectangle rect2 = new Rectangle(1, 1, 0);
         assertEquals(rect1,rect2);
     }
 
     @Test void testEqualsWhenDifferent() {
-        Rectangle rect1 = new Rectangle(1,1,0);
-        Rectangle rect2 = new Rectangle(10,10,10);
+        Rectangle rect1 = new Rectangle(1, 1, 0);
+        Rectangle rect2 = new Rectangle(10, 10, 10);
         assertNotEquals(rect1,rect2);
     }
-    
-    
 
     private void setupGoodOrientation() {
-    	
-    	//checkpoint 
-		 cp1= new Checkpoint(new Position(14,10 ), new Circle(10));
-		 cp2= new Checkpoint(new Position(0,10 ), new Circle(10));
-		
-		//rectangle
-		 courant = new Point2D(6,6);
-		//boat
-		 boat1 = new Point2D(4,6);
-		 boat2 = new Point2D(15,6);
-		
-	}
-    
-    @Test void testhaveGoodOrientation() {
-    	assertTrue(rectangle.haveGoodOrientation(cp1, boat1,courant));
-    	assertFalse(rectangle.haveGoodOrientation(cp1, boat2,courant));
-    	assertFalse(rectangle.haveGoodOrientation(cp2, boat1,courant));
+
+        // checkpoint
+        cp1 = new Checkpoint(new Position(14, 10), new Circle(10));
+        cp2 = new Checkpoint(new Position(0, 10), new Circle(10));
+
+        // rectangle
+        courant = new Point2D(6, 6);
+        // boat
+        boat1 = new Point2D(4, 6);
+        boat2 = new Point2D(15, 6);
+
+    }
+
+    @Test
+    void testhaveGoodOrientation() {
+        assertTrue(rectangle.haveGoodOrientation(cp1, boat1, courant));
+        assertFalse(rectangle.haveGoodOrientation(cp1, boat2, courant));
+        assertFalse(rectangle.haveGoodOrientation(cp2, boat1, courant));
     }
 
     /*
      * End of tests for equals
      */
+    @Test
+    void isInsideOpenShapeTest() {
+
+        assertTrue( rectangle.isInsideOpenShape(new Position(0,0)) );
+        assertFalse( rectangle.isInsideOpenShape(new Position(0,5.0)) );
+        assertFalse( rectangle.isInsideOpenShape(new Position(0,-5.0)) );
+        assertTrue( rectangle.isInsideOpenShape(new Position(0,4.9)) );
+        assertFalse( rectangle.isInsideOpenShape(new Position(10,5)) );
+    }
+
 
 }

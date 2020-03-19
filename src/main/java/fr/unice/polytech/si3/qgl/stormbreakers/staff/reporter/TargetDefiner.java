@@ -8,7 +8,6 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Checkpoint;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Boat;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Courant;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.processing.Logger;
-import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Utils;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Vector;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.graph.ShortestPathCalculator;
@@ -64,13 +63,21 @@ public class TargetDefiner {
                 Logger.getInstance().log("both inside stream " + checkpoint);
                 // the boat and the stream are inside the same stream
                 List<IPoint> trajectory = streamManager.trajectoryBoatAndCheckpointInsideStream(boat, checkpoint);
+
                 if (!courant.isCompatibleWith(boat, checkpoint)) {
                     return new TupleDistanceOrientation(trajectory.get(1).distanceTo(boat) + courant.getStrength(),
                             this.navigator.additionalOrientationNeeded(boat.getPosition(), trajectory.get(1)));
                 }
+
                 double speedDueToStream = Math
-                    .cos(courant.getPosition().getOrientation() - new Vector(boat, checkpoint).getOrientation())
-                    * courant.getStrength();
+                        .cos(courant.getPosition().getOrientation() - new Vector(boat, checkpoint).getOrientation())
+                        * courant.getStrength();
+
+                if (trajectory.get(1).distanceTo(boat) > courant.getStrength() + Utils.MAX_SPEED_OARS
+                        && trajectory.get(1).distanceTo(boat) < 2 * courant.getStrength() + Utils.MAX_SPEED_OARS) {
+                    return new TupleDistanceOrientation(0.0,
+                            this.navigator.additionalOrientationNeeded(boat.getPosition(), trajectory.get(1)));
+                }
                 return new TupleDistanceOrientation(trajectory.get(1).distanceTo(boat) - speedDueToStream,
                         this.navigator.additionalOrientationNeeded(boat.getPosition(), trajectory.get(1)));
 
@@ -99,14 +106,13 @@ public class TargetDefiner {
 
     public TupleDistanceOrientation caseInsideAStream() {
         Courant streamAround = this.streamManager.streamAroundBoat();
-        Vector courantVector = Vector.createUnitVector(streamAround.getPosition().getOrientation());
 
-        Point2D cpPoint = this.checkpointsManager.nextCheckpoint().getPosition().getPoint2D();
+        IPoint cpPoint = this.checkpointsManager.nextCheckpoint();
 
-        double helpness = this.helpness(courantVector, boat, cpPoint);
-
+        double helpness = streamAround.helpness(boat, cpPoint);
+        // courantVector est perpendiculaire à la trajectoire
         if (Utils.within(helpness, Utils.EPS)) {
-            Logger.getInstance().log(String.valueOf(helpness));
+            Logger.getInstance().log("Helpness nulle:" + helpness);
             double orientation = navigator.additionalOrientationNeeded(boat.getPosition(), cpPoint);
             double distance = boat.distanceTo(cpPoint) + streamAround.getStrength();
 
@@ -114,68 +120,40 @@ public class TargetDefiner {
             Logger.getInstance().log(tmp.toString());
             return tmp;
         } else if (helpness > 0) {
-            Logger.getInstance().log("helpness positive: " + helpness);
+            Logger.getInstance().log("helpness positive:" + helpness);
 
-            Point2D pointToLeave = this.maximalPointToStay(boat.getPosition().getPoint2D(), cpPoint, courantVector,
-                    streamAround);
-            double speedDueToStream = Math
-                    .cos(streamAround.getPosition().getOrientation() - new Vector(boat, cpPoint).getOrientation())
-                    * streamAround.getStrength();
+            IPoint pointToLeave = streamAround.maximalPointToStay(boat.getPosition().getPoint2D(), cpPoint);
+
+            double speedDueToStream = streamAround.speedProvided(boat, cpPoint);
             if (pointToLeave.distanceTo(boat) <= streamAround.getStrength()) {
+                //
                 double orientation = navigator.additionalOrientationNeeded(boat.getPosition(), cpPoint);
+
                 double distance = boat.distanceTo(pointToLeave) - speedDueToStream;
                 var tmp = new TupleDistanceOrientation(distance, orientation);
-                Logger.getInstance().log(tmp.toString());
+                Logger.getInstance().log("PointToLeaveClose and Stream Fast:" + tmp.toString());
                 return tmp;
             } else {
                 double orientation = streamAround.getPosition().getOrientation() - boat.getOrientation();
                 double distance = pointToLeave.distanceTo(boat) - speedDueToStream;
                 var tmp = new TupleDistanceOrientation(distance, orientation);
-                Logger.getInstance().log(tmp.toString());
+                Logger.getInstance().log("PointToLeaveNotSoClose:" + tmp.toString());
                 return tmp;
             }
         }
 
         else if (helpness < 0) {
-            Logger.getInstance().log("helpness negative");
+            Logger.getInstance().log("helpness negative: " + helpness);
             List<IPoint> trajet = this.streamManager.trajectoryLeaveStreamAndReachPoint(boat, cpPoint);
             double orientation = navigator.additionalOrientationNeeded(boat.getPosition(), trajet.get(1));
             double distance = boat.distanceTo(trajet.get(1));
-            Logger.getInstance().log(trajet.get(1).toString());
+            Logger.getInstance().log("NextTarget:" + trajet.get(1).toString());
             return new TupleDistanceOrientation(distance + streamAround.getStrength(), orientation);
 
         }
 
         return null;
 
-    }
-
-    /**
-     * 
-     * @param depart
-     * @param destination
-     * @param courant
-     * @param surface
-     * @return
-     */
-    Point2D maximalPointToStay(Point2D depart, Point2D destination, Vector courant, Courant surface) {
-        Point2D current = depart;
-        Point2D prev = current;
-        Vector biggerStreamVector = courant.scaleVector(2);
-        while (helpness(courant, current, destination) > 0 && surface.isPtInside(current)) {
-
-            prev = current;
-
-            current = current.getTranslatedBy(biggerStreamVector);
-
-        }
-        return prev;
-
-    }
-
-    double helpness(Vector streamVector, IPoint depart, IPoint destination) {
-        Vector trajectVector = new Vector(depart, destination);
-        return streamVector.scal(trajectVector);
     }
 
 }

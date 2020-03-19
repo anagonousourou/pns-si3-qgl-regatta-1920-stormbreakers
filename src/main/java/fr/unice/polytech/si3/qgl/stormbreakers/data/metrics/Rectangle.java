@@ -72,7 +72,7 @@ public class Rectangle extends Shape {
     }
 
     @Override
-    public boolean isPtInside(Point2D pt) {
+    public boolean isPtInside(IPoint pt) {
 
         Point2D point2D = new Point2D(pt);
         // On ramene le plan pour que les cotes du rectangle soient sur les axes du
@@ -159,6 +159,20 @@ public class Rectangle extends Shape {
         return (min <= value) && (value <= max);
     }
 
+    /**
+     * Vérifie si le point est dans le rectangle d'orientation 0
+     * 
+     * @param pt point à tester
+     * @return true s'il est dedans, false sinon
+     */
+    private boolean isPtInRectangleOpen(IPoint pt) {
+        double eps = Math.pow(10, -10);
+
+        boolean xOk = between(pt.x(), (-(height - Utils.EPS) / 2), (height / 2) - Utils.EPS, eps);
+        boolean yOk = between(pt.y(), (-(width - Utils.EPS) / 2), (width / 2) - Utils.EPS, eps);
+        return xOk && yOk;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj)
@@ -167,9 +181,9 @@ public class Rectangle extends Shape {
             return false;
         Rectangle other = (Rectangle) obj;
 
-        return Utils.within(other.width-this.width, Utils.EPSILON)
-                && Utils.within(other.height-this.height, Utils.EPSILON)
-                && Utils.within(other.orientation-this.orientation, Utils.EPS);
+        return Utils.within(other.width - this.width, Utils.EPSILON)
+                && Utils.within(other.height - this.height, Utils.EPSILON)
+                && Utils.within(other.orientation - this.orientation, Utils.EPS);
     }
 
     @Override
@@ -205,6 +219,17 @@ public class Rectangle extends Shape {
                 boatposition.y() - courantPos.y());
         ptBoat = ptBoat.getRotatedBy(-orientation);
         return ptCp.x() > 0 && ptCp.x() > ptBoat.x();
+    }
+
+    @Override
+    public boolean isInsideOpenShape(IPoint pt) {
+        Point2D point2D = new Point2D(pt);
+        // On ramene le plan pour que les cotes du rectangle soient sur les axes du
+        // repere
+        if (orientation != 0) {
+            point2D = point2D.getRotatedBy(-orientation);
+        }
+        return isPtInRectangleOpen(point2D);
     }
 
 }

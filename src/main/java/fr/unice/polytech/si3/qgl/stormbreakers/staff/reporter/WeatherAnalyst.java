@@ -2,6 +2,7 @@ package fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Boat;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Wind;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.Utils;
 
 public class WeatherAnalyst{
 
@@ -19,8 +20,7 @@ public class WeatherAnalyst{
 
 
     /**
-     * Calculate the norm of the speed procured by the wind and later
-     * the streams given the current and actual conditions
+     * Calculate the norm of the speed procured by the wind
      *  Ex:current number of lifted sails
      * @return
      */
@@ -52,7 +52,7 @@ public class WeatherAnalyst{
             return false;
         }
         else{
-            return wind.getOrientation()!=0.0 || wind.getStrength()!=0.0;
+            return !Utils.almostEquals(wind.getStrength(), 0.0, Utils.EPSILON);
         }
     }
     

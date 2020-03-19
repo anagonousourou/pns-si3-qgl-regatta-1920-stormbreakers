@@ -41,7 +41,7 @@ public class StreamManager implements PropertyChangeListener {
      * @return
      */
     public boolean insideStream() {
-        return this.courants.stream().anyMatch(courant -> courant.isPtInside(boat));
+        return this.courants.stream().anyMatch(courant -> courant.isInsideOpenSurface(boat));
     }
 
     public boolean pointIsInsideStream(IPoint point) {
@@ -95,7 +95,6 @@ public class StreamManager implements PropertyChangeListener {
      * in this method we assume that both the boat and the destination are not
      * inside a stream
      * 
-     * @param position
      * @return
      */
     public List<IPoint> trajectoryToAvoidObstacles(IPoint depart, IPoint destination) {
@@ -133,7 +132,6 @@ public class StreamManager implements PropertyChangeListener {
     /**
      * We assume boatPoint and checkPoint are in the same stream
      * 
-     * @param courant
      * @param boatPoint
      * @param checkPoint
      * @return potentially immutable list

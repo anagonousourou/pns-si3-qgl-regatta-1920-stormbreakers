@@ -165,7 +165,7 @@ public class Polygon extends Shape implements CanCollide, Orientable {
      * @return true if it is inside, false if not
      */
     @Override
-    public boolean isPtInside(Point2D pointToTest) {
+    public boolean isPtInside(IPoint pointToTest) {
         // On prend en compte la rotation du polygone
         Iterator<LineSegment2D> it = bordersActualPos.iterator();
         Side lastSide = null;
@@ -197,7 +197,9 @@ public class Polygon extends Shape implements CanCollide, Orientable {
      * @param t point to test
      * @return Side of the vector to which the point is
      */
-    private Side getPointSideComparedToVector(Point2D a, Point2D b, Point2D t) {
+
+    private Side getPointSideComparedToVector(Point2D a, Point2D b, IPoint t) {
+
         Vector borderVector = new Vector(a,b);
         Vector toCompare = new Vector(a,t);
 
@@ -242,6 +244,12 @@ public class Polygon extends Shape implements CanCollide, Orientable {
     @Override
     public ShapeType getTypeEnum() {
         return ShapeType.POLYGON;
+    }
+
+    @Override
+    public boolean isInsideOpenShape(IPoint pt) {
+        // TODO Auto-generated method stub
+        return isPtInside(pt);
     }
 
     

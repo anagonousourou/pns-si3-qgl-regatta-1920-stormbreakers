@@ -55,8 +55,11 @@ public class CaptainTest {
         
 
         assertTrue(sailorsActions.containsAll(this.rogers.accelerate(1230, 200)));
+        
 
         assertEquals(List.of(), rogers.accelerate(200, 210), "Nothing to do");
+        assertEquals(List.of(), rogers.accelerate(0.0001, 0), "Nothing to do");
+        assertEquals(List.of(), rogers.accelerate(100, 120), "Nothing to do");
 
     }
 
@@ -217,6 +220,35 @@ public class CaptainTest {
             assertEquals(Math.PI/4,turnAction.getRotation() ,1e-3, "doit etre pi/4 ");
         }
     }
+
+    @Test
+    void orientateWithRudderTest(){
+        List<Sailor> sailors = List.of(
+    			new Sailor(0, new IntPosition(0, 0)),
+        		new Sailor(1, new IntPosition(0, 1)),
+        		new Sailor(2, new IntPosition(1, 0)),
+        		new Sailor(3, new IntPosition(1, 1)));
+    	CrewManager crewManager = new CrewManager(sailors);
+    	List<Equipment> equipments = List.of(
+    			new Gouvernail(0, 0));
+    	EquipmentsManager equipmentsManager = new EquipmentsManager(equipments, 2);
+    	Coordinator coordinator = new Coordinator(crewManager, equipmentsManager);
+        Navigator navigator = new Navigator();
+        rogers = new Captain(null, null, navigator, null, coordinator,null);
+
+        List<SailorAction> actions= rogers.orientateWithRudder(-Math.PI);
+        
+        assertEquals(2, actions.size(),"Pas de rames seulement une TurnAction et la MoveAction correspondante");
+        var optTurnAction=actions.stream().filter(action->action.getType().equals(ActionType.TURN.actionCode )).findFirst();
+        if(optTurnAction.isPresent()){
+            var turnAction=(Turn)optTurnAction.get();
+            
+            assertEquals(-Math.PI/4,turnAction.getRotation() ,1e-3, "doit etre -pi/4 ");
+        }
+    }
+
+
+
     
     @Test
     void actionsToOrientateTest5() {
@@ -227,11 +259,13 @@ public class CaptainTest {
         		new Sailor(3, new IntPosition(1, 1)));
     	CrewManager crewManager = new CrewManager(sailors);
     	List<Equipment> equipments = List.of(
-        		new Oar(0, 0),
-    			new Oar(1, 0),
-    			new Oar(0, 1),
-    			new Oar(1, 1),
-    			new Gouvernail(2, 2));
+
+                    new Oar(0, 0),
+                    new Oar(1, 0),
+                    new Oar(0, 1),
+                    new Oar(1, 1),
+                    new Gouvernail(2, 2)
+                );
     	EquipmentsManager equipmentsManager = new EquipmentsManager(equipments, 2);
     	Coordinator coordinator = new Coordinator(crewManager, equipmentsManager);
         Navigator navigator = new Navigator();

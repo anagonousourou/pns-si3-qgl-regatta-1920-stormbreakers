@@ -1,5 +1,6 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.data.ocean;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -8,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Rectangle;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.LineSegment2D;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.Utils;
 
 public class CourantTest {
     
@@ -48,5 +50,14 @@ public class CourantTest {
         assertFalse(courant.isCompletelyCompatibleWith(new Position(-200, 160), new Position(350, 77.5)));
         assertTrue(courant.isPartiallyCompatibleWith(new Position(-200, 160), new Position(350, 77.5)));
         assertTrue(courant.isCompatibleWith(new Position(-200, 160), new Position(350, 77.5)));
+    }
+
+    @Test
+    void speedProvidedTest(){
+        //TODO add more tests
+        Courant courant=new Courant(new Position(400,200),new Rectangle(200, 300, 0), 100);
+        assertEquals(100.0, courant.speedProvided( new Position(100, 200) , new Position(800,200)), Utils.EPS);
+        assertEquals(-100.0, courant.speedProvided(new Position(800,200),new Position(100, 200) ), Utils.EPS);
+        assertEquals(Math.cos(0.78539816)*100, courant.speedProvided(new Position(400,200),new Position(500, 300) ), Utils.EPS);
     }
 }

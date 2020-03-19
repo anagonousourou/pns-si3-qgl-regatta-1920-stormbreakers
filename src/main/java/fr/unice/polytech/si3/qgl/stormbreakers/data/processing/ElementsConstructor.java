@@ -1,12 +1,7 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.data.processing;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-import fr.unice.polytech.si3.qgl.stormbreakers.Logable;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.SailorAction;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Shape;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Boat;
@@ -78,19 +73,9 @@ public class ElementsConstructor {
 
         // Update informations
 		this.observableData.setValue(round);
-
-		// Phase de calcul des actions
-		List<SailorAction> actions = this.captain.nextRoundActions();
-
-		//Log current checkpoint
-
-		// Log actions generated
 		
 		
-
-		// Save logs and prepare for new instructions
-		
-		return outputBuilder.writeActions(actions);
+		return outputBuilder.writeActions(this.captain.nextRoundActions());
     }
 
     
