@@ -22,7 +22,7 @@ public abstract class OceanEntity implements Surface {
   protected Shape shape;
 
   @JsonCreator
-  OceanEntity(@JsonProperty("type") String type, @JsonProperty("postion") Position position,
+  OceanEntity(@JsonProperty("type") String type, @JsonProperty("position") Position position,
       @JsonProperty("shape") Shape shape) {
     this.type = type;
     this.position = position;

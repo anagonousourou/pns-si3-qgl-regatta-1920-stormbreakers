@@ -16,7 +16,6 @@ import fr.unice.polytech.si3.qgl.stormbreakers.math.Vector;
 public class Circle extends Shape {
     private double radius;
 
-    @JsonCreator
     public Circle(double radius, Position anchor) {
         super("circle",anchor);
         this.radius = radius;
