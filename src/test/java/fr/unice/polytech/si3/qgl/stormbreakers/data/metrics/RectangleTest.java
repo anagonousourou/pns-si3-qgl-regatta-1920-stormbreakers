@@ -146,5 +146,12 @@ class RectangleTest {
         assertFalse( rectangle.isInsideOpenShape(new Position(10,5)) );
     }
 
+     @Test
+    void testSetAnchor() {
+        Position newAnchor = new Position(20,20,0);
+        rectangle.setAnchor(newAnchor);
+        assertEquals(newAnchor,rectangle.getAnchor());
+        assertEquals(newAnchor,rectangle.rectanglePolygon.getAnchor());
+     }
 
 }
