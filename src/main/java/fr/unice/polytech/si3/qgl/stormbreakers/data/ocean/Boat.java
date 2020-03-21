@@ -83,7 +83,7 @@ public class Boat implements PropertyChangeListener, Surface {
             this.life = this.parser.fetchBoatLife(data);
             setPosition(this.parser.fetchBoatPosition(data));
         } catch (JsonProcessingException e) {
-            Logger.getInstance().log(e.getMessage());
+            Logger.getInstance().logErrorMsg(e);
         }
 
     }

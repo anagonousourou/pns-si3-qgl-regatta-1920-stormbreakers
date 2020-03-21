@@ -42,7 +42,7 @@ public class Wind implements PropertyChangeListener {
             this.orientation = this.parser.fetchWindOrientation(jString);
             this.strength =this.parser.fetchWindStrength(jString);
         } catch (JsonProcessingException e) {
-            Logger.getInstance().log(e.getMessage());
+            Logger.getInstance().logErrorMsg(e);
         }
         
         

@@ -234,7 +234,7 @@ public class StreamManager implements PropertyChangeListener {
             
 
         } catch (JsonProcessingException e) {
-            Logger.getInstance().log(e.getMessage());
+            Logger.getInstance().logErrorMsg(e);
         }
     }
 
