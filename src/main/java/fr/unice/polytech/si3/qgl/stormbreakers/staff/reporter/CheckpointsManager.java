@@ -25,7 +25,7 @@ public class CheckpointsManager {
 	public void updateCheckpoint(Boat boat) {
         // TODO: 14/03/2020 tests
         if (hasNextCheckpoint() && boatCollidesWithNextCheckpoint(boat)) {
-                Logger.getInstance().log(checkpoints.remove(0).toString());
+                Logger.getInstance().addSeparatorThenLog("Validated:" +checkpoints.remove(0).toLogs());
         }
 	}
 

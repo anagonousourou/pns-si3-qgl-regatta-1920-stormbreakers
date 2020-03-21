@@ -10,13 +10,15 @@ public class Cockpit implements ICockpit {
 	
 	private ElementsConstructor elementsConstructor;
 	public void initGame(String game) {
-
+		Logger.getInstance().addSeparatorThenLog("INIT");
+		Logger.getInstance().addSeparator();
 		this.elementsConstructor=new ElementsConstructor(game);
 	}
 
 	public String nextRound(String round) {
+		Logger.getInstance().addSeparatorThenLog("N_RND");
+		Logger.getInstance().addSeparator();
 		return this.elementsConstructor.sendActions(round);
-		
 	}
 
 	@Override

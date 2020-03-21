@@ -38,6 +38,16 @@ public class Logger {
         }
     }
 
+    public void addSeparatorThenLog(String msg){
+        addSeparator();
+        log(msg);
+    }
+
+    public void logErrorMsg(Exception error){
+        addSeparator();
+        log(error.getMessage());
+    }
+
     /**
      * Logs a predefined separator
      * 

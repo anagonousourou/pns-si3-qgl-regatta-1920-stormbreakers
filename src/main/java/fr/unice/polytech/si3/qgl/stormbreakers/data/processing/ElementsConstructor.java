@@ -64,7 +64,7 @@ public class ElementsConstructor {
 			this.observableData.addPropertyChangeListener(this.streamManager);
 
 		} catch (JsonProcessingException e) {
-			Logger.getInstance().log(e.getMessage());
+			Logger.getInstance().logErrorMsg(e);
 		}
     }
 

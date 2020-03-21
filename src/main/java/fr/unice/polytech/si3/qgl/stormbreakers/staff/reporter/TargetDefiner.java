@@ -51,7 +51,7 @@ public class TargetDefiner {
     public TupleDistanceOrientation defineNextTarget() {
         Checkpoint checkpoint = checkpointsManager.nextCheckpoint();
         if (checkpoint != null) {
-            Logger.getInstance().log(checkpoint.toString());
+            Logger.getInstance().log(checkpoint.toLogs());
             boolean insideStream = streamManager.insideStream();
 
             if (insideStream && !streamManager.streamAroundBoat().isPtInside(checkpoint)) {
