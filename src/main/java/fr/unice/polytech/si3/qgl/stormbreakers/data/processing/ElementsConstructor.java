@@ -6,6 +6,8 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Shape;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Boat;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Wind;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.graph.Cartographer;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.graph.Graph;
 import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.CheckpointsManager;
 import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.CrewManager;
 import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.EquipmentsManager;
@@ -31,6 +33,8 @@ public class ElementsConstructor {
 	private ObservableData observableData = new ObservableData();
 	private TargetDefiner targetDefiner;
 	private StreamManager streamManager;
+	private Graph graph;
+	private Cartographer cartographer;
     
     public ElementsConstructor(String game){
         try {
@@ -53,7 +57,12 @@ public class ElementsConstructor {
 
 			streamManager=new StreamManager(parser, boat);
 
-			targetDefiner=new TargetDefiner(checkpointsManager, streamManager, boat, navigator);
+			graph=new Graph(streamManager, seaElements);
+
+			cartographer=new Cartographer(checkpointsManager, graph, boat);
+
+
+			targetDefiner=new TargetDefiner(checkpointsManager, streamManager, boat, navigator,cartographer);
 
 			captain = new Captain(boat, checkpointsManager, navigator, seaElements,
 					coordinator,targetDefiner);

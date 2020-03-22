@@ -23,7 +23,7 @@ public class EquationDroiteTest {
 	@Test
 	public void constructorsTest(){
 		assertEquals((double)-7/5, eqD2.getSlope() , 1e-3);
-		assertEquals((double)16/5, eqD2.getY_Intercept(), 1e-3);
+		assertEquals((double)16/5, eqD2.getYIntercept(), 1e-3);
 		
 	} 
 
@@ -32,17 +32,17 @@ public class EquationDroiteTest {
 		EquationDroite tmp = new EquationDroite(5, -16);
 		EquationDroite result = eqD1.findEqPerpendicularLineByPos(c);
 		assertEquals(tmp.getSlope(), result.getSlope());
-		assertEquals(tmp.getY_Intercept(), result.getY_Intercept());
+		assertEquals(tmp.getYIntercept(), result.getYIntercept());
 
 		tmp = new EquationDroite(0.7142857142857, -1.714285714286);
 		result = eqD2.findEqPerpendicularLineByPos(a);
 		assertTrue(Math.abs(result.getSlope() - tmp.getSlope()) <= 0.000001);
-		assertTrue(Math.abs(result.getY_Intercept() - tmp.getY_Intercept()) <= 0.000001);
+		assertTrue(Math.abs(result.getYIntercept() - tmp.getYIntercept()) <= 0.000001);
 		
 		tmp = new EquationDroite(-1, 4);
 		result = eqD3.findEqPerpendicularLineByPos(b);
 		assertEquals(tmp.getSlope(), result.getSlope());
-		assertEquals(tmp.getY_Intercept(), result.getY_Intercept());
+		assertEquals(tmp.getYIntercept(), result.getYIntercept());
 	}
 
     @Test

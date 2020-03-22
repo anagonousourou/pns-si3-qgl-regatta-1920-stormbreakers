@@ -1,18 +1,22 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.data.metrics;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import fr.unice.polytech.si3.qgl.stormbreakers.math.LineSegment2D;
-import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
-import fr.unice.polytech.si3.qgl.stormbreakers.math.Utils;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import fr.unice.polytech.si3.qgl.stormbreakers.math.LineSegment2D;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.Utils;
 
 class PolygonTest {
 
@@ -38,7 +42,7 @@ class PolygonTest {
         rectangle = new Polygon(0.0, rectangleVertices);
         orientedRectangle = new Polygon(0.5 * Math.PI, rectangleVertices);
 
-        // TODO: 04/03/2020 Use more than rectangle
+        // LATER: 04/03/2020 Use more than rectangle
 
         Point2D triA = new Point2D(0,10);
         Point2D triB = new Point2D(-5,0);
@@ -81,7 +85,7 @@ class PolygonTest {
         Polygon polygon = new Polygon(0.0,vertices);
 
 
-        // TODO: 15/03/2020 Maybe avoid computing points
+        // LATER: 15/03/2020 Maybe avoid computing points
         List<Point2D> translatedVertices = vertices.stream()
                 .map(point -> point.getTranslatedBy(0,10))
                 .collect(Collectors.toList());
@@ -89,7 +93,7 @@ class PolygonTest {
         polygon.setAnchor(new Position(0,10));
         assertEquals(translatedPolygon.getHull(),polygon.getHull());
 
-        // TODO: 15/03/2020 Maybe avoid computing points
+        // LATER: 15/03/2020 Maybe avoid computing points
         List<Point2D> rotatedVertices = vertices.stream()
                 .map(point -> point.getRotatedBy( Math.toRadians(50) ))
                 .collect(Collectors.toList());

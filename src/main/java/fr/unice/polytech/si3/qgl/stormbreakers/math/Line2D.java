@@ -19,8 +19,8 @@ public class Line2D {
     }
 
     /** Defines a new Straight line going through the two given points. */
-    public Line2D(Point2D P1, Point2D P2) {
-        this(P1,P1.getVectorTo(P2));
+    public Line2D(Point2D p1, Point2D p2) {
+        this(p1,p1.getVectorTo(p2));
     }
 
     /** Defines a new Straight line going through anchor with a given direction. */
@@ -62,8 +62,8 @@ public class Line2D {
      * Note: The point needs to be on the line.
      * @author David Lebrisse - Stormbreakers
      */
-    public double lineParameterOf(Point2D P) {
-        Vector relativeTranslation = new Vector(anchor,P);
+    public double lineParameterOf(Point2D p) {
+        Vector relativeTranslation = new Vector(anchor,p);
         return relativeTranslation.norm() / direction.norm();
     }
 
@@ -88,9 +88,9 @@ public class Line2D {
         if (isVerticalLine()) {
             projectionPoint = new Point2D(anchor.x(),pointToProject.y());
         } else {
-            Vector AP = new Vector(anchor,pointToProject);
+            Vector ap = new Vector(anchor,pointToProject);
             // A + AB * ( AP.AB / |AB|² )
-            projectionPoint = anchor.getTranslatedBy( direction.scaleVector( AP.scal(direction) / direction.squaredNorm() ) );
+            projectionPoint = anchor.getTranslatedBy( direction.scaleVector( ap.scal(direction) / direction.squaredNorm() ) );
         }
         return projectionPoint;
     }
@@ -153,11 +153,11 @@ public class Line2D {
 
     /**
      * Computes the distance for a given point to this Line
-     * @param P the given point
+     * @param p the given point
      * @return the computed distance
      */
-    public double distance(Point2D P) {
-        return P.distanceTo(this.projectOnto(P));
+    public double distance(Point2D p) {
+        return p.distanceTo(this.projectOnto(p));
     }
 
     public Vector getDirection() {
@@ -173,5 +173,5 @@ public class Line2D {
         return Utils.almostEquals(0,distance);
     }
 
-    // TODO: 07/03/2020 Equals && hashcode ?
+    // LATER: 07/03/2020 Equals && hashcode ?
 }

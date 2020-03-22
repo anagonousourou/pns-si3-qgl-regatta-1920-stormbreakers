@@ -23,14 +23,14 @@ public class CheckpointsManager {
      * @param boat le bateau en question
      */
 	public void updateCheckpoint(Boat boat) {
-        // TODO: 14/03/2020 tests
+        // LATER: 14/03/2020 tests
         if (hasNextCheckpoint() && ( boatCollidesWithNextCheckpoint(boat)||this.isPosInCheckpoint(boat))) {
                 Logger.getInstance().addSeparatorThenLog("Validated:" +checkpoints.remove(0).toLogs());
         }
 	}
 
     boolean boatCollidesWithNextCheckpoint(Boat boat) {
-        // TODO: 14/03/2020 Tests
+        // LATER: 14/03/2020 Tests
         return boat.collidesWith(nextCheckpoint());
 
     }

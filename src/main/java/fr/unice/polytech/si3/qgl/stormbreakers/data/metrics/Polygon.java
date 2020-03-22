@@ -115,7 +115,7 @@ public class Polygon extends Shape implements Orientable {
 
     @Override
     public boolean collidesWith(Polygon polygon) {
-        // TODO: 12/03/2020 Missing Test where bounding circles don't collide
+        // LATER: 12/03/2020 Missing Test where bounding circles don't collide
         if (!this.getBoundingCircle().collidesWith(polygon.getBoundingCircle())) {
             // Bounding circles don't even intersect
             return false;
@@ -144,7 +144,7 @@ public class Polygon extends Shape implements Orientable {
 
     @Override
     public boolean collidesWith(LineSegment2D lineSegment2D) {
-        // TODO: 16/03/2020 If lineSegment inside
+        // LATER: 16/03/2020 If lineSegment inside
         List<LineSegment2D> edges = bordersActualPos;
 
         for (LineSegment2D border : edges) {
@@ -262,7 +262,7 @@ public class Polygon extends Shape implements Orientable {
 
     @Override
     public boolean isInsideOpenShape(IPoint pt) {
-        // TODO URGENT Auto-generated method stub
+        // LATER URGENT Auto-generated method stub
         return isPtInside(pt);
     }
 

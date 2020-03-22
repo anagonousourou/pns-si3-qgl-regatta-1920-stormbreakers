@@ -56,7 +56,7 @@ public interface Surface extends IPoint, Orientable {
 	 * @return
 	 */
 	default List<IPoint> avoidHit(IPoint depart, IPoint destination) {
-		// TODO: 16/03/2020 Figure out how to fix circle test
+		// LATER: 16/03/2020 Figure out how to fix circle test
 		// LATER
 		if (this.getShape().getType().equals("rectangle")) {
 			return Surface.avoidHitRectangle(this, depart, destination);
@@ -95,7 +95,7 @@ public interface Surface extends IPoint, Orientable {
 
 			if (self.intersectsWith(ls1)) {
 				var secondPt = rectPos.corners().stream().filter(corner -> !self.intersectsWith(corner, destination)
-						&& Point2D.ccw(ptDepart, fpt, ptDest) == Point2D.ccw(fpt, corner, ptDest)).findAny();
+						&& IPoint.ccw(ptDepart, fpt, ptDest) == IPoint.ccw(fpt, corner, ptDest)).findAny();
 				if (secondPt.isPresent()) {
 					return List.of(depart, fpt, secondPt.get(), destination);
 				}

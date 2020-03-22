@@ -107,7 +107,7 @@ public class RectanglePositioned {
      * @param point2d
      * @return
      */
-    // TODO: 15/03/2020 KEEP
+    // LATER: 15/03/2020 KEEP
     public Optional<Point2D> closestPointTo(IPoint point2d){
         return List.of(largeur1,longueur1,largeur2,longueur2).stream()
         .map(l->l.closestPointTo(point2d))

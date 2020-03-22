@@ -113,7 +113,7 @@ public class InputParser {
 	}
 
 	public Shape fetchBoatShape(String jString) throws JsonProcessingException {
-		// TODO: 12/03/2020 Tests ?
+		// LATER: 12/03/2020 Tests ?
 		JsonNode shipNode = mapper.readTree(jString).get(SHIP_KEY);
 		JsonNode boatShape = shipNode.get(SHAPE_KEY);
 		if (boatShape != null) {

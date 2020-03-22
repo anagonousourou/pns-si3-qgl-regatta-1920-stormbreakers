@@ -59,10 +59,10 @@ public class Graph {
     }
 
     // NEW
-    public List<Sommet> reducePath(Sommet depart) {
+    public List<Sommet> reducePath(Sommet sommet) {
         // ?? morceau de chemin trop court pour etre atteint
-        List<Sommet> result = new ArrayList<>(depart.getShortestPath());
-        result.add(depart);
+        List<Sommet> result = new ArrayList<>(sommet.getShortestPath());
+        result.add(sommet);
         int i = 1;
         while (i < result.size() - 1) {
             if (!this.streamManager.thereIsObstacleBetween(result.get(i - 1).getPoint(),

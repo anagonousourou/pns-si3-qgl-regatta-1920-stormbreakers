@@ -49,12 +49,12 @@ public class EquationDroite {
 	/**
 	 * Returns the perpendicular
 	 * going through P
-	 * @param P the base point
+	 * @param p the base point
 	 */
-	EquationDroite findEqPerpendicularLineByPos(IPoint P) {
+	EquationDroite findEqPerpendicularLineByPos(IPoint p) {
 		double lineA= -(1/ slope);
-		EquationDroite e= new EquationDroite(-lineA, P.y());
-		double lineB=e.evalY(P.x());
+		EquationDroite e= new EquationDroite(-lineA, p.y());
+		double lineB=e.evalY(p.x());
 		return new EquationDroite(lineA, lineB);
 	}
 
@@ -78,7 +78,7 @@ public class EquationDroite {
     }
   
     // CHANGE: OLD getB
-    double getY_Intercept() {
+    double getYIntercept() {
         return yIntercept;
     }
 }

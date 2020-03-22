@@ -139,7 +139,7 @@ public class StreamManager implements PropertyChangeListener {
         return Double.NaN;
     }
 
-    // TODO tests for NEW code
+    // LATER tests for NEW code
     public double speedProvided(IPoint depart, IPoint destination) {
 
         IPoint insideIPoint;

@@ -70,7 +70,7 @@ public class GraphTest {
         graph.createSquaring(0.0, 0.0, 600, 600, 200);
 
         assertEquals(12, graph.nbOfNodes(), "Doit y avoir 12");
-        System.out.println(graph);
+        
     }
 
     @Test

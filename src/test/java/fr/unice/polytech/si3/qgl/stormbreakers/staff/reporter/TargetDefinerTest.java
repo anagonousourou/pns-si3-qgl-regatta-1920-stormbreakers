@@ -20,7 +20,6 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Boat;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Courant;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Wind;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.processing.InputParser;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.processing.Logger;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.graph.Cartographer;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.graph.Graph;
 import fr.unice.polytech.si3.qgl.stormbreakers.staff.tactical.Navigator;
@@ -121,14 +120,15 @@ public class TargetDefinerTest {
 
     assertNotNull(reponse);
 
+    //le checkpoint se trouve dans un stream et le bateau est hors du stream
     when(checkpointsManager.nextCheckpoint()).thenReturn(cp6);
 
     reponse = targetDefiner.defineNextTarget();
 
     assertNotNull(reponse);
 
-    System.out.println(Logger.getInstance());
-
+    
+    // le ep se trouve de l'autre coté du courant4
     when(checkpointsManager.nextCheckpoint()).thenReturn(cp5);
 
     reponse = targetDefiner.defineNextTarget();
@@ -183,8 +183,6 @@ public class TargetDefinerTest {
     reponse = targetDefiner.defineNextTarget();
 
     assertNotNull(reponse);
-    
-
   }
 
 }

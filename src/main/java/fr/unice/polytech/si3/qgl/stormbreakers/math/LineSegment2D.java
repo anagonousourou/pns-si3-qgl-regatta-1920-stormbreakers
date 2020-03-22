@@ -62,8 +62,8 @@ public class LineSegment2D {
 		Point2D e2p1 = edge2.firstPoint();
 		Point2D e2p2 = edge2.lastPoint();
 
-		boolean b1 = Point2D.ccw(e1p1, e1p2, e2p1) * Point2D.ccw(e1p1, e1p2, e2p2) <= 0;
-		boolean b2 = Point2D.ccw(e2p1, e2p2, e1p1) * Point2D.ccw(e2p1, e2p2, e1p2) <= 0;
+		boolean b1 = IPoint.ccw(e1p1, e1p2, e2p1) * IPoint.ccw(e1p1, e1p2, e2p2) <= 0;
+		boolean b2 = IPoint.ccw(e2p1, e2p2, e1p1) * IPoint.ccw(e2p1, e2p2, e1p2) <= 0;
 
 		return b1 && b2;
 	}
@@ -77,14 +77,14 @@ public class LineSegment2D {
 	 * @return true if the 2 line segments intersect
 	 */
 	public static boolean intersects(LineSegment2D edge1, LineSegment2D edge2) {
-		// TODO: 07/03/2020 Rework
+		// LATER: 07/03/2020 Rework
 		Point2D e1p1 = edge1.firstPoint();
 		Point2D e1p2 = edge1.lastPoint();
 		Point2D e2p1 = edge2.firstPoint();
 		Point2D e2p2 = edge2.lastPoint();
 
-		boolean b1 = Point2D.ccw(e1p1, e1p2, e2p1) * Point2D.ccw(e1p1, e1p2, e2p2) <= 0;
-		boolean b2 = Point2D.ccw(e2p1, e2p2, e1p1) * Point2D.ccw(e2p1, e2p2, e1p2) <= 0;
+		boolean b1 = IPoint.ccw(e1p1, e1p2, e2p1) * IPoint.ccw(e1p1, e1p2, e2p2) <= 0;
+		boolean b2 = IPoint.ccw(e2p1, e2p2, e1p1) * IPoint.ccw(e2p1, e2p2, e1p2) <= 0;
 		return b1 && b2;
 	}
 
@@ -191,11 +191,11 @@ public class LineSegment2D {
 	 * 
 	 * @author David Lebrisse - Stormbreakers
 	 */
-	public double segmentParameterOf(Point2D P) {
-		// TODO: 08/03/2020 Clamp k in [0,1] and corresponding tests
+	public double segmentParameterOf(Point2D p) {
+		// LATER: 08/03/2020 Clamp k in [0,1] and corresponding tests
 		Vector supportDirection = startPoint.getVectorTo(endPoint).normalize();
 		Line2D arrangedSupport = new Line2D(startPoint, supportDirection);
-		return arrangedSupport.lineParameterOf(P) / length;
+		return arrangedSupport.lineParameterOf(p) / length;
 	}
 
 	/**
@@ -207,7 +207,7 @@ public class LineSegment2D {
 	 * @author David Lebrisse - Stormbreakers
 	 */
 	public Point2D point(double segmentParameter) {
-		// TODO: 08/03/2020 Clamp k in [0,1] and corresponding tests
+		// LATER: 08/03/2020 Clamp k in [0,1] and corresponding tests
 		Vector supportDirection = startPoint.getVectorTo(endPoint).normalize();
 		Line2D arrangedSupport = new Line2D(startPoint, supportDirection);
 		return arrangedSupport.pointFromLineParameter(segmentParameter * length);
@@ -260,22 +260,22 @@ public class LineSegment2D {
 	 * 
 	 * @author David Lebrisse - Stormbreakers
 	 */
-	public double distance(Point2D P) {
+	public double distance(Point2D p) {
 		Line2D support = this.getSupportingLine();
-		Point2D projectedPOntoSupport = support.projectOnto(P);
+		Point2D projectedPOntoSupport = support.projectOnto(p);
 
 		if (this.isCollinearPointOnSegment(projectedPOntoSupport)) {
 			// The closest point to draw distance from
 			// is in the segment line
-			return support.distance(P);
+			return support.distance(p);
 		} else {
 			// The closest point to draw distance from
 			// is in one of the edges
 			Point2D first = firstPoint();
 			Point2D last = lastPoint();
 
-			double distanceFromFirst = first.distanceTo(P);
-			double distanceFromLast = last.distanceTo(P);
+			double distanceFromFirst = first.distanceTo(p);
+			double distanceFromLast = last.distanceTo(p);
 			return Math.min(distanceFromFirst, distanceFromLast);
 		}
 	}
@@ -361,7 +361,7 @@ public class LineSegment2D {
 
 	@Override
 	public boolean equals(Object obj) {
-		// // TODO: 08/03/2020 Add tests for equals
+		// // LATER: 08/03/2020 Add tests for equals
 		if (this == obj)
 			return true;
 		if (!(obj instanceof LineSegment2D))

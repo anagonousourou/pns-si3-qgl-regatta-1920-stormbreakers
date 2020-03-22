@@ -74,7 +74,7 @@ public class Circle extends Shape {
      *         given relative to this shape's coordinates
      */
     public boolean collidesWith(LineSegment2D lineSegment2D) {
-        // TODO: 14/03/2020 Tests
+        // LATER: 14/03/2020 Tests
         Line2D support = lineSegment2D.getSupportingLine();
         double distanceToCenter = support.distance(getAnchorPoint());
         double delta = distanceToCenter - radius;
@@ -111,7 +111,7 @@ public class Circle extends Shape {
      *         given relative to this shape's coordinates
      */
     public boolean intersects(Line2D line2D) {
-        // TODO: 05/03/2020 Tests
+        // LATER: 05/03/2020 Tests
         double distanceToCenter = line2D.distance(getAnchorPoint());
         double delta = distanceToCenter - radius;
         // delta > 0 : No collision
@@ -126,7 +126,7 @@ public class Circle extends Shape {
      * @return an intersection point if it exists
      */
     public Optional<Point2D> intersect(LineSegment2D lineSegment2D) {
-        // TODO Missing Test when supporting lines don't intersect and when the
+        // LATER Missing Test when supporting lines don't intersect and when the
         // intersection points are not on the line segment
         Line2D support = lineSegment2D.getSupportingLine();
         double distanceToCenter = support.distance(getAnchorPoint());
@@ -171,7 +171,7 @@ public class Circle extends Shape {
      *         given relative to this shape's coordinates
      */
     public Optional<Point2D> intersect(Line2D line2D) {
-        // TODO: 05/03/2020 Tests
+        // LATER: 05/03/2020 Tests
         double distanceToCenter = line2D.distance(getAnchorPoint());
         double delta = distanceToCenter - radius;
         if (delta > 0) {
@@ -231,7 +231,7 @@ public class Circle extends Shape {
      * @author David Lebrisse - Stormbreakers
      */
     Point2D findFirstIntersectingPoint(Line2D line2D) {
-        // TODO: 05/03/2020 Tests
+        // LATER: 05/03/2020 Tests
         Point2D anchorProjection = line2D.projectOnto(getAnchorPoint());
         Vector normalizedLineDirection = line2D.getNormalizedDirection();
         Point2D bounding1 = anchorProjection.getTranslatedBy(normalizedLineDirection.scaleVector(radius));
@@ -361,7 +361,7 @@ public class Circle extends Shape {
 
     @Override
     public IPoint intersectionPoint(IPoint depart, IPoint arrive) {
-        //NEW Code to test TODO
+        //NEW Code to test LATER
         LineSegment2D lineSegment2D = new LineSegment2D(depart, arrive);
         return this.findOneIntersection(lineSegment2D);
     }

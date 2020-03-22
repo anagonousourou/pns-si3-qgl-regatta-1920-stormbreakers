@@ -45,7 +45,7 @@ public class CheckpointsManagerTest {
     void updateCheckpointTest(){
         assertEquals(c1,checkpointsManager.nextCheckpoint());
 
-        // TODO: 12/03/2020 Redo updateCheckpoint test
+        // LATER: 12/03/2020 Redo updateCheckpoint test
 
         boatShape.setAnchor(new Position(-5,5));
         checkpointsManager.updateCheckpoint(boat); // Still same checkpoint

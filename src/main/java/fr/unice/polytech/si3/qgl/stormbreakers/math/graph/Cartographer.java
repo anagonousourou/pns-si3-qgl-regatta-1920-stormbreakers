@@ -1,6 +1,5 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.math.graph;
 
-import java.util.Collections;
 import java.util.List;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.IPoint;
@@ -52,10 +51,10 @@ public class Cartographer {
         // en principe inutile
         graph.clearShortestPaths();
 
-        graph.calculateShortestPathFromSource(destination);
+        graph.calculateShortestPathFromSource(depart);
 
-        List<Sommet> path = graph.reducePath(depart);
-        Collections.reverse(path);
+        List<Sommet> path = graph.reducePath(destination);
+        
         if (path.size() > 1) {
             return path.get(1).getPoint();
         } else {
@@ -63,25 +62,6 @@ public class Cartographer {
             return cp;
         }
     }
-
-    /*
-     * IPoint caseUseExistingMap(Checkpoint cp) { List<Sommet> path; Sommet depart;
-     * Sommet destination; if (!graph.hasAsVertex(cp)) {// le checkpoint était pas
-     * pris en compte dans le graph destination = graph.addNodeAndLink(new
-     * Sommet(cp), ECART); depart = graph.addNodeAndLink(new Sommet(boat), ECART);
-     * 
-     * // reduce it // return the second point } else { // on rajoute la nouvelle
-     * position du bateau au graphe depart = graph.addNodeAndLink(new Sommet(boat),
-     * ECART); destination = graph.findVertexFor(cp); } graph.clearShortestPaths();
-     * 
-     * graph.calculateShortestPathFromSource(destination);
-     * System.out.println(depart.getDistance());
-     * System.out.println(depart.getShortestPath()); path =
-     * graph.reducePath(depart); Collections.reverse(path); if (path.size() > 1) {
-     * return path.get(1).getPoint(); } else { return cp; }
-     * 
-     * }
-     */
 
     boolean virtualMapExists() {
         return this.virtualMap != null;
