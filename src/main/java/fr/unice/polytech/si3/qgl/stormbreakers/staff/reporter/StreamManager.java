@@ -108,7 +108,7 @@ public class StreamManager implements PropertyChangeListener {
 
         IPoint insideIPoint;
         IPoint outsideIPoint;
-        System.out.println("StreamManager: " + depart + " " + destination);
+        
 
         if (this.pointIsInsideOpenStream(depart) && this.pointIsInsideStream(destination)) {
             var optCourant = this.streamAroundPoint(depart);

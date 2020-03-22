@@ -1,25 +1,27 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.data.metrics;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import fr.unice.polytech.si3.qgl.stormbreakers.Logable;
-import fr.unice.polytech.si3.qgl.stormbreakers.math.LineSegment2D;
-import fr.unice.polytech.si3.qgl.stormbreakers.math.Orientable;
-import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
-import fr.unice.polytech.si3.qgl.stormbreakers.math.Utils;
-import fr.unice.polytech.si3.qgl.stormbreakers.math.Vector;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import fr.unice.polytech.si3.qgl.stormbreakers.Logable;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.processing.Logger;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.LineSegment2D;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.Orientable;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.Utils;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.Vector;
+
 public class Polygon extends Shape implements Orientable {
 
     private double orientation;
     private List<Point2D> vertices;
-    private List<LineSegment2D> borders;
+
     private List<LineSegment2D> bordersActualPos;
 
     enum Side {
@@ -31,7 +33,7 @@ public class Polygon extends Shape implements Orientable {
         this.orientation = orientation;
         this.vertices = new ArrayList<>(vertices);
         this.bordersActualPos = generateBordersInActualPos(this.anchor, orientation); // Well Oriented borders
-        this.borders = generateBorders(vertices);
+
     }
 
     /**
@@ -51,7 +53,7 @@ public class Polygon extends Shape implements Orientable {
         this.orientation = orientation;
         this.vertices = new ArrayList<>(vertices);
         this.bordersActualPos = generateBordersInActualPos(getAnchor(), orientation); // Well Oriented borders
-        this.borders = generateBorders(vertices);
+
     }
 
     /**
@@ -92,10 +94,10 @@ public class Polygon extends Shape implements Orientable {
             return generateBordersInThePlan(actualPos);
         } else {
             // Polygon is drawn with total orientation
-            List<Point2D> vertices = this.vertices.stream()
+            List<Point2D> sommets = this.vertices.stream()
                     .map(vertex -> vertex.getRotatedBy(totalOrientation).getTranslatedBy(new Vector(origin, actualPos)))
                     .collect(Collectors.toList());
-            return generateBorders(vertices);
+            return generateBorders(sommets);
         }
     }
 
@@ -236,7 +238,7 @@ public class Polygon extends Shape implements Orientable {
 
     @Override
     public String toString() {
-        
+
         return "Polygon " + bordersActualPos;
     }
 
@@ -260,7 +262,7 @@ public class Polygon extends Shape implements Orientable {
 
     @Override
     public boolean isInsideOpenShape(IPoint pt) {
-        // TODO Auto-generated method stub
+        // TODO URGENT Auto-generated method stub
         return isPtInside(pt);
     }
 
@@ -272,7 +274,7 @@ public class Polygon extends Shape implements Orientable {
         if (optPoint.isPresent()) {
             return optPoint.get();
         }
-        System.out.println("returning null");
+        Logger.getInstance().log("returning null");
         return null;
     }
 

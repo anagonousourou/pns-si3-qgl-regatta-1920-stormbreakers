@@ -115,8 +115,7 @@ public interface Surface extends IPoint, Orientable {
 	 * @return
 	 */
 	public default IPoint limitToSurface(IPoint depart, IPoint arrivee){
-		System.out.println(this);
-		System.out.println(depart+" "+arrivee);
+		
 		if(this.isInsideOpenSurface(arrivee)){
 			return arrivee;
 		}

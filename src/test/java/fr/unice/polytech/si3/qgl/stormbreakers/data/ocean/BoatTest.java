@@ -9,6 +9,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Rectangle;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.processing.InputParser;
 
 import java.io.IOException;
@@ -26,7 +27,7 @@ public class BoatTest {
         boatJsonPos = new Position(80,100,30);
         parser=new InputParser();
         boatInitPosition = new Position(400,50.6);
-        boat=new Boat(boatInitPosition, 6, 3, 50,parser);
+        boat=new Boat(boatInitPosition, 6, 3, 50,parser,new Rectangle(5, 5, 0.0));
     }
 
     @Test

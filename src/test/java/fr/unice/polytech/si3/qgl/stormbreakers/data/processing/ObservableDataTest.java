@@ -11,6 +11,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Rectangle;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Boat;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Wind;
 import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.EquipmentsManager;
@@ -36,7 +37,7 @@ public class ObservableDataTest {
     void observableBehaviorTest() {
         Wind wind = new Wind(parser);
         EquipmentsManager equipmentManager = new EquipmentsManager(List.of(), 3, parser);
-        Boat boat=new Boat(new Position(45,23.6),6 , 6, 100, parser);
+        Boat boat=new Boat(new Position(45,23.6),6 , 6, 100, parser,new Rectangle(5, 5, 0));
 
         observableData.addPropertyChangeListener(wind);
         observableData.addPropertyChangeListener(equipmentManager );
