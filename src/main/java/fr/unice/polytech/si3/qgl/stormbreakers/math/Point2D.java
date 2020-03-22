@@ -152,13 +152,13 @@ public class Point2D implements Logable, IPoint{
      * @param p2 the last point
      * @return +1, 0 or -1, depending on the relative position of the points
      */
-    public static int ccw(Point2D p0, Point2D p1, Point2D p2) {
-        double x0 = p0.x;
-        double y0 = p0.y;
-        double dx1 = p1.x - x0;
-        double dy1 = p1.y - y0;
-        double dx2 = p2.x - x0;
-        double dy2 = p2.y - y0;
+    public static int ccw(IPoint p0, IPoint p1, IPoint p2) {
+        double x0 = p0.x();
+        double y0 = p0.y();
+        double dx1 = p1.x() - x0;
+        double dy1 = p1.y() - y0;
+        double dx2 = p2.x() - x0;
+        double dy2 = p2.y() - y0;
 
         if (dx1 * dy2 > dy1 * dx2)
             return +1;

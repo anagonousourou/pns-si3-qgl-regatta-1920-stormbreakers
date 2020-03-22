@@ -24,14 +24,18 @@ import fr.unice.polytech.si3.qgl.stormbreakers.math.LineSegment2D;
 public class StreamManager implements PropertyChangeListener {
 
     private List<Courant> courants;
-    
+
     private List<OceanEntity> obstacles;
-    private InputParser parser;
-    private Boat boat;
+    private List<Recif> recifs;
+    private final InputParser parser;
+    private final Boat boat;
 
     public StreamManager(InputParser parser, Boat boat) {
         this.parser = parser;
         this.boat = boat;
+        this.courants = List.of();
+        this.obstacles = List.of();
+        this.recifs = List.of();
 
     }
 
@@ -46,6 +50,14 @@ public class StreamManager implements PropertyChangeListener {
 
     public boolean pointIsInsideStream(IPoint point) {
         return this.courants.stream().anyMatch(courant -> courant.isPtInside(point));
+    }
+
+    public boolean pointIsInsideOpenStream(IPoint point) {
+        return this.courants.stream().anyMatch(courant -> courant.isInsideOpenSurface(point));
+    }
+
+    public boolean pointIsInsideRecif(IPoint point) {
+        return this.recifs.stream().anyMatch(recif -> recif.isPtInside(point));
     }
 
     /**
@@ -86,6 +98,71 @@ public class StreamManager implements PropertyChangeListener {
         return this.obstacles.stream().anyMatch(obstacle -> obstacle.intersectsWith(segment2d));
     }
 
+    public boolean thereIsRecifsBetween(IPoint depart, IPoint destination) {
+        LineSegment2D segment2d = new LineSegment2D(depart, destination);
+        return this.recifs.stream().anyMatch(obstacle -> obstacle.intersectsWith(segment2d));
+    }
+
+    // TODO tests for NEW code
+    public double speedProvided(IPoint depart, IPoint destination) {
+
+        IPoint insideIPoint;
+        IPoint outsideIPoint;
+        System.out.println("StreamManager: " + depart + " " + destination);
+
+        if (this.pointIsInsideOpenStream(depart) && this.pointIsInsideStream(destination)) {
+            var optCourant = this.streamAroundPoint(depart);
+            if (optCourant.isPresent()) {
+                Courant courant = optCourant.get();
+                return courant.speedProvided(depart, destination);
+            }
+            
+        }
+
+        if (this.pointIsInsideOpenStream(destination) && this.pointIsInsideStream(depart)) {
+            var optCourant = this.streamAroundPoint(destination);
+            if (optCourant.isPresent()) {
+                Courant courant = optCourant.get();
+                return courant.speedProvided(depart, destination);
+            }
+            
+        }
+
+        if (this.pointIsInsideStream(depart) && !this.pointIsInsideOpenStream(depart)
+                && !this.pointIsInsideStream(destination)) {
+            return 0.0;
+        }
+
+        if (this.pointIsInsideStream(destination) && !this.pointIsInsideOpenStream(destination)
+                && !this.pointIsInsideStream(depart)) {
+            return 0.0;
+        }
+        if(this.pointIsInsideStream(depart) && !this.pointIsInsideOpenStream(depart)
+        && this.pointIsInsideStream(destination) &&!this.pointIsInsideOpenStream(destination) ){
+            return 0.0;
+        }
+
+        if (this.pointIsInsideStream(depart)) {
+            System.out.println(depart + " is inside ?");
+            insideIPoint = depart;
+            outsideIPoint = destination;
+        } else if (this.pointIsInsideStream(destination)) {
+            System.out.println(destination + " is inside ?");
+            insideIPoint = destination;
+            outsideIPoint = depart;
+        } else {
+            return 0.0;
+        }
+
+        var optCourant = this.streamAroundPoint(insideIPoint);
+        if (optCourant.isPresent()) {
+            Courant courant = optCourant.get();
+            return courant.speedProvided(depart, courant.limitToSurface(insideIPoint, outsideIPoint));
+        }
+
+        return 0.0;
+
+    }
 
     /**
      * Lets define a trajectory as a list of points such that 1- the last point is
@@ -98,20 +175,19 @@ public class StreamManager implements PropertyChangeListener {
      * @return
      */
     public List<IPoint> trajectoryToAvoidObstacles(IPoint depart, IPoint destination) {
-        if(this.thereIsObstacleBetween(depart, destination)){
-            OceanEntity obstacleEntity= this.firstObstacleBetween(depart, destination);
-            if(obstacleEntity.getType().equals("stream")){
-                Courant courant=(Courant)obstacleEntity;
-                if(!courant.isCompatibleWith(depart, destination)){
+        if (this.thereIsObstacleBetween(depart, destination)) {
+            OceanEntity obstacleEntity = this.firstObstacleBetween(depart, destination);
+            if (obstacleEntity.getType().equals("stream")) {
+                Courant courant = (Courant) obstacleEntity;
+                if (!courant.isCompatibleWith(depart, destination)) {
                     return courant.avoidHit(depart, destination);
                 }
-            }
-            else{//reef
+            } else {// reef
                 return obstacleEntity.avoidHit(depart, destination);
             }
         }
-        
-        return List.of(depart,destination);
+
+        return List.of(depart, destination);
     }
 
     /**
@@ -121,11 +197,12 @@ public class StreamManager implements PropertyChangeListener {
      * @return immutable list
      */
     public List<IPoint> trajectoryToReachAPointInsideStream(IPoint depart, IPoint destination) {
-        // LATER  simply implement a weighted graph
-        /**due to the hassle to handle the case we the stream is not in the good direction we do nothing in
-         * this method
+        // LATER simply implement a weighted graph
+        /**
+         * due to the hassle to handle the case we the stream is not in the good
+         * direction we do nothing in this method
          */
-        
+
         return List.of(depart, destination);
     }
 
@@ -137,10 +214,10 @@ public class StreamManager implements PropertyChangeListener {
      * @return potentially immutable list
      */
     public List<IPoint> trajectoryBoatAndCheckpointInsideStream(IPoint boatPoint, IPoint checkPoint) {
-        
-            // LATER est-ce qu'on peut avoir un récif à l'intérieur d'un courant ?
-            return List.of(boatPoint, checkPoint);
-        
+
+        // LATER est-ce qu'on peut avoir un récif à l'intérieur d'un courant ?
+        return List.of(boatPoint, checkPoint);
+
     }
 
     /**
@@ -165,14 +242,12 @@ public class StreamManager implements PropertyChangeListener {
                 }
 
             } else {
-                
-                return List.of(departPoint,destination);
+
+                return List.of(departPoint, destination);
             }
         }
-        return List.of(departPoint,destination);// LATER
+        return List.of(departPoint, destination);// LATER
     }
-
-    
 
     public Courant firstStreamBetween(IPoint destination) {
         LineSegment2D segment2d = new LineSegment2D(destination, boat);
@@ -197,19 +272,18 @@ public class StreamManager implements PropertyChangeListener {
         return null;
     }
 
-    public OceanEntity firstObstacleBetween(IPoint depart,IPoint destination) {
+    public OceanEntity firstObstacleBetween(IPoint depart, IPoint destination) {
         LineSegment2D segment2d = new LineSegment2D(destination, depart);
-        List<OceanEntity> obstaclesOnTrajectory = this.obstacles.stream().filter(obstacle -> obstacle.intersectsWith(segment2d))
-                .collect(Collectors.toList());
+        List<OceanEntity> obstaclesOnTrajectory = this.obstacles.stream()
+                .filter(obstacle -> obstacle.intersectsWith(segment2d)).collect(Collectors.toList());
 
         if (obstaclesOnTrajectory.size() == 1) {
 
             return obstaclesOnTrajectory.get(0);
         } else if (obstaclesOnTrajectory.size() > 1) {
 
-            var tmp = obstaclesOnTrajectory
-                    .stream()
-                    .min((a, b) -> Double.compare(depart.distanceTo(a.getPosition()), depart.distanceTo(b.getPosition())));
+            var tmp = obstaclesOnTrajectory.stream().min(
+                    (a, b) -> Double.compare(depart.distanceTo(a.getPosition()), depart.distanceTo(b.getPosition())));
 
             if (tmp.isPresent()) {
                 return tmp.get();
@@ -221,8 +295,6 @@ public class StreamManager implements PropertyChangeListener {
         return null;
     }
 
-    
-
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         String s = (String) evt.getNewValue();
@@ -231,7 +303,8 @@ public class StreamManager implements PropertyChangeListener {
             this.obstacles = entities;
             this.courants = entities.stream().filter(e -> e.getType().equals("stream")).map(e -> (Courant) e)
                     .collect(Collectors.toList());
-            
+            this.recifs = entities.stream().filter(e -> e.getType().equals("reef")).map(e -> (Recif) e)
+                    .collect(Collectors.toList());
 
         } catch (JsonProcessingException e) {
             Logger.getInstance().log(e.getMessage());
@@ -241,30 +314,24 @@ public class StreamManager implements PropertyChangeListener {
     /**
      * @param courants the streams to set
      */
-    void setCourants(List<Courant> courants) {
+    public void setCourants(List<Courant> courants) {
         this.courants = courants;
     }
 
-    void setObstacles(List<OceanEntity> oceanEntities ){
-        this.obstacles=oceanEntities;
+    public void setObstacles(List<OceanEntity> oceanEntities) {
+        this.obstacles = oceanEntities;
+    }
+
+    /**
+     * @param recifs the recifs to set
+     */
+    public void setRecifs(List<Recif> recifs) {
+        this.recifs = recifs;
     }
 
     IPoint calculateEscapePoint(Courant courant, IPoint position) {
         // LATER add strength consideration etc ...
         return courant.closestPointTo(position);
-    }
-    public List<Courant> getCourants() {
-    	return courants;
-    }
-    
-    public List<Recif> getRecifs(){
-    	List<Recif> recifs= new ArrayList<Recif>();
-    	for(OceanEntity o:obstacles) {
-    		if(o instanceof Recif) {
-    			recifs.add((Recif) o);
-    		}
-    	}
-    	return recifs;
     }
 
 }

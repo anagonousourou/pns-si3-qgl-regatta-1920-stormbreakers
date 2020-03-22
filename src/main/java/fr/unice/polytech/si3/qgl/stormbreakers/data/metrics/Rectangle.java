@@ -26,6 +26,7 @@ public class Rectangle extends Shape {
         this.height = height;
         this.orientation = orientation;
         this.rectanglePolygon = buildAsPolygon();
+        
     }
 
     private Polygon buildAsPolygon() {
@@ -230,6 +231,12 @@ public class Rectangle extends Shape {
             point2D = point2D.getRotatedBy(-orientation);
         }
         return isPtInRectangleOpen(point2D);
+    }
+
+    @Override
+    public IPoint intersectionPoint(IPoint depart, IPoint arrive) {
+        System.out.println(rectanglePolygon);
+        return this.rectanglePolygon.intersectionPoint(depart, arrive);
     }
 
 }

@@ -12,9 +12,10 @@ import fr.unice.polytech.si3.qgl.stormbreakers.math.Vector;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
-public class Polygon extends Shape implements CanCollide, Orientable {
+public class Polygon extends Shape implements Orientable {
 
     private double orientation;
     private List<Point2D> vertices;
@@ -22,28 +23,26 @@ public class Polygon extends Shape implements CanCollide, Orientable {
     private List<LineSegment2D> bordersActualPos;
 
     enum Side {
-        LEFT,
-        RIGHT,
-        MIDDLE
+        LEFT, RIGHT, MIDDLE
     }
 
     public Polygon(double orientation, List<Point2D> vertices, Position anchor) {
         super("polygon", anchor);
         this.orientation = orientation;
         this.vertices = new ArrayList<>(vertices);
-        this.bordersActualPos = generateBordersInActualPos(getAnchor(),orientation); // Well Oriented borders
+        this.bordersActualPos = generateBordersInActualPos(this.anchor, orientation); // Well Oriented borders
         this.borders = generateBorders(vertices);
     }
 
     /**
-     * Changes the shape's anchor to a given one
-     * This method recomputes the polygons's hull
+     * Changes the shape's anchor to a given one This method recomputes the
+     * polygons's hull
      */
     @Override
     public void setAnchor(Position newAnchor) {
         super.setAnchor(newAnchor);
         // Compute actual Borders
-        this.bordersActualPos = generateBordersInActualPos(getAnchor(),orientation);
+        this.bordersActualPos = generateBordersInActualPos(getAnchor(), orientation);
     }
 
     @JsonCreator
@@ -51,12 +50,13 @@ public class Polygon extends Shape implements CanCollide, Orientable {
         super("polygon");
         this.orientation = orientation;
         this.vertices = new ArrayList<>(vertices);
-        this.bordersActualPos = generateBordersInActualPos(getAnchor(),orientation); // Well Oriented borders
+        this.bordersActualPos = generateBordersInActualPos(getAnchor(), orientation); // Well Oriented borders
         this.borders = generateBorders(vertices);
     }
 
     /**
      * Generates shape's borders from given vertices
+     * 
      * @return List of the shape borders as LineSegment2D
      */
     private List<LineSegment2D> generateBorders(List<Point2D> vertices) {
@@ -79,8 +79,8 @@ public class Polygon extends Shape implements CanCollide, Orientable {
     }
 
     public List<LineSegment2D> generateBordersInThePlan(IPoint omegaPoint) {
-        List<Point2D> sommets = this.getVertices().stream().map(point -> point.getTranslatedBy(omegaPoint.x(), omegaPoint.y()))
-                .collect(Collectors.toList());
+        List<Point2D> sommets = this.getVertices().stream()
+                .map(point -> point.getTranslatedBy(omegaPoint.x(), omegaPoint.y())).collect(Collectors.toList());
 
         return generateBorders(sommets);
     }
@@ -93,10 +93,7 @@ public class Polygon extends Shape implements CanCollide, Orientable {
         } else {
             // Polygon is drawn with total orientation
             List<Point2D> vertices = this.vertices.stream()
-                    .map(vertex -> vertex
-                            .getRotatedBy(totalOrientation)
-                            .getTranslatedBy(new Vector(origin, actualPos))
-                    )
+                    .map(vertex -> vertex.getRotatedBy(totalOrientation).getTranslatedBy(new Vector(origin, actualPos)))
                     .collect(Collectors.toList());
             return generateBorders(vertices);
         }
@@ -106,7 +103,7 @@ public class Polygon extends Shape implements CanCollide, Orientable {
     // Methods for all shapes
 
     public Circle getBoundingCircle() {
-        return new Circle(getMaxRadius(),getAnchor());
+        return new Circle(getMaxRadius(), getAnchor());
     }
 
     @Override
@@ -125,7 +122,8 @@ public class Polygon extends Shape implements CanCollide, Orientable {
         List<LineSegment2D> edges = bordersActualPos;
 
         for (LineSegment2D border : edges) {
-            if (polygon.collidesWith(border)) return true;
+            if (polygon.collidesWith(border))
+                return true;
         }
         return false;
     }
@@ -133,7 +131,6 @@ public class Polygon extends Shape implements CanCollide, Orientable {
     @Override
     public boolean collidesWith(Circle circle) {
         List<LineSegment2D> edges = bordersActualPos;
-
 
         for (LineSegment2D border : edges) {
             if (circle.collidesWith(border)) {
@@ -149,18 +146,18 @@ public class Polygon extends Shape implements CanCollide, Orientable {
         List<LineSegment2D> edges = bordersActualPos;
 
         for (LineSegment2D border : edges) {
-            if (border.intersects(lineSegment2D)) return true;
+            if (border.intersects(lineSegment2D))
+                return true;
         }
         return false;
     }
 
-
     // =========
 
-
     /**
-     * Returns whether the given point is inside this Polygon
-     * Complexity: O(N) where N is the amount of vertices
+     * Returns whether the given point is inside this Polygon Complexity: O(N) where
+     * N is the amount of vertices
+     * 
      * @param pointToTest the point for which to test whether it is inside of not
      * @return true if it is inside, false if not
      */
@@ -173,12 +170,13 @@ public class Polygon extends Shape implements CanCollide, Orientable {
         while (it.hasNext()) {
             LineSegment2D currentBorder = it.next();
 
-            Side currentSide = getPointSideComparedToVector(currentBorder.firstPoint(),currentBorder.lastPoint(),pointToTest);
+            Side currentSide = getPointSideComparedToVector(currentBorder.firstPoint(), currentBorder.lastPoint(),
+                    pointToTest);
 
-            if (currentSide!=Side.MIDDLE && lastSide==null) {
+            if (currentSide != Side.MIDDLE && lastSide == null) {
                 // Side of point compared to one edge
                 lastSide = currentSide;
-            } else if (currentSide!=Side.MIDDLE && currentSide!=lastSide) {
+            } else if (currentSide != Side.MIDDLE && currentSide != lastSide) {
                 // If the point changes side when cycling through borders
                 // The point is outside the CONVEX polygon
                 return false;
@@ -190,8 +188,9 @@ public class Polygon extends Shape implements CanCollide, Orientable {
     }
 
     /**
-     * Returns for a given vector AB the side to which the tested point T is
-     * NB: Left and Right are determined by considering the Vector facing Front
+     * Returns for a given vector AB the side to which the tested point T is NB:
+     * Left and Right are determined by considering the Vector facing Front
+     * 
      * @param a start point of border
      * @param b end point of border
      * @param t point to test
@@ -200,15 +199,18 @@ public class Polygon extends Shape implements CanCollide, Orientable {
 
     private Side getPointSideComparedToVector(Point2D a, Point2D b, IPoint t) {
 
-        Vector borderVector = new Vector(a,b);
-        Vector toCompare = new Vector(a,t);
+        Vector borderVector = new Vector(a, b);
+        Vector toCompare = new Vector(a, t);
 
         double scal = borderVector.scal(toCompare);
 
         Side side = null;
-        if (Utils.almostEquals(scal, 0)) side=Side.MIDDLE;
-        else if (scal < 0) side=Side.LEFT;
-        else if (scal > 0) side=Side.RIGHT;
+        if (Utils.almostEquals(scal, 0))
+            side = Side.MIDDLE;
+        else if (scal < 0)
+            side = Side.LEFT;
+        else if (scal > 0)
+            side = Side.RIGHT;
 
         return side;
     }
@@ -232,13 +234,23 @@ public class Polygon extends Shape implements CanCollide, Orientable {
         return "Polygon " + Logable.listToLogs(new ArrayList<>(vertices), " ", "", "");
     }
 
-    public double getMaxRadius(){
-        IPoint center=getAnchorPoint();
-        var optfarPt= this.vertices.stream().max((a,b)->Double.compare(center.distanceTo(a),center.distanceTo(b))); // Changed second a to b
-        if(optfarPt.isPresent()){
+    @Override
+    public String toString() {
+        System.out.println(anchor);
+        return "Polygon " + generateBordersInThePlan(anchor);
+    }
+
+    public double getMaxRadius() {
+        IPoint center = getAnchorPoint();
+        var optfarPt = this.vertices.stream().max((a, b) -> Double.compare(center.distanceTo(a), center.distanceTo(b))); // Changed
+                                                                                                                         // second
+                                                                                                                         // a
+                                                                                                                         // to
+                                                                                                                         // b
+        if (optfarPt.isPresent()) {
             return center.distanceTo(optfarPt.get());
         }
-		return 0.0;
+        return 0.0;
     }
 
     @Override
@@ -252,5 +264,16 @@ public class Polygon extends Shape implements CanCollide, Orientable {
         return isPtInside(pt);
     }
 
-    
+    @Override
+    public IPoint intersectionPoint(IPoint depart, IPoint arrive) {
+        var optPoint = this.borders.stream().map(segment -> segment.intersectionPoint(depart, arrive))
+                .filter(Objects::nonNull).findFirst();
+
+        if (optPoint.isPresent()) {
+            return optPoint.get();
+        }
+        System.out.println("returning null");
+        return null;
+    }
+
 }

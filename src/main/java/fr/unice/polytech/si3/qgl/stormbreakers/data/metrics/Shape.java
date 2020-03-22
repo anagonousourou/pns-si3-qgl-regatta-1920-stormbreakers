@@ -6,7 +6,6 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.Logable;
-import fr.unice.polytech.si3.qgl.stormbreakers.math.LineSegment2D;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
 
 /**
@@ -74,4 +73,6 @@ public abstract class Shape implements Logable, CanCollide {
     public abstract boolean isPtInside(IPoint pt);
 
     public abstract boolean isInsideOpenShape(IPoint pt);
+
+    public abstract IPoint intersectionPoint(IPoint depart ,IPoint arrive);
 }

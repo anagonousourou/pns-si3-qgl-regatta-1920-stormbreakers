@@ -292,7 +292,7 @@ public class CaptainTest {
 
         rogers = new Captain(null, null, null, weatherAnalyst, coordinator,null);
 
-        when(weatherAnalyst.additionalSpeedExists()).thenReturn(false);
+        when(weatherAnalyst.speedFromWindExists()).thenReturn(false);
 
         List<SailorAction> result = rogers.adjustSpeedTakingIntoAccountWind(300, 0);
         assertFalse(result.isEmpty(), "should Send some actions");
@@ -320,7 +320,7 @@ public class CaptainTest {
 
         rogers = new Captain(null, null, null, weatherAnalyst, coordinator,null);
 
-        when(weatherAnalyst.additionalSpeedExists()).thenReturn(true);
+        when(weatherAnalyst.speedFromWindExists()).thenReturn(true);
         when(weatherAnalyst.potentialSpeedAcquirable()).thenReturn(200.56);
 
         List<SailorAction> results = rogers.adjustSpeedTakingIntoAccountWind(300, 0);

@@ -17,6 +17,7 @@ public class Vector {
     }
 
     public Vector(IPoint start, IPoint end) {
+        
         this.dx = end.x() - start.x();
         this.dy = end.y() - start.y();
     }

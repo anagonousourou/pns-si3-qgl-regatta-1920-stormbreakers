@@ -24,10 +24,10 @@ public class WeatherAnalystTest {
     @Test
     void additionalSpeedExistsTest(){
         this.seaElements = new WeatherAnalyst(null, null, null);
-        assertFalse(this.seaElements.additionalSpeedExists(),"Pas de vent donc pas de vitesse additionelle");
+        assertFalse(this.seaElements.speedFromWindExists(),"Pas de vent donc pas de vitesse additionelle");
 
         this.seaElements = new WeatherAnalyst(new Wind(1.253, 200), null, null);
-        assertTrue(this.seaElements.additionalSpeedExists(),"Du vent donc potentiellement vitesse supplémentaire");
+        assertTrue(this.seaElements.speedFromWindExists(),"Du vent donc potentiellement vitesse supplémentaire");
     }
 
 

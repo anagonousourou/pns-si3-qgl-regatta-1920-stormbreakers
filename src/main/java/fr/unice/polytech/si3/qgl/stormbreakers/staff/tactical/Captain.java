@@ -153,9 +153,8 @@ public class Captain {
 
     List<SailorAction> adjustSpeedTakingIntoAccountWind(double distance, double currentSpeed) {
         double currentExternalSpeed = this.weatherAnalyst.currentExternalSpeed();
-        
 
-        if (this.weatherAnalyst.additionalSpeedExists()) {
+        if (this.weatherAnalyst.speedFromWindExists()) {
             // si on a du vent
             double potentialSpeedAcquirable = this.weatherAnalyst.potentialSpeedAcquirable();
             // le vent va dans le bon sens et ne nous fait pas dépasser
@@ -170,7 +169,7 @@ public class Captain {
                         actionsToUseWeather, this.accelerate(distance, currentSpeed + expectedSpeedFromWind));
 
             }
-
+            //vent dans le mauvais sens || vent nous fait dépasser
             if (currentExternalSpeed < 0.0 || currentSpeed + currentExternalSpeed > distance) {
 
                 List<SailorAction> actionsToCancelWeather = new ArrayList<>();
@@ -187,7 +186,7 @@ public class Captain {
 
             // voir si on peut pas ouvrir des voiles sups, sans dépasser bien sur
             if (currentSpeed + currentExternalSpeed <= distance && currentExternalSpeed > 0) {
-
+                
                 return this.accelerate(distance, currentSpeed + currentExternalSpeed);
             }
             // voiles fermées et les ouvrir vous ralentissent

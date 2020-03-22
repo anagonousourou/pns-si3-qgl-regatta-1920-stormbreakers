@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.IPoint;
+
 public class Utils {
 
     private Utils() {
@@ -58,8 +60,12 @@ public class Utils {
         return Math.abs(expected - result) <= EPSILON;
     }
 
-    public static boolean almostEquals(Point2D p1, Point2D p2) {
+    public static boolean almostEquals(IPoint p1, IPoint p2) {
         return p1.distanceTo(p2) < EPSILON;
+    }
+
+    public static boolean almostEqualsBoundsIncluded(IPoint p1, IPoint p2) {
+        return p1.distanceTo(p2) <= EPSILON;
     }
 
     public static boolean almostEquals(Point2D p1, Point2D p2, double delta) {

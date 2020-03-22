@@ -1,47 +1,88 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.math.graph;
 
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.IPoint;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
 
 public class Sommet {
-	private IPoint point ;
-	
-	 public Sommet(IPoint pt) {
-		point =new Point2D(pt);
+	private IPoint point;
+	private List<Sommet> shortestPath = new LinkedList<>();
+	private int distance = Integer.MAX_VALUE;
+	private Map<Sommet, Integer> adjacentNodes = new HashMap<>();
+
+	public Sommet(IPoint pt) {
+		point = new Point2D(pt);
 	}
-	 public Sommet(double x, double y) {
-			point =new Point2D(x,y);
+
+	public Sommet(double x, double y) {
+		point = new Point2D(x, y);
 	}
+
 	public IPoint getPoint() {
 		return point;
 	}
+
 	public String toString() {
 		return point.toString();
 	}
-	
+
 	@Override
 	public boolean equals(Object other) {
-		if(!(other instanceof Sommet)) {
+		if (this == other) {
+			return true;
+		}
+		if (!(other instanceof Sommet)) {
 			return false;
 		}
-		Sommet s= (Sommet) other;
-		if(this.getPoint().equals(s.getPoint()))
-			return true;
-		return false;
+
+		Sommet s = (Sommet) other;
+		return this.getPoint().equals(s.getPoint());
+
 	}
-	
-	@Override 
+
+	public void addDestination(Sommet destination, int distance) {
+		adjacentNodes.put(destination, distance);
+	}
+
+	@Override
 	public int hashCode() {
 		return Objects.hash(point);
 	}
-	
+
 	public double getX() {
 		return point.x();
 	}
-		
+
 	public double getY() {
 		return point.y();
+	}
+
+	public int getDistance() {
+		return distance;
+	}
+
+	public void setDistance(int distance) {
+		this.distance = distance;
+	}
+
+	public List<Sommet> getShortestPath() {
+		return this.shortestPath;
+	}
+
+	public void setShortestPath(List<Sommet> shortestPath2) {
+		this.shortestPath = shortestPath2;
+	}
+
+	public Map<Sommet, Integer> getAdjacentNodes() {
+		return this.adjacentNodes;
+	}
+
+	public void clearShortestPath() {
+		this.shortestPath.clear();
 	}
 }

@@ -106,4 +106,23 @@ public interface Surface extends IPoint, Orientable {
 
 		return List.of(depart, destination);
 	}
+
+	/**
+	 * Give the intersection of segment [depart,arrive] if arrivee is outside the Surface otherwise
+	 *  return arrive if arrive is inside , we assume depart is inside the Surface
+	 * @param depart
+	 * @param arrivee
+	 * @return
+	 */
+	public default IPoint limitToSurface(IPoint depart, IPoint arrivee){
+		System.out.println(this);
+		System.out.println(depart+" "+arrivee);
+		if(this.isInsideOpenSurface(arrivee)){
+			return arrivee;
+		}
+
+		else{
+			return this.getShape().intersectionPoint(depart, arrivee);
+		}
+	}
 }
