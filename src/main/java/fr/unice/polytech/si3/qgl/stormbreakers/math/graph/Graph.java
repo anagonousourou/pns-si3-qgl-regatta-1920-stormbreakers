@@ -73,7 +73,7 @@ public class Graph {
             }
             i++;
         }
-        System.out.println(result);
+        
         Logger.getInstance().log(result.toString());
         return result;
     }
