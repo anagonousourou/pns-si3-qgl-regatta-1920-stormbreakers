@@ -20,6 +20,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Boat;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Courant;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Wind;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.processing.InputParser;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.processing.Logger;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.graph.Cartographer;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.graph.Graph;
 import fr.unice.polytech.si3.qgl.stormbreakers.staff.tactical.Navigator;
@@ -34,7 +35,7 @@ public class TargetDefinerTest {
   private InputParser parser = new InputParser();
   private Courant courant1 = new Courant(new Position(500.0, 0.0, 0.0), new Rectangle(300, 600, 0.0), 40.0);
   private Courant courant2 = new Courant(new Position(900.0, 900.0, -0.52), new Rectangle(300, 600, 0.0), 80.0);
-  private Courant courant3 = new Courant(new Position(500.0, 0.0, 0.0), new Rectangle(400, 600, 0.0), 40.0);
+  private Courant courant3 = new Courant(new Position(500.0, 0.0, 0.0), new Rectangle(400, 600, 0.0), 100.0);
   private Courant courant4 = new Courant(new Position(500.0, 500.0, 0.78539), new Rectangle(400, 400, 0.0), 80.0);
 
   private Checkpoint cp1 = new Checkpoint(new Position(1500, 300), new Circle(50));
@@ -120,11 +121,13 @@ public class TargetDefinerTest {
 
     assertNotNull(reponse);
 
-    /*when(checkpointsManager.nextCheckpoint()).thenReturn(cp6);
+    when(checkpointsManager.nextCheckpoint()).thenReturn(cp6);
 
     reponse = targetDefiner.defineNextTarget();
 
     assertNotNull(reponse);
+
+    System.out.println(Logger.getInstance());
 
     when(checkpointsManager.nextCheckpoint()).thenReturn(cp5);
 
@@ -180,7 +183,7 @@ public class TargetDefinerTest {
     reponse = targetDefiner.defineNextTarget();
 
     assertNotNull(reponse);
-    */
+    
 
   }
 

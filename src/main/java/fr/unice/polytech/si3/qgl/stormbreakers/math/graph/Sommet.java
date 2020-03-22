@@ -28,7 +28,7 @@ public class Sommet {
 	}
 
 	public String toString() {
-		return point.toString();
+		return String.format("%s(x: %f,y: %f,distance: %d)", this.getClass().getSimpleName(),this.point.x(),this.point.y(),distance);
 	}
 
 	@Override

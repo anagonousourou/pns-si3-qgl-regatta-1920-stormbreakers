@@ -2,17 +2,16 @@ package fr.unice.polytech.si3.qgl.stormbreakers.data.ocean;
 
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.mock;
 
-import fr.unice.polytech.si3.qgl.stormbreakers.data.processing.ObservableData;
+import java.io.IOException;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Rectangle;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.processing.InputParser;
-
-import java.io.IOException;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.processing.ObservableData;
 
 public class BoatTest {
     private Boat boat;

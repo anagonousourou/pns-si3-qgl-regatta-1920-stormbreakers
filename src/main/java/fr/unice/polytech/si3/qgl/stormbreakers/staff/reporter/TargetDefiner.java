@@ -54,7 +54,7 @@ public class TargetDefiner {
 
     public TupleDistanceOrientation defineNextTarget() {
         IPoint target = cartographer.nextPoint();
-        System.out.println(target);
+        Logger.getInstance().log(target.toString());
         boolean insideStream = streamManager.insideStream();
 
         if (insideStream && streamManager.streamAroundBoat().isPtInside(target)) {

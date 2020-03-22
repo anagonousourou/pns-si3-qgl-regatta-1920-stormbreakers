@@ -85,6 +85,7 @@ public class CartographerTest {
 
         var result = cartographer.caseBuildMap(checkpoint1);
         assertNotNull(result);
+        
         assertNotEquals(checkpoint1, result, "Il doit y avoir une étape intermediaire");
     }
     /*

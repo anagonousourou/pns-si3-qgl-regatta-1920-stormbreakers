@@ -285,4 +285,17 @@ public class StreamManagerTest {
         assertEquals(2,trajectory.size());
 
     }
+
+    @Test
+    public void speedProvidedLimitsTest(){
+
+        StreamManager streamManager=new StreamManager(parser, null);
+        
+        streamManager.setCourants(List.of(courant3,courant4));
+
+        assertEquals(0.0, streamManager.speedProvidedLimits(new Point2D(300,200),new Point2D(350, 200)), 1e-3);
+
+        assertTrue(streamManager.speedProvidedLimits(new Point2D(300,200),new Point2D(350, 100)) > 1e-3);
+
+    }
 }

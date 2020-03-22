@@ -50,7 +50,10 @@ public class Boat implements PropertyChangeListener, Surface {
 
     public void setPosition(Position position) {
         this.position = position;
-        this.boatShape.setAnchor(position);
+        if (this.boatShape != null) {
+            this.boatShape.setAnchor(position);
+        }
+
     }
 
     public int getDeckwidth() {

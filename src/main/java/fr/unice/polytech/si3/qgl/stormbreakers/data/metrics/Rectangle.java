@@ -81,7 +81,7 @@ public class Rectangle extends Shape {
     @Override
     public boolean isPtInside(IPoint pt) {
 
-        Point2D point2D = new Point2D(pt);
+        Point2D point2D;
         // On ramene le plan pour que les cotes du rectangle soient sur les axes du
         // repere
         double totalOrientation = orientation + getAnchorOrientation();
@@ -96,7 +96,7 @@ public class Rectangle extends Shape {
         return isPtInRectangle0(point2D);
 
 
-        //return rectanglePolygon.isPtInside(pt);
+        
     }
 
     // =========
@@ -241,7 +241,7 @@ public class Rectangle extends Shape {
 
     @Override
     public IPoint intersectionPoint(IPoint depart, IPoint arrive) {
-        System.out.println(rectanglePolygon);
+        
         return this.rectanglePolygon.intersectionPoint(depart, arrive);
     }
 

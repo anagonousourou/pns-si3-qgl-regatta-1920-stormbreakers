@@ -16,6 +16,7 @@ public class Cartographer {
     private Graph graph;
     private CheckpointsManager checkpointsManager;
     private RectangularSurface virtualMap;
+    private static final double ECART = 50.0;
 
     public Cartographer(CheckpointsManager checkpointsManager, Graph graph, Boat boat) {
         this.boat = boat;
@@ -39,20 +40,20 @@ public class Cartographer {
 
         this.virtualMap = new RectangularSurface(center.x(), center.y(), 0.0, new Rectangle(width, height, 0.0));
 
-        graph.createSquaring(virtualMap.minX(), virtualMap.minY(), virtualMap.maxX(), virtualMap.maxY(), 50);
+        graph.createSquaring(virtualMap.minX(), virtualMap.minY(), virtualMap.maxX(), virtualMap.maxY(), ECART);
 
         var depart = new Sommet(boat);
         depart = graph.addNode(depart);
 
         var destination = new Sommet(cp);
         destination = graph.addNode(destination);
-        graph.createLinkBetweenVertices(50);
+        graph.createLinkBetweenVertices(ECART);
 
         // en principe inutile
         graph.clearShortestPaths();
 
         graph.calculateShortestPathFromSource(destination);
-        
+
         List<Sommet> path = graph.reducePath(depart);
         Collections.reverse(path);
         if (path.size() > 1) {
@@ -67,11 +68,11 @@ public class Cartographer {
      * IPoint caseUseExistingMap(Checkpoint cp) { List<Sommet> path; Sommet depart;
      * Sommet destination; if (!graph.hasAsVertex(cp)) {// le checkpoint était pas
      * pris en compte dans le graph destination = graph.addNodeAndLink(new
-     * Sommet(cp), 50); depart = graph.addNodeAndLink(new Sommet(boat), 50);
+     * Sommet(cp), ECART); depart = graph.addNodeAndLink(new Sommet(boat), ECART);
      * 
      * // reduce it // return the second point } else { // on rajoute la nouvelle
      * position du bateau au graphe depart = graph.addNodeAndLink(new Sommet(boat),
-     * 50); destination = graph.findVertexFor(cp); } graph.clearShortestPaths();
+     * ECART); destination = graph.findVertexFor(cp); } graph.clearShortestPaths();
      * 
      * graph.calculateShortestPathFromSource(destination);
      * System.out.println(depart.getDistance());

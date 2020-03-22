@@ -103,20 +103,14 @@ public class StreamManager implements PropertyChangeListener {
         return this.recifs.stream().anyMatch(obstacle -> obstacle.intersectsWith(segment2d));
     }
 
-    // TODO tests for NEW code
-    public double speedProvided(IPoint depart, IPoint destination) {
-
-        IPoint insideIPoint;
-        IPoint outsideIPoint;
-        
-
+    double speedProvidedLimits(IPoint depart, IPoint destination) {
         if (this.pointIsInsideOpenStream(depart) && this.pointIsInsideStream(destination)) {
             var optCourant = this.streamAroundPoint(depart);
             if (optCourant.isPresent()) {
                 Courant courant = optCourant.get();
                 return courant.speedProvided(depart, destination);
             }
-            
+
         }
 
         if (this.pointIsInsideOpenStream(destination) && this.pointIsInsideStream(depart)) {
@@ -125,7 +119,7 @@ public class StreamManager implements PropertyChangeListener {
                 Courant courant = optCourant.get();
                 return courant.speedProvided(depart, destination);
             }
-            
+
         }
 
         if (this.pointIsInsideStream(depart) && !this.pointIsInsideOpenStream(depart)
@@ -137,17 +131,31 @@ public class StreamManager implements PropertyChangeListener {
                 && !this.pointIsInsideStream(depart)) {
             return 0.0;
         }
-        if(this.pointIsInsideStream(depart) && !this.pointIsInsideOpenStream(depart)
-        && this.pointIsInsideStream(destination) &&!this.pointIsInsideOpenStream(destination) ){
+        if (this.pointIsInsideStream(depart) && !this.pointIsInsideOpenStream(depart)
+                && this.pointIsInsideStream(destination) && !this.pointIsInsideOpenStream(destination)) {
             return 0.0;
         }
 
+        return Double.NaN;
+    }
+
+    // TODO tests for NEW code
+    public double speedProvided(IPoint depart, IPoint destination) {
+
+        IPoint insideIPoint;
+        IPoint outsideIPoint;
+
+        double resultLimitCase = this.speedProvidedLimits(depart, destination);
+        if (resultLimitCase != Double.NaN) {
+            return resultLimitCase;
+        }
+
         if (this.pointIsInsideStream(depart)) {
-            System.out.println(depart + " is inside ?");
+
             insideIPoint = depart;
             outsideIPoint = destination;
         } else if (this.pointIsInsideStream(destination)) {
-            System.out.println(destination + " is inside ?");
+
             insideIPoint = destination;
             outsideIPoint = depart;
         } else {

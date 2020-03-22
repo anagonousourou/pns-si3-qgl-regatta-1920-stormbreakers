@@ -93,7 +93,16 @@ public class Logger {
     private void clearCurrentLogLine() {
         currentLogLine = new StringBuilder();
     }
-
+    @Override
+    public String toString() {
+        StringBuilder bld = new StringBuilder();
+        for (String string : getSavedData()) {
+           bld.append(string+"\n");
+        }
+        
+        return bld.toString();
+    }
+    
     public List<String> getSavedData() {
         if (allLogs.size() < MAX_LOG_LINES)
             push();

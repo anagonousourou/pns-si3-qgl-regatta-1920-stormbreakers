@@ -8,6 +8,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.IPoint;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.processing.Logger;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Utils;
 import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.StreamManager;
@@ -27,7 +28,7 @@ public class Graph {
         if (nodes.add(nodeA)) {
             return nodeA;
         } else {
-            
+
             return this.findVertexFor(nodeA.getPoint());
         }
 
@@ -73,13 +74,14 @@ public class Graph {
             i++;
         }
         System.out.println(result);
+        Logger.getInstance().log(result.toString());
         return result;
     }
 
     public void createLinkBetweenVertices(double ecart) {
-        
+
         for (Sommet node : nodes) {
-            
+
             nodes.stream().filter(n -> n != node).forEach(n -> {
                 double distance = n.getPoint().distanceTo(node.getPoint());
                 if (distance <= ecart * Math.sqrt(2)) {
@@ -97,6 +99,7 @@ public class Graph {
             });
 
         }
+
     }
 
     // NEW
@@ -109,12 +112,12 @@ public class Graph {
         unsettledNodes.add(destination);
 
         while (!unsettledNodes.isEmpty()) {
-            
+
             Sommet currentNode = getLowestDistanceNode(unsettledNodes);
             unsettledNodes.remove(currentNode);
             for (Entry<Sommet, Integer> adjacencyPair : currentNode.getAdjacentNodes().entrySet()) {
                 Sommet adjacentNode = adjacencyPair.getKey();
-                Integer edgeWeight = adjacencyPair.getValue();
+                int edgeWeight = adjacencyPair.getValue();
                 if (!settledNodes.contains(adjacentNode)) {
                     calculateMinimumDistance(adjacentNode, edgeWeight, currentNode);
                     unsettledNodes.add(adjacentNode);
@@ -127,7 +130,7 @@ public class Graph {
 
     // NEW
     public Sommet getLowestDistanceNode(Set<Sommet> unsettledNodes) {
-        var optResult = unsettledNodes.stream().min((a, b) -> Integer.compare(a.getDistance(), b.getDistance()));
+        var optResult = unsettledNodes.stream().min((a, b) -> Double.compare(a.getDistance(), b.getDistance()));
         if (optResult.isPresent()) {
             return optResult.get();
         }
@@ -154,7 +157,7 @@ public class Graph {
     // NEW
     public Sommet addNodeAndLink(Sommet vertex, double ecart) {
         final Sommet ourSommet = this.addNode(vertex);
-        nodes.stream().filter(node->node!=ourSommet).forEach(n -> {
+        nodes.stream().filter(node -> node != ourSommet).forEach(n -> {
             double distance = n.getPoint().distanceTo(ourSommet.getPoint());
             if (distance <= ecart * Math.sqrt(2)) {
                 double cout = distance - streamManager.speedProvided(ourSommet.getPoint(), n.getPoint())
@@ -165,7 +168,7 @@ public class Graph {
                     ourSommet.addDestination(n, 0);
 
                 } else {
-                    
+
                     ourSommet.addDestination(n, (int) cout);
 
                 }
@@ -173,7 +176,7 @@ public class Graph {
                 if (coutNodeSommet < 0) {
                     n.addDestination(ourSommet, 0);
                 } else {
-                    
+
                     n.addDestination(ourSommet, (int) coutNodeSommet);
                 }
 
