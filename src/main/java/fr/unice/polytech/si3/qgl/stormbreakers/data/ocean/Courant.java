@@ -44,7 +44,6 @@ public class Courant extends OceanEntity {
                 return tmp.get();
             }
         } else if (this.shape.getTypeEnum() == ShapeType.POLYGON) {
-            Logger.getInstance().log(this.shape.toLogs());
             Polygon poly = (Polygon) this.shape;
             var point = poly.generateBordersInThePlan(this).stream().map(l -> l.closestPointTo(point2d))
                     .min((p, pother) -> Double.compare(p.distanceTo(point2d), pother.distanceTo(point2d)));

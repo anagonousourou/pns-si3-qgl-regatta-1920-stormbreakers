@@ -149,7 +149,7 @@ public class EquipmentsManager implements PropertyChangeListener {
         try {
             this.setUp(this.parser.fetchEquipments(jString), this.parser.fetchBoatWidth(jString));
         } catch (JsonProcessingException e) {
-            Logger.getInstance().log(e.getMessage());
+            Logger.getInstance().logErrorMsg(e);
         }
 
     }

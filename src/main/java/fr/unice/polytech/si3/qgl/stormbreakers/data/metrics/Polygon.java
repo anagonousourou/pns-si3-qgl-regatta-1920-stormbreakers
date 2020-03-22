@@ -236,8 +236,8 @@ public class Polygon extends Shape implements Orientable {
 
     @Override
     public String toString() {
-        System.out.println(anchor);
-        return "Polygon " + generateBordersInThePlan(anchor);
+        
+        return "Polygon " + bordersActualPos;
     }
 
     public double getMaxRadius() {
@@ -266,7 +266,7 @@ public class Polygon extends Shape implements Orientable {
 
     @Override
     public IPoint intersectionPoint(IPoint depart, IPoint arrive) {
-        var optPoint = this.borders.stream().map(segment -> segment.intersectionPoint(depart, arrive))
+        var optPoint = this.bordersActualPos.stream().map(segment -> segment.intersectionPoint(depart, arrive))
                 .filter(Objects::nonNull).findFirst();
 
         if (optPoint.isPresent()) {

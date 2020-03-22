@@ -50,6 +50,7 @@ public class Boat implements PropertyChangeListener, Surface {
 
     public void setPosition(Position position) {
         this.position = position;
+        this.boatShape.setAnchor(position);
     }
 
     public int getDeckwidth() {
@@ -77,9 +78,9 @@ public class Boat implements PropertyChangeListener, Surface {
         String data = (String) evt.getNewValue();
         try {
             this.life = this.parser.fetchBoatLife(data);
-            this.position = this.parser.fetchBoatPosition(data);
+            setPosition(this.parser.fetchBoatPosition(data));
         } catch (JsonProcessingException e) {
-            Logger.getInstance().log(e.getMessage());
+            Logger.getInstance().logErrorMsg(e);
         }
 
     }

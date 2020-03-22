@@ -91,7 +91,6 @@ public class Captain {
                         .max((oc1, oc2) -> Double.compare(oc1.getAngle(), oc2.getAngle()));
 
                 if (possibleOarsConfig.isPresent()) {
-                    Logger.getInstance().log(possibleOarsConfig.toString());
                     int diff = this.navigator.fromAngleToDiff(possibleOarsConfig.get().getAngle(),
                             this.coordinator.nbLeftOars(), this.coordinator.nbRightOars());
 

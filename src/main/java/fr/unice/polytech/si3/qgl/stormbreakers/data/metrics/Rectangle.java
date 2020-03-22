@@ -29,6 +29,12 @@ public class Rectangle extends Shape {
         
     }
 
+    @Override
+    public void setAnchor(Position newAnchor) {
+        super.setAnchor(newAnchor);
+        rectanglePolygon.setAnchor(newAnchor);
+    }
+
     private Polygon buildAsPolygon() {
         // TODO: 16/03/2020 Quick test
         double halfLength = height/2;

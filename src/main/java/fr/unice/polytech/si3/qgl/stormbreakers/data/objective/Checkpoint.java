@@ -53,7 +53,7 @@ public class Checkpoint implements Logable,Surface {
 
     @Override
     public String toLogs() {
-        return "{" + position.toLogs() + "," + shape.toLogs() + "}";
+        return "CP: {" + position.toLogs() + "," + shape.toLogs() + "}";
     }
 
     @Override
