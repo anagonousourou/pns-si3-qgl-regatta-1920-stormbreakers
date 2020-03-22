@@ -30,6 +30,11 @@ public class StreamManager implements PropertyChangeListener {
     private final InputParser parser;
     private final Boat boat;
 
+    /**
+     * 
+     * @param parser
+     * @param boat
+     */
     public StreamManager(InputParser parser, Boat boat) {
         this.parser = parser;
         this.boat = boat;
@@ -42,27 +47,43 @@ public class StreamManager implements PropertyChangeListener {
     /**
      * Method to say if the boat is currently within a stream
      * 
-     * @return
+     * @return if the boat is really inside a stream
      */
-    public boolean insideStream() {
+    public boolean insideOpenStream() {
         return this.courants.stream().anyMatch(courant -> courant.isInsideOpenSurface(boat));
     }
 
+    /**
+     * 
+     * @param point
+     * @return if point is inside a stream included limits
+     */
     public boolean pointIsInsideStream(IPoint point) {
         return this.courants.stream().anyMatch(courant -> courant.isPtInside(point));
     }
 
+    /**
+     * 
+     * @param point
+     * @return if point is inside a stream excluding limits
+     */
     public boolean pointIsInsideOpenStream(IPoint point) {
         return this.courants.stream().anyMatch(courant -> courant.isInsideOpenSurface(point));
     }
 
+    /**
+     * 
+     * @param point
+     * @return if point is inside a reef including limits
+     */
     public boolean pointIsInsideRecif(IPoint point) {
         return this.recifs.stream().anyMatch(recif -> recif.isPtInside(point));
     }
 
     /**
      * 
-     * @return
+     * @return the stream the boat is inside null if the boat is not inside any
+     *         stream
      */
     public Courant streamAroundBoat() {
         var optCourant = this.courants.stream().filter(courant -> courant.isPtInside(boat)).findAny();
@@ -73,6 +94,11 @@ public class StreamManager implements PropertyChangeListener {
         }
     }
 
+    /**
+     * 
+     * @param point
+     * @return an optional of the stream surrounding point
+     */
     public Optional<Courant> streamAroundPoint(IPoint point) {
         return this.courants.stream().filter(courant -> courant.isPtInside(point)).findAny();
     }
@@ -89,20 +115,44 @@ public class StreamManager implements PropertyChangeListener {
 
     }
 
+    /**
+     * 
+     * @param position
+     * @return if there exists a stream / reef between boat and position
+     */
     public boolean thereIsObstacleBetween(IPoint position) {
         return this.thereIsObstacleBetween(this.boat, position);
     }
 
+    /**
+     * 
+     * @param depart
+     * @param destination
+     * @return if there exists a stream between depart and destination
+     */
     public boolean thereIsObstacleBetween(IPoint depart, IPoint destination) {
         LineSegment2D segment2d = new LineSegment2D(depart, destination);
         return this.obstacles.stream().anyMatch(obstacle -> obstacle.intersectsWith(segment2d));
     }
 
+    /**
+     * 
+     * @param depart
+     * @param destination
+     * @return
+     */
     public boolean thereIsRecifsBetween(IPoint depart, IPoint destination) {
         LineSegment2D segment2d = new LineSegment2D(depart, destination);
         return this.recifs.stream().anyMatch(obstacle -> obstacle.intersectsWith(segment2d));
     }
 
+    /**
+     * Method to handle edge cases for speedProvided
+     * 
+     * @param depart
+     * @param destination
+     * @return
+     */
     double speedProvidedLimits(IPoint depart, IPoint destination) {
         if (this.pointIsInsideOpenStream(depart) && this.pointIsInsideStream(destination)) {
             var optCourant = this.streamAroundPoint(depart);
@@ -136,17 +186,24 @@ public class StreamManager implements PropertyChangeListener {
             return 0.0;
         }
 
-        return Double.NaN;
+        return Double.POSITIVE_INFINITY;
     }
 
     // LATER tests for NEW code
+    /**
+     * 
+     * @param depart
+     * @param destination
+     * @return
+     */
     public double speedProvided(IPoint depart, IPoint destination) {
 
         IPoint insideIPoint;
         IPoint outsideIPoint;
 
         double resultLimitCase = this.speedProvidedLimits(depart, destination);
-        if (resultLimitCase != Double.NaN) {
+        if (resultLimitCase != Double.POSITIVE_INFINITY) {
+
             return resultLimitCase;
         }
 

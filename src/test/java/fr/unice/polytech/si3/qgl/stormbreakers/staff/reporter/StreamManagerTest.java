@@ -24,278 +24,276 @@ import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
 public class StreamManagerTest {
 
     private StreamManager manager;
-    
+
     private InputParser parser = new InputParser();
-    private Courant courant1=new Courant(new Position(500.0, 0.0,0.0), new Rectangle(300, 600, 0.0) , 40.0);
-    private Courant courant2=new Courant(new Position(900.0, 900.0,-0.52), new Rectangle(300, 600, 0.0) , 80.0);
-    private Courant courant3=new Courant(new Position(500.0, 0.0,0.0), new Rectangle(400, 600, 0.0) , 40.0);
-    private Courant courant4=new Courant(new Position(500.0, 500.0,0.78539), new Rectangle(400, 400, 0.0) , 80.0);
-    private Recif recifTriangle=new Recif(new Position(-200, 300.0,0), 
-    new Polygon(
-        0.0,List.of(new Point2D(100,100),new Point2D(0, -100),new Point2D(-100,100))
-    ));
+    private Courant courant1 = new Courant(new Position(500.0, 0.0, 0.0), new Rectangle(300, 600, 0.0), 40.0);
+    private Courant courant2 = new Courant(new Position(900.0, 900.0, -0.52), new Rectangle(300, 600, 0.0), 80.0);
+    private Courant courant3 = new Courant(new Position(500.0, 0.0, 0.0), new Rectangle(400, 600, 0.0), 40.0);
+    private Courant courant4 = new Courant(new Position(500.0, 500.0, 0.78539), new Rectangle(400, 400, 0.0), 80.0);
+    private Recif recifTriangle = new Recif(new Position(-200, 300.0, 0),
+            new Polygon(0.0, List.of(new Point2D(100, 100), new Point2D(0, -100), new Point2D(-100, 100))));
 
-    private Recif recifCercle=new Recif(new Position(300, 600), 
-    new Circle(200)
-    );
-    private Recif recifCarre=new Recif(
-        new Position(500,200), 
-        new Rectangle(200, 200,0)
-    );
+    private Recif recifCercle = new Recif(new Position(300, 600), new Circle(200));
+    private Recif recifCarre = new Recif(new Position(500, 200), new Rectangle(200, 200, 0));
 
-    private Courant courantCarre=new Courant(
-        new Position(500,200), 
-        new Rectangle(200, 200,0),
-        100
-    );
+    private Courant courantCarre = new Courant(new Position(500, 200), new Rectangle(200, 200, 0), 100);
 
-
-
-    Position pointA=new Position(200, 200);
-    Position pointB=new Position(500, 400);
-    Position pointC=new Position(800, 200);
-    Position pointD=new Position(-300, 300);
-    Position pointE=new Position(200, 900);
-    Position pointF=new Position(-100, 600);
-    Position pointG=new Position(-200, 700);
-    Position pointH=new Position(200, 300);
-    Position pointI=new Position(800, 800);
-
-    
+    Position pointA = new Position(200, 200);
+    Position pointB = new Position(500, 400);
+    Position pointC = new Position(800, 200);
+    Position pointD = new Position(-300, 300);
+    Position pointE = new Position(200, 900);
+    Position pointF = new Position(-100, 600);
+    Position pointG = new Position(-200, 700);
+    Position pointH = new Position(200, 300);
+    Position pointI = new Position(800, 800);
 
     @Test
-    void insideStreamTest(){
-        Boat boat=mock(Boat.class);
-        List<Courant> courants=List.of(
-            courant1,courant2
-        );
-        manager=new StreamManager(parser, boat);
+    void insideStreamTest() {
+        Boat boat = mock(Boat.class);
+        List<Courant> courants = List.of(courant1, courant2);
+        manager = new StreamManager(parser, boat);
         manager.setCourants(courants);
 
-       
-        when( boat.x() ).thenReturn(300.0);
-        when( boat.y() ).thenReturn(300.0);
-        when( boat.getOrientation() ).thenReturn(0.0);
+        when(boat.x()).thenReturn(300.0);
+        when(boat.y()).thenReturn(300.0);
+        when(boat.getOrientation()).thenReturn(0.0);
 
-        assertFalse(manager.insideStream());
+        assertFalse(manager.insideOpenStream());
 
-        
-        when( boat.x() ).thenReturn(300.0);
-        when( boat.y() ).thenReturn(100.0);
-        
+        when(boat.x()).thenReturn(300.0);
+        when(boat.y()).thenReturn(100.0);
 
+        assertTrue(manager.insideOpenStream());
 
-        assertTrue(manager.insideStream());
+        when(boat.x()).thenReturn(500.0);
+        when(boat.y()).thenReturn(0.0);
 
-        when( boat.x() ).thenReturn(500.0);
-        when( boat.y() ).thenReturn(0.0);
-        
-        
-
-        assertTrue(manager.insideStream());
+        assertTrue(manager.insideOpenStream());
     }
 
     @Test
-    void streamAroundBoatTest(){
-        Boat boat=mock(Boat.class);
-        List<Courant> courants=List.of(
-            courant1,courant2
-        );
-        manager=new StreamManager(parser, boat);
+    void streamAroundBoatTest() {
+        Boat boat = mock(Boat.class);
+        List<Courant> courants = List.of(courant1, courant2);
+        manager = new StreamManager(parser, boat);
         manager.setCourants(courants);
 
-        
-        when( boat.x() ).thenReturn(300.0);
-        when( boat.y() ).thenReturn(300.0);
+        when(boat.x()).thenReturn(300.0);
+        when(boat.y()).thenReturn(300.0);
 
-        assertEquals(null,manager.streamAroundBoat());
+        assertEquals(null, manager.streamAroundBoat());
 
-        when( boat.x() ).thenReturn(800.0);
-        when( boat.y() ).thenReturn(100.0);
+        when(boat.x()).thenReturn(800.0);
+        when(boat.y()).thenReturn(100.0);
 
-        
+        assertEquals(courant1, manager.streamAroundBoat());
 
-        assertEquals(courant1,manager.streamAroundBoat());
+        when(boat.x()).thenReturn(500.0);
+        when(boat.y()).thenReturn(0.0);
 
-        when( boat.x() ).thenReturn(500.0);
-        when( boat.y() ).thenReturn(0.0);
+        assertEquals(courant1, manager.streamAroundBoat());
 
-        
-
-        assertEquals(courant1,manager.streamAroundBoat());
-        
     }
 
     @Test
-    void thereIsStreamBetweenTest(){
-        Boat boat=mock(Boat.class);
-        List<Courant> courants=List.of(
-            courant1,courant2
-        );
-        manager=new StreamManager(parser, boat);
+    void thereIsStreamBetweenTest() {
+        Boat boat = mock(Boat.class);
+        List<Courant> courants = List.of(courant1, courant2);
+        manager = new StreamManager(parser, boat);
         manager.setCourants(courants);
 
-        when( boat.getPosition() ).thenReturn(new Position(0.0, 0.0));
+        when(boat.getPosition()).thenReturn(new Position(0.0, 0.0));
 
         assertFalse(manager.thereIsStreamBetween(new Position(300, 300)));
         assertTrue(manager.thereIsStreamBetween(new Position(900, 100)));
         assertTrue(manager.thereIsStreamBetween(new Position(500, 100)));
         assertFalse(manager.thereIsStreamBetween(new Position(-300, 100)));
 
-
     }
-    @Test
-    void firstStreamBetweenTest(){
 
-        Boat boat=mock(Boat.class);
-        List<Courant> courants=List.of(
-            courant1,courant2
-        );
-        manager=new StreamManager(parser, boat);
+    @Test
+    void firstStreamBetweenTest() {
+
+        Boat boat = mock(Boat.class);
+        List<Courant> courants = List.of(courant1, courant2);
+        manager = new StreamManager(parser, boat);
         manager.setCourants(courants);
 
-        when( boat.x() ).thenReturn(700.0);
-        when( boat.y() ).thenReturn(-300.0);
-
-        
+        when(boat.x()).thenReturn(700.0);
+        when(boat.y()).thenReturn(-300.0);
 
         assertEquals(courant1, manager.firstStreamBetween(Position.create(700, 1500)));
 
         assertEquals(null, manager.firstStreamBetween(Position.create(1800, 300)));
 
-        when( boat.x() ).thenReturn(700.0);
-        when( boat.y() ).thenReturn(1300.0);
-        
+        when(boat.x()).thenReturn(700.0);
+        when(boat.y()).thenReturn(1300.0);
 
         assertEquals(courant2, manager.firstStreamBetween(Position.create(700, 600)));
 
     }
+
     @Test
-    void thereIsObstacleBetweenTest(){
-         
-        StreamManager streamManager=new StreamManager(parser, null);
-        streamManager.setObstacles(List.of(recifCarre,recifCercle,recifTriangle));
+    void thereIsObstacleBetweenTest() {
+
+        StreamManager streamManager = new StreamManager(parser, null);
+        streamManager.setObstacles(List.of(recifCarre, recifCercle, recifTriangle));
 
         assertTrue(streamManager.thereIsObstacleBetween(pointA, pointC));
-        //assertTrue(streamManager.thereIsObstacleBetween(pointA, pointE));
+        // assertTrue(streamManager.thereIsObstacleBetween(pointA, pointE));
         assertTrue(streamManager.thereIsObstacleBetween(pointA, pointD));
         assertFalse(streamManager.thereIsObstacleBetween(pointA, pointB));
 
-        
     }
 
     @Test
-    void pointIsInsideStreamTest(){
-        StreamManager streamManager=new StreamManager(parser, null);
-        streamManager.setObstacles(List.of(recifCarre,recifCercle,recifTriangle));
+    void pointIsInsideStreamTest() {
+        StreamManager streamManager = new StreamManager(parser, null);
+        streamManager.setObstacles(List.of(recifCarre, recifCercle, recifTriangle));
         streamManager.setCourants(List.of(courantCarre));
         assertFalse(streamManager.pointIsInsideStream(pointA));
         assertFalse(streamManager.pointIsInsideStream(pointB));
         assertFalse(streamManager.pointIsInsideStream(pointC));
         assertFalse(streamManager.pointIsInsideStream(pointE));
-        assertTrue(streamManager.pointIsInsideStream(new Position(500, 200) ));
-        assertTrue(streamManager.pointIsInsideStream(new Position(510, 190) ));
+        assertTrue(streamManager.pointIsInsideStream(new Position(500, 200)));
+        assertTrue(streamManager.pointIsInsideStream(new Position(510, 190)));
     }
 
     @Test
-    void streamAroundPointTest(){
-        StreamManager streamManager=new StreamManager(parser, null);
-        
-        streamManager.setCourants(List.of(courant3,courant4));
-        assertTrue(streamManager.streamAroundPoint(new Position(300, 300)).isEmpty() );
+    void streamAroundPointTest() {
+        StreamManager streamManager = new StreamManager(parser, null);
 
-        var optc3=streamManager.streamAroundPoint(new Position(500, 100));
-        assertTrue( optc3.isPresent());
+        streamManager.setCourants(List.of(courant3, courant4));
+        assertTrue(streamManager.streamAroundPoint(new Position(300, 300)).isEmpty());
+
+        var optc3 = streamManager.streamAroundPoint(new Position(500, 100));
+        assertTrue(optc3.isPresent());
         assertEquals(courant3, optc3.get(), "Le point est dans le courant 3");
 
-        var optc4=streamManager.streamAroundPoint(new Position(500, 300));
-        assertTrue( optc4.isPresent());
+        var optc4 = streamManager.streamAroundPoint(new Position(500, 300));
+        assertTrue(optc4.isPresent());
         assertEquals(courant4, optc4.get(), "Le point est dans le courant 4");
-        
+
     }
 
     @Test
-    void firstObstacleBetweenTest(){
-        StreamManager streamManager=new StreamManager(parser, null);
-        streamManager.setObstacles(List.of(recifCarre,recifCercle,recifTriangle));
+    void firstObstacleBetweenTest() {
+        StreamManager streamManager = new StreamManager(parser, null);
+        streamManager.setObstacles(List.of(recifCarre, recifCercle, recifTriangle));
 
         assertEquals(recifTriangle, streamManager.firstObstacleBetween(pointD, pointC));
         assertEquals(recifCarre, streamManager.firstObstacleBetween(pointC, pointD));
         assertEquals(recifCarre, streamManager.firstObstacleBetween(pointA, pointC));
 
-        
     }
 
     @Test
-    void trajectoryToAvoidObstaclesTest(){
-        StreamManager streamManager=new StreamManager(parser, null);
-        streamManager.setObstacles(List.of(recifCarre,recifCercle,recifTriangle));
+    void trajectoryToAvoidObstaclesTest() {
+        StreamManager streamManager = new StreamManager(parser, null);
+        streamManager.setObstacles(List.of(recifCarre, recifCercle, recifTriangle));
 
-       List<IPoint> trajectory= streamManager.trajectoryToAvoidObstacles(pointA, pointC);
+        List<IPoint> trajectory = streamManager.trajectoryToAvoidObstacles(pointA, pointC);
 
-       assertEquals(4, trajectory.size());
-       assertEquals(pointA,trajectory.get(0) ,"Le premier élément de la trajectoire doit etre le depart");
-       assertEquals(pointC,trajectory.get(trajectory.size()-1));
-       trajectory=streamManager.trajectoryToAvoidObstacles(pointA, pointB);
+        assertEquals(4, trajectory.size());
+        assertEquals(pointA, trajectory.get(0), "Le premier élément de la trajectoire doit etre le depart");
+        assertEquals(pointC, trajectory.get(trajectory.size() - 1));
+        trajectory = streamManager.trajectoryToAvoidObstacles(pointA, pointB);
 
-       assertEquals(2, trajectory.size());
-       assertEquals(pointA,trajectory.get(0) ,"Le premier élément de la trajectoire doit etre le depart");
-       assertEquals(pointB,trajectory.get(1));
+        assertEquals(2, trajectory.size());
+        assertEquals(pointA, trajectory.get(0), "Le premier élément de la trajectoire doit etre le depart");
+        assertEquals(pointB, trajectory.get(1));
 
-        //we set with streams to explore another branch of if/else
-       streamManager.setObstacles(List.of(courant3,courant4,recifTriangle));
+        // we set with streams to explore another branch of if/else
+        streamManager.setObstacles(List.of(courant3, courant4, recifTriangle));
 
-       trajectory=streamManager.trajectoryToAvoidObstacles(pointI, pointH);
+        trajectory = streamManager.trajectoryToAvoidObstacles(pointI, pointH);
 
-       assertEquals(4, trajectory.size());
+        assertEquals(4, trajectory.size());
 
-       trajectory=streamManager.trajectoryToAvoidObstacles(pointH, pointI);
-       assertEquals(2, trajectory.size());
-       
-       
-
-    }
-
-    @Test
-    void trajectoryLeaveStreamAndReachPointTest(){
-       StreamManager streamManager=new StreamManager(parser, null);
-        
-       streamManager.setCourants(List.of(courant3,courant4));
-
-       var trajectory= streamManager.trajectoryLeaveStreamAndReachPoint(new Position(600, 600), pointH);
-
-       
-       assertEquals(3, trajectory.size());
-
-       assertFalse( streamManager.pointIsInsideStream(trajectory.get(1)) );
-
-       trajectory= streamManager.trajectoryLeaveStreamAndReachPoint(new Position(600, 600), pointI);
-
-       assertEquals(2, trajectory.size());
-    }
-
-    @Test
-    void trajectoryBoatAndCheckpointInsideStreamTest(){
-        StreamManager streamManager=new StreamManager(parser, null);
-        
-        streamManager.setCourants(List.of(courant3,courant4));
-
-        var trajectory=streamManager.trajectoryBoatAndCheckpointInsideStream(new Position(400,400), new Position(600,600));
-
-        assertEquals(2,trajectory.size());
+        trajectory = streamManager.trajectoryToAvoidObstacles(pointH, pointI);
+        assertEquals(2, trajectory.size());
 
     }
 
     @Test
-    public void speedProvidedLimitsTest(){
+    void trajectoryLeaveStreamAndReachPointTest() {
+        StreamManager streamManager = new StreamManager(parser, null);
 
-        StreamManager streamManager=new StreamManager(parser, null);
-        
-        streamManager.setCourants(List.of(courant3,courant4));
+        streamManager.setCourants(List.of(courant3, courant4));
 
-        assertEquals(0.0, streamManager.speedProvidedLimits(new Point2D(300,200),new Point2D(350, 200)), 1e-3);
+        var trajectory = streamManager.trajectoryLeaveStreamAndReachPoint(new Position(600, 600), pointH);
 
-        assertTrue(streamManager.speedProvidedLimits(new Point2D(300,200),new Point2D(350, 100)) > 1e-3);
+        assertEquals(3, trajectory.size());
+
+        assertFalse(streamManager.pointIsInsideStream(trajectory.get(1)));
+
+        trajectory = streamManager.trajectoryLeaveStreamAndReachPoint(new Position(600, 600), pointI);
+
+        assertEquals(2, trajectory.size());
+    }
+
+    @Test
+    void trajectoryBoatAndCheckpointInsideStreamTest() {
+        StreamManager streamManager = new StreamManager(parser, null);
+
+        streamManager.setCourants(List.of(courant3, courant4));
+
+        var trajectory = streamManager.trajectoryBoatAndCheckpointInsideStream(new Position(400, 400),
+                new Position(600, 600));
+
+        assertEquals(2, trajectory.size());
+
+    }
+
+    @Test
+    public void speedProvidedLimitsTest() {
+
+        StreamManager streamManager = new StreamManager(parser, null);
+
+        streamManager.setCourants(List.of(courant3, courant4));
+
+        assertEquals(0.0, streamManager.speedProvidedLimits(new Point2D(300, 200), new Point2D(350, 200)), 1e-3);
+
+        assertTrue(streamManager.speedProvidedLimits(new Point2D(300, 200), new Point2D(350, 100)) > 1e-3);
+
+    }
+
+    @Test
+    public void speedProvidedTest() {
+        StreamManager streamManager = new StreamManager(parser, null);
+
+        streamManager.setCourants(List.of(courant3, courant4));
+        // segment completement dans le courant4
+        assertEquals(courant4.getStrength(),
+                streamManager.speedProvided(new Position(400, 400), new Position(600, 600)), 1e-3);
+
+        // segment perpendiculiare au courant4
+        assertEquals(0.0, streamManager.speedProvided(new Position(600, 400), new Position(400, 600)), 1e-3);
+
+        assertEquals(courant4.getStrength() * Math.cos(courant4.getPosition().getOrientation()),
+                streamManager.speedProvided(new Position(500, 500), new Position(500, 600)), 1e-3);
+
+        assertEquals(courant4.getStrength(),
+                streamManager.speedProvided(new Position(500, 500), new Position(700, 700)), 1e-3);
+
+        assertEquals(-courant4.getStrength(),
+                streamManager.speedProvided(new Position(700, 700), new Position(500, 500)), 1e-3);
+
+        assertEquals(courant4.getStrength() * Math.cos(courant4.getPosition().getOrientation()),
+                streamManager.speedProvided(new Position(500, 700), new Position(499.64, 782.16)), 1.0);
+
+        assertEquals(0.0, streamManager.speedProvided(new Position(300, 200), new Position(400, 200)), 1e-3);
+
+        // le segment se trouve à l'extérieur avec un bord sur le courant3
+        assertEquals(0.0, streamManager.speedProvided(new Position(100, 100), new Position(200, 100)), 1e-3);
+
+        // le segment se trouve à l'intérieur du courant3
+        assertEquals(courant3.getStrength(),
+                streamManager.speedProvided(new Position(300, 199), new Position(400, 199)), 1e-3);
+
+        assertEquals(courant3.getStrength() * Math.cos(Math.PI/4),
+                streamManager.speedProvided(new Position(700, 100), new Position(800, 200)), 1);
 
     }
 }

@@ -13,7 +13,6 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Equipment;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Gouvernail;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Oar;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Sail;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Vigie;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.processing.InputParser;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.processing.Logger;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.IntPosition;
@@ -25,7 +24,7 @@ public class EquipmentsManager implements PropertyChangeListener {
     private List<Oar> oars;
     private List<Sail> sails;
     private Gouvernail rudder = null;
-    private Vigie watch = null;
+    
     private List<Equipment> equipments;
     private InputParser parser;
 
