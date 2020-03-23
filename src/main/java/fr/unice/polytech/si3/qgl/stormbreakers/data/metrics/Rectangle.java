@@ -19,14 +19,13 @@ public class Rectangle extends Shape {
     private double orientation;
     Polygon rectanglePolygon;
 
-    public Rectangle(double width, double height,
-                     double orientation, Position anchor) {
+    public Rectangle(double width, double height, double orientation, Position anchor) {
         super("rectangle", anchor);
         this.width = width;
         this.height = height;
         this.orientation = orientation;
         this.rectanglePolygon = buildAsPolygon();
-        
+
     }
 
     @Override
@@ -37,15 +36,15 @@ public class Rectangle extends Shape {
 
     private Polygon buildAsPolygon() {
         // LATER: 16/03/2020 Quick test
-        double halfLength = height/2;
-        double halfWidth = width/2;
+        double halfLength = height / 2;
+        double halfWidth = width / 2;
 
         List<Point2D> rectangleVertices = new ArrayList<>();
-        rectangleVertices.add(new Point2D(halfLength,halfWidth));
-        rectangleVertices.add(new Point2D(-halfLength,halfWidth));
-        rectangleVertices.add(new Point2D(-halfLength,-halfWidth));
-        rectangleVertices.add(new Point2D(halfLength,-halfWidth));
-        return new Polygon(this.orientation,rectangleVertices, this.anchor);
+        rectangleVertices.add(new Point2D(halfLength, halfWidth));
+        rectangleVertices.add(new Point2D(-halfLength, halfWidth));
+        rectangleVertices.add(new Point2D(-halfLength, -halfWidth));
+        rectangleVertices.add(new Point2D(halfLength, -halfWidth));
+        return new Polygon(this.orientation, rectangleVertices, this.anchor);
     }
 
     @JsonCreator
@@ -87,16 +86,14 @@ public class Rectangle extends Shape {
         double totalOrientation = orientation + getAnchorOrientation();
 
         // Point relatif au centre de Rectangle 0
-        point2D = new Point2D(pt.x()-anchor.x(),pt.y()-anchor.y());
+        point2D = new Point2D(pt.x() - anchor.x(), pt.y() - anchor.y());
 
         if (totalOrientation != 0) {
             // Orientation du rectangle compensée
-            point2D = point2D.getRotatedAround(origin,-totalOrientation);
+            point2D = point2D.getRotatedAround(origin, -totalOrientation);
         }
         return isPtInRectangle0(point2D);
 
-
-        
     }
 
     // =========
@@ -120,7 +117,6 @@ public class Rectangle extends Shape {
 
     @Override
     public boolean collidesWith(LineSegment2D lineSegment2D) {
-       
 
         // LATER: 12/03/2020 Figure out why polygon collision doesn't work in tests
         return new RectanglePositioned(this, this.getAnchor()).intersectsWith(lineSegment2D);
@@ -230,18 +226,26 @@ public class Rectangle extends Shape {
 
     @Override
     public boolean isInsideOpenShape(IPoint pt) {
-        Point2D point2D = new Point2D(pt);
+
+        Point2D point2D;
         // On ramene le plan pour que les cotes du rectangle soient sur les axes du
         // repere
-        if (orientation != 0) {
-            point2D = point2D.getRotatedBy(-orientation);
+        double totalOrientation = this.orientation + getAnchorOrientation();
+
+        // Point relatif au centre de Rectangle 0
+        point2D = new Point2D(pt.x() - anchor.x(), pt.y() - anchor.y());
+
+        if (totalOrientation != 0) {
+            // Orientation du rectangle compensée
+            point2D = point2D.getRotatedAround(origin, -totalOrientation);
         }
+
         return isPtInRectangleOpen(point2D);
     }
 
     @Override
     public IPoint intersectionPoint(IPoint depart, IPoint arrive) {
-        
+
         return this.rectanglePolygon.intersectionPoint(depart, arrive);
     }
 

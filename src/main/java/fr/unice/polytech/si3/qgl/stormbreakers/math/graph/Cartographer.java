@@ -40,6 +40,10 @@ public class Cartographer {
             ecart = 300.0;
         } else if (width >= 2000 || height >= 2000) {
             ecart = 200;
+        } else if (width >= 1500 || height >= 1500) {
+            ecart = 150;
+        } else if (width >= 1200 || height >= 1200) {
+            ecart = 80;
         }
 
         IPoint center = IPoint.centerPoints(boat, cp);

@@ -8,6 +8,7 @@ import java.util.Objects;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.IPoint;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.Utils;
 
 public class Sommet {
 	private IPoint point;
@@ -41,7 +42,8 @@ public class Sommet {
 		}
 
 		Sommet s = (Sommet) other;
-		return this.getPoint().equals(s.getPoint());
+
+		return Utils.almostEquals(s.getPoint(), this.getPoint());
 
 	}
 

@@ -53,6 +53,12 @@ public class TargetDefiner {
     }
 
     public TupleDistanceOrientation defineNextTarget() {
+        IPoint cp = checkpointsManager.nextCheckpoint();
+        if (this.streamManager.thereIsObstacleBetween(cp)) {
+            return new TupleDistanceOrientation(cp.distanceTo(boat),
+                    this.navigator.additionalOrientationNeeded(boat.getPosition(), cp));
+
+        }
         IPoint target = cartographer.nextPoint();
         Logger.getInstance().log(target.toString());
         boolean insideStream = streamManager.insideOpenStream();
@@ -80,7 +86,7 @@ public class TargetDefiner {
         }
 
         return new TupleDistanceOrientation(target.distanceTo(boat),
-                        this.navigator.additionalOrientationNeeded(boat.getPosition(), target));
+                this.navigator.additionalOrientationNeeded(boat.getPosition(), target));
     }
 
 }

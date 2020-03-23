@@ -183,6 +183,7 @@ public class TargetDefinerTest {
     reponse = targetDefiner.defineNextTarget();
 
     assertNotNull(reponse);
+    
   }
 
 }

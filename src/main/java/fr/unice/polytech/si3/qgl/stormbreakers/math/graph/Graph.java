@@ -82,9 +82,10 @@ public class Graph {
 
         for (Sommet node : nodes) {
 
-            nodes.stream().filter(n -> n != node).forEach(n -> {
+            nodes.stream().filter(n -> !n.equals(node)).forEach(n -> {
                 double distance = n.getPoint().distanceTo(node.getPoint());
-                if (distance <= ecart * Math.sqrt(2)) {
+                
+                if (distance <= ecart * Math.sqrt(2) && !this.streamManager.thereIsRecifsBetween(n.getPoint(), node.getPoint())) {
                     double cout = distance - streamManager.speedProvided(node.getPoint(), n.getPoint())
                             - this.weatherAnalyst.speedProvided(node.getPoint(), n.getPoint());
                     if (cout < 0) {
@@ -139,7 +140,7 @@ public class Graph {
             return optResult.get();
         }
         Logger.getInstance().log(unsettledNodes.toString());
-        Logger.getInstance().log("returning null");
+        Logger.getInstance().log("returning null :) fichu");
         return null;
     }
 
