@@ -32,29 +32,36 @@ public class Cartographer {
     }
 
     IPoint caseBuildMap(Checkpoint cp) {
-        double height = Math.abs((boat.x() - cp.x())) + 200;
-        double width = Math.abs((boat.y() - cp.y())) + 200;
+        double ecart = ECART;
+        double height = Math.abs((boat.x() - cp.x())) + 400;
+        double width = Math.abs((boat.y() - cp.y())) + 400;
+
+        if (width >= 3000 || height >= 3000) {
+            ecart = 300.0;
+        } else if (width >= 2000 || height >= 2000) {
+            ecart = 200;
+        }
 
         IPoint center = IPoint.centerPoints(boat, cp);
 
         this.virtualMap = new RectangularSurface(center.x(), center.y(), 0.0, new Rectangle(width, height, 0.0));
 
-        graph.createSquaring(virtualMap.minX(), virtualMap.minY(), virtualMap.maxX(), virtualMap.maxY(), ECART);
+        graph.createSquaring(virtualMap.minX(), virtualMap.minY(), virtualMap.maxX(), virtualMap.maxY(), ecart);
 
         var depart = new Sommet(boat);
         depart = graph.addNode(depart);
 
         var destination = new Sommet(cp);
         destination = graph.addNode(destination);
-        graph.createLinkBetweenVertices(ECART);
+        graph.createLinkBetweenVertices(ecart);
 
         // en principe inutile
         graph.clearShortestPaths();
 
-        graph.calculateShortestPathFromSource(depart);
+        graph.calculateShortestPathFromSource(depart, destination);
 
         List<Sommet> path = graph.reducePath(destination);
-        
+
         if (path.size() > 1) {
             return path.get(1).getPoint();
         } else {

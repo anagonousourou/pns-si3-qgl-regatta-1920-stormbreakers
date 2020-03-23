@@ -70,7 +70,7 @@ public class GraphTest {
         graph.createSquaring(0.0, 0.0, 600, 600, 200);
 
         assertEquals(12, graph.nbOfNodes(), "Doit y avoir 12");
-        
+
     }
 
     @Test
@@ -127,11 +127,11 @@ public class GraphTest {
         graph.setNodes(Set.of(s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12));
         graph.createLinkBetweenVertices(200);
 
-        graph.calculateShortestPathFromSource(s12);
+        graph.calculateShortestPathFromSource(s12, s1);
 
         assertEquals(5, s1.getShortestPath().size());
 
-        assertEquals(2, s10.getShortestPath().size());
+        // assertEquals(2, s10.getShortestPath().size());
     }
 
     @Test
@@ -150,21 +150,20 @@ public class GraphTest {
         s11 = new Sommet(400, 600);
         s12 = new Sommet(600, 600);
         Sommet sommet = mock(Sommet.class);
-        streamManager=mock(StreamManager.class);
+        streamManager = mock(StreamManager.class);
         when(sommet.getShortestPath()).thenReturn(List.of(s1, s5, s7, s9, s10, s11));
 
         graph = new Graph(streamManager, null);
         var result = graph.reducePath(sommet);
 
         assertEquals(2, result.size(), "Chemin reduit à deux");
-        
+
         assertTrue(result.containsAll(List.of(s1, sommet)));
 
-        
-
     }
+
     @Test
-    public void hasAsVertexTest(){
+    public void hasAsVertexTest() {
         s1 = new Sommet(0, 0);
         s2 = new Sommet(200, 0);
         s3 = new Sommet(400, 0);
@@ -176,19 +175,18 @@ public class GraphTest {
         s9 = new Sommet(0, 600);
         s10 = new Sommet(200, 600);
         s11 = new Sommet(400, 600);
-        s12 = new Sommet(600, 600); 
+        s12 = new Sommet(600, 600);
 
         graph = new Graph(null, null);
         graph.setNodes(Set.of(s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12));
-        
 
-        assertTrue(graph.hasAsVertex(new Point2D(0,0)));
-        assertFalse(graph.hasAsVertex(new Point2D(100,0)));
-        assertFalse(graph.hasAsVertex(new Point2D(199,599)));
+        assertTrue(graph.hasAsVertex(new Point2D(0, 0)));
+        assertFalse(graph.hasAsVertex(new Point2D(100, 0)));
+        assertFalse(graph.hasAsVertex(new Point2D(199, 599)));
     }
 
     @Test
-    public void findVertexForTest(){
+    public void findVertexForTest() {
         s1 = new Sommet(0, 0);
         s2 = new Sommet(200, 0);
         s3 = new Sommet(400, 0);
@@ -200,20 +198,20 @@ public class GraphTest {
         s9 = new Sommet(0, 600);
         s10 = new Sommet(200, 600);
         s11 = new Sommet(400, 600);
-        s12 = new Sommet(600, 600); 
+        s12 = new Sommet(600, 600);
 
         graph = new Graph(null, null);
         graph.setNodes(Set.of(s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12));
-        
-        assertEquals(s12, graph.findVertexFor(new Point2D(600,600)));
-        assertEquals(null, graph.findVertexFor(new Point2D(600,500)));
-        assertEquals(null, graph.findVertexFor(new Point2D(599.9999,599.9999)));
+
+        assertEquals(s12, graph.findVertexFor(new Point2D(600, 600)));
+        assertEquals(null, graph.findVertexFor(new Point2D(600, 500)));
+        assertEquals(null, graph.findVertexFor(new Point2D(599.9999, 599.9999)));
 
     }
 
     @Test
-    public void addNodeAndLinkTest(){
-        //we setUp a graph and we link its vertices
+    public void addNodeAndLinkTest() {
+        // we setUp a graph and we link its vertices
         s1 = new Sommet(0, 0);
         s2 = new Sommet(200, 0);
         s3 = new Sommet(400, 0);
@@ -237,27 +235,26 @@ public class GraphTest {
         graph.setNodes(Set.of(s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12, s13));
         graph.createLinkBetweenVertices(200);
 
+        // we add a new Vertex
+        var vertex1 = new Sommet(300, 300);
+        graph.addNodeAndLink(vertex1, 200);
 
-        //we add a new Vertex
-        var vertex1=new Sommet(300,300);
-        graph.addNodeAndLink(vertex1,200);
-        
         assertEquals(1, vertex1.getAdjacentNodes().size(), "Un seul voisin");
 
         assertEquals(6, s13.getAdjacentNodes().size(), "Un  voisin s'ajoute");
 
-        //we add a new Vertex again
-        var vertex2=new Sommet(900, 800);
+        // we add a new Vertex again
+        var vertex2 = new Sommet(900, 800);
 
-        graph.addNodeAndLink(vertex1,200);
-        
+        graph.addNodeAndLink(vertex1, 200);
+
         assertEquals(0, vertex2.getAdjacentNodes().size(), "Pas de voisin");
 
         assertEquals(2, s12.getAdjacentNodes().size());
     }
 
     @Test
-    public void clearShortestPathsTest(){
+    public void clearShortestPathsTest() {
         s1 = new Sommet(0, 0);
         s2 = new Sommet(200, 0);
         s3 = new Sommet(400, 0);
@@ -281,17 +278,17 @@ public class GraphTest {
         graph.setNodes(Set.of(s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12));
         graph.createLinkBetweenVertices(200);
 
-        graph.calculateShortestPathFromSource(s12);
+        graph.calculateShortestPathFromSource(s12, s1);
 
         assertEquals(5, s1.getShortestPath().size());
 
-        assertEquals(2, s10.getShortestPath().size());
+        // assertEquals(2, s10.getShortestPath().size());
 
         graph.clearShortestPaths();
 
         assertTrue(s1.getShortestPath().isEmpty());
 
         assertTrue(s10.getShortestPath().isEmpty());
-    } 
+    }
 
 }

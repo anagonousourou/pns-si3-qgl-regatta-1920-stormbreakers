@@ -1,8 +1,8 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.math;
 
-import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.IPoint;
-
 import java.util.Objects;
+
+import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.IPoint;
 
 public class Vector {
 

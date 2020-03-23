@@ -1,8 +1,8 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.math;
 
-import fr.unice.polytech.si3.qgl.stormbreakers.exceptions.DegeneratedLine2DException;
-
 import java.util.Optional;
+
+import fr.unice.polytech.si3.qgl.stormbreakers.exceptions.DegeneratedLine2DException;
 
 public class Line2D {
 

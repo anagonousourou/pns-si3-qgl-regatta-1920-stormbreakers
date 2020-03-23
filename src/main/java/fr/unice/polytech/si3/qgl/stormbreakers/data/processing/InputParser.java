@@ -27,7 +27,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.OceanEntity;
  */
 
 public class InputParser {
-	ObjectMapper mapper = new ObjectMapper();
+	private ObjectMapper mapper = new ObjectMapper();
 	private static final String SHAPE_KEY = "shape";
 	private static final String ID_KEY = "id";
 	private static final String SHIP_KEY = "ship";

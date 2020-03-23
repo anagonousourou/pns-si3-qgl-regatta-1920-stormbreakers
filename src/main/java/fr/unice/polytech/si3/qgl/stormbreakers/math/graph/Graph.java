@@ -73,7 +73,7 @@ public class Graph {
             }
             i++;
         }
-        
+        System.out.println(result);
         Logger.getInstance().log(result.toString());
         return result;
     }
@@ -103,17 +103,18 @@ public class Graph {
     }
 
     // NEW
-    public void calculateShortestPathFromSource(Sommet destination) {
-        destination.setDistance(0);
+    public void calculateShortestPathFromSource(Sommet depart, Sommet destination) {
+        Sommet currentNode = null;
+        depart.setDistance(0);
 
         Set<Sommet> settledNodes = new HashSet<>();
         Set<Sommet> unsettledNodes = new HashSet<>();
 
-        unsettledNodes.add(destination);
+        unsettledNodes.add(depart);
 
         while (!unsettledNodes.isEmpty()) {
 
-            Sommet currentNode = getLowestDistanceNode(unsettledNodes);
+            currentNode = getLowestDistanceNode(unsettledNodes);
             unsettledNodes.remove(currentNode);
             for (Entry<Sommet, Integer> adjacencyPair : currentNode.getAdjacentNodes().entrySet()) {
                 Sommet adjacentNode = adjacencyPair.getKey();
@@ -124,6 +125,9 @@ public class Graph {
                 }
             }
             settledNodes.add(currentNode);
+            if (currentNode == destination) {
+                break;
+            }
         }
 
     }
@@ -134,6 +138,8 @@ public class Graph {
         if (optResult.isPresent()) {
             return optResult.get();
         }
+        Logger.getInstance().log(unsettledNodes.toString());
+        Logger.getInstance().log("returning null");
         return null;
     }
 

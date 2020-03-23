@@ -4,19 +4,8 @@
         "checkpoints": [
             {
                 "position": {
-                    "x": 300.0,
-                    "y": 1800.0,
-                    "orientation": 0.0
-                },
-                "shape": {
-                    "type": "circle",
-                    "radius": 150.0
-                }
-            },
-            {
-                "position": {
-                    "x": 1900.0,
-                    "y": 3800.0,
+                    "x": 3600.0,
+                    "y": 5160.0,
                     "orientation": 0.0
                 },
                 "shape": {
@@ -37,8 +26,8 @@
             },
             {
                 "position": {
-                    "x": 3600.0,
-                    "y": 5160.0,
+                    "x": 1900.0,
+                    "y": 3800.0,
                     "orientation": 0.0
                 },
                 "shape": {
