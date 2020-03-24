@@ -126,4 +126,26 @@ public class Vector {
     public String toString() {
         return String.format("%s(x: %f,y: %f)", this.getClass().getSimpleName(),this.dx,this.dy);
     }
+
+    /**
+     * Extends a vector by a given length
+     * @param margin lenght to extend by
+     * @return extended vector
+     */
+    public Vector extendBy(double margin) {
+        if (Utils.almostEquals(0.0,this.norm())) throw new UnsupportedOperationException("Cannot extend a vector of norm 0");
+        double currentMag = norm();
+        return this.setScaleTo(currentMag+margin);
+    }
+
+    /**
+     * Changes the vectors scale
+     * if the new scale is negative, the vector direction will be flipped
+     * @param newScale new scale to give to the vector
+     * @return the rescaled vector
+     */
+    public Vector setScaleTo(double newScale) {
+        if (Utils.almostEquals(0.0,this.norm())) throw new UnsupportedOperationException("Cannot set scale for a vector of norm 0");
+        return this.normalize().scaleVector(newScale);
+    }
 }

@@ -366,4 +366,9 @@ public class Circle extends Shape {
         return this.findOneIntersection(lineSegment2D);
     }
 
+    @Override
+    public Shape wrappingShape(double margin) {
+        return new Circle(radius+margin,anchor);
+    }
+
 }

@@ -94,10 +94,8 @@ public class Polygon extends Shape implements Orientable {
             return generateBordersInThePlan(actualPos);
         } else {
             // Polygon is drawn with total orientation
-            List<Point2D> sommets = this.vertices.stream()
-                    .map(vertex -> vertex.getRotatedBy(totalOrientation).getTranslatedBy(new Vector(origin, actualPos)))
-                    .collect(Collectors.toList());
-            return generateBorders(sommets);
+            List<Point2D> vertices = getActualVertices(actualPos);
+            return generateBorders(vertices);
         }
     }
 
@@ -276,6 +274,29 @@ public class Polygon extends Shape implements Orientable {
         }
         Logger.getInstance().log("returning null");
         return null;
+    }
+
+    // NEW
+
+    public List<Point2D> getActualVertices(Position actualPos) {
+        List<Point2D> actualVertices = this.vertices.stream()
+                .map(vertex -> vertex
+                        .getRotatedBy(orientation + actualPos.getOrientation())
+                        .getTranslatedBy(new Vector(origin, actualPos))
+                )
+                .collect(Collectors.toList());
+        return actualVertices;
+    }
+
+    @Override
+    public Shape wrappingShape(double margin) {
+        // TODO: 24/03/2020 TESTS - DAVID
+        // Center is anchor for now
+        Point2D center = anchor.getPoint2D();
+        List<Point2D> newVertices = this.vertices.stream()
+                .map(v -> v.getTranslatedBy(new Vector(center,v).extendBy(margin)))
+                .collect(Collectors.toList());
+        return new Polygon(orientation,newVertices,anchor);
     }
 
 }

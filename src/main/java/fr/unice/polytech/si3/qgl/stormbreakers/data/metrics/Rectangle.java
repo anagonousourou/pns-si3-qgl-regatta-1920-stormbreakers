@@ -249,4 +249,9 @@ public class Rectangle extends Shape {
         return this.rectanglePolygon.intersectionPoint(depart, arrive);
     }
 
+    @Override
+    public Shape wrappingShape(double margin) {
+        return rectanglePolygon.wrappingShape(margin);
+    }
+
 }
