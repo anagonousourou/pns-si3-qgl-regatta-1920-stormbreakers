@@ -54,7 +54,7 @@ public class TargetDefiner {
 
     public TupleDistanceOrientation defineNextTarget() {
         IPoint cp = checkpointsManager.nextCheckpoint();
-        if (this.streamManager.thereIsObstacleBetween(cp)) {
+        if (!this.streamManager.thereIsObstacleBetween(cp) && !this.streamManager.insideOpenStream() ) {
             return new TupleDistanceOrientation(cp.distanceTo(boat),
                     this.navigator.additionalOrientationNeeded(boat.getPosition(), cp));
 
