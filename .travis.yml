@@ -1,11 +1,11 @@
 language: java
 jdk: oraclejdk11
 jobs:
+  - stage: "Build"
+    script: "mvn clean package test"
   - stage: "Tests"
-    script: "mvn clean test"
-branches:
-  except:
-    - \*\feature\*
+    name: "PIT Test"
+    script: "mvn clean package -Pcoverage"
 after_success:
   - wget https://raw.githubusercontent.com/DiscordHooks/travis-ci-discord-webhook/master/send.sh
   - chmod +x send.sh
