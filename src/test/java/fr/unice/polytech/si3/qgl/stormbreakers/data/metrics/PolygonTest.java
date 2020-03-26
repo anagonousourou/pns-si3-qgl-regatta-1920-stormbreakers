@@ -6,17 +6,15 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import fr.unice.polytech.si3.qgl.stormbreakers.math.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import fr.unice.polytech.si3.qgl.stormbreakers.math.LineSegment2D;
-import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
-import fr.unice.polytech.si3.qgl.stormbreakers.math.Utils;
 
 class PolygonTest {
 
@@ -205,4 +203,58 @@ class PolygonTest {
         assertFalse(rectangle.collidesWith(new Circle(5, new Position(0,10.2,0))));
     }
 
+
+
+    @Test
+    void wrappingShapeTest() {
+        List<Point2D> vertices = new ArrayList<>();
+        vertices.add( new Point2D(0,3) );
+        vertices.add( new Point2D(2,1) );
+        vertices.add( new Point2D(1,-2) );
+        vertices.add( new Point2D(-3,0) );
+        vertices.add( new Point2D(-2,2) );
+
+        Polygon original = new Polygon(0,vertices,new Position(0,0));
+        double margin = 5;
+        Polygon expanded = (Polygon) original.wrappingShape(margin);
+
+        assertEquals(original.getVertices().size(),expanded.getVertices().size());
+
+        List<Point2D> expandedVertices = expanded.getVertices();
+        List<LineSegment2D> originalHull = original.getHull();
+        for (int i=0; i<originalHull.size(); i++) {
+            Point2D vertex = expandedVertices.get(i);
+            LineSegment2D border = originalHull.get(i);
+            assertEquals(margin,(border.getSupportingLine()).distance(vertex),Utils.EPSILON);
+        }
+    }
+
+    @Test
+    void wrappingShapeTestExpandedOutwards() {
+        List<Point2D> vertices = new ArrayList<>();
+        vertices.add( new Point2D(5,5) );
+        vertices.add( new Point2D(-5,5) );
+        vertices.add( new Point2D(-5,-5) );
+        vertices.add( new Point2D(5,-5) );
+
+        Polygon original = new Polygon(0,vertices,new Position(0,0));
+        double margin = 4;
+        Polygon expanded = (Polygon) original.wrappingShape(margin);
+
+        LineSegment2D lineOutsideOriginal = new LineSegment2D(new Point2D(-10,6), new Point2D(10,6));
+        LineSegment2D lineOutsideExpandedInwards = new LineSegment2D(new Point2D(-10,0.5), new Point2D(10,0.5));
+        LineSegment2D lineOutsideExpandedOutwards = new LineSegment2D(new Point2D(-10,14.5), new Point2D(10,14.5));
+
+        //Original shape
+        assertTrue(original.collidesWith(lineOutsideExpandedInwards));
+        assertFalse(original.collidesWith(lineOutsideOriginal));
+        assertFalse(original.collidesWith(lineOutsideExpandedOutwards));
+
+        //Expanded shape
+        assertTrue(expanded.collidesWith(lineOutsideExpandedInwards));
+        assertTrue(expanded.collidesWith(lineOutsideOriginal));
+        assertFalse(expanded.collidesWith(lineOutsideExpandedOutwards));
+
+
+    }
 }

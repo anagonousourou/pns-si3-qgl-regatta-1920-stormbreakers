@@ -127,6 +127,7 @@ public class Vector {
         return String.format("%s(x: %f,y: %f)", this.getClass().getSimpleName(),this.dx,this.dy);
     }
 
+
     /**
      * Extends a vector by a given length
      * @param margin lenght to extend by
@@ -138,6 +139,7 @@ public class Vector {
         return this.setScaleTo(currentMag+margin);
     }
 
+
     /**
      * Changes the vectors scale
      * if the new scale is negative, the vector direction will be flipped
@@ -147,5 +149,19 @@ public class Vector {
     public Vector setScaleTo(double newScale) {
         if (Utils.almostEquals(0.0,this.norm())) throw new UnsupportedOperationException("Cannot set scale for a vector of norm 0");
         return this.normalize().scaleVector(newScale);
+    }
+
+    /**
+     * Rotates the vector by 90° in the Clockwise direction
+     */
+    public Vector rotateBy90CW() {
+        return new Vector(dy,-dx);
+    }
+
+    /**
+     * Rotates the vector by 90° in the Counter Clockwise direction
+     */
+    public Vector rotateBy90CCW() {
+        return new Vector(-dy,dx);
     }
 }
