@@ -26,8 +26,7 @@ public abstract class OceanEntity implements Surface {
       @JsonProperty("shape") Shape shape) {
     this.type = type;
     this.position = position;
-    this.shape = shape;
-    
+    this.shape = shape;  
     shape.setAnchor(position);
   }
 

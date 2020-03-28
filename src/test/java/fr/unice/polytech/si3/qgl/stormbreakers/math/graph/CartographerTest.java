@@ -48,12 +48,11 @@ public class CartographerTest {
     @Test
     public void nextPointTest() {
 
-        boat = new Boat(new Position(300, 500), 5, 5, 5, null);
+        boat = new Boat(new Position(-5000, -5000), 5, 5, 5, null);
         streamManager = new StreamManager(null, boat);
         streamManager.setRecifs(List.of(reefRectangle1, reefRectangle2, reefTriangle));
         streamManager.setObstacles(List.of(reefRectangle1, reefRectangle2, reefTriangle));
         weatherAnalyst = new WeatherAnalyst(null, boat, null);
-
         checkpointsManager = mock(CheckpointsManager.class);
 
         checkpoint1 = new Checkpoint(new Position(1000, 700), new Circle(50));
@@ -61,10 +60,12 @@ public class CartographerTest {
 
         graph = new Graph(streamManager, weatherAnalyst);
 
+        for(int i=0;i<=500;i++) {
         cartographer = new Cartographer(checkpointsManager, graph, boat);
         assertFalse(cartographer.virtualMapExists());
         cartographer.nextPoint();
-
+        graph.clearShortestPaths();
+        }
         assertTrue(cartographer.virtualMapExists());
         assertNotNull(cartographer.nextPoint());
     }

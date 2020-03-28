@@ -22,7 +22,7 @@ public class Courant extends OceanEntity {
 
     public Courant(@JsonProperty("position") Position position, @JsonProperty("shape") Shape shape,
             @JsonProperty("strength") double strength) {
-        super("stream", position, shape);
+        super(OceanEntityType.COURANT.EntityCode, position, shape);
         this.strength = strength;
     }
 
@@ -32,7 +32,7 @@ public class Courant extends OceanEntity {
 
     @Override
     public String toString() {
-        return String.format("%s(strength= %f, position= %s, shape= %s)", this.getClass().getSimpleName(), strength,
+        return String.format("%s(strength= %f, position= %s, shape= %s)", OceanEntityType.COURANT.shortCode, strength,
                 position.toString(), shape.toString());
     }
 

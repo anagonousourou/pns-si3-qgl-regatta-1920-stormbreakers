@@ -12,7 +12,7 @@ public class Recif extends OceanEntity {
     public Recif(
             @JsonProperty("position") Position position,
             @JsonProperty("shape") Shape shape) {
-        super("reef",position, shape);
+        super(OceanEntityType.RECIF.EntityCode,position, shape);
     }
 
     

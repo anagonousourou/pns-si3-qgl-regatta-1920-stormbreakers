@@ -113,7 +113,7 @@ public class Graph {
 
         unsettledNodes.add(depart);
 
-        while (!unsettledNodes.isEmpty()) {
+        while (!unsettledNodes.isEmpty() && !settledNodes.contains(destination)) {
 
             currentNode = getLowestDistanceNode(unsettledNodes);
             unsettledNodes.remove(currentNode);
@@ -126,9 +126,6 @@ public class Graph {
                 }
             }
             settledNodes.add(currentNode);
-            if (currentNode == destination) {
-                break;
-            }
         }
 
     }

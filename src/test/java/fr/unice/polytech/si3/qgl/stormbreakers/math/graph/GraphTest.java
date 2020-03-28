@@ -128,7 +128,7 @@ public class GraphTest {
         graph.createLinkBetweenVertices(200);
 
         graph.calculateShortestPathFromSource(s12, s1);
-
+        
         assertEquals(5, s1.getShortestPath().size());
 
         // assertEquals(2, s10.getShortestPath().size());

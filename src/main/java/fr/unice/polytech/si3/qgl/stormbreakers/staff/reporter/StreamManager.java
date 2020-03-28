@@ -13,6 +13,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.IPoint;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Boat;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Courant;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.OceanEntity;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.OceanEntityType;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Recif;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.processing.InputParser;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.processing.Logger;
@@ -242,7 +243,7 @@ public class StreamManager implements PropertyChangeListener {
     public List<IPoint> trajectoryToAvoidObstacles(IPoint depart, IPoint destination) {
         if (this.thereIsObstacleBetween(depart, destination)) {
             OceanEntity obstacleEntity = this.firstObstacleBetween(depart, destination);
-            if (obstacleEntity.getType().equals("stream")) {
+            if (obstacleEntity.getType().equals(OceanEntityType.COURANT.EntityCode)) {
                 Courant courant = (Courant) obstacleEntity;
                 if (!courant.isCompatibleWith(depart, destination)) {
                     return courant.avoidHit(depart, destination);
@@ -366,9 +367,9 @@ public class StreamManager implements PropertyChangeListener {
         try {
             var entities = parser.fetchOceanEntities(s);
             this.obstacles = entities;
-            this.courants = entities.stream().filter(e -> e.getType().equals("stream")).map(e -> (Courant) e)
+            this.courants = entities.stream().filter(e -> e.getType().equals(OceanEntityType.COURANT)).map(e -> (Courant) e)
                     .collect(Collectors.toList());
-            this.recifs = entities.stream().filter(e -> e.getType().equals("reef")).map(e -> (Recif) e)
+            this.recifs = entities.stream().filter(e -> e.getType().equals(OceanEntityType.RECIF)).map(e -> (Recif) e)
                     .collect(Collectors.toList());
 
         } catch (JsonProcessingException e) {
