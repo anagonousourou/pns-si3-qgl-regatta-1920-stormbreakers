@@ -173,5 +173,10 @@ public class Line2D {
         return Utils.almostEquals(0,distance);
     }
 
+    @Override
+    public String toString() {
+        return "Line2D: anchor:"+anchor.toString()+"dir:"+direction.toString();
+    }
+
     // LATER: 07/03/2020 Equals && hashcode ?
 }

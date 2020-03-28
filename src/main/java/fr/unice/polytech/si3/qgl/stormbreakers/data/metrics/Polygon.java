@@ -270,13 +270,12 @@ public class Polygon extends Shape implements Orientable {
     // NEW
 
     public List<Point2D> getActualVertices(Position actualPos) {
-        List<Point2D> actualVertices = this.vertices.stream()
+        return this.vertices.stream()
                 .map(vertex -> vertex
                         .getRotatedBy(orientation + actualPos.getOrientation())
                         .getTranslatedBy(new Vector(origin, actualPos))
                 )
                 .collect(Collectors.toList());
-        return actualVertices;
     }
 
     /**
@@ -299,11 +298,11 @@ public class Polygon extends Shape implements Orientable {
     }
 
     /**
-     * Given any shape's segment line AB and whether is or not clockwise
+     * Given any shape's segment line AB and whether the shape is or not clockwise
      * it computes a new Line parallel to the given segment
      * and outside the original shape
      * at a given distance from the original shape
-     * @param isPolygonClockwise
+     * @param isPolygonClockwise whether the polygon is or not clockwise
      * @param A original segment's first point
      * @param B original segment's last point
      * @param distance distance beween old and new segment line
@@ -329,11 +328,13 @@ public class Polygon extends Shape implements Orientable {
     /**
      * Expands the shape by a margin
      * The distance between the old borders and the new ones will be margin
-     * @param margin to expand by
+     * @param margin to expand by, if negative used as positive
      * @return new expanded shape at same position
      */
     @Override
     public Shape wrappingShape(double margin) {
+        margin = Math.abs(margin); // Expansion needs positive values
+
         boolean isPolygonCW = this.isClockWise();
         List<Point2D> oldVertices = getVertices();
         oldVertices.add(oldVertices.get(0)); // Need line between last and first vertex
