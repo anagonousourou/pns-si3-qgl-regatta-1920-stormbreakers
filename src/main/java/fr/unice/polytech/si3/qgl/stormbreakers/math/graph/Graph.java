@@ -48,7 +48,7 @@ public class Graph {
         this.nodes.clear();
         for (double x = xmin; x <= xmax; x = x + ecart) {
             for (double y = ymin; y <= ymax; y = y + ecart) {
-                if (!streamManager.pointIsInsideRecif(new Point2D(x, y))) {
+                if (!streamManager.pointIsInsideOrAroundReef(new Point2D(x, y))) {
                     this.addNode(new Sommet(x, y));
                 }
 
@@ -85,7 +85,7 @@ public class Graph {
             nodes.stream().filter(n -> !n.equals(node)).forEach(n -> {
                 double distance = n.getPoint().distanceTo(node.getPoint());
                 
-                if (distance <= ecart * Math.sqrt(2) && !this.streamManager.thereIsRecifsBetween(n.getPoint(), node.getPoint())) {
+                if (distance <= ecart * Math.sqrt(2) && !this.streamManager.thereIsRecifsBetweenOrAround(n.getPoint(), node.getPoint())) {
                     double cout = distance - streamManager.speedProvided(node.getPoint(), n.getPoint())
                             - this.weatherAnalyst.speedProvided(node.getPoint(), n.getPoint());
                     if (cout < 0) {
@@ -137,7 +137,7 @@ public class Graph {
             return optResult.get();
         }
         Logger.getInstance().log(unsettledNodes.toString());
-        Logger.getInstance().log("returning null :) fichu");
+        Logger.getInstance().log("returning null fichu :)");
         return null;
     }
 

@@ -75,4 +75,10 @@ public abstract class Shape implements Logable, CanCollide {
     public abstract boolean isInsideOpenShape(IPoint pt);
 
     public abstract IPoint intersectionPoint(IPoint depart ,IPoint arrive);
+
+    /**
+     * Renvoie une forme plus étendue d'une marge donnée
+     * @return la forme étendue
+     */
+    public abstract Shape wrappingShape(double margin);
 }
