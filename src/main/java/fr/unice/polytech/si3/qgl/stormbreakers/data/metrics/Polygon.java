@@ -88,8 +88,8 @@ public class Polygon extends Shape implements Orientable {
             return generateBordersInThePlan(actualPos);
         } else {
             // Polygon is drawn with total orientation
-            List<Point2D> vertices = getActualVertices(actualPos);
-            return generateBorders(vertices);
+            List<Point2D> sommets = getActualVertices(actualPos);
+            return generateBorders(sommets);
         }
     }
 
@@ -270,46 +270,39 @@ public class Polygon extends Shape implements Orientable {
     // NEW
 
     public List<Point2D> getActualVertices(Position actualPos) {
-        return this.vertices.stream()
-                .map(vertex -> vertex
-                        .getRotatedBy(orientation + actualPos.getOrientation())
-                        .getTranslatedBy(new Vector(origin, actualPos))
-                )
-                .collect(Collectors.toList());
+        return this.vertices.stream().map(vertex -> vertex.getRotatedBy(orientation + actualPos.getOrientation())
+                .getTranslatedBy(new Vector(origin, actualPos))).collect(Collectors.toList());
     }
 
     /**
-     * Checks if the shape's vertices are stored in clockwise order
-     * It's when by iteration over the vertices you go clockwise around the shape's surface
+     * Checks if the shape's vertices are stored in clockwise order It's when by
+     * iteration over the vertices you go clockwise around the shape's surface
+     * 
      * @return true if clockwise, false if counterclockwise
      */
     private boolean isClockWise() {
-        List<Point2D> vertices = getVertices();
-        int is_ccw = 0;
-        for (int ct=0; ct<vertices.size()-2 && is_ccw==0; ct++ ) {
-            is_ccw = IPoint.ccw(vertices.get(ct),vertices.get(ct+1),vertices.get(ct+2));
+        List<Point2D> sommets = getVertices();
+        int isCcw = 0;
+        for (int ct = 0; ct < sommets.size() - 2 && isCcw == 0; ct++) {
+            isCcw = IPoint.ccw(sommets.get(ct), sommets.get(ct + 1), sommets.get(ct + 2));
         }
 
-        if (is_ccw==1) {
-            return false;
-        } else {
-            return true;
-        }
+        return isCcw != 1;
     }
 
     /**
      * Given any shape's segment line AB and whether the shape is or not clockwise
-     * it computes a new Line parallel to the given segment
-     * and outside the original shape
-     * at a given distance from the original shape
+     * it computes a new Line parallel to the given segment and outside the original
+     * shape at a given distance from the original shape
+     * 
      * @param isPolygonClockwise whether the polygon is or not clockwise
-     * @param A original segment's first point
-     * @param B original segment's last point
-     * @param distance distance beween old and new segment line
+     * @param A                  original segment's first point
+     * @param B                  original segment's last point
+     * @param distance           distance beween old and new segment line
      * @return the extracted parallel line
      */
     private Line2D extractParallelLine(boolean isPolygonClockwise, Point2D A, Point2D B, double distance) {
-        Vector AB = new Vector(A,B);
+        Vector AB = new Vector(A, B);
         Vector normal = AB.normalize();
         // We expand out of the polygon
         if (isPolygonClockwise) {
@@ -322,12 +315,13 @@ public class Polygon extends Shape implements Orientable {
         Point2D translatedA = A.getTranslatedBy(normal);
         Point2D translatedB = B.getTranslatedBy(normal);
 
-        return new Line2D(translatedA,translatedB);
+        return new Line2D(translatedA, translatedB);
     }
 
     /**
-     * Expands the shape by a margin
-     * The distance between the old borders and the new ones will be margin
+     * Expands the shape by a margin The distance between the old borders and the
+     * new ones will be margin
+     * 
      * @param margin to expand by, if negative used as positive
      * @return new expanded shape at same position
      */
@@ -340,20 +334,21 @@ public class Polygon extends Shape implements Orientable {
         oldVertices.add(oldVertices.get(0)); // Need line between last and first vertex
 
         List<Line2D> expandedLines = new ArrayList<>();
-        for (int ct=0; ct<oldVertices.size()-1; ct++ ) {
-            expandedLines.add( extractParallelLine(isPolygonCW,oldVertices.get(ct),oldVertices.get(ct+1),margin) );
+        for (int ct = 0; ct < oldVertices.size() - 1; ct++) {
+            expandedLines.add(extractParallelLine(isPolygonCW, oldVertices.get(ct), oldVertices.get(ct + 1), margin));
         }
         expandedLines.add(expandedLines.get(0)); // Need collision between last and first line
 
         List<Point2D> expandedVertices = new ArrayList<>();
-        for (int ct=0; ct<expandedLines.size()-1; ct++ ) {
-            Optional<Point2D> optExpandedVertex = (expandedLines.get(ct)).intersect(expandedLines.get(ct+1));
+        for (int ct = 0; ct < expandedLines.size() - 1; ct++) {
+            Optional<Point2D> optExpandedVertex = (expandedLines.get(ct)).intersect(expandedLines.get(ct + 1));
             if (optExpandedVertex.isEmpty())
-                throw new UnsupportedOperationException("Can't find expansion point with lines :"+expandedLines.get(ct)+" and "+expandedLines.get(ct+1));
-            expandedVertices.add( optExpandedVertex.get() );
+                throw new UnsupportedOperationException("Can't find expansion point with lines :"
+                        + expandedLines.get(ct) + " and " + expandedLines.get(ct + 1));
+            expandedVertices.add(optExpandedVertex.get());
         }
 
-        return new Polygon(orientation,expandedVertices,getAnchor());
+        return new Polygon(orientation, expandedVertices, getAnchor());
     }
 
 }

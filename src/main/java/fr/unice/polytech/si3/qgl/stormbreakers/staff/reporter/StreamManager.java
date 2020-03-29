@@ -80,6 +80,10 @@ public class StreamManager implements PropertyChangeListener {
         return this.recifs.stream().anyMatch(recif -> recif.isPtInside(point));
     }
 
+    public boolean pointIsInsideOrAroundReef(IPoint point) {
+        return this.recifs.stream().anyMatch(recif -> recif.isInsideWrappingSurface(12.0, point));
+    }
+
     /**
      * 
      * @return the stream the boat is inside null if the boat is not inside any
@@ -144,6 +148,17 @@ public class StreamManager implements PropertyChangeListener {
     public boolean thereIsRecifsBetween(IPoint depart, IPoint destination) {
         LineSegment2D segment2d = new LineSegment2D(depart, destination);
         return this.recifs.stream().anyMatch(obstacle -> obstacle.intersectsWith(segment2d));
+    }
+
+    /**
+     * 
+     * @param depart
+     * @param destination
+     * @return
+     */
+    public boolean thereIsRecifsBetweenOrAround(IPoint depart, IPoint destination) {
+        LineSegment2D segment2d = new LineSegment2D(depart, destination);
+        return this.recifs.stream().anyMatch(obstacle -> obstacle.intersectsWithWrappingSurface(12.0, segment2d));
     }
 
     /**
