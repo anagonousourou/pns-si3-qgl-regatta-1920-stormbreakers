@@ -7,12 +7,13 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.processing.ElementsConstruct
 import fr.unice.polytech.si3.qgl.stormbreakers.data.processing.Logger;
 
 public class Cockpit implements ICockpit {
-	
+
 	private ElementsConstructor elementsConstructor;
+
 	public void initGame(String game) {
 		Logger.getInstance().addSeparatorThenLog("INIT");
 		Logger.getInstance().addSeparator();
-		this.elementsConstructor=new ElementsConstructor(game);
+		this.elementsConstructor = new ElementsConstructor(game);
 	}
 
 	public String nextRound(String round) {

@@ -6,6 +6,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.IPoint;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Rectangle;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Checkpoint;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Boat;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.processing.Logger;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.RectangularSurface;
 import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.CheckpointsManager;
 
@@ -15,6 +16,7 @@ public class Cartographer {
     private Graph graph;
     private CheckpointsManager checkpointsManager;
     private RectangularSurface virtualMap;
+    private static final double MAP_MARGIN = 1500;
     private static final double ECART = 50.0;
 
     public Cartographer(CheckpointsManager checkpointsManager, Graph graph, Boat boat) {
@@ -33,21 +35,21 @@ public class Cartographer {
 
     IPoint caseBuildMap(Checkpoint cp) {
         double ecart = ECART;
-        double height = Math.abs((boat.x() - cp.x())) + 400;
-        double width = Math.abs((boat.y() - cp.y())) + 400;
+        double height = Math.abs((boat.x() - cp.x())) + MAP_MARGIN;
+        double width = Math.abs((boat.y() - cp.y())) + MAP_MARGIN;
 
         if (width >= 3000 || height >= 3000) {
-            ecart = 300.0;
+            ecart = 220;
         } else if (width >= 2000 || height >= 2000) {
-            ecart = 200;
+            ecart = 180;
         } else if (width >= 1500 || height >= 1500) {
-            ecart = 150;
+            ecart = 120;
         } else if (width >= 1200 || height >= 1200) {
-            ecart = 80;
+            ecart = 60;
         }
 
         IPoint center = IPoint.centerPoints(boat, cp);
-
+        
         this.virtualMap = new RectangularSurface(center.x(), center.y(), 0.0, new Rectangle(width, height, 0.0));
 
         graph.createSquaring(virtualMap.minX(), virtualMap.minY(), virtualMap.maxX(), virtualMap.maxY(), ecart);
@@ -69,7 +71,7 @@ public class Cartographer {
         if (path.size() > 1) {
             return path.get(1).getPoint();
         } else {
-
+            Logger.getInstance().log("Oh not path found :screwed");
             return cp;
         }
     }

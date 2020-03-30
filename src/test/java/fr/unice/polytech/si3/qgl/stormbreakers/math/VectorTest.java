@@ -299,4 +299,44 @@ class VectorTest {
         assertEquals(Vector.createUnitVector(0), Vector.createUnitVector(Math.PI/2).getRotatedBy(-Math.PI/2));
     }
 
+    @Test
+    void extendByTestWhenNorm0() {
+        assertThrows(UnsupportedOperationException.class, () -> {vect00.extendBy(5);});
+    }
+
+    @Test
+    void testExtendBy() {
+        assertEquals(new Vector(1,1),new Vector(1,1).extendBy(0));
+        assertEquals(new Vector(2,2),new Vector(1,1).extendBy(Math.sqrt(2)));
+        assertEquals(new Vector(1.5,1.5),new Vector(1,1).extendBy(Math.sqrt(2)/2));
+
+        assertEquals(new Vector(-2,-2),new Vector(-1,-1).extendBy(Math.sqrt(2)));
+        assertEquals(new Vector(-1.5,-1.5),new Vector(-1,-1).extendBy(Math.sqrt(2)/2));
+
+        assertEquals(new Vector(0,2),new Vector(0,1).extendBy(1));
+        assertEquals(new Vector(0,-2),new Vector(0,-1).extendBy(1));
+        assertEquals(new Vector(2,0),new Vector(1,0).extendBy(1));
+        assertEquals(new Vector(-2,0),new Vector(-1,0).extendBy(1));
+    }
+
+    @Test
+    void setScaleToTestWhenNorm0() {
+        assertThrows(UnsupportedOperationException.class, () -> {vect00.setScaleTo(5);});
+        assertDoesNotThrow(() -> {new Vector(1,1).scaleVector(0);});
+    }
+
+    @Test
+    void testSetScaleTo() {
+        assertEquals(vect00,new Vector(1,1).setScaleTo(0));
+
+        assertEquals(15,new Vector(25,12).setScaleTo(15).norm(),Utils.EPSILON);
+        assertEquals(15,new Vector(25,12).setScaleTo(-15).norm(),Utils.EPSILON);
+
+        assertEquals(new Vector(-1,-1), new Vector(1,1).setScaleTo(-Math.sqrt(2)));
+
+        assertEquals(2,new Vector(0,1).setScaleTo(2).norm());
+        assertEquals(2,new Vector(0,-1).setScaleTo(2).norm());
+        assertEquals(2,new Vector(1,0).setScaleTo(2).norm());
+        assertEquals(2,new Vector(-1,0).setScaleTo(2).norm());
+    }
 }

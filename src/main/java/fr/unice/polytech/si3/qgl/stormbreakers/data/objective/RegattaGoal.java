@@ -21,8 +21,7 @@ public class RegattaGoal extends Goal {
 
     @Override
     public String toLogs() {
-        return "CP"+checkpoints.size()+" "+checkpoints.get(0).toLogs();
+        return "CP" + checkpoints.size() + " " + checkpoints.get(0).toLogs();
     }
-
 
 }

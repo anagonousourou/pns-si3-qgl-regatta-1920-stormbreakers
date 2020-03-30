@@ -38,12 +38,12 @@ public class Logger {
         }
     }
 
-    public void addSeparatorThenLog(String msg){
+    public void addSeparatorThenLog(String msg) {
         addSeparator();
         log(msg);
     }
 
-    public void logErrorMsg(Exception error){
+    public void logErrorMsg(Exception error) {
         addSeparator();
         log(error.getMessage());
     }
@@ -93,16 +93,17 @@ public class Logger {
     private void clearCurrentLogLine() {
         currentLogLine = new StringBuilder();
     }
+
     @Override
     public String toString() {
         StringBuilder bld = new StringBuilder();
         for (String string : getSavedData()) {
-           bld.append(string+"\n");
+            bld.append(string + "\n");
         }
-        
+
         return bld.toString();
     }
-    
+
     public List<String> getSavedData() {
         if (allLogs.size() < MAX_LOG_LINES)
             push();

@@ -7,8 +7,7 @@ public interface Logable {
     String toLogs();
 
     static String listToLogs(List<Logable> logables, String delimiter, String prefix, String suffix) {
-        return logables.stream()
-                .map((Logable s)->(s.toLogs()))
+        return logables.stream().map((Logable s) -> (s.toLogs()))
                 .collect(Collectors.joining(delimiter, prefix, suffix));
     }
 

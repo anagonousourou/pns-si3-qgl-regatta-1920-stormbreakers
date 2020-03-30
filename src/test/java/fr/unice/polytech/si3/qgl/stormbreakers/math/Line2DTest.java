@@ -133,6 +133,9 @@ class Line2DTest {
     	Point2D p= new Point2D(12,12);
     	assertEquals(6.36,line.distance(p),Math.pow(10, -2));
 
+        line = new Line2D(new Point2D(0,0),new Point2D(0,10));
+        p= new Point2D(12,0);
+        assertEquals(12,line.distance(p),Math.pow(10, -2));
     }
     
     @Test

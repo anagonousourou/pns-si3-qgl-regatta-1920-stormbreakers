@@ -20,12 +20,7 @@ public interface Surface extends IPoint, Orientable {
 	Shape getShape();
 
 	public default boolean isInsideOpenSurface(IPoint point) {
-		/*Point2D pt = new Point2D(point.x() - this.x(), point.y() - this.y());
 
-		double orientation = this.getOrientation();
-		// On compense l'orientation de la surface
-		if (orientation != 0)
-			pt = pt.getRotatedBy(-orientation);*/
 		return this.getShape().isInsideOpenShape(point);
 	}
 
@@ -37,11 +32,15 @@ public interface Surface extends IPoint, Orientable {
 		return getShape().collidesWith(lineSegment2D);
 	}
 
+	default boolean intersectsWithWrappingSurface(double margin, LineSegment2D lineSegment2D) {
+		return this.getShape().wrappingShape(margin).collidesWith(lineSegment2D);
+	}
+
 	default boolean collidesWith(Surface other) {
 		return this.getShape().collidesWith(other.getShape());
 	}
 
-	 default boolean intersectsWith(IPoint fp, IPoint sp) {
+	default boolean intersectsWith(IPoint fp, IPoint sp) {
 		LineSegment2D segment2d = new LineSegment2D(fp, sp);
 		return this.intersectsWith(segment2d);
 	}
@@ -108,20 +107,30 @@ public interface Surface extends IPoint, Orientable {
 	}
 
 	/**
-	 * Give the intersection of segment [depart,arrive] if arrivee is outside the Surface otherwise
-	 *  return arrive if arrive is inside , we assume depart is inside the Surface
+	 * Give the intersection of segment [depart,arrive] if arrivee is outside the
+	 * Surface otherwise return arrive if arrive is inside , we assume depart is
+	 * inside the Surface
+	 * 
 	 * @param depart
 	 * @param arrivee
 	 * @return
 	 */
-	public default IPoint limitToSurface(IPoint depart, IPoint arrivee){
-		
-		if(this.isInsideOpenSurface(arrivee)){
+	public default IPoint limitToSurface(IPoint depart, IPoint arrivee) {
+
+		if (this.isInsideOpenSurface(arrivee)) {
 			return arrivee;
 		}
 
-		else{
+		else {
 			return this.getShape().intersectionPoint(depart, arrivee);
 		}
+	}
+
+	public default boolean intersectsWithWrappingSurface(double margin, IPoint start, IPoint end) {
+		return this.getShape().wrappingShape(margin).collidesWith(new LineSegment2D(start, end));
+	}
+
+	public default boolean isInsideWrappingSurface(double margin, IPoint point) {
+		return this.getShape().wrappingShape(margin).isPtInside(point);
 	}
 }

@@ -10,27 +10,19 @@ import fr.unice.polytech.si3.qgl.stormbreakers.Logable;
  * Represents any action a Sailor can Do
  */
 
-
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME,
-        include = JsonTypeInfo.As.PROPERTY,
-        property = "type")
-@JsonSubTypes({
-        @JsonSubTypes.Type(value = MoveAction.class, name="MOVING"),
-        @JsonSubTypes.Type(value = LiftSail.class, name="LIFT_SAIL"),
-        @JsonSubTypes.Type(value = LowerSail.class, name="LOWER_SAIL"),
-        @JsonSubTypes.Type(value = Turn.class, name="TURN"),
-        @JsonSubTypes.Type(value = OarAction.class, name="OAR"),
-        @JsonSubTypes.Type(value = UseWatch.class, name="USE_WATCH")
-})
-public abstract  class SailorAction implements Logable {
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
+@JsonSubTypes({ @JsonSubTypes.Type(value = MoveAction.class, name = "MOVING"),
+        @JsonSubTypes.Type(value = LiftSail.class, name = "LIFT_SAIL"),
+        @JsonSubTypes.Type(value = LowerSail.class, name = "LOWER_SAIL"),
+        @JsonSubTypes.Type(value = Turn.class, name = "TURN"),
+        @JsonSubTypes.Type(value = OarAction.class, name = "OAR"),
+        @JsonSubTypes.Type(value = UseWatch.class, name = "USE_WATCH") })
+public abstract class SailorAction implements Logable {
     protected int sailorId;
     private String type;
 
-
     @JsonCreator
-    public SailorAction(
-            @JsonProperty("sailorId") int sailorId,
-            @JsonProperty("type") String type) {
+    public SailorAction(@JsonProperty("sailorId") int sailorId, @JsonProperty("type") String type) {
         this.sailorId = sailorId;
         this.type = type;
     }

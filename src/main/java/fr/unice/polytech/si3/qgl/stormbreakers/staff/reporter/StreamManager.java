@@ -13,6 +13,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.IPoint;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Boat;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Courant;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.OceanEntity;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.OceanEntityType;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Recif;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.processing.InputParser;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.processing.Logger;
@@ -80,6 +81,10 @@ public class StreamManager implements PropertyChangeListener {
         return this.recifs.stream().anyMatch(recif -> recif.isPtInside(point));
     }
 
+    public boolean pointIsInsideOrAroundReef(IPoint point) {
+        return this.recifs.stream().anyMatch(recif -> recif.isInsideWrappingSurface(12.0, point));
+    }
+
     /**
      * 
      * @return the stream the boat is inside null if the boat is not inside any
@@ -144,6 +149,17 @@ public class StreamManager implements PropertyChangeListener {
     public boolean thereIsRecifsBetween(IPoint depart, IPoint destination) {
         LineSegment2D segment2d = new LineSegment2D(depart, destination);
         return this.recifs.stream().anyMatch(obstacle -> obstacle.intersectsWith(segment2d));
+    }
+
+    /**
+     * 
+     * @param depart
+     * @param destination
+     * @return
+     */
+    public boolean thereIsRecifsBetweenOrAround(IPoint depart, IPoint destination) {
+        LineSegment2D segment2d = new LineSegment2D(depart, destination);
+        return this.recifs.stream().anyMatch(obstacle -> obstacle.intersectsWithWrappingSurface(12.0, segment2d));
     }
 
     /**
@@ -242,7 +258,7 @@ public class StreamManager implements PropertyChangeListener {
     public List<IPoint> trajectoryToAvoidObstacles(IPoint depart, IPoint destination) {
         if (this.thereIsObstacleBetween(depart, destination)) {
             OceanEntity obstacleEntity = this.firstObstacleBetween(depart, destination);
-            if (obstacleEntity.getType().equals("stream")) {
+            if (obstacleEntity.getEnumType().equals(OceanEntityType.COURANT)) {
                 Courant courant = (Courant) obstacleEntity;
                 if (!courant.isCompatibleWith(depart, destination)) {
                     return courant.avoidHit(depart, destination);
@@ -366,10 +382,10 @@ public class StreamManager implements PropertyChangeListener {
         try {
             var entities = parser.fetchOceanEntities(s);
             this.obstacles = entities;
-            this.courants = entities.stream().filter(e -> e.getType().equals("stream")).map(e -> (Courant) e)
-                    .collect(Collectors.toList());
-            this.recifs = entities.stream().filter(e -> e.getType().equals("reef")).map(e -> (Recif) e)
-                    .collect(Collectors.toList());
+            this.courants = entities.stream().filter(e -> e.getEnumType().equals(OceanEntityType.COURANT))
+                    .map(e -> (Courant) e).collect(Collectors.toList());
+            this.recifs = entities.stream().filter(e -> e.getEnumType().equals(OceanEntityType.RECIF))
+                    .map(e -> (Recif) e).collect(Collectors.toList());
 
         } catch (JsonProcessingException e) {
             Logger.getInstance().logErrorMsg(e);
@@ -394,9 +410,18 @@ public class StreamManager implements PropertyChangeListener {
         this.recifs = recifs;
     }
 
-    IPoint calculateEscapePoint(Courant courant, IPoint position) {
-        // LATER add strength consideration etc ...
-        return courant.closestPointTo(position);
+    
+
+    public List<Recif> getRecifs(){
+        return this.recifs;
+    }
+
+    public List<Courant> getStreams(){
+        return this.courants;
+    }
+
+    public List<OceanEntity> getObstacles(){
+        return this.obstacles;
     }
 
 }

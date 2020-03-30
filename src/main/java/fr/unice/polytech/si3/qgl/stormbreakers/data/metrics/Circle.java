@@ -361,9 +361,14 @@ public class Circle extends Shape {
 
     @Override
     public IPoint intersectionPoint(IPoint depart, IPoint arrive) {
-        //NEW Code to test LATER
+        // NEW Code to test LATER
         LineSegment2D lineSegment2D = new LineSegment2D(depart, arrive);
         return this.findOneIntersection(lineSegment2D);
+    }
+
+    @Override
+    public Shape wrappingShape(double margin) {
+        return new Circle(radius + margin, anchor);
     }
 
 }

@@ -13,7 +13,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.exceptions.ImpossibleAngleError;
  * Un point 2D dans une espace reel
  */
 
-public class Point2D implements Logable, IPoint{
+public class Point2D implements Logable, IPoint {
     private double x;
     private double y;
     private static final double EPS = Utils.EPSILON_COLLISION;
@@ -33,8 +33,6 @@ public class Point2D implements Logable, IPoint{
         this.x = fromOrigin.getDeltaX();
         this.y = fromOrigin.getDeltaY();
     }
-
-    
 
     /**
      * Donne l'angle entre l'axe x et le vecteur position retourne null si (0,0)
@@ -117,14 +115,12 @@ public class Point2D implements Logable, IPoint{
      * @return Vector le vecteur
      */
     public Vector getVectorTo(Point2D other) {
-        return new Vector(other.x-this.x, other.y-this.y);
+        return new Vector(other.x - this.x, other.y - this.y);
     }
-
-    
 
     @Override
     public String toString() {
-        return String.format("%s(x: %f, y: %f)", this.getClass().getSimpleName(),x,y);
+        return String.format("%s(x: %f, y: %f)", this.getClass().getSimpleName(), x, y);
     }
 
     @Override
@@ -134,7 +130,8 @@ public class Point2D implements Logable, IPoint{
         if (!(obj instanceof Point2D))
             return false;
         Point2D other = (Point2D) obj;
-        return Utils.almostEqualsBoundsIncluded(other.x,this.x, EPS) && Utils.almostEqualsBoundsIncluded(other.y,this.y, EPS);
+        return Utils.almostEqualsBoundsIncluded(other.x, this.x, EPS)
+                && Utils.almostEqualsBoundsIncluded(other.y, this.y, EPS);
     }
 
     @Override
@@ -142,32 +139,34 @@ public class Point2D implements Logable, IPoint{
         return Objects.hash(x, y);
     }
 
-    
-    @Override @JsonProperty("y")
+    @Override
+    @JsonProperty("y")
     public double y() {
         return y;
     }
-    @Override @JsonProperty("x")
+
+    @Override
+    @JsonProperty("x")
     public double x() {
         return x;
     }
 
     @Override
     public String toLogs() {
-        return String.format("%f %f",x,y);
+        return String.format("%f %f", x, y);
     }
 
     public Point2D negate() {
-        return new Point2D(-x,-y);
+        return new Point2D(-x, -y);
     }
 
     public Point2D getRotatedAround(Point2D anchorPoint, double angle) {
         // LATER: 15/03/2020 Tests
-        if (Utils.almostEquals(new Point2D(0,0),anchorPoint)) {
+        if (Utils.almostEquals(new Point2D(0, 0), anchorPoint)) {
             return getRotatedBy(angle);
         }
 
-        Vector fromAnchorToThis = new Vector(anchorPoint,this);
+        Vector fromAnchorToThis = new Vector(anchorPoint, this);
         Vector rotatedVector = fromAnchorToThis.getRotatedBy(angle);
         return anchorPoint.getTranslatedBy(rotatedVector);
     }

@@ -73,9 +73,7 @@ public class InputParser {
 						c.get(SHAPE_KEY).get("height").asDouble(), c.get(SHAPE_KEY).get(ORIENTATION_KEY).asDouble());
 			}
 			checkpoints.add(new Checkpoint(
-					new Position(
-							c.get(POSITION_KEY).get("x").asDouble(),
-							c.get(POSITION_KEY).get("y").asDouble()),
+					new Position(c.get(POSITION_KEY).get("x").asDouble(), c.get(POSITION_KEY).get("y").asDouble()),
 					shape));
 		});
 		return checkpoints;
@@ -94,7 +92,7 @@ public class InputParser {
 
 			} else if (e.get("type").asText().equals("watch")) {
 				equipment = new Vigie(e.get(XKEY).asInt(), e.get(YKEY).asInt());
-// ---
+				// ---
 			}
 			if (equipment != null) {
 				equipments.add(equipment);
@@ -103,7 +101,7 @@ public class InputParser {
 		});
 		return equipments;
 	}
-// ----
+	// ----
 
 	public Position fetchBoatPosition(String jString) throws JsonProcessingException {
 		JsonNode result = mapper.readTree(jString).get(SHIP_KEY);
@@ -123,7 +121,7 @@ public class InputParser {
 
 	}
 
-  public int fetchBoatLength(String jString) throws JsonProcessingException {
+	public int fetchBoatLength(String jString) throws JsonProcessingException {
 		return mapper.readTree(jString).get(SHIP_KEY).get("deck").get("length").asInt();
 	}
 
