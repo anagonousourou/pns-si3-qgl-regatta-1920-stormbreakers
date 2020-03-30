@@ -46,7 +46,7 @@ public class Navigator {
 
         // Si la cible est completement derrière,
         // on dit par default qu'elle est derrière à gauche
-        if (Utils.almostEquals(actualAngle, Math.PI))//TODO corriger ça
+        if (Utils.almostEquals(actualAngle, Math.PI))
             return 0.75 * Math.PI;
 
         if (actualAngle > 0)

@@ -55,7 +55,7 @@ public class Captain {
         double orientation = destination.getOrientation();
         double distance = destination.getDistance();
         if (Math.abs(orientation) >= 0.05 && this.coordinator.rudderIsPresent() && this.coordinator.rudderIsAccesible()) {
-            System.out.println("Par ici");
+            
             distance = 0.0;
         }
 
