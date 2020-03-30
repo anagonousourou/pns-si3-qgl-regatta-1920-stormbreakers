@@ -1,8 +1,7 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.math;
 
 /**
- * Analog to Vector but of ints
- * Represents a path from an IntPosition to another
+ * Analog to Vector but of ints Represents a path from an IntPosition to another
  */
 
 public class MovementPath {

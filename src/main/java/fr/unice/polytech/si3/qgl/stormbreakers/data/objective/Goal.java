@@ -23,5 +23,4 @@ public abstract class Goal implements Logable {
         return mode;
     }
 
-
 }

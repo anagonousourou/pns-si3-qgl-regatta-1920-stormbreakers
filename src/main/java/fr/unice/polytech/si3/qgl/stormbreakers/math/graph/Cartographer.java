@@ -33,17 +33,17 @@ public class Cartographer {
 
     IPoint caseBuildMap(Checkpoint cp) {
         double ecart = ECART;
-        double height = Math.abs((boat.x() - cp.x())) + 400;
-        double width = Math.abs((boat.y() - cp.y())) + 400;
+        double height = Math.abs((boat.x() - cp.x())) + 500;
+        double width = Math.abs((boat.y() - cp.y())) + 500;
 
         if (width >= 3000 || height >= 3000) {
-            ecart = 300.0;
+            ecart = 220;
         } else if (width >= 2000 || height >= 2000) {
-            ecart = 200;
+            ecart = 180;
         } else if (width >= 1500 || height >= 1500) {
-            ecart = 150;
+            ecart = 120;
         } else if (width >= 1200 || height >= 1200) {
-            ecart = 80;
+            ecart = 60;
         }
 
         IPoint center = IPoint.centerPoints(boat, cp);

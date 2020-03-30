@@ -10,7 +10,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Shape;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Surface;
 
-public class Checkpoint implements Logable,Surface {
+public class Checkpoint implements Logable, Surface {
     private Position position;
     private Shape shape;
 
@@ -48,7 +48,8 @@ public class Checkpoint implements Logable,Surface {
 
     @Override
     public String toString() {
-        return String.format("%s(pos: %s, shape:%s)", this.getClass().getSimpleName(),position.toString(),shape.toString());
+        return String.format("%s(pos: %s, shape:%s)", this.getClass().getSimpleName(), position.toString(),
+                shape.toString());
     }
 
     @Override
@@ -58,7 +59,7 @@ public class Checkpoint implements Logable,Surface {
 
     @Override
     public double x() {
-       return this.position.x();
+        return this.position.x();
     }
 
     @Override

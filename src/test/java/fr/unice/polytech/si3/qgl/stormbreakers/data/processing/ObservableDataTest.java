@@ -15,16 +15,20 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Rectangle;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Boat;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Wind;
 import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.EquipmentsManager;
+import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.StreamManager;
 
 public class ObservableDataTest {
 
     ObservableData observableData = new ObservableData();
-    String round;
+    private StreamManager streamManager;
+    private String round;
+    private String round2;
     InputParser parser = new InputParser();
 
     @BeforeEach
     void setUp() throws IOException {
         round = new String(this.getClass().getResourceAsStream("/observabletest/round1.json").readAllBytes());
+        round2 = new String(this.getClass().getResourceAsStream("/observabletest/round2.json").readAllBytes());
     }
 
     @Test
@@ -62,6 +66,21 @@ public class ObservableDataTest {
 
 
 
+    }
+
+
+    @Test
+    void streamManagerTest(){
+        streamManager=new StreamManager(parser, null);
+        observableData.addPropertyChangeListener(streamManager);
+        observableData.setValue(round2);
+
+        assertEquals(0, streamManager.getStreams().size());
+        assertEquals(6, streamManager.getRecifs().size());
+        assertEquals(6, streamManager.getObstacles().size());
+
+        
+        
     }
 
     

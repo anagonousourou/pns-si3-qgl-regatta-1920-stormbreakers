@@ -296,14 +296,14 @@ public class Polygon extends Shape implements Orientable {
      * shape at a given distance from the original shape
      * 
      * @param isPolygonClockwise whether the polygon is or not clockwise
-     * @param A                  original segment's first point
-     * @param B                  original segment's last point
+     * @param a                  original segment's first point
+     * @param b                  original segment's last point
      * @param distance           distance beween old and new segment line
      * @return the extracted parallel line
      */
-    private Line2D extractParallelLine(boolean isPolygonClockwise, Point2D A, Point2D B, double distance) {
-        Vector AB = new Vector(A, B);
-        Vector normal = AB.normalize();
+    private Line2D extractParallelLine(boolean isPolygonClockwise, Point2D a, Point2D b, double distance) {
+        Vector abVector = new Vector(a, b);
+        Vector normal = abVector.normalize();
         // We expand out of the polygon
         if (isPolygonClockwise) {
             normal = normal.rotateBy90CCW();
@@ -312,8 +312,8 @@ public class Polygon extends Shape implements Orientable {
         }
         normal = normal.scaleVector(distance); // We expand out by distance
 
-        Point2D translatedA = A.getTranslatedBy(normal);
-        Point2D translatedB = B.getTranslatedBy(normal);
+        Point2D translatedA = a.getTranslatedBy(normal);
+        Point2D translatedB = b.getTranslatedBy(normal);
 
         return new Line2D(translatedA, translatedB);
     }

@@ -35,6 +35,10 @@ public abstract class OceanEntity implements Surface {
     return type;
   }
 
+  public abstract OceanEntityType getEnumType();
+    
+  
+
   @JsonProperty("position")
   public Position getPosition() {
     return this.position;

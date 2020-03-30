@@ -10,6 +10,7 @@ import static org.mockito.Mockito.when;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Circle;
@@ -60,12 +61,12 @@ public class CartographerTest {
 
         graph = new Graph(streamManager, weatherAnalyst);
 
-        for(int i=0;i<=500;i++) {
+        
         cartographer = new Cartographer(checkpointsManager, graph, boat);
         assertFalse(cartographer.virtualMapExists());
         cartographer.nextPoint();
         graph.clearShortestPaths();
-        }
+        
         assertTrue(cartographer.virtualMapExists());
         assertNotNull(cartographer.nextPoint());
     }
@@ -89,35 +90,6 @@ public class CartographerTest {
         
         assertNotEquals(checkpoint1, result, "Il doit y avoir une étape intermediaire");
     }
-    /*
-     * @Test public void caseUseExistingMapTestNoWindNoStream() { boat = new
-     * Boat(new Position(1100, 300), 5, 5, 5, null); streamManager = new
-     * StreamManager(null, boat); streamManager.setRecifs(List.of(reefRectangle1,
-     * reefRectangle2, reefTriangle));
-     * streamManager.setObstacles(List.of(reefRectangle1, reefRectangle2,
-     * reefTriangle)); weatherAnalyst = new WeatherAnalyst(null, boat, null);
-     * 
-     * checkpointsManager = mock(CheckpointsManager.class); checkpoint1 = new
-     * Checkpoint(new Position(1200, 700), new Circle(50));
-     * 
-     * graph = new Graph(streamManager, weatherAnalyst);
-     * graph.createSquaring(0,0,1300, 800, 100);
-     * 
-     * var passage=new Sommet(1250,350); passage=graph.addNode(passage);
-     * 
-     * graph.createLinkBetweenVertices(100);
-     * 
-     * assertTrue(104 > graph.nbOfNodes());
-     * 
-     * cartographer = new Cartographer(checkpointsManager, graph, boat);
-     * 
-     * var result = cartographer.caseUseExistingMap(checkpoint1);
-     * 
-     * assertTrue(Utils.almostEquals(result, new Position(1250,
-     * 350)),"Le chemin utilise le sommet de passage inserer dans le graph");
-     * 
-     * 
-     * }
-     */
+    
 
 }

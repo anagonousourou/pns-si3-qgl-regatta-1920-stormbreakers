@@ -12,22 +12,23 @@ public class CheckpointsManager {
 
     private final List<Checkpoint> checkpoints;
 
-    public CheckpointsManager(List<Checkpoint> checkpoints){
-        this.checkpoints=new ArrayList<>(checkpoints);
+    public CheckpointsManager(List<Checkpoint> checkpoints) {
+        this.checkpoints = new ArrayList<>(checkpoints);
 
     }
 
     /**
-     * Verifie si le bateau en parametre est dans le nextCheckpoint
-     * et retire le nextCheckpoint si c'est le cas
+     * Verifie si le bateau en parametre est dans le nextCheckpoint et retire le
+     * nextCheckpoint si c'est le cas
+     * 
      * @param boat le bateau en question
      */
-	public void updateCheckpoint(Boat boat) {
+    public void updateCheckpoint(Boat boat) {
         // LATER: 14/03/2020 tests
-        if (hasNextCheckpoint() && ( boatCollidesWithNextCheckpoint(boat)||this.isPosInCheckpoint(boat))) {
-                Logger.getInstance().addSeparatorThenLog("Validated:" +checkpoints.remove(0).toLogs());
+        if (hasNextCheckpoint() && (boatCollidesWithNextCheckpoint(boat) || this.isPosInCheckpoint(boat))) {
+            Logger.getInstance().addSeparatorThenLog("Validated:" + checkpoints.remove(0).toLogs());
         }
-	}
+    }
 
     boolean boatCollidesWithNextCheckpoint(Boat boat) {
         // LATER: 14/03/2020 Tests
@@ -43,19 +44,17 @@ public class CheckpointsManager {
         return checkpoints.get(0).isPtInside(position);
     }
 
-
     /**
      * 
      * @return the nextCheckpoint in the List
      */
-	public Checkpoint nextCheckpoint() {
-        if(hasNextCheckpoint()) {
+    public Checkpoint nextCheckpoint() {
+        if (hasNextCheckpoint()) {
             return checkpoints.get(0);
-        }
-        else{
+        } else {
             return null;
         }
-		
-	}
-    
+
+    }
+
 }

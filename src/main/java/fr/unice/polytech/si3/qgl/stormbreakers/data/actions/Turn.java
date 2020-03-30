@@ -9,11 +9,8 @@ public class Turn extends SailorAction {
     private double rotation;
 
     @JsonCreator
-	public
-    Turn(
-            @JsonProperty("sailorId") int sailorId,
-            @JsonProperty("rotation") double rotation) {
-        super(sailorId,ActionType.TURN.actionCode);
+    public Turn(@JsonProperty("sailorId") int sailorId, @JsonProperty("rotation") double rotation) {
+        super(sailorId, ActionType.TURN.actionCode);
         this.rotation = rotation;
     }
 
@@ -34,6 +31,7 @@ public class Turn extends SailorAction {
 
     @Override
     public String toString() {
-        return String.format("%s( id:%d, orientation:%f )", this.getClass().getSimpleName(),this.sailorId,this.rotation);
+        return String.format("%s( id:%d, orientation:%f )", this.getClass().getSimpleName(), this.sailorId,
+                this.rotation);
     }
 }

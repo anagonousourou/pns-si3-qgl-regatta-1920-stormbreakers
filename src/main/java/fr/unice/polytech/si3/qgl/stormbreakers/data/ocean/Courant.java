@@ -22,7 +22,7 @@ public class Courant extends OceanEntity {
 
     public Courant(@JsonProperty("position") Position position, @JsonProperty("shape") Shape shape,
             @JsonProperty("strength") double strength) {
-        super(OceanEntityType.COURANT.EntityCode, position, shape);
+        super("stream", position, shape);
         this.strength = strength;
     }
 
@@ -36,25 +36,7 @@ public class Courant extends OceanEntity {
                 position.toString(), shape.toString());
     }
 
-    public Point2D closestPointTo(IPoint point2d) {
-        if (this.shape.getTypeEnum() == ShapeType.RECTANGLE) {
-            var tmp = new RectanglePositioned((Rectangle) this.shape, this.position).closestPointTo(point2d);
-            if (tmp.isPresent()) {
-                return tmp.get();
-            }
-        } else if (this.shape.getTypeEnum() == ShapeType.POLYGON) {
-            Polygon poly = (Polygon) this.shape;
-            var point = poly.generateBordersInThePlan(this).stream().map(l -> l.closestPointTo(point2d))
-                    .min((p, pother) -> Double.compare(p.distanceTo(point2d), pother.distanceTo(point2d)));
-            if (point.isPresent()) {
-                return point.get();
-            }
-        }
-        //
-
-        // LATER add support for circle
-        return null;
-    }
+    
 
     /**
      * Dis si le courant est compatible avec le traject défini par les parametres
@@ -175,6 +157,11 @@ public class Courant extends OceanEntity {
         Vector courantVector = Vector.createUnitVector(this.getPosition().getOrientation());
         Vector trajectVector = new Vector(depart, destination);
         return courantVector.scal(trajectVector);
+    }
+
+    @Override
+    public OceanEntityType getEnumType() {
+        return OceanEntityType.COURANT;
     }
 
 }

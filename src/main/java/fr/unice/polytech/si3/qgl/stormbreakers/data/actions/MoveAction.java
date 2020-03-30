@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.MovementPath;
 
 public class MoveAction extends SailorAction {
-  
+
     private int xdistance;
     private int ydistance;
 
@@ -21,7 +21,7 @@ public class MoveAction extends SailorAction {
     }
 
     public MoveAction(int id, MovementPath pathTo) {
-        this(id,pathTo.getDeltaX(),pathTo.getDeltaY());
+        this(id, pathTo.getDeltaX(), pathTo.getDeltaY());
     }
 
     @JsonProperty("xdistance")
@@ -56,16 +56,16 @@ public class MoveAction extends SailorAction {
 
     @Override
     public boolean equals(Object obj) {
-        if (this==obj) return true;
-        if (!(obj instanceof MoveAction)) return false;
+        if (this == obj)
+            return true;
+        if (!(obj instanceof MoveAction))
+            return false;
         MoveAction other = (MoveAction) obj;
-        return  getSailorId()==other.getSailorId()
-                && xdistance==other.xdistance
-                && ydistance==other.ydistance;
+        return getSailorId() == other.getSailorId() && xdistance == other.xdistance && ydistance == other.ydistance;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getSailorId(),xdistance,ydistance);
+        return Objects.hash(getSailorId(), xdistance, ydistance);
     }
 }

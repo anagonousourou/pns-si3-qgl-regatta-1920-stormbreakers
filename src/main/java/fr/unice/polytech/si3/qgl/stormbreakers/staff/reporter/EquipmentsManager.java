@@ -24,7 +24,7 @@ public class EquipmentsManager implements PropertyChangeListener {
     private List<Oar> oars;
     private List<Sail> sails;
     private Gouvernail rudder = null;
-    
+
     private List<Equipment> equipments;
     private InputParser parser;
 

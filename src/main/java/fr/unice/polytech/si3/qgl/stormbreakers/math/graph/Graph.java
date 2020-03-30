@@ -73,7 +73,7 @@ public class Graph {
             }
             i++;
         }
-        System.out.println(result);
+        
         Logger.getInstance().log(result.toString());
         return result;
     }
@@ -84,8 +84,9 @@ public class Graph {
 
             nodes.stream().filter(n -> !n.equals(node)).forEach(n -> {
                 double distance = n.getPoint().distanceTo(node.getPoint());
-                
-                if (distance <= ecart * Math.sqrt(2) && !this.streamManager.thereIsRecifsBetweenOrAround(n.getPoint(), node.getPoint())) {
+
+                if (distance <= ecart * Math.sqrt(2)
+                        && !this.streamManager.thereIsRecifsBetweenOrAround(n.getPoint(), node.getPoint())) {
                     double cout = distance - streamManager.speedProvided(node.getPoint(), n.getPoint())
                             - this.weatherAnalyst.speedProvided(node.getPoint(), n.getPoint());
                     if (cout < 0) {

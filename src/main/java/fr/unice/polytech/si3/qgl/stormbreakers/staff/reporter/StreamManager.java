@@ -258,7 +258,7 @@ public class StreamManager implements PropertyChangeListener {
     public List<IPoint> trajectoryToAvoidObstacles(IPoint depart, IPoint destination) {
         if (this.thereIsObstacleBetween(depart, destination)) {
             OceanEntity obstacleEntity = this.firstObstacleBetween(depart, destination);
-            if (obstacleEntity.getType().equals(OceanEntityType.COURANT.EntityCode)) {
+            if (obstacleEntity.getEnumType().equals(OceanEntityType.COURANT)) {
                 Courant courant = (Courant) obstacleEntity;
                 if (!courant.isCompatibleWith(depart, destination)) {
                     return courant.avoidHit(depart, destination);
@@ -382,10 +382,10 @@ public class StreamManager implements PropertyChangeListener {
         try {
             var entities = parser.fetchOceanEntities(s);
             this.obstacles = entities;
-            this.courants = entities.stream().filter(e -> e.getType().equals(OceanEntityType.COURANT)).map(e -> (Courant) e)
-                    .collect(Collectors.toList());
-            this.recifs = entities.stream().filter(e -> e.getType().equals(OceanEntityType.RECIF)).map(e -> (Recif) e)
-                    .collect(Collectors.toList());
+            this.courants = entities.stream().filter(e -> e.getEnumType().equals(OceanEntityType.COURANT))
+                    .map(e -> (Courant) e).collect(Collectors.toList());
+            this.recifs = entities.stream().filter(e -> e.getEnumType().equals(OceanEntityType.RECIF))
+                    .map(e -> (Recif) e).collect(Collectors.toList());
 
         } catch (JsonProcessingException e) {
             Logger.getInstance().logErrorMsg(e);
@@ -410,9 +410,18 @@ public class StreamManager implements PropertyChangeListener {
         this.recifs = recifs;
     }
 
-    IPoint calculateEscapePoint(Courant courant, IPoint position) {
-        // LATER add strength consideration etc ...
-        return courant.closestPointTo(position);
+    
+
+    public List<Recif> getRecifs(){
+        return this.recifs;
+    }
+
+    public List<Courant> getStreams(){
+        return this.courants;
+    }
+
+    public List<OceanEntity> getObstacles(){
+        return this.obstacles;
     }
 
 }

@@ -54,8 +54,12 @@ public class Captain {
 
         double orientation = destination.getOrientation();
         double distance = destination.getDistance();
+        if (Math.abs(orientation) >= 0.05 && this.coordinator.rudderIsPresent() && this.coordinator.rudderIsAccesible()) {
+            System.out.println("Par ici");
+            distance = 0.0;
+        }
 
-        List<SailorAction> actionsOrientation = this.actionsToOrientate(orientation);
+        List<SailorAction> actionsOrientation = this.actionsToOrientate(orientation, distance);
 
         double currentSpeed = this.calculateSpeedFromOarsAction(actionsOrientation);
         List<SailorAction> actionsToAdjustSpeed = this.adjustSpeed(distance, currentSpeed);
@@ -73,12 +77,12 @@ public class Captain {
         return SPEED * ((double) nbActivatedOars / this.coordinator.nbOars());
     }
 
-    List<SailorAction> orientateWithRudder(double orientation) {
+    List<SailorAction> orientateWithRudder(double orientation, double vitesse) {
         if (Utils.within(orientation, Utils.MAX_RUDDER_ROTATION)) {
             // rudder suffisant
             return this.validateActions(this.coordinator.activateRudder(orientation));
-        } else {// rudder insuffisant
-            if (this.coordinator.nbOars() == 0) {
+        } else {// rudder insuffisant ou la vitesse voulue est nulle
+            if (this.coordinator.nbOars() == 0 || vitesse <= 1) {
                 // pas de rames
                 return this.validateActions(
                         this.coordinator.activateRudder(Utils.MAX_RUDDER_ROTATION * Math.signum(orientation)));
@@ -117,14 +121,21 @@ public class Captain {
      * @param orientation
      * @return
      */
-    List<SailorAction> actionsToOrientate(double orientation) {
+    List<SailorAction> actionsToOrientate(double orientation, double vitesse) {
+        // orientation is low but the rudder can be used pour affiner encore plus
+        
+        if (Utils.within(orientation, Utils.EPS) && this.coordinator.rudderIsPresent()
+                && this.coordinator.rudderIsAccesible()) {
+            return this.orientateWithRudder(orientation, vitesse);
+        }
+
         // NO ORIENTATION NEEDED
         if (Utils.within(orientation, Utils.EPS)) {
             return List.of();
         }
-
+        //on a le rudder et il peut etre utilisé
         else if (this.coordinator.rudderIsPresent() && this.coordinator.rudderIsAccesible()) {
-            return this.orientateWithRudder(orientation);
+            return this.orientateWithRudder(orientation, vitesse);
         } else {
             int diff = this.navigator.fromAngleToDiff(orientation, this.coordinator.nbLeftOars(),
                     this.coordinator.nbRightOars());
@@ -167,7 +178,7 @@ public class Captain {
                         actionsToUseWeather, this.accelerate(distance, currentSpeed + expectedSpeedFromWind));
 
             }
-            //vent dans le mauvais sens || vent nous fait dépasser
+            // vent dans le mauvais sens || vent nous fait dépasser
             if (currentExternalSpeed < 0.0 || currentSpeed + currentExternalSpeed > distance) {
 
                 List<SailorAction> actionsToCancelWeather = new ArrayList<>();
@@ -184,7 +195,7 @@ public class Captain {
 
             // voir si on peut pas ouvrir des voiles sups, sans dépasser bien sur
             if (currentSpeed + currentExternalSpeed <= distance && currentExternalSpeed > 0) {
-                
+
                 return this.accelerate(distance, currentSpeed + currentExternalSpeed);
             }
             // voiles fermées et les ouvrir vous ralentissent
