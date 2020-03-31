@@ -8,8 +8,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import fr.unice.polytech.si3.qgl.stormbreakers.Logable;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Utils;
+import fr.unice.polytech.si3.qgl.stormbreakers.visuals.draw.Drawable;
+import fr.unice.polytech.si3.qgl.stormbreakers.visuals.draw.drawings.Drawing;
+import fr.unice.polytech.si3.qgl.stormbreakers.visuals.draw.drawings.PosDrawing;
 
-public class Position implements Logable, IPoint {
+public class Position implements Logable, IPoint , Drawable {
     private double x;
     private double y;
     private double orientation;
@@ -77,4 +80,13 @@ public class Position implements Logable, IPoint {
     public Point2D getPoint2D() {
         return new Point2D(this.x, this.y);
     }
+
+
+    // Implements drawable
+    // DRAWING
+    @Override
+    public Drawing getDrawing() {
+        return new PosDrawing(this);
+    }
+
 }
