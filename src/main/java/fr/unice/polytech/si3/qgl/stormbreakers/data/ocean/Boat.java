@@ -18,7 +18,6 @@ import fr.unice.polytech.si3.qgl.stormbreakers.math.Surface;
  */
 public class Boat extends OceanEntity implements PropertyChangeListener, Surface {
     private Shape boatShape;
-    private Position position;
     private final int deckwidth;
     private final int decklength;
     private int life;
@@ -26,7 +25,6 @@ public class Boat extends OceanEntity implements PropertyChangeListener, Surface
 
     public Boat(Position position, int decklength, int deckwidth, int life, InputParser parser, Shape boatShape) {
         super(OceanEntityType.BOAT.entityCode, position, boatShape); // DUCT TAPE
-        this.position = position;
         this.decklength = decklength;
         this.deckwidth = deckwidth;
         this.life = life;
@@ -40,7 +38,6 @@ public class Boat extends OceanEntity implements PropertyChangeListener, Surface
      */
     public Boat(Position position, int decklength, int deckwidth, int life, InputParser parser) {
         super(OceanEntityType.BOAT.entityCode, position, new Rectangle(deckwidth,deckwidth,0)); // DUCT TAPE
-        this.position = position;
         this.decklength = decklength;
         this.deckwidth = deckwidth;
         this.life = life;
@@ -91,6 +88,7 @@ public class Boat extends OceanEntity implements PropertyChangeListener, Surface
 
     }
 
+    @Override
     public Position getPosition() {
         return position;
     }
