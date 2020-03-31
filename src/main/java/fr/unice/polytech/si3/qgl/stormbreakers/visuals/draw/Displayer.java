@@ -89,7 +89,7 @@ public class Displayer {
         shipShape = boatShape;
     }
 
-    void addDrawing(Drawing drawing) {
+    public void addDrawing(Drawing drawing) {
         special.add(wrapDrawing(drawing));
     }
 

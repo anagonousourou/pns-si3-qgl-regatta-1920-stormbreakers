@@ -1,6 +1,9 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.visuals.draw.drawings;
 
+import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Circle;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Polygon;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.LineSegment2D;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Vector;
 
@@ -15,20 +18,25 @@ public class PolygonDrawing extends Drawing {
     private List<Point2D> vertices;
 
     public PolygonDrawing(Polygon polygon) {
-        super(polygon.getBoundingCircle().getAnchor(),getPolygonBoundingRadius(polygon));
+        super(getPolygonReCenteredBoundingCircle(polygon).getAnchor(),getPolygonReCenteredBoundingCircle(polygon).getRadius());
         this.vertices = polygon.getActualVertices(polygon.getAnchor());
     }
 
-    private static double getPolygonBoundingRadius(Polygon polygon) {
-        // TODO: 31/03/2020 Check if problem with bounding circles' radiuses
+    // TODO: 31/03/2020 Use AABB for updating display boundaries
+
+    public static Circle getPolygonReCenteredBoundingCircle(Polygon polygon) {
         List<Point2D> vertices = polygon.getActualVertices(polygon.getAnchor());
-        if (vertices.size()<=1) return 0;
 
         double xMin = vertices.stream().map(v -> v.x()).min(Double::compareTo).get();
         double yMin = vertices.stream().map(v -> v.y()).min(Double::compareTo).get();
         double xMax = vertices.stream().map(v -> v.x()).max(Double::compareTo).get();
         double yMax = vertices.stream().map(v -> v.y()).max(Double::compareTo).get();
-        return new Vector(xMax-xMin,yMax-yMin).scaleVector(0.5).norm();
+
+        Point2D diagMiddle = new LineSegment2D(new Point2D(xMin,yMin),new Point2D(xMax,yMax)).getMiddle();
+        Position center = new Position(diagMiddle.x(),diagMiddle.y(),0);
+
+        double radius = new Vector(xMax-xMin,yMax-yMin).scaleVector(0.5).norm();
+        return new Circle(radius,center);
     }
 
     @Override

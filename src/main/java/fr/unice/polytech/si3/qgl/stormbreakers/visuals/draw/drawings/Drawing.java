@@ -35,13 +35,8 @@ public abstract class Drawing {
     }
 
     public void draw(Graphics g, UnaryOperator<Point2D> mapPoint) {
-        Point2D mappedPoint = mapPoint.apply(getPosition().getPoint2D());
         g.setColor(getColor());
-        int x1= (int) mappedPoint.x();
-        int y1= (int) mappedPoint.y();
-        int crossSize = 4;
-        g.drawLine(x1-crossSize, y1, x1+crossSize, y1);
-        g.drawLine(x1, y1-crossSize, x1, y1+crossSize);
+        new DotDrawing(getPosition(),getColor()).draw(g,mapPoint);
     }
 
     public void setColor(Color color) {
