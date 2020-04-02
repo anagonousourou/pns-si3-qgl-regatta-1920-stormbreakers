@@ -25,6 +25,10 @@ public class Position implements Logable, IPoint , Drawable {
         this.orientation = orientation;
     }
 
+    public Position(Position toCopy) {
+       this(toCopy.x,toCopy.y,toCopy.orientation);
+    }
+
     public static Position create(double x, double y) {
         return new Position(x, y);
     }
@@ -47,6 +51,7 @@ public class Position implements Logable, IPoint , Drawable {
         return y;
     }
 
+    @JsonProperty("orientation")
     public double getOrientation() {
         return this.orientation;
     }

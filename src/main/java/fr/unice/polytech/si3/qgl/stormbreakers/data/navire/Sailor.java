@@ -4,6 +4,9 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import fr.unice.polytech.si3.qgl.stormbreakers.Logable;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.MoveAction;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.IntPosition;
@@ -13,6 +16,8 @@ import fr.unice.polytech.si3.qgl.stormbreakers.math.MovementPath;
  * classe qui représente un marin
  */
 public class Sailor implements Logable {
+    @JsonIgnoreProperties({"position","onEquipment","doneTurn"})
+
     private final int id;
     private IntPosition position;
     private boolean onEquipment = false;
@@ -27,7 +32,8 @@ public class Sailor implements Logable {
     // Potentiellement à enlever
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
-    public Sailor(int id, int x, int y) {
+    @JsonCreator
+    public Sailor(@JsonProperty("id") int id, @JsonProperty("x") int x, @JsonProperty("y") int y) {
         this.id = id;
         this.position = new IntPosition(x, y);
     }
