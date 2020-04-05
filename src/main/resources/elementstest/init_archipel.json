@@ -3,25 +3,58 @@
         "mode": "REGATTA",
         "checkpoints": [
             {
+                "type": "checkpoint",
                 "position": {
-                    "x": 800.0,
-                    "y": 856.0,
-                    "orientation": 0.0
+                    "x": 2052.8211284513804,
+                    "y": 2262.9051620648256
                 },
                 "shape": {
                     "type": "circle",
-                    "radius": 150.0
+                    "radius": 100
                 }
             },
             {
+                "type": "checkpoint",
                 "position": {
-                    "x": 120.0,
-                    "y": 1488.0,
-                    "orientation": 0.0
+                    "x": 5288.115246098437,
+                    "y": 1650.6602641056418
                 },
                 "shape": {
                     "type": "circle",
-                    "radius": 150.0
+                    "radius": 100
+                }
+            },
+            {
+                "type": "checkpoint",
+                "position": {
+                    "x": 4273.709483793517,
+                    "y": 3475.390156062426
+                },
+                "shape": {
+                    "type": "circle",
+                    "radius": 100
+                }
+            },
+            {
+                "type": "checkpoint",
+                "position": {
+                    "x": 2983.193277310925,
+                    "y": 1686.6746698679472
+                },
+                "shape": {
+                    "type": "circle",
+                    "radius": 100
+                }
+            },
+            {
+                "type": "checkpoint",
+                "position": {
+                    "x": 3475.3901560624263,
+                    "y": 3973.589435774311
+                },
+                "shape": {
+                    "type": "circle",
+                    "radius": 100
                 }
             }
         ]
