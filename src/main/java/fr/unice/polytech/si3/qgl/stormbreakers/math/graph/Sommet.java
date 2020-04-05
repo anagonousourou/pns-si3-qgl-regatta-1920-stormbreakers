@@ -1,7 +1,7 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.math.graph;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -12,9 +12,11 @@ import fr.unice.polytech.si3.qgl.stormbreakers.math.Utils;
 
 public class Sommet {
 	private IPoint point;
-	private List<Sommet> shortestPath = new LinkedList<>();
+	private List<Sommet> shortestPath = new ArrayList<>();
 	private int distance = Integer.MAX_VALUE;
 	private Map<Sommet, Integer> adjacentNodes = new HashMap<>();
+	boolean extended = false;
+	boolean computedAdj= false;
 
 	public Sommet(IPoint pt) {
 		point = new Point2D(pt);
@@ -49,7 +51,7 @@ public class Sommet {
 	}
 
 	public void addDestination(Sommet destination, int distance) {
-		adjacentNodes.put(destination, distance);
+		adjacentNodes.putIfAbsent(destination, distance);
 	}
 
 	@Override

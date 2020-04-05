@@ -78,4 +78,6 @@ public abstract class Shape implements Logable, CanCollide {
      * @return la forme étendue
      */
     public abstract Shape wrappingShape(double margin);
+
+   
 }

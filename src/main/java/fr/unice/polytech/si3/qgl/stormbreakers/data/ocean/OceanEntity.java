@@ -11,10 +11,9 @@ import fr.unice.polytech.si3.qgl.stormbreakers.math.Surface;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
 
-@JsonSubTypes({
-  @JsonSubTypes.Type(value = Courant.class, name="stream"),
-  @JsonSubTypes.Type(value = Recif.class, name="reef")
-})
+@JsonSubTypes({ @JsonSubTypes.Type(value = Courant.class, name = "stream"),
+    @JsonSubTypes.Type(value = OtherBoat.class, name = "ship"),
+    @JsonSubTypes.Type(value = Recif.class, name = "reef") })
 
 public abstract class OceanEntity implements Surface {
   private String type;
@@ -26,7 +25,7 @@ public abstract class OceanEntity implements Surface {
       @JsonProperty("shape") Shape shape) {
     this.type = type;
     this.position = position;
-    this.shape = shape;  
+    this.shape = shape;
     shape.setAnchor(position);
   }
 
@@ -36,8 +35,6 @@ public abstract class OceanEntity implements Surface {
   }
 
   public abstract OceanEntityType getEnumType();
-    
-  
 
   @JsonProperty("position")
   public Position getPosition() {

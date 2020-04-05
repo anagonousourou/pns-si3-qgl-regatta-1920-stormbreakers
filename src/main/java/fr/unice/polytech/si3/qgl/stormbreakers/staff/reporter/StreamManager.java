@@ -137,6 +137,7 @@ public class StreamManager implements PropertyChangeListener {
      */
     public boolean thereIsObstacleBetween(IPoint depart, IPoint destination) {
         LineSegment2D segment2d = new LineSegment2D(depart, destination);
+        System.out.println(this.obstacles);
         return this.obstacles.stream().anyMatch(obstacle -> obstacle.intersectsWith(segment2d));
     }
 

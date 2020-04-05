@@ -2,7 +2,6 @@ package fr.unice.polytech.si3.qgl.stormbreakers.math.graph;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -38,7 +37,7 @@ public class Graph {
         int sourceDistance = sourceNode.getDistance();
         if (sourceDistance + edgeWeigh < evaluationNode.getDistance()) {
             evaluationNode.setDistance(sourceDistance + edgeWeigh);
-            LinkedList<Sommet> shortestPath = new LinkedList<>(sourceNode.getShortestPath());
+            List<Sommet> shortestPath = new ArrayList<>(sourceNode.getShortestPath());
             shortestPath.add(sourceNode);
             evaluationNode.setShortestPath(shortestPath);
         }
@@ -46,6 +45,7 @@ public class Graph {
 
     public void createSquaring(double xmin, double ymin, double xmax, double ymax, double ecart) {
         this.nodes.clear();
+
         for (double x = xmin; x <= xmax; x = x + ecart) {
             for (double y = ymin; y <= ymax; y = y + ecart) {
                 if (!streamManager.pointIsInsideOrAroundReef(new Point2D(x, y))) {
@@ -55,6 +55,9 @@ public class Graph {
             }
 
         }
+        System.out.println("xdif :" + (xmax - xmin));
+        System.out.println("ydif :" + (ymax - ymin));
+        System.out.println("Nodes size:" + this.nodes.size());
 
     }
 
@@ -63,23 +66,30 @@ public class Graph {
         // ?? morceau de chemin trop court pour etre atteint
         List<Sommet> result = new ArrayList<>(sommet.getShortestPath());
         result.add(sommet);
+        return reducePath(result);
+    }
+
+    List<Sommet> reducePath(List<Sommet> result) {
         int i = 1;
         while (i < result.size() - 1) {
             if (!this.streamManager.thereIsObstacleBetween(result.get(i - 1).getPoint(),
                     result.get(i + 1).getPoint())) {
-
                 result.remove(i);
                 i--;
             }
             i++;
         }
-        
+
         Logger.getInstance().log(result.toString());
         return result;
     }
 
+    /**
+     * 
+     * @param ecart
+     */
     public void createLinkBetweenVertices(double ecart) {
-
+        long t = System.currentTimeMillis();
         for (Sommet node : nodes) {
 
             nodes.stream().filter(n -> !n.equals(node)).forEach(n -> {
@@ -102,15 +112,19 @@ public class Graph {
 
         }
 
+        System.out.println(System.currentTimeMillis() - t);
+
     }
 
+    
+
     // NEW
-    public void calculateShortestPathFromSource(Sommet depart, Sommet destination) {
+    public void calculateShortestPathFromSource(Sommet depart, Sommet destination, double ecart) {
         Sommet currentNode = null;
         depart.setDistance(0);
 
-        Set<Sommet> settledNodes = new HashSet<>();
-        Set<Sommet> unsettledNodes = new HashSet<>();
+        Set<Sommet> settledNodes = new HashSet<>(6000);
+        Set<Sommet> unsettledNodes = new HashSet<>(6000);
 
         unsettledNodes.add(depart);
 
@@ -118,17 +132,46 @@ public class Graph {
 
             currentNode = getLowestDistanceNode(unsettledNodes);
             unsettledNodes.remove(currentNode);
+
+            if (!currentNode.computedAdj) {// si on n'a pas déja déterminé les noeuds adjacents de ce noeud
+                this.computeAdjacentNodes(currentNode, ecart);
+                currentNode.computedAdj = true;
+            }
+
             for (Entry<Sommet, Integer> adjacencyPair : currentNode.getAdjacentNodes().entrySet()) {
                 Sommet adjacentNode = adjacencyPair.getKey();
                 int edgeWeight = adjacencyPair.getValue();
                 if (!settledNodes.contains(adjacentNode)) {
                     calculateMinimumDistance(adjacentNode, edgeWeight, currentNode);
                     unsettledNodes.add(adjacentNode);
+
                 }
             }
             settledNodes.add(currentNode);
         }
 
+    }
+
+    void computeAdjacentNodes(Sommet vertex, double ecart) {
+        for (Sommet v : this.nodes) {
+            if (!v.equals(vertex)) {
+                double distance = v.getPoint().distanceTo(vertex.getPoint());
+
+                if (distance <= ecart * Math.sqrt(2)
+                        && !this.streamManager.thereIsRecifsBetweenOrAround(vertex.getPoint(), v.getPoint())) {
+                    double cout = distance - streamManager.speedProvided(vertex.getPoint(), v.getPoint())
+                            - this.weatherAnalyst.speedProvided(vertex.getPoint(), v.getPoint());
+                    if (cout < 0) {
+
+                        vertex.addDestination(v, 0);
+                    } else {
+
+                        vertex.addDestination(v, (int) cout);
+                    }
+
+                }
+            }
+        }
     }
 
     // NEW
