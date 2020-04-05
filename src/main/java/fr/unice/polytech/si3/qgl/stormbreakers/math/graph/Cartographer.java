@@ -55,7 +55,6 @@ public class Cartographer {
         this.virtualMap = new RectangularSurface(center.x(), center.y(), 0.0, new Rectangle(width, height, 0.0));
     	
         while(!roadFound && ecart>=10) {
-        	//System.out.println(cp+"tour");
 
 	        graph.createSquaring(virtualMap.minX(), virtualMap.minY(), virtualMap.maxX(), virtualMap.maxY(), ecart);
 	
@@ -72,7 +71,6 @@ public class Cartographer {
 	        roadFound =graph.calculateShortestPathFromSource(depart, destination);
 	        
 	        path = graph.reducePath(destination);
-	        System.out.println("after"+path+"\n ecart"+ecart);
 	        ecart/=2;
 	    }
         if (path.size() > 1) {

@@ -62,6 +62,7 @@ public class GraphTest {
         when(s3.getDistance()).thenReturn(2000);
         when(s4.getDistance()).thenReturn(100);
 
+
         assertEquals(s4, graph.getLowestDistanceNode(Set.of(s1, s2, s3, s4),destination), "On doit trouver s4");
         assertEquals(null, graph.getLowestDistanceNode(Set.of(),destination), "On doit trouver null");
 
