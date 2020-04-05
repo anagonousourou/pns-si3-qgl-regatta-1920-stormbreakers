@@ -388,6 +388,7 @@ public class StreamManager implements PropertyChangeListener {
                     .map(e -> (Recif) e).collect(Collectors.toList());
 
         } catch (JsonProcessingException e) {
+            
             Logger.getInstance().logErrorMsg(e);
         }
     }

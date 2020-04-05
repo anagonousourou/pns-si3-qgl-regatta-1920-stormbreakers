@@ -14,7 +14,6 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Rectangle;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Boat;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Wind;
-import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
 import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.EquipmentsManager;
 import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.StreamManager;
 
@@ -76,9 +75,7 @@ public class ObservableDataTest {
         assertEquals(11, streamManager.getRecifs().size());
         assertEquals(12, streamManager.getObstacles().size());
 
-        Point2D depart = new Point2D(2306.962592519181, 5190.275946479242);
-        Point2D arrive = new Point2D(3600.0, 5160);
-        streamManager.getRecifs().stream().filter(r -> r.intersectsWith(depart, arrive)).forEach(System.out::println);
+        
 
     }
 

@@ -1,6 +1,12 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.staff.tactical;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.ActionType;
@@ -15,7 +21,6 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Equipment;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Oar;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Sail;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Sailor;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Vigie;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.IntPosition;
 import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.CrewManager;
 import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.EquipmentsManager;
@@ -512,13 +517,14 @@ public class Coordinator {
      */
 	List<SailorAction> setSailorToWatch() {
 		List<Sailor> availableSailors = crewManager.getAvailableSailors();
-		List<SailorAction> actions = List.of();
+		List<SailorAction> actions = new ArrayList<>();
 		if(equipmentsManager.watchIsPresent() && !equipmentsManager.isWatchUsed() && !availableSailors.isEmpty()) {
 			Optional<Sailor> chosenSailor = findSailorForWatch();
 			if(chosenSailor.isPresent()) {
-				Sailor sailorForWatch = chosenSailor.get();
-				actions = List.of(sailorForWatch.howToMoveTo(equipmentsManager.watchPosition()), 
-						new UseWatch(sailorForWatch.getId()));
+                Sailor sailorForWatch = chosenSailor.get();
+                
+                actions.add(sailorForWatch.howToMoveTo(equipmentsManager.watchPosition()));
+                actions.add(new UseWatch(sailorForWatch.getId()));
 			}
 		}
 		return actions;
