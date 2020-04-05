@@ -294,4 +294,30 @@ class PolygonTest {
         assertTrue(rePart.wrappingShape(12).collidesWith(new LineSegment2D(depart, arrive)));
 
     }
+    @Test
+    void testIntersectsWithSegment() {
+        List<Point2D> vertices = new ArrayList<>();
+        //polygon
+        // 27.99999999999996 -748.0000000000001
+        vertices.add(new Point2D(28,-748));
+        // 568.0 -48.0-48.0
+        vertices.add(new Point2D(568.0,-48.0));
+        // 67.99999999999994 711.9999999999999
+        vertices.add(new Point2D(68,712));
+        // -251.99999999999991 332.00000000000006
+        vertices.add(new Point2D(-252,332));
+        // -411.99999999999994 -248.00000000000006
+        vertices.add(new Point2D(-412,-248));
+
+        Polygon polyReIsland = new Polygon(0,vertices,new Position(1172.0,1548.0,0.0));
+
+        Point2D A = new Point2D(1010,2320);
+        Point2D B = new Point2D(1160,2170);
+        Point2D C = new Point2D(1210,2120);
+        LineSegment2D segmentAB = new LineSegment2D(A,B);
+        LineSegment2D segmentBC = new LineSegment2D(B,C);
+
+        assertFalse(polyReIsland.collidesWith(segmentAB));
+        assertTrue(polyReIsland.collidesWith(segmentBC));
+    }
 }
