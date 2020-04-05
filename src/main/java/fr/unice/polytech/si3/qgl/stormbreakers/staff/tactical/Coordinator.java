@@ -1,6 +1,12 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.staff.tactical;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.ActionType;
@@ -10,6 +16,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.MoveAction;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.OarAction;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.SailorAction;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.Turn;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.UseWatch;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Equipment;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Oar;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Sail;
@@ -491,5 +498,35 @@ public class Coordinator {
         }
         return moves;
     }
-
+    
+    /**
+     * Trouve un Sailor proche ou positionné à la vigie
+     * @return selected sailor
+     */
+    
+    Optional<Sailor> findSailorForWatch(){
+    	IntPosition watchPos = equipmentsManager.watchPosition();
+    	if(this.crewManager.marinAround(this.equipmentsManager.watchPosition()))
+    	 return this.crewManager.availableSailorAtPosition(watchPos)
+        .or(() -> this.crewManager.availableSailorClosestTo(watchPos));
+    	return Optional.empty();
+    }
+    /**
+     * Assigne un sailor a la vigie
+     * @return liste des actions à effectuer pour cela
+     */
+	List<SailorAction> setSailorToWatch() {
+		List<Sailor> availableSailors = crewManager.getAvailableSailors();
+		List<SailorAction> actions = new ArrayList<>();
+		if(equipmentsManager.watchIsPresent() && !equipmentsManager.isWatchUsed() && !availableSailors.isEmpty()) {
+			Optional<Sailor> chosenSailor = findSailorForWatch();
+			if(chosenSailor.isPresent()) {
+                Sailor sailorForWatch = chosenSailor.get();
+                
+                actions.add(sailorForWatch.howToMoveTo(equipmentsManager.watchPosition()));
+                actions.add(new UseWatch(sailorForWatch.getId()));
+			}
+		}
+		return actions;
+	}
 }

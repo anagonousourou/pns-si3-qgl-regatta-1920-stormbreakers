@@ -19,11 +19,13 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.MoveAction;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.OarAction;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.SailorAction;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.Turn;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.UseWatch;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Equipment;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Gouvernail;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Oar;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Sail;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Sailor;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Vigie;
 import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.CrewManager;
 import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.EquipmentsManager;
 
@@ -36,6 +38,7 @@ public class CoordinatorTest {
 	private Sail s1, s2, s3, s4;
 	private Oar o1, o2, o3, o4, o5, o6;
 	private Gouvernail r1, r2;
+	private Vigie w1, w2;
 	
 	private List<Equipment> equipments;
 	private List<Oar> rames;
@@ -57,9 +60,11 @@ public class CoordinatorTest {
 		m6 = new Sailor(5, 	6, 3);
 		r1 = new Gouvernail(2, 3);
 		r2 = new Gouvernail(10, 7);
-		o1 = new Oar(0, 0);//
-		o2 = new Oar(0, 2);//
-		o3 = new Oar(2, 0);//
+		w1 = new Vigie(1, 0);
+		w2 = new Vigie(10, 7);
+		o1 = new Oar(0, 0);
+		o2 = new Oar(0, 2);
+		o3 = new Oar(2, 0);
 		o4 = new Oar(2, 2);
 		o5 = new Oar(4, 0);
 		o6 = new Oar(4, 2);
@@ -577,5 +582,38 @@ public class CoordinatorTest {
 		List<SailorAction> moves = coordinator2.manageUnusedSailors();
 
 		assertEquals(0,moves.size());
+	}
+	
+	@Test
+	void setSailorToWatchTest() {
+		// Setup sans utiliser Mockito
+    	List<Equipment> newVersion = new ArrayList<>(equipments);
+    	newVersion.add(w1);
+    	coordinator =  new Coordinator(new CrewManager(marinsDisponibles), new EquipmentsManager(newVersion, 4));
+    	
+    	// Orientaiton valide, au moins 1 marin proche
+    	Optional<Sailor> sailorForRudder = coordinator.findSailorForWatch();
+    	List<SailorAction> toTest1 = coordinator.setSailorToWatch();
+    	assertTrue(toTest1.get(0) instanceof MoveAction);
+    	
+    	int expectedX = sailorForRudder.get().getPosition().x() + ((MoveAction) toTest1.get(0)).getXdistance();
+    	int expectedY = sailorForRudder.get().getPosition().y() + ((MoveAction) toTest1.get(0)).getYdistance();
+    	assertEquals(w1.x(), expectedX);
+    	assertEquals(w1.y(), expectedY);
+    	
+    	assertTrue(toTest1.get(1) instanceof UseWatch);
+    	assertEquals(sailorForRudder.get().getId(), toTest1.get(1).getSailorId());
+    	
+    	// Watch already used
+    	w1.setUsed(true);
+    	assertTrue(coordinator.setSailorToWatch().isEmpty());
+    	
+    	// Aucun marin proche
+    	newVersion.remove(w1);
+    	newVersion.add(w2);
+    	coordinator =  new Coordinator(new CrewManager(marinsDisponibles), new EquipmentsManager(newVersion, 4));
+		List<SailorAction> toTest3 = coordinator.setSailorToWatch();
+		
+    	assertTrue(toTest3.isEmpty());
 	}
 }

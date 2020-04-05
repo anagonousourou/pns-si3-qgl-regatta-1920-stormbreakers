@@ -63,10 +63,12 @@ public class Captain {
 
         double currentSpeed = this.calculateSpeedFromOarsAction(actionsOrientation);
         List<SailorAction> actionsToAdjustSpeed = this.adjustSpeed(distance, currentSpeed);
-
+        
+        List<SailorAction> actionsToUseWatch = this.validateActions(this.coordinator.setSailorToWatch());
+        
         List<SailorAction> actionsForUnusedSailors = this.validateActions(this.coordinator.manageUnusedSailors());
 
-        return Utils.<SailorAction>concatenate(actionsOrientation, actionsToAdjustSpeed, actionsForUnusedSailors);
+        return Utils.<SailorAction>concatenate(actionsOrientation, actionsToAdjustSpeed, actionsToUseWatch, actionsForUnusedSailors);
 
     }
 
