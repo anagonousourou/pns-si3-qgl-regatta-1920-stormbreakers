@@ -58,9 +58,9 @@ public class Coordinator {
         var optMarine = this.marineForRudder();
         if (optMarine.isPresent() && rudderIsAccesible()) {
             Sailor rudderMarine = optMarine.get();
-            List<SailorAction> actions = new ArrayList<>();
-            MoveAction tmpMove = rudderMarine.howToMoveTo(this.rudderPosition());
-            actions.add(tmpMove);
+            List<SailorAction> actions = new ArrayList<>(2);
+            
+            actions.add(rudderMarine.howToMoveTo(this.rudderPosition()));
             actions.add(new Turn(rudderMarine.getId(), orientation));
             return actions;
         }

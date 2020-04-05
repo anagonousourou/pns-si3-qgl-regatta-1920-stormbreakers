@@ -124,17 +124,20 @@ public class Captain {
      * @return
      */
     List<SailorAction> actionsToOrientate(double orientation, double vitesse) {
-        // orientation is low but the rudder can be used pour affiner encore plus
         
+
+        // NO ORIENTATION NEEDED
+        if (Utils.within(orientation, Utils.MIN_ROTATION)) {
+            return List.of();
+        }
+        
+        // orientation needed is low but the rudder can be used for better adjustment so we use it:) 
         if (Utils.within(orientation, Utils.EPS) && this.coordinator.rudderIsPresent()
                 && this.coordinator.rudderIsAccesible()) {
             return this.orientateWithRudder(orientation, vitesse);
         }
 
-        // NO ORIENTATION NEEDED
-        if (Utils.within(orientation, Utils.EPS)) {
-            return List.of();
-        }
+        
         //on a le rudder et il peut etre utilisé
         else if (this.coordinator.rudderIsPresent() && this.coordinator.rudderIsAccesible()) {
             return this.orientateWithRudder(orientation, vitesse);

@@ -40,14 +40,14 @@ public class InputParser {
 	private static final String POSITION_KEY = "position";
 
 	public List<Sailor> fetchAllSailors(String jsonInput) throws JsonProcessingException {
-		List<Sailor> marins = new ArrayList<>();
+		List<Sailor> marins = new ArrayList<>(30);
 		mapper.readTree(jsonInput).get(SAILORS_KEY)
 				.forEach(s -> marins.add(new Sailor(s.get(ID_KEY).asInt(), s.get(XKEY).asInt(), s.get(YKEY).asInt())));
 		return marins;
 	}
 
 	public List<Oar> fetchAllOars(String jString) throws JsonProcessingException {
-		List<Oar> oars = new ArrayList<>();
+		List<Oar> oars = new ArrayList<>(30);
 		mapper.readTree(jString).get(SHIP_KEY).get(ENTITIES_KEY)
 				.forEach(s -> oars.add(new Oar(s.get(XKEY).asInt(), s.get(YKEY).asInt())));
 
@@ -80,7 +80,7 @@ public class InputParser {
 	}
 
 	public List<Equipment> fetchEquipments(String jString) throws JsonProcessingException {
-		List<Equipment> equipments = new ArrayList<>();
+		List<Equipment> equipments = new ArrayList<>(30);
 		mapper.readTree(jString).get(SHIP_KEY).get(ENTITIES_KEY).forEach(e -> {
 			Equipment equipment = null;
 			if (e.get("type").asText().equals("oar")) {

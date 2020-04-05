@@ -67,7 +67,7 @@ public class ObservableDataTest {
     }
 
     @Test
-    @Disabled
+    
     void streamManagerTest() {
         streamManager = new StreamManager(parser, null);
         observableData.addPropertyChangeListener(streamManager);
@@ -75,7 +75,7 @@ public class ObservableDataTest {
 
         assertEquals(1, streamManager.getStreams().size());
         assertEquals(11, streamManager.getRecifs().size());
-        assertEquals(12, streamManager.getObstacles().size());
+        assertEquals(13, streamManager.getObstacles().size());
 
         
 

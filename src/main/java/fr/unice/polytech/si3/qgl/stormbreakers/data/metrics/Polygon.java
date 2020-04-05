@@ -103,7 +103,7 @@ public class Polygon extends Shape implements Orientable {
      * @return List of the shape borders as LineSegment2D
      */
     private List<LineSegment2D> generateBorders(List<Point2D> vertices) {
-        List<LineSegment2D> cotes = new ArrayList<>();
+        List<LineSegment2D> cotes = new ArrayList<>(vertices.size());
         List<Point2D> points = new ArrayList<>(vertices);
         points.add(vertices.get(0)); // Close the hull
 
@@ -308,7 +308,7 @@ public class Polygon extends Shape implements Orientable {
         double k;
         double xN;
         double yN;
-        List<Point2D> extendedPoints = new ArrayList<>();
+        List<Point2D> extendedPoints = new ArrayList<>(this.vertices.size());
         for (Point2D vertex : this.vertices) {
             k = ((vertex.distanceTo(fakeBarycenter) + marge) / vertex.distanceTo(fakeBarycenter));
             xN = k * vertex.x() + fakeBarycenter.x() * (1 - k);

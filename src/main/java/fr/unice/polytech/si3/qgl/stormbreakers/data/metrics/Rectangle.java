@@ -39,7 +39,7 @@ public class Rectangle extends Shape {
         double halfLength = height / 2;
         double halfWidth = width / 2;
 
-        List<Point2D> rectangleVertices = new ArrayList<>();
+        List<Point2D> rectangleVertices = new ArrayList<>(4);
         rectangleVertices.add(new Point2D(halfLength, halfWidth));
         rectangleVertices.add(new Point2D(-halfLength, halfWidth));
         rectangleVertices.add(new Point2D(-halfLength, -halfWidth));

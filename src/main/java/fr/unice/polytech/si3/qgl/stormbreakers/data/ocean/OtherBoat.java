@@ -36,5 +36,7 @@ public class OtherBoat extends OceanEntity {
     public void setLife(int life) {
         this.life = life;
     }
+    
+    
 
 }
