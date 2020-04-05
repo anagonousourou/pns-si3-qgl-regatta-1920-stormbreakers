@@ -25,6 +25,10 @@ public class Position implements Logable, IPoint , Drawable {
         this.orientation = orientation;
     }
 
+    public Position(IPoint point2D) {
+        this(point2D.x(),point2D.y());
+    }
+
     public static Position create(double x, double y) {
         return new Position(x, y);
     }
