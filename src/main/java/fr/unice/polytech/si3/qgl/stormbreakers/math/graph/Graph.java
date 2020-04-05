@@ -48,7 +48,7 @@ public class Graph {
 
         for (double x = xmin; x <= xmax; x = x + ecart) {
             for (double y = ymin; y <= ymax; y = y + ecart) {
-                if (!streamManager.pointIsInsideOrAroundReef(new Point2D(x, y))) {
+                if (!streamManager.pointIsInsideOrAroundReefOrBoat(new Point2D(x, y))) {
                     this.addNode(new Sommet(x, y));
                 }
 
@@ -158,7 +158,7 @@ public class Graph {
                 double distance = v.getPoint().distanceTo(vertex.getPoint());
 
                 if (distance <= ecart * Math.sqrt(2)
-                        && !this.streamManager.thereIsRecifsBetweenOrAround(vertex.getPoint(), v.getPoint())) {
+                        && !this.streamManager.thereIsRecifsOrBoatsBetweenOrAround(vertex.getPoint(), v.getPoint())) {
                     double cout = distance - streamManager.speedProvided(vertex.getPoint(), v.getPoint())
                             - this.weatherAnalyst.speedProvided(vertex.getPoint(), v.getPoint());
                     if (cout < 0) {

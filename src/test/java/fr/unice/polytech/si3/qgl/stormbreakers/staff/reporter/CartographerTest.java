@@ -1,4 +1,4 @@
-package fr.unice.polytech.si3.qgl.stormbreakers.math.graph;
+package fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -23,9 +23,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Recif;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.processing.InputParser;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.processing.ObservableData;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
-import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.CheckpointsManager;
-import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.StreamManager;
-import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.WeatherAnalyst;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.graph.Graph;
 
 public class CartographerTest {
 

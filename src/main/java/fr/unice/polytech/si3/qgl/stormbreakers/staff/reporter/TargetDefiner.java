@@ -5,7 +5,6 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Boat;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Courant;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.processing.Logger;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Utils;
-import fr.unice.polytech.si3.qgl.stormbreakers.math.graph.Cartographer;
 import fr.unice.polytech.si3.qgl.stormbreakers.staff.tactical.Navigator;
 
 public class TargetDefiner {

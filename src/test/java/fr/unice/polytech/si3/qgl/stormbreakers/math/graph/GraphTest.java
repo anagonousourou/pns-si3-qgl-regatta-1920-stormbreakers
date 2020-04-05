@@ -64,7 +64,7 @@ public class GraphTest {
     @Test
     public void createSquaringTest() {
         streamManager = new StreamManager(null, null);
-        streamManager.setRecifs(List.of(reef1));
+        streamManager.setBoatsAndReefs(List.of(reef1));
         graph = new Graph(streamManager, null);
 
         graph.createSquaring(0.0, 0.0, 600, 600, 200);
@@ -276,9 +276,9 @@ public class GraphTest {
         graph = new Graph(streamManager, weatherAnalyst);
 
         graph.setNodes(Set.of(s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12));
-        //graph.createLinkBetweenVertices(200);
+        // graph.createLinkBetweenVertices(200);
 
-        graph.calculateShortestPathFromSource(s12, s1,200);
+        graph.calculateShortestPathFromSource(s12, s1, 200);
 
         assertEquals(5, s1.getShortestPath().size());
 
