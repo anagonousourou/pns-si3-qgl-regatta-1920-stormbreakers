@@ -62,6 +62,8 @@ public class Graph {
     public List<Sommet> reducePath(Sommet sommet) {
         // ?? morceau de chemin trop court pour etre atteint
         List<Sommet> result = new ArrayList<>(sommet.getShortestPath());
+
+        System.out.println("before"+result);
         result.add(sommet);
         int i = 1;
         while (i < result.size() - 1) {
@@ -85,26 +87,29 @@ public class Graph {
                 double distance = n.getPoint().distanceTo(node.getPoint());
 
                 if (distance <= ecart * Math.sqrt(2)
-                        && !this.streamManager.thereIsRecifsBetweenOrAround(n.getPoint(), node.getPoint())) {
-                    double cout = distance - streamManager.speedProvided(node.getPoint(), n.getPoint())
+                		&& !this.streamManager.thereIsRecifsBetweenOrAround(n.getPoint(), node.getPoint())) {
+                	
+                	double cout = distance - streamManager.speedProvided(node.getPoint(), n.getPoint())
                             - this.weatherAnalyst.speedProvided(node.getPoint(), n.getPoint());
                     if (cout < 0) {
-
+                    	
                         node.addDestination(n, 0);
                     } else {
 
                         node.addDestination(n, (int) cout);
                     }
-
+                    
                 }
             });
-
+            if(node.getAdjacentNodes().size()>9) {
+            	System.out.println("no problem for "+node);
+            }
         }
 
     }
 
     // NEW
-    public void calculateShortestPathFromSource(Sommet depart, Sommet destination) {
+    public boolean calculateShortestPathFromSource(Sommet depart, Sommet destination) {
         Sommet currentNode = null;
         depart.setDistance(0);
 
@@ -125,14 +130,18 @@ public class Graph {
                     unsettledNodes.add(adjacentNode);
                 }
             }
+           /* if(currentNode.getAdjacentNodes().size()==0) {
+            	System.out.println("no adjacent"+currentNode);
+            }*/
             settledNodes.add(currentNode);
         }
+        return settledNodes.contains(destination);
         //System.out.println("settledNodeSize"+settledNodes.size());
     }
 
     // NEW
     public Sommet getLowestDistanceNode(Set<Sommet> unsettledNodes,Sommet destination) {
-        var optResult = unsettledNodes.stream().min((a, b) -> Double.compare(a.getDistance()+a.getPoint().distanceTo(destination.getPoint()), b.getDistance()+b.getPoint().distanceTo(destination.getPoint())));
+        var optResult = unsettledNodes.stream().min((a, b) -> Double.compare(a.getDistance(), b.getDistance()));
 
     	if (optResult.isPresent()) {
             return optResult.get();
@@ -164,7 +173,7 @@ public class Graph {
         final Sommet ourSommet = this.addNode(vertex);
         nodes.stream().filter(node -> node != ourSommet).forEach(n -> {
             double distance = n.getPoint().distanceTo(ourSommet.getPoint());
-            if (distance <= ecart * Math.sqrt(2)) {
+            if (distance <= 2*ecart * Math.sqrt(2)) {
                 double cout = distance - streamManager.speedProvided(ourSommet.getPoint(), n.getPoint())
                         - this.weatherAnalyst.speedProvided(ourSommet.getPoint(), n.getPoint());
                 double coutNodeSommet = distance - streamManager.speedProvided(n.getPoint(), ourSommet.getPoint())

@@ -41,6 +41,7 @@ public class CartographerTest {
     private Recif reefRectangle2;
     private Cartographer cartographer;
     private String round2;
+    private String round3;
 
     @BeforeEach
     public void setUp() throws IOException {
@@ -49,6 +50,7 @@ public class CartographerTest {
         reefRectangle1 = new Recif(new Position(350, 200), new Rectangle(200, 300, 0.0));
         reefRectangle2 = new Recif(new Position(1000, 500), new Rectangle(200, 400, 0.0));
         round2 = new String(this.getClass().getResourceAsStream("/observabletest/round2.json").readAllBytes());
+        round3 = new String(this.getClass().getResourceAsStream("/observabletest/round3.json").readAllBytes());
     }
 
     @Test
@@ -117,11 +119,35 @@ public class CartographerTest {
         Date before=new Date();
         var result = cartographer.caseBuildMap(checkpoint1);
         Date after= new Date();
-        System.out.println("time"+(after.getTime()-before.getTime()));
+        System.out.println("time1 "+(after.getTime()-before.getTime()));
         assertNotNull(result);
-        System.out.println(result);
         assertNotEquals(checkpoint1, result, "Il doit y avoir une étape intermediaire");
     }
-    
+    @Test
+    public void obstaclesLikeWeek9() {
+    	boat=new Boat(new Position(120, 1728), 5, 5, 5, null);
+    	 InputParser parser=new InputParser();
+         ObservableData observableData=new ObservableData();
+         streamManager = new StreamManager(parser, boat);
+         observableData.addPropertyChangeListener(streamManager);
+         observableData.setValue(round3);
+         
+         weatherAnalyst = new WeatherAnalyst(null, boat, null);
+         checkpointsManager = mock(CheckpointsManager.class);
+         
+
+         checkpoint1 = new Checkpoint(new Position(800, 856), new Circle(50));
+         
+         
+         graph = new Graph(streamManager, weatherAnalyst);
+         cartographer = new Cartographer(checkpointsManager, graph, boat);
+         Date before=new Date();
+         var result = cartographer.caseBuildMap(checkpoint1);
+         Date after= new Date();
+         System.out.println("time2 "+(after.getTime()-before.getTime()));
+         assertNotNull(result);
+        // assertNotEquals(checkpoint1, result, "Il doit y avoir une étape intermediaire");
+     
+    }
 
 }

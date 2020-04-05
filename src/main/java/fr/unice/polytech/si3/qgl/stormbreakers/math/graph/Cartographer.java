@@ -1,5 +1,6 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.math.graph;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.IPoint;
@@ -49,25 +50,31 @@ public class Cartographer {
         }
 
         IPoint center = IPoint.centerPoints(boat, cp);
-        
+        boolean roadFound=false;
+        List<Sommet> path= new ArrayList<Sommet>();
         this.virtualMap = new RectangularSurface(center.x(), center.y(), 0.0, new Rectangle(width, height, 0.0));
+    	
+        while(!roadFound && ecart>=10) {
+        	//System.out.println(cp+"tour");
 
-        graph.createSquaring(virtualMap.minX(), virtualMap.minY(), virtualMap.maxX(), virtualMap.maxY(), ecart);
-
-        var depart = new Sommet(boat);
-        depart = graph.addNode(depart);
-
-        var destination = new Sommet(cp);
-        destination = graph.addNode(destination);
-        graph.createLinkBetweenVertices(ecart);
-
-        // en principe inutile
-        graph.clearShortestPaths();
-
-        graph.calculateShortestPathFromSource(depart, destination);
-
-        List<Sommet> path = graph.reducePath(destination);
-
+	        graph.createSquaring(virtualMap.minX(), virtualMap.minY(), virtualMap.maxX(), virtualMap.maxY(), ecart);
+	
+	        var depart = new Sommet(boat);
+	        depart = graph.addNode(depart);
+	
+	        var destination = new Sommet(cp);
+	        destination = graph.addNode(destination);
+	        graph.createLinkBetweenVertices(ecart);
+	
+	        // en principe inutile
+	        graph.clearShortestPaths();
+	
+	        roadFound =graph.calculateShortestPathFromSource(depart, destination);
+	        
+	        path = graph.reducePath(destination);
+	        System.out.println("after"+path+"\n ecart"+ecart);
+	        ecart/=2;
+	    }
         if (path.size() > 1) {
             return path.get(1).getPoint();
         } else {
