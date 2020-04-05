@@ -81,7 +81,6 @@ public class Graph {
     public void createLinkBetweenVertices(double ecart) {
 
         for (Sommet node : nodes) {
-
             nodes.stream().filter(n -> !n.equals(node)).forEach(n -> {
                 double distance = n.getPoint().distanceTo(node.getPoint());
 
@@ -116,7 +115,7 @@ public class Graph {
 
         while (!unsettledNodes.isEmpty() && !settledNodes.contains(destination)) {
 
-            currentNode = getLowestDistanceNode(unsettledNodes);
+            currentNode = getLowestDistanceNode(unsettledNodes,destination);
             unsettledNodes.remove(currentNode);
             for (Entry<Sommet, Integer> adjacencyPair : currentNode.getAdjacentNodes().entrySet()) {
                 Sommet adjacentNode = adjacencyPair.getKey();
@@ -128,13 +127,14 @@ public class Graph {
             }
             settledNodes.add(currentNode);
         }
-
+        //System.out.println("settledNodeSize"+settledNodes.size());
     }
 
     // NEW
-    public Sommet getLowestDistanceNode(Set<Sommet> unsettledNodes) {
-        var optResult = unsettledNodes.stream().min((a, b) -> Double.compare(a.getDistance(), b.getDistance()));
-        if (optResult.isPresent()) {
+    public Sommet getLowestDistanceNode(Set<Sommet> unsettledNodes,Sommet destination) {
+        var optResult = unsettledNodes.stream().min((a, b) -> Double.compare(a.getDistance()+a.getPoint().distanceTo(destination.getPoint()), b.getDistance()+b.getPoint().distanceTo(destination.getPoint())));
+
+    	if (optResult.isPresent()) {
             return optResult.get();
         }
         Logger.getInstance().log(unsettledNodes.toString());
