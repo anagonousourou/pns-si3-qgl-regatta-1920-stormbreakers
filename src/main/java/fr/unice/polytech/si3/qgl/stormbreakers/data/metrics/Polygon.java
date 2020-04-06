@@ -1,9 +1,6 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.data.metrics;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -11,21 +8,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.Logable;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.processing.Logger;
-import fr.unice.polytech.si3.qgl.stormbreakers.math.LineSegment2D;
-import fr.unice.polytech.si3.qgl.stormbreakers.math.Orientable;
-import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.*;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Vector;
 
 public class Polygon extends Shape implements Orientable {
 
-    private final double orientation;
+    private double orientation;
     private List<Point2D> vertices;
-    private List<Point2D> actualVertices;
-    private final Point2D fakeBarycenter;
-    private double minX;
-    private double minY;
-    private double maxX;
-    private double maxY;
 
     private List<LineSegment2D> bordersActualPos;
 
@@ -33,81 +22,33 @@ public class Polygon extends Shape implements Orientable {
         LEFT, RIGHT, MIDDLE
     }
 
-    public Polygon(double orientation, List<Point2D> sommets, Position anchor) {
+    public Polygon(double orientation, List<Point2D> vertices, Position anchor) {
         super("polygon", anchor);
         this.orientation = orientation;
-        double xbar = 0.0;
-        double ybar = 0.0;
-        for (Point2D v : sommets) {
-            xbar += v.x();
-            ybar += v.y();
-        }
-        xbar = xbar / (double) sommets.size();
-        ybar = ybar / (double) sommets.size();
-        this.fakeBarycenter = new Point2D(xbar, ybar);
-        this.vertices = new ArrayList<>(sommets);
-        this.actualVertices = getActualVertices(anchor);
-
-        this.setUpAABB();
-
+        this.vertices = new ArrayList<>(vertices);
         this.bordersActualPos = generateBordersInActualPos(this.anchor, orientation); // Well Oriented borders
 
-    }
-
-    @JsonCreator
-    public Polygon(@JsonProperty("orientation") double orientation, @JsonProperty("vertices") List<Point2D> vertices) {
-
-        super("polygon");
-        this.orientation = orientation;
-        double xbar = 0.0;
-        double ybar = 0.0;
-        for (Point2D v : vertices) {
-            xbar += v.x();
-            ybar += v.y();
-        }
-        xbar = xbar / (double) vertices.size();
-        ybar = ybar / (double) vertices.size();
-        this.fakeBarycenter = new Point2D(xbar, ybar);
-        this.vertices = new ArrayList<>(vertices);
-        this.actualVertices = getActualVertices(getAnchor());
-        this.setUpAABB();
-        this.bordersActualPos = generateBordersInActualPos(getAnchor(), orientation); // Well Oriented borders
-
-    }
-
-    void setUpAABB() {
-        this.maxX=actualVertices.get(0).x();
-        this.minX=actualVertices.get(0).x();
-        this.minY=actualVertices.get(0).y();
-        this.maxY=actualVertices.get(0).y();
-        for (int i = 0; i < this.actualVertices.size(); i++) {
-            double x = actualVertices.get(i).x();
-            double y = actualVertices.get(i).y();
-            this.minX = Math.min(minX, x);
-            this.maxX = Math.max(maxX, x);
-            this.minY = Math.min(minY, y);
-            this.maxY = Math.max(maxY, y);
-        }
     }
 
     /**
      * Changes the shape's anchor to a given one This method recomputes the
      * polygons's hull
-     * @param newAnchor
      */
     @Override
     public void setAnchor(Position newAnchor) {
-        System.out.println("Old anchor: "+this.anchor);
-        
         super.setAnchor(newAnchor);
-        System.out.println("New anchor: "+this.anchor);
         // Compute actual Borders
-        this.actualVertices = getActualVertices(getAnchor());
-        this.setUpAABB();
         this.bordersActualPos = generateBordersInActualPos(getAnchor(), orientation);
     }
 
-    
+    @JsonCreator
+    public Polygon(@JsonProperty("orientation") double orientation, @JsonProperty("vertices") List<Point2D> vertices) {
+        super("polygon");
+        this.orientation = orientation;
+        this.vertices = new ArrayList<>(vertices);
+        this.bordersActualPos = generateBordersInActualPos(getAnchor(), orientation); // Well Oriented borders
+
+    }
 
     /**
      * Generates shape's borders from given vertices
@@ -115,7 +56,7 @@ public class Polygon extends Shape implements Orientable {
      * @return List of the shape borders as LineSegment2D
      */
     private List<LineSegment2D> generateBorders(List<Point2D> vertices) {
-        List<LineSegment2D> cotes = new ArrayList<>(vertices.size());
+        List<LineSegment2D> cotes = new ArrayList<>();
         List<Point2D> points = new ArrayList<>(vertices);
         points.add(vertices.get(0)); // Close the hull
 
@@ -216,26 +157,56 @@ public class Polygon extends Shape implements Orientable {
      */
     @Override
     public boolean isPtInside(IPoint pointToTest) {
-        
-        if(this.isOutsideBoundingRectangle(pointToTest)){
-            
-            return false;
-        }
+        // On prend en compte la rotation du polygone
+        Iterator<LineSegment2D> it = bordersActualPos.iterator();
+        Side lastSide = null;
 
-        boolean flag = false;
+        while (it.hasNext()) {
+            LineSegment2D currentBorder = it.next();
 
-        int n = this.actualVertices.size();
-        for (int i = 0, j = n - 1; i < n; j = i++) {
-            if (((actualVertices.get(i).y() > pointToTest.y()) != (actualVertices.get(j).y() > pointToTest.y()))
-                    && (pointToTest.x() < ((actualVertices.get(j).x() - actualVertices.get(i).x())
-                            * (pointToTest.y() - actualVertices.get(i).y()))
-                            / (actualVertices.get(j).y() - actualVertices.get(i).y()) + actualVertices.get(i).x())) {
-                flag = !flag;
+            Side currentSide = getPointSideComparedToVector(currentBorder.firstPoint(), currentBorder.lastPoint(),
+                    pointToTest);
+
+            if (currentSide != Side.MIDDLE && lastSide == null) {
+                // Side of point compared to one edge
+                lastSide = currentSide;
+            } else if (currentSide != Side.MIDDLE && currentSide != lastSide) {
+                // If the point changes side when cycling through borders
+                // The point is outside the CONVEX polygon
+                return false;
             }
-
         }
 
-        return flag;
+        // If we reach here then the point is inside
+        return true;
+    }
+
+    /**
+     * Returns for a given vector AB the side to which the tested point T is NB:
+     * Left and Right are determined by considering the Vector facing Front
+     * 
+     * @param a start point of border
+     * @param b end point of border
+     * @param t point to test
+     * @return Side of the vector to which the point is
+     */
+
+    private Side getPointSideComparedToVector(Point2D a, Point2D b, IPoint t) {
+
+        Vector borderVector = new Vector(a, b);
+        Vector toCompare = new Vector(a, t);
+
+        double scal = Vector.crossZ(borderVector, toCompare);
+
+        Side side = null;
+        if (Utils.almostEquals(scal, 0))
+            side = Side.MIDDLE;
+        else if (scal < 0)
+            side = Side.LEFT;
+        else if (scal > 0)
+            side = Side.RIGHT;
+
+        return side;
     }
 
     List<LineSegment2D> getHull() {
@@ -303,32 +274,81 @@ public class Polygon extends Shape implements Orientable {
                 .getTranslatedBy(new Vector(origin, actualPos))).collect(Collectors.toList());
     }
 
-    public boolean isOutsideBoundingRectangle(IPoint p){
-        return (p.x() < this.minX || p.x() > this.maxX || p.y() < this.minY || p.y() > this.maxY);
+    /**
+     * Checks if the shape's vertices are stored in clockwise order It's when by
+     * iteration over the vertices you go clockwise around the shape's surface
+     * 
+     * @return true if clockwise, false if counterclockwise
+     */
+    private boolean isClockWise() {
+        List<Point2D> sommets = getVertices();
+        int isCcw = 0;
+        for (int ct = 0; ct < sommets.size() - 2 && isCcw == 0; ct++) {
+            isCcw = IPoint.ccw(sommets.get(ct), sommets.get(ct + 1), sommets.get(ct + 2));
+        }
 
+        return isCcw != 1;
     }
+
+    /**
+     * Given any shape's segment line AB and whether the shape is or not clockwise
+     * it computes a new Line parallel to the given segment and outside the original
+     * shape at a given distance from the original shape
+     * 
+     * @param isPolygonClockwise whether the polygon is or not clockwise
+     * @param a                  original segment's first point
+     * @param b                  original segment's last point
+     * @param distance           distance beween old and new segment line
+     * @return the extracted parallel line
+     */
+    private Line2D extractParallelLine(boolean isPolygonClockwise, Point2D a, Point2D b, double distance) {
+        Vector abVector = new Vector(a, b);
+        Vector normal = abVector.normalize();
+        // We expand out of the polygon
+        if (isPolygonClockwise) {
+            normal = normal.rotateBy90CCW();
+        } else {
+            normal = normal.rotateBy90CW();
+        }
+        normal = normal.scaleVector(distance); // We expand out by distance
+
+        Point2D translatedA = a.getTranslatedBy(normal);
+        Point2D translatedB = b.getTranslatedBy(normal);
+
+        return new Line2D(translatedA, translatedB);
+    }
+
     /**
      * Expands the shape by a margin The distance between the old borders and the
-     * new ones will be margin We use an homothetie
+     * new ones will be margin
      * 
      * @param margin to expand by, if negative used as positive
      * @return new expanded shape at same position
      */
     @Override
     public Shape wrappingShape(double margin) {
-        double marge = Math.abs(margin);
-        double k;
-        double xN;
-        double yN;
-        List<Point2D> extendedPoints = new ArrayList<>(this.vertices.size());
-        for (Point2D vertex : this.vertices) {
-            k = ((vertex.distanceTo(fakeBarycenter) + marge) / vertex.distanceTo(fakeBarycenter));
-            xN = k * vertex.x() + fakeBarycenter.x() * (1 - k);
-            yN = k * vertex.y() + fakeBarycenter.y() * (1 - k);
-            extendedPoints.add(new Point2D(xN, yN));
-        }
-        return new Polygon(this.orientation, extendedPoints, this.anchor);
+        margin = Math.abs(margin); // Expansion needs positive values
 
+        boolean isPolygonCW = this.isClockWise();
+        List<Point2D> oldVertices = getVertices();
+        oldVertices.add(oldVertices.get(0)); // Need line between last and first vertex
+
+        List<Line2D> expandedLines = new ArrayList<>();
+        for (int ct = 0; ct < oldVertices.size() - 1; ct++) {
+            expandedLines.add(extractParallelLine(isPolygonCW, oldVertices.get(ct), oldVertices.get(ct + 1), margin));
+        }
+        expandedLines.add(expandedLines.get(0)); // Need collision between last and first line
+
+        List<Point2D> expandedVertices = new ArrayList<>();
+        for (int ct = 0; ct < expandedLines.size() - 1; ct++) {
+            Optional<Point2D> optExpandedVertex = (expandedLines.get(ct)).intersect(expandedLines.get(ct + 1));
+            if (optExpandedVertex.isEmpty())
+                throw new UnsupportedOperationException("Can't find expansion point with lines :"
+                        + expandedLines.get(ct) + " and " + expandedLines.get(ct + 1));
+            expandedVertices.add(optExpandedVertex.get());
+        }
+
+        return new Polygon(orientation, expandedVertices, getAnchor());
     }
 
 }

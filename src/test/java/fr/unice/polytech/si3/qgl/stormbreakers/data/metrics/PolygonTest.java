@@ -152,7 +152,7 @@ class PolygonTest {
     }
 
     @Test
-    void isPtInsideHexagon(){
+    void isPtInsideHexagon() {
         assertTrue(hexagon.isPtInside(new Point2D(0, 0))); // Is in
         assertTrue(hexagon.isPtInside(new Point2D(1, 1))); // Is in
         assertTrue(hexagon.isPtInside(new Point2D(-1, -1))); // Is in
@@ -161,11 +161,10 @@ class PolygonTest {
         assertTrue(hexagon.isPtInside(new Point2D(0, 2.999))); // Is in
         assertTrue(hexagon.isPtInside(new Point2D(0, -2))); // Is in
 
-
         assertFalse(hexagon.isPtInside(new Point2D(3, 3))); // not in
         assertFalse(hexagon.isPtInside(new Point2D(0, 3.1))); // not in
         assertFalse(hexagon.isPtInside(new Point2D(0, 3.0001))); // not in
-        
+
         assertFalse(hexagon.isPtInside(new Point2D(10, 10))); // not in
         assertFalse(hexagon.isPtInside(new Point2D(-100, 3.0001))); // not in
     }
@@ -259,16 +258,19 @@ class PolygonTest {
 
         assertEquals(original.getVertices().size(), expanded.getVertices().size());
         System.out.println(expanded.getVertices());
-        for (int i = 0; i < vertices.size(); i++) {
-            assertEquals(margin, vertices.get(i).distanceTo(expanded.getVertices().get(i)), 1e-3);
-        }
         /*
-         * List<Point2D> expandedVertices = expanded.getVertices(); List<LineSegment2D>
-         * originalHull = original.getHull(); for (int i = 0; i < originalHull.size();
-         * i++) { Point2D vertex = expandedVertices.get(i); LineSegment2D border =
-         * originalHull.get(i); assertEquals(margin,
-         * (border.getSupportingLine()).distance(vertex), Utils.EPSILON); }
+         * for (int i = 0; i < vertices.size(); i++) { assertEquals(margin,
+         * vertices.get(i).distanceTo(expanded.getVertices().get(i)), 1e-3); }
          */
+
+        List<Point2D> expandedVertices = expanded.getVertices();
+        List<LineSegment2D> originalHull = original.getHull();
+        for (int i = 0; i < originalHull.size(); i++) {
+            Point2D vertex = expandedVertices.get(i);
+            LineSegment2D border = originalHull.get(i);
+            assertEquals(margin, (border.getSupportingLine()).distance(vertex), Utils.EPSILON);
+        }
+
     }
 
     @Test
