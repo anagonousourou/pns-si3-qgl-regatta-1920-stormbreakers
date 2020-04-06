@@ -139,12 +139,12 @@ public class CartographerTest {
          
          graph = new Graph(streamManager, weatherAnalyst);
          cartographer = new Cartographer(checkpointsManager, graph, boat);
-         Date before=new Date();
+         
          var result = cartographer.caseBuildMap(checkpoint1);
-         Date after= new Date();
-         System.out.println("time2 "+(after.getTime()-before.getTime()));
+         
+         
          assertNotNull(result);
-        // assertNotEquals(checkpoint1, result, "Il doit y avoir une étape intermediaire");
+        assertNotEquals(checkpoint1, result, "Il doit y avoir une étape intermediaire");
      
     }
 

@@ -20,7 +20,7 @@ public class Polygon extends Shape implements Orientable {
 
     private final double orientation;
     private List<Point2D> vertices;
-    private final List<Point2D> actualVertices;
+    private List<Point2D> actualVertices;
     private final Point2D fakeBarycenter;
     private double minX;
     private double minY;
@@ -76,6 +76,10 @@ public class Polygon extends Shape implements Orientable {
     }
 
     void setUpAABB() {
+        this.maxX=actualVertices.get(0).x();
+        this.minX=actualVertices.get(0).x();
+        this.minY=actualVertices.get(0).y();
+        this.maxY=actualVertices.get(0).y();
         for (int i = 0; i < this.actualVertices.size(); i++) {
             double x = actualVertices.get(i).x();
             double y = actualVertices.get(i).y();
@@ -89,11 +93,17 @@ public class Polygon extends Shape implements Orientable {
     /**
      * Changes the shape's anchor to a given one This method recomputes the
      * polygons's hull
+     * @param newAnchor
      */
     @Override
     public void setAnchor(Position newAnchor) {
+        System.out.println("Old anchor: "+this.anchor);
+        
         super.setAnchor(newAnchor);
+        System.out.println("New anchor: "+this.anchor);
         // Compute actual Borders
+        this.actualVertices = getActualVertices(getAnchor());
+        this.setUpAABB();
         this.bordersActualPos = generateBordersInActualPos(getAnchor(), orientation);
     }
 
