@@ -169,6 +169,12 @@ public class StreamManager implements PropertyChangeListener {
         return this.recifs.stream().anyMatch(obstacle -> obstacle.intersectsWithWrappingSurface(12.0, segment2d));
     }
 
+    public boolean thereIsObstacleBetweenOrAround(IPoint cp) {
+		LineSegment2D segment2d = new LineSegment2D(boat, cp);
+        return this.obstacles.stream().anyMatch(obstacle -> obstacle.intersectsWithWrappingSurface(12.0, segment2d));
+	}
+
+
     /**
      * 
      * @param depart
@@ -454,4 +460,5 @@ public class StreamManager implements PropertyChangeListener {
         return this.obstacles;
     }
 
+	
 }
