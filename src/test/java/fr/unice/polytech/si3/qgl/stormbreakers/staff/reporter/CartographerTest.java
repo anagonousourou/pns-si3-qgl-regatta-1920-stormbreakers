@@ -1,4 +1,4 @@
-package fr.unice.polytech.si3.qgl.stormbreakers.math.graph;
+package fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -24,9 +24,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Recif;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.processing.InputParser;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.processing.ObservableData;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
-import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.CheckpointsManager;
-import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.StreamManager;
-import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.WeatherAnalyst;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.graph.Graph;
 
 public class CartographerTest {
 
@@ -45,8 +43,8 @@ public class CartographerTest {
 
     @BeforeEach
     public void setUp() throws IOException {
-        reefTriangle = new Recif(new Position(700, 500),
-                new Polygon(0.0, List.of(new Point2D(0, 200), new Point2D(0, 0), new Point2D(-200, 0))));
+        reefTriangle = new Recif(new Position(600, 600),
+                new Polygon(0.0, List.of(new Point2D(100, -100), new Point2D(100, 100), new Point2D(-100, -100))));
         reefRectangle1 = new Recif(new Position(350, 200), new Rectangle(200, 300, 0.0));
         reefRectangle2 = new Recif(new Position(1000, 500), new Rectangle(200, 400, 0.0));
         round2 = new String(this.getClass().getResourceAsStream("/observabletest/round2.json").readAllBytes());
@@ -149,5 +147,33 @@ public class CartographerTest {
         // assertNotEquals(checkpoint1, result, "Il doit y avoir une étape intermediaire");
      
     }
+
+
+    @Test
+    public void someObstaclesTest(){
+        boat = new Boat(new Position(500, 500), 5, 5, 5, null);
+        
+        streamManager = new StreamManager(null, boat);
+        
+
+        
+        
+        weatherAnalyst = new WeatherAnalyst(null, boat, null);
+
+        checkpointsManager = mock(CheckpointsManager.class);
+        checkpoint1 = new Checkpoint(new Position(3600.0, 5160), new Circle(50));
+
+        graph = new Graph(streamManager, weatherAnalyst);
+        cartographer = new Cartographer(checkpointsManager, graph, boat);
+
+        var result = cartographer.caseBuildMap(checkpoint1);
+        assertNotNull(result);
+        System.out.println(result);
+        assertNotEquals(checkpoint1, result, "Il doit y avoir une étape intermediaire");
+    }
+
+
+
+    
 
 }

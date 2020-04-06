@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.OarAction;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.SailorAction;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.UseWatch;
 
 class OutputBuilderTest {
 
@@ -38,6 +39,15 @@ class OutputBuilderTest {
         expected = expected.replace(" ","");
         String out = outputBuilder.writeActions(actions);
         assertEquals(expected, out);
+    }
+
+    @Test
+    void watchTest(){
+        List<SailorAction> actions=new ArrayList<>();
+
+        actions.add(new UseWatch(1));
+        assertEquals("[{\"sailorId\":1,\"type\":\"USE_WATCH\"}]",outputBuilder.writeActions(actions));
+
     }
 
 }

@@ -14,7 +14,7 @@ public class Logger {
 
     private Logger() {
         currentLogLine = new StringBuilder();
-        allLogs = new ArrayList<>();
+        allLogs = new ArrayList<>(MAX_LOG_LINES);
     }
 
     public static Logger getInstance() {

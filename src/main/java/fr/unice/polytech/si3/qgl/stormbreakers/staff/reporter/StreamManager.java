@@ -27,6 +27,7 @@ public class StreamManager implements PropertyChangeListener {
     private List<Courant> courants;
 
     private List<OceanEntity> obstacles;
+    private List<OceanEntity> boatsAndReefs;
     private List<Recif> recifs;
     private final InputParser parser;
     private final Boat boat;
@@ -42,6 +43,7 @@ public class StreamManager implements PropertyChangeListener {
         this.courants = List.of();
         this.obstacles = List.of();
         this.recifs = List.of();
+        this.boatsAndReefs = List.of();
 
     }
 
@@ -83,6 +85,10 @@ public class StreamManager implements PropertyChangeListener {
 
     public boolean pointIsInsideOrAroundReef(IPoint point) {
         return this.recifs.stream().anyMatch(recif -> recif.isInsideWrappingSurface(12.0, point));
+    }
+
+    public boolean pointIsInsideOrAroundReefOrBoat(IPoint point) {
+        return this.boatsAndReefs.stream().anyMatch(recif -> recif.isInsideWrappingSurface(12.0, point));
     }
 
     /**
@@ -137,6 +143,7 @@ public class StreamManager implements PropertyChangeListener {
      */
     public boolean thereIsObstacleBetween(IPoint depart, IPoint destination) {
         LineSegment2D segment2d = new LineSegment2D(depart, destination);
+
         return this.obstacles.stream().anyMatch(obstacle -> obstacle.intersectsWith(segment2d));
     }
 
@@ -160,6 +167,18 @@ public class StreamManager implements PropertyChangeListener {
     public boolean thereIsRecifsBetweenOrAround(IPoint depart, IPoint destination) {
         LineSegment2D segment2d = new LineSegment2D(depart, destination);
         return this.recifs.stream().anyMatch(obstacle -> obstacle.intersectsWithWrappingSurface(12.0, segment2d));
+    }
+
+    /**
+     * 
+     * @param depart
+     * @param destination
+     * @return
+     */
+    public boolean thereIsRecifsOrBoatsBetweenOrAround(IPoint depart, IPoint destination) {
+        LineSegment2D segment2d = new LineSegment2D(depart, destination);
+        return this.boatsAndReefs.stream()
+                .anyMatch(obstacle -> obstacle.intersectsWithWrappingSurface(12.0, segment2d));
     }
 
     /**
@@ -387,7 +406,12 @@ public class StreamManager implements PropertyChangeListener {
             this.recifs = entities.stream().filter(e -> e.getEnumType().equals(OceanEntityType.RECIF))
                     .map(e -> (Recif) e).collect(Collectors.toList());
 
+            this.boatsAndReefs = entities.stream().filter(
+                    e -> e.getEnumType().equals(OceanEntityType.RECIF) || e.getEnumType().equals(OceanEntityType.BOAT))
+                    .collect(Collectors.toList());
+
         } catch (JsonProcessingException e) {
+
             Logger.getInstance().logErrorMsg(e);
         }
     }
@@ -408,19 +432,25 @@ public class StreamManager implements PropertyChangeListener {
      */
     public void setRecifs(List<Recif> recifs) {
         this.recifs = recifs;
+
     }
 
-    
+    /**
+     * @param boatsAndReefs the boatsAndReefs to set
+     */
+    public void setBoatsAndReefs(List<OceanEntity> boatsAndReefs) {
+        this.boatsAndReefs = boatsAndReefs;
+    }
 
-    public List<Recif> getRecifs(){
+    public List<Recif> getRecifs() {
         return this.recifs;
     }
 
-    public List<Courant> getStreams(){
+    public List<Courant> getStreams() {
         return this.courants;
     }
 
-    public List<OceanEntity> getObstacles(){
+    public List<OceanEntity> getObstacles() {
         return this.obstacles;
     }
 

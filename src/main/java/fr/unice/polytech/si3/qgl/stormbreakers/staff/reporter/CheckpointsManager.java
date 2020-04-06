@@ -25,7 +25,7 @@ public class CheckpointsManager {
      */
     public void updateCheckpoint(Boat boat) {
         // LATER: 14/03/2020 tests
-        if (hasNextCheckpoint() && (boatCollidesWithNextCheckpoint(boat) || this.isPosInCheckpoint(boat))) {
+        if (hasNextCheckpoint() && (this.isPosInCheckpoint(boat) || boatCollidesWithNextCheckpoint(boat))) {
             Logger.getInstance().addSeparatorThenLog("Validated:" + checkpoints.remove(0).toLogs());
         }
     }
@@ -41,6 +41,7 @@ public class CheckpointsManager {
     }
 
     private boolean isPosInCheckpoint(IPoint position) {
+        
         return checkpoints.get(0).isPtInside(position);
     }
 

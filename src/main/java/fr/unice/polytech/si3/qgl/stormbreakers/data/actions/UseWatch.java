@@ -8,8 +8,8 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.EquipmentType;
 public class UseWatch extends SailorAction {
 
     @JsonCreator
-    UseWatch(@JsonProperty("sailorId") int sailorId) {
-        super(sailorId, ActionType.USEWATCH.actionCode);
+	public UseWatch(@JsonProperty("sailorId")  int sailorId) {
+        super(sailorId,ActionType.USEWATCH.actionCode);
     }
 
     @Override
