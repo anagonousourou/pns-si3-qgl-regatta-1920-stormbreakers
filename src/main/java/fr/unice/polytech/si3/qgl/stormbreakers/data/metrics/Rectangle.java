@@ -27,6 +27,16 @@ public class Rectangle extends Shape {
         this.rectanglePolygon = buildAsPolygon();
 
     }
+    @JsonCreator
+    public Rectangle(@JsonProperty("width") double width, @JsonProperty("height") double height,
+            @JsonProperty("orientation") double orientation) {
+        super("rectangle");
+        this.width = width;
+        this.height = height;
+        this.orientation = orientation;
+        this.rectanglePolygon = buildAsPolygon();
+    }
+
 
     @Override
     public void setAnchor(Position newAnchor) {
@@ -47,16 +57,7 @@ public class Rectangle extends Shape {
         return new Polygon(this.orientation, rectangleVertices, this.anchor);
     }
 
-    @JsonCreator
-    public Rectangle(@JsonProperty("width") double width, @JsonProperty("height") double height,
-            @JsonProperty("orientation") double orientation) {
-        super("rectangle");
-        this.width = width;
-        this.height = height;
-        this.orientation = orientation;
-        this.rectanglePolygon = buildAsPolygon();
-    }
-
+    
     @JsonProperty("width")
     public double getWidth() {
         return width;

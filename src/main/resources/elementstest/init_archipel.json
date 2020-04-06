@@ -5,6 +5,18 @@
             {
                 "type": "checkpoint",
                 "position": {
+                    "x": 2929.171668667469,
+                    "y": 1668.6674669867962,
+                    "orientation": 0.0
+                },
+                "shape": {
+                    "type": "circle",
+                    "radius": 100.0
+                }
+            },
+            {
+                "type": "checkpoint",
+                "position": {
                     "x": 2052.8211284513804,
                     "y": 2262.9051620648256
                 },

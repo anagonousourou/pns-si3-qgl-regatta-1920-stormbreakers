@@ -54,6 +54,27 @@ public class Polygon extends Shape implements Orientable {
 
     }
 
+    @JsonCreator
+    public Polygon(@JsonProperty("orientation") double orientation, @JsonProperty("vertices") List<Point2D> vertices) {
+
+        super("polygon");
+        this.orientation = orientation;
+        double xbar = 0.0;
+        double ybar = 0.0;
+        for (Point2D v : vertices) {
+            xbar += v.x();
+            ybar += v.y();
+        }
+        xbar = xbar / (double) vertices.size();
+        ybar = ybar / (double) vertices.size();
+        this.fakeBarycenter = new Point2D(xbar, ybar);
+        this.vertices = new ArrayList<>(vertices);
+        this.actualVertices = getActualVertices(getAnchor());
+        this.setUpAABB();
+        this.bordersActualPos = generateBordersInActualPos(getAnchor(), orientation); // Well Oriented borders
+
+    }
+
     void setUpAABB() {
         for (int i = 0; i < this.actualVertices.size(); i++) {
             double x = actualVertices.get(i).x();
@@ -76,26 +97,7 @@ public class Polygon extends Shape implements Orientable {
         this.bordersActualPos = generateBordersInActualPos(getAnchor(), orientation);
     }
 
-    @JsonCreator
-    public Polygon(@JsonProperty("orientation") double orientation, @JsonProperty("vertices") List<Point2D> vertices) {
-
-        super("polygon");
-        this.orientation = orientation;
-        double xbar = 0.0;
-        double ybar = 0.0;
-        for (Point2D v : vertices) {
-            xbar += v.x();
-            ybar += v.y();
-        }
-        xbar = xbar / (double) vertices.size();
-        ybar = ybar / (double) vertices.size();
-        this.fakeBarycenter = new Point2D(xbar, ybar);
-        this.vertices = new ArrayList<>(vertices);
-        this.actualVertices = getActualVertices(new Position(0, 0));
-        this.setUpAABB();
-        this.bordersActualPos = generateBordersInActualPos(getAnchor(), orientation); // Well Oriented borders
-
-    }
+    
 
     /**
      * Generates shape's borders from given vertices
