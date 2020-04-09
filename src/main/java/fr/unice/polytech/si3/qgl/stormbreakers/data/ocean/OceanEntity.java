@@ -8,7 +8,6 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Shape;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Surface;
-import fr.unice.polytech.si3.qgl.stormbreakers.visuals.bumps.VisibleEntity;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
 
@@ -16,7 +15,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.visuals.bumps.VisibleEntity;
     @JsonSubTypes.Type(value = OtherBoat.class, name = "ship"),
     @JsonSubTypes.Type(value = Recif.class, name = "reef") })
 
-public abstract class OceanEntity implements Surface , VisibleEntity {
+public abstract class OceanEntity implements Surface {
   private String type;
   protected Position position;
   protected Shape shape;
