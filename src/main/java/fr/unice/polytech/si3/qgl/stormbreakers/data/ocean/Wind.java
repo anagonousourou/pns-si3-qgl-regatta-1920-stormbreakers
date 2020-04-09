@@ -11,8 +11,8 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.processing.InputParser;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.processing.Logger;
 
 public class Wind implements PropertyChangeListener {
-    private double orientation=0.0;
-    private double strength=0.0;
+    private double orientation = 0.0;
+    private double strength = 0.0;
     private InputParser parser;
 
     @JsonCreator
@@ -40,12 +40,10 @@ public class Wind implements PropertyChangeListener {
         String jString = (String) evt.getNewValue();
         try {
             this.orientation = this.parser.fetchWindOrientation(jString);
-            this.strength =this.parser.fetchWindStrength(jString);
+            this.strength = this.parser.fetchWindStrength(jString);
         } catch (JsonProcessingException e) {
-            Logger.getInstance().log(e.getMessage());
+            Logger.getInstance().logErrorMsg(e);
         }
-        
-        
 
     }
 }

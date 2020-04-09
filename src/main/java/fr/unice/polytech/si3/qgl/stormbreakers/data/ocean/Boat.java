@@ -5,22 +5,37 @@ import java.beans.PropertyChangeListener;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.IPoint;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Shape;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.processing.InputParser;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.processing.Logger;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.Surface;
+
 /**
- * Le bateau implémente Propertychange listener pour permettre 
- * la mise à jour des infos du bateau notamment la vie et la position-orientation
+ * Le bateau implémente Propertychange listener pour permettre la mise à jour
+ * des infos du bateau notamment la vie et la position-orientation
  */
-public class Boat implements PropertyChangeListener,IPoint {
-    private Position position = null;
+public class Boat implements PropertyChangeListener, Surface {
+    private Shape boatShape;
+    private Position position;
     private final int deckwidth;
     private final int decklength;
-    private int life = 0;
-    //add a Shape field
+    private int life;
     private InputParser parser;
 
+    public Boat(Position position, int decklength, int deckwidth, int life, InputParser parser, Shape boatShape) {
+        this.position = position;
+        this.decklength = decklength;
+        this.deckwidth = deckwidth;
+        this.life = life;
+        this.parser = parser;
+        this.boatShape = boatShape;
+        boatShape.setAnchor(position);
+    }
+
+    /**
+     * Constructor for test compatibility (No shape)
+     */
     public Boat(Position position, int decklength, int deckwidth, int life, InputParser parser) {
         this.position = position;
         this.decklength = decklength;
@@ -29,22 +44,26 @@ public class Boat implements PropertyChangeListener,IPoint {
         this.parser = parser;
     }
 
-    
-
-    
+    public Shape getShape() {
+        return boatShape;
+    }
 
     public void setPosition(Position position) {
         this.position = position;
+        if (this.boatShape != null) {
+            this.boatShape.setAnchor(position);
+        }
+
     }
 
     public int getDeckwidth() {
         return deckwidth;
     }
 
-    
     public int getDecklength() {
         return decklength;
     }
+
     public int getLife() {
         return life;
     }
@@ -62,21 +81,20 @@ public class Boat implements PropertyChangeListener,IPoint {
         String data = (String) evt.getNewValue();
         try {
             this.life = this.parser.fetchBoatLife(data);
-            this.position =this.parser.fetchBoatPosition(data);
+            setPosition(this.parser.fetchBoatPosition(data));
         } catch (JsonProcessingException e) {
-            Logger.getInstance().log(e.getMessage());
+            Logger.getInstance().logErrorMsg(e);
         }
-        
 
     }
 
-    public Position getPosition(){
+    public Position getPosition() {
         return position;
     }
 
     @Override
     public double x() {
-       return this.position.x();   
+        return this.position.x();
     }
 
     @Override

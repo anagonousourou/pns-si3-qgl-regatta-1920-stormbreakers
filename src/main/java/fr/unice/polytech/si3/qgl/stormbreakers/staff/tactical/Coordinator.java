@@ -1,6 +1,12 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.staff.tactical;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.ActionType;
@@ -10,6 +16,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.MoveAction;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.OarAction;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.SailorAction;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.Turn;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.UseWatch;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Equipment;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Oar;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Sail;
@@ -28,9 +35,7 @@ public class Coordinator {
     }
 
     void validateActions(List<SailorAction> actions) {
-        actions.forEach(action -> 
-            this.getMarinById(action.getSailorId()).get().setDoneTurn(true)
-        );
+        actions.forEach(action -> this.getMarinById(action.getSailorId()).get().setDoneTurn(true));
 
     }
 
@@ -53,9 +58,9 @@ public class Coordinator {
         var optMarine = this.marineForRudder();
         if (optMarine.isPresent() && rudderIsAccesible()) {
             Sailor rudderMarine = optMarine.get();
-            List<SailorAction> actions = new ArrayList<>();
-            MoveAction tmpMove = rudderMarine.howToMoveTo(this.rudderPosition());
-            actions.add(tmpMove);
+            List<SailorAction> actions = new ArrayList<>(2);
+            
+            actions.add(rudderMarine.howToMoveTo(this.rudderPosition()));
             actions.add(new Turn(rudderMarine.getId(), orientation));
             return actions;
         }
@@ -146,15 +151,15 @@ public class Coordinator {
 
     public Map<Oar, List<Sailor>> marinsDisponiblesForOar() {
         HashMap<Oar, List<Sailor>> results = new HashMap<>();
-        this.equipmentsManager.oars().forEach(oar -> results.put(oar,
-                this.crewManager.marins().stream().filter(m -> m.canReach(oar.getPosition())).collect(Collectors.toList())));
+        this.equipmentsManager.oars().forEach(oar -> results.put(oar, this.crewManager.marins().stream()
+                .filter(m -> m.canReach(oar.getPosition())).collect(Collectors.toList())));
         return results;
     }
 
     public Map<Equipment, List<Sailor>> marinsDisponiblesVoiles(boolean isOpened) {
         HashMap<Equipment, List<Sailor>> results = new HashMap<>();
-        this.equipmentsManager.sails(isOpened).forEach(sail -> results.put(sail,
-                this.crewManager.marins().stream().filter(m -> m.canReach(sail.getPosition())).collect(Collectors.toList())));
+        this.equipmentsManager.sails(isOpened).forEach(sail -> results.put(sail, this.crewManager.marins().stream()
+                .filter(m -> m.canReach(sail.getPosition())).collect(Collectors.toList())));
         return results;
     }
 
@@ -239,7 +244,7 @@ public class Coordinator {
     public List<SailorAction> activateOarsNotStrict(int nb) {
         List<SailorAction> actions;
         if (nb > 0) {
-            
+
             do {
                 actions = this.activateOarsOnRight(nb);
                 nb--;
@@ -252,7 +257,7 @@ public class Coordinator {
                 actions = this.activateOarsOnLeft(nb);
                 nb--;
 
-            } while (actions.isEmpty()&& nb > 0);
+            } while (actions.isEmpty() && nb > 0);
 
             return actions;
         }
@@ -332,6 +337,7 @@ public class Coordinator {
 
     /**
      * Fonction qui renvoie les marins présents sur des rames à gauche
+     * 
      * @return
      */
     public List<Sailor> leftSailorsOnOars() {
@@ -347,6 +353,7 @@ public class Coordinator {
 
     /**
      * Fonction qui renvoie les marins présents sur des rames à droite
+     * 
      * @return
      */
     public List<Sailor> rightSailorsOnOars() {
@@ -427,14 +434,13 @@ public class Coordinator {
     }
 
     /**
-     * Cette méthode va déplacer les marins en utilisant les MoveAction
-     * de la liste
-     * puis simulera l'execution des autres actions en marquant
-     * les équipements concernés avec used=true
-     * il faut vérifier que l'action correspond au type d'équipement
-     * bien sur si le movingaction conduit le marin vers une case où il n'y
-     * a pas d'équipement on fait rien
-     * Cela permettra de voir les équipements déja utilisés
+     * Cette méthode va déplacer les marins en utilisant les MoveAction de la liste
+     * puis simulera l'execution des autres actions en marquant les équipements
+     * concernés avec used=true il faut vérifier que l'action correspond au type
+     * d'équipement bien sur si le movingaction conduit le marin vers une case où il
+     * n'y a pas d'équipement on fait rien Cela permettra de voir les équipements
+     * déja utilisés
+     * 
      * @param actions
      */
 
@@ -445,16 +451,16 @@ public class Coordinator {
 
         List<SailorAction> otherActions = actions.stream()
                 .filter(act -> !act.getType().equals(ActionType.MOVING.actionCode)).collect(Collectors.toList());
-        
+
         this.crewManager.executeMoves(moves);
         this.markEquipmentUsedByActions(otherActions);
 
     }
 
     /**
-     * Rapproche, tant que possible, de chaque équipement non-utilisé,
-     * un marin non assignés
-     * ordre de priorité: gouvernail, puis rames, puis voiles
+     * Rapproche, tant que possible, de chaque équipement non-utilisé, un marin non
+     * assignés ordre de priorité: gouvernail, puis rames, puis voiles
+     * 
      * @return déplacements générés
      */
     public List<SailorAction> manageUnusedSailors() {
@@ -462,18 +468,21 @@ public class Coordinator {
         List<SailorAction> moves = new ArrayList<>();
 
         if (rudderIsPresent() && !equipmentsManager.isRudderUsed()) {
-            moves.add(crewManager.bringClosestSailorCloserTo(availableSailors,rudderPosition()));
+            moves.add(crewManager.bringClosestSailorCloserTo(availableSailors, rudderPosition()));
         }
-        moves.addAll(bringSailorsCloserToEquipments(availableSailors,new ArrayList<Equipment>(equipmentsManager.unusedOars())));
-        moves.addAll(bringSailorsCloserToEquipments(availableSailors,new ArrayList<Equipment>(equipmentsManager.sails())));
+        moves.addAll(bringSailorsCloserToEquipments(availableSailors,
+                new ArrayList<Equipment>(equipmentsManager.unusedOars())));
+        moves.addAll(
+                bringSailorsCloserToEquipments(availableSailors, new ArrayList<Equipment>(equipmentsManager.sails())));
 
         return moves.stream().filter(Objects::nonNull).collect(Collectors.toList());
     }
 
     /**
-     * Rapproche au mieux les marins des equipements en parametre
-     * NB: modifie la liste de marins (retire ceux assignés)
-     * @param sailors Liste de marins
+     * Rapproche au mieux les marins des equipements en parametre NB: modifie la
+     * liste de marins (retire ceux assignés)
+     * 
+     * @param sailors    Liste de marins
      * @param equipments à approcher
      * @return déplacements générés
      */
@@ -483,11 +492,41 @@ public class Coordinator {
 
         while (it.hasNext()) {
             Equipment currentEquipment = it.next();
-            MoveAction generatedMove = crewManager.bringClosestSailorCloserTo(sailors,currentEquipment.getPosition());
-            if (generatedMove!=null) moves.add(generatedMove);
+            MoveAction generatedMove = crewManager.bringClosestSailorCloserTo(sailors, currentEquipment.getPosition());
+            if (generatedMove != null)
+                moves.add(generatedMove);
         }
         return moves;
     }
-
-
+    
+    /**
+     * Trouve un Sailor proche ou positionné à la vigie
+     * @return selected sailor
+     */
+    
+    Optional<Sailor> findSailorForWatch(){
+    	IntPosition watchPos = equipmentsManager.watchPosition();
+    	if(this.crewManager.marinAround(this.equipmentsManager.watchPosition()))
+    	 return this.crewManager.availableSailorAtPosition(watchPos)
+        .or(() -> this.crewManager.availableSailorClosestTo(watchPos));
+    	return Optional.empty();
+    }
+    /**
+     * Assigne un sailor a la vigie
+     * @return liste des actions à effectuer pour cela
+     */
+	List<SailorAction> setSailorToWatch() {
+		List<Sailor> availableSailors = crewManager.getAvailableSailors();
+		List<SailorAction> actions = new ArrayList<>();
+		if(equipmentsManager.watchIsPresent() && !equipmentsManager.isWatchUsed() && !availableSailors.isEmpty()) {
+			Optional<Sailor> chosenSailor = findSailorForWatch();
+			if(chosenSailor.isPresent()) {
+                Sailor sailorForWatch = chosenSailor.get();
+                
+                actions.add(sailorForWatch.howToMoveTo(equipmentsManager.watchPosition()));
+                actions.add(new UseWatch(sailorForWatch.getId()));
+			}
+		}
+		return actions;
+	}
 }

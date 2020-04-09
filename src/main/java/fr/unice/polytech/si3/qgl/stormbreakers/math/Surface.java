@@ -11,47 +11,40 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Rectangle;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Shape;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Recif;
 
+/**
+ * Represents entities that have a positioned shape
+ */
+
 public interface Surface extends IPoint, Orientable {
 
-	public Shape getShape();
+	Shape getShape();
 
-	// Une surface a une shape, des coordonnées x,y et une orientation
-	// l'orientation ici est l'oriention de position pas celle de la shape
-	public default boolean isPtInside(IPoint point) {
-		// On se replace par rapport au centre de la forme
+	public default boolean isInsideOpenSurface(IPoint point) {
 
-		Point2D pt = new Point2D(point.x() - this.x(), point.y() - this.y());
-
-		double orientation = this.getOrientation();
-		// On compense l'orientation du checkpoint
-		if (orientation != 0)
-			pt = pt.getRotatedBy(-orientation);
-		return this.getShape().isPtInside(pt);
+		return this.getShape().isInsideOpenShape(point);
 	}
 
-	public default boolean intersectsWith(LineSegment2D lineSegment2D) {
-		if (this.getShape().getType().equals("rectangle")) {
-
-			return new RectanglePositioned((Rectangle) this.getShape(),
-					new Position(this.x(), this.y(), this.getOrientation())).intersectsWith(lineSegment2D);
-		} else if (this.getShape().getType().equals("polygon")) {
-			Polygon shape = (Polygon) this.getShape();
-			
-			return shape.generateBordersInThePlan(this).stream().anyMatch(lineSegment2D::intersects);
-		}
-
-		else {
-			//TODO
-			return false;
-		}
+	default boolean isPtInside(IPoint point) {
+		return getShape().isPtInside(point);
 	}
 
-	public default boolean intersectsWith(IPoint fp, IPoint sp) {
+	default boolean intersectsWith(LineSegment2D lineSegment2D) {
+		return getShape().collidesWith(lineSegment2D);
+	}
+
+	default boolean intersectsWithWrappingSurface(double margin, LineSegment2D lineSegment2D) {
+		return this.getShape().wrappingShape(margin).collidesWith(lineSegment2D);
+	}
+
+	default boolean collidesWith(Surface other) {
+		return this.getShape().collidesWith(other.getShape());
+	}
+
+	default boolean intersectsWith(IPoint fp, IPoint sp) {
 		LineSegment2D segment2d = new LineSegment2D(fp, sp);
 		return this.intersectsWith(segment2d);
-
 	}
-	
+
 	/**
 	 * This methode must return the point to aim for so that you can go from depart
 	 * to destination such that you will avoid Surface of course an effort must be
@@ -61,7 +54,8 @@ public interface Surface extends IPoint, Orientable {
 	 * @param depart * @param destination
 	 * @return
 	 */
-	public default List<IPoint> avoidHit(IPoint depart, IPoint destination) {
+	default List<IPoint> avoidHit(IPoint depart, IPoint destination) {
+		// LATER: 16/03/2020 Figure out how to fix circle test
 		// LATER
 		if (this.getShape().getType().equals("rectangle")) {
 			return Surface.avoidHitRectangle(this, depart, destination);
@@ -100,7 +94,7 @@ public interface Surface extends IPoint, Orientable {
 
 			if (self.intersectsWith(ls1)) {
 				var secondPt = rectPos.corners().stream().filter(corner -> !self.intersectsWith(corner, destination)
-						&& Point2D.ccw(ptDepart, fpt, ptDest) == Point2D.ccw(fpt, corner, ptDest)).findAny();
+						&& IPoint.ccw(ptDepart, fpt, ptDest) == IPoint.ccw(fpt, corner, ptDest)).findAny();
 				if (secondPt.isPresent()) {
 					return List.of(depart, fpt, secondPt.get(), destination);
 				}
@@ -109,6 +103,34 @@ public interface Surface extends IPoint, Orientable {
 			}
 		}
 
-		return List.of(depart,destination);
+		return List.of(depart, destination);
+	}
+
+	/**
+	 * Give the intersection of segment [depart,arrive] if arrivee is outside the
+	 * Surface otherwise return arrive if arrive is inside , we assume depart is
+	 * inside the Surface
+	 * 
+	 * @param depart
+	 * @param arrivee
+	 * @return
+	 */
+	public default IPoint limitToSurface(IPoint depart, IPoint arrivee) {
+
+		if (this.isInsideOpenSurface(arrivee)) {
+			return arrivee;
+		}
+
+		else {
+			return this.getShape().intersectionPoint(depart, arrivee);
+		}
+	}
+
+	public default boolean intersectsWithWrappingSurface(double margin, IPoint start, IPoint end) {
+		return this.getShape().wrappingShape(margin).collidesWith(new LineSegment2D(start, end));
+	}
+
+	public default boolean isInsideWrappingSurface(double margin, IPoint point) {
+		return this.getShape().wrappingShape(margin).isPtInside(point);
 	}
 }

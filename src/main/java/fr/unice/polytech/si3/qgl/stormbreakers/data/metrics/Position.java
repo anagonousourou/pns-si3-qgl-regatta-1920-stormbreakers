@@ -9,7 +9,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.Logable;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Utils;
 
-public class Position implements Logable,IPoint {
+public class Position implements Logable, IPoint {
     private double x;
     private double y;
     private double orientation;
@@ -22,11 +22,12 @@ public class Position implements Logable,IPoint {
         this.orientation = orientation;
     }
 
-    public static Position create(double x,double y){
+    public static Position create(double x, double y) {
         return new Position(x, y);
     }
-    public static Position create(double x,double y,double orientation){
-        return new Position(x, y,orientation);
+
+    public static Position create(double x, double y, double orientation) {
+        return new Position(x, y, orientation);
     }
 
     public Position(double x, double y) {
@@ -43,8 +44,6 @@ public class Position implements Logable,IPoint {
         return y;
     }
 
-    
-
     public double getOrientation() {
         return this.orientation;
     }
@@ -56,7 +55,8 @@ public class Position implements Logable,IPoint {
         if (!(obj instanceof Position))
             return false;
         Position other = (Position) obj;
-        return Utils.almostEquals(other.x, x) && Utils.almostEquals(other.y, y) && Utils.almostEquals(other.orientation, orientation);
+        return Utils.almostEquals(other.x, x) && Utils.almostEquals(other.y, y)
+                && Utils.almostEquals(other.orientation, orientation);
     }
 
     @Override
@@ -74,7 +74,7 @@ public class Position implements Logable,IPoint {
         return "P(" + this.x + "|" + this.y + "|" + this.orientation + ")";
     }
 
-	public Point2D getPoint2D() {
-		return new Point2D(this.x, this.y);
-	}
+    public Point2D getPoint2D() {
+        return new Point2D(this.x, this.y);
+    }
 }

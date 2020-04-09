@@ -15,89 +15,14 @@ import fr.unice.polytech.si3.qgl.stormbreakers.exceptions.DegeneratedLine2DExcep
  */
 public class LineSegment2D {
 
-
 	/**
-	 *  Segment bounding points
+	 * Segment bounding points
 	 */
 	private Point2D startPoint;
 	private Point2D endPoint;
 
 	private final double length;
-	public static final  double ACCURACY = 1e-12;
-
-
-	/**
-	 * Checks if two line segment intersect. Uses the Point2D.ccw() method, which is
-	 * based on Sedgewick algorithm.
-	 * 
-	 * 
-	 * @param edge2 a line segment
-	 * @return true if the 2 line segments intersect
-	 */
-	public boolean intersects( LineSegment2D edge2) {
-		
-		Point2D e1p1 = this.firstPoint();
-		Point2D e1p2 = this.lastPoint();
-		Point2D e2p1 = edge2.firstPoint();
-		Point2D e2p2 = edge2.lastPoint();
-
-		boolean b1 = Point2D.ccw(e1p1, e1p2, e2p1) * Point2D.ccw(e1p1, e1p2, e2p2) <= 0;
-		boolean b2 = Point2D.ccw(e2p1, e2p2, e1p1) * Point2D.ccw(e2p1, e2p2, e1p2) <= 0;
-		
-		return b1 && b2;
-	}
-
-	/**
-     * Checks if two line segment intersect. Uses the Point2D.ccw() method,
-     * which is based on Sedgewick algorithm.
-     * 
-     * @param edge1 a line segment
-     * @param edge2 a line segment
-     * @return true if the 2 line segments intersect
-     */
-	public static boolean intersects(LineSegment2D edge1, LineSegment2D edge2) {
-		// LATER: 07/03/2020 Rework
-		Point2D e1p1 = edge1.firstPoint();
-		Point2D e1p2 = edge1.lastPoint();
-		Point2D e2p1 = edge2.firstPoint();
-		Point2D e2p2 = edge2.lastPoint();
-
-		boolean b1 = Point2D.ccw(e1p1, e1p2, e2p1)
-				* Point2D.ccw(e1p1, e1p2, e2p2) <= 0;
-		boolean b2 = Point2D.ccw(e2p1, e2p2, e1p1)
-				* Point2D.ccw(e2p1, e2p2, e1p2) <= 0;
-		return b1 &&b2;
-    }
-
-	/**
-     * Returns the intersection with a given lineSegment
-	 * @return if exists the intersection point
-	 * @author David Lebrisse - Stormbreakers
-     */
-    public Optional<Point2D> intersection(LineSegment2D other) {
-        Line2D thisSupport = this.getSupportingLine();
-        Line2D otherSupport = other.getSupportingLine();
-
-        Optional<Point2D> lineIntersectionOpt = thisSupport.intersect(otherSupport);
-
-        if (lineIntersectionOpt.isPresent()) {
-        	// Supporting lines collide
-        	Point2D lineIntersection = lineIntersectionOpt.get();
-
-        	if (this.isCollinearPointOnSegment(lineIntersection) && other.isCollinearPointOnSegment(lineIntersection)) {
-        		// The collision point is on this segment
-				// -> collision point
-        		return lineIntersectionOpt;
-			} else {
-        		// The collision point is not on this segment
-				// -> no collision point
-        		return Optional.empty();
-			}
-		} else {
-        	// Even supporting lines don't collide
-        	return Optional.empty();
-		}
-    }
+	public static final double ACCURACY = 1e-12;
 
 	// ===================================================================
 	// constructors
@@ -120,6 +45,87 @@ public class LineSegment2D {
 	/** Defines a new Edge with two extremities. */
 	public LineSegment2D(double x1, double y1, double x2, double y2) {
 		this(new Point2D(x1, y1), new Point2D(x2, y2));
+	}
+
+	/**
+	 * Checks if two line segment intersect. Uses the Point2D.ccw() method, which is
+	 * based on Sedgewick algorithm.
+	 * 
+	 * 
+	 * @param edge2 a line segment
+	 * @return true if the 2 line segments intersect
+	 */
+	public boolean intersects(LineSegment2D edge2) {
+
+		Point2D e1p1 = this.firstPoint();
+		Point2D e1p2 = this.lastPoint();
+		Point2D e2p1 = edge2.firstPoint();
+		Point2D e2p2 = edge2.lastPoint();
+
+		boolean b1 = IPoint.ccw(e1p1, e1p2, e2p1) * IPoint.ccw(e1p1, e1p2, e2p2) <= 0;
+		boolean b2 = IPoint.ccw(e2p1, e2p2, e1p1) * IPoint.ccw(e2p1, e2p2, e1p2) <= 0;
+
+		return b1 && b2;
+	}
+
+	/**
+	 * Checks if two line segment intersect. Uses the Point2D.ccw() method, which is
+	 * based on Sedgewick algorithm.
+	 * 
+	 * @param edge1 a line segment
+	 * @param edge2 a line segment
+	 * @return true if the 2 line segments intersect
+	 */
+	public static boolean intersects(LineSegment2D edge1, LineSegment2D edge2) {
+		// LATER: 07/03/2020 Rework
+		Point2D e1p1 = edge1.firstPoint();
+		Point2D e1p2 = edge1.lastPoint();
+		Point2D e2p1 = edge2.firstPoint();
+		Point2D e2p2 = edge2.lastPoint();
+
+		boolean b1 = IPoint.ccw(e1p1, e1p2, e2p1) * IPoint.ccw(e1p1, e1p2, e2p2) <= 0;
+		boolean b2 = IPoint.ccw(e2p1, e2p2, e1p1) * IPoint.ccw(e2p1, e2p2, e1p2) <= 0;
+		return b1 && b2;
+	}
+
+	/**
+	 * Returns the intersection with a given lineSegment
+	 * 
+	 * @return if exists the intersection point
+	 * @author David Lebrisse - Stormbreakers
+	 */
+	public Optional<Point2D> intersection(LineSegment2D other) {
+		Line2D thisSupport = this.getSupportingLine();
+		Line2D otherSupport = other.getSupportingLine();
+
+		Optional<Point2D> lineIntersectionOpt = thisSupport.intersect(otherSupport);
+
+		if (lineIntersectionOpt.isPresent()) {
+			// Supporting lines collide
+			Point2D lineIntersection = lineIntersectionOpt.get();
+
+			if (this.isCollinearPointOnSegment(lineIntersection) && other.isCollinearPointOnSegment(lineIntersection)) {
+				// The collision point is on this segment
+				// -> collision point
+				return lineIntersectionOpt;
+			} else {
+				// The collision point is not on this segment
+				// -> no collision point
+				return Optional.empty();
+			}
+		} else {
+			// Even supporting lines don't collide
+			return Optional.empty();
+		}
+	}
+
+	public IPoint intersectionPoint(IPoint depart, IPoint fin) {
+		var optPoint = this.intersection(new LineSegment2D(depart, fin));
+		if (optPoint.isPresent()) {
+			return optPoint.get();
+		} else {
+			return null;
+		}
 	}
 
 	// ===================================================================
@@ -185,11 +191,11 @@ public class LineSegment2D {
 	 * 
 	 * @author David Lebrisse - Stormbreakers
 	 */
-	public double segmentParameterOf(Point2D P) {
+	public double segmentParameterOf(Point2D p) {
 		// LATER: 08/03/2020 Clamp k in [0,1] and corresponding tests
 		Vector supportDirection = startPoint.getVectorTo(endPoint).normalize();
 		Line2D arrangedSupport = new Line2D(startPoint, supportDirection);
-		return arrangedSupport.lineParameterOf(P) / length;
+		return arrangedSupport.lineParameterOf(p) / length;
 	}
 
 	/**
@@ -226,7 +232,6 @@ public class LineSegment2D {
 	}
 
 	public boolean contains(Point2D point2D) {
-		// LATER: 08/03/2020 Tests
 		// Compute distance between segment and point
 		double distance = this.distance(point2D);
 		return Utils.almostEquals(0, distance);
@@ -255,22 +260,22 @@ public class LineSegment2D {
 	 * 
 	 * @author David Lebrisse - Stormbreakers
 	 */
-	public double distance(Point2D P) {
+	public double distance(Point2D p) {
 		Line2D support = this.getSupportingLine();
-		Point2D projectedPOntoSupport = support.projectOnto(P);
+		Point2D projectedPOntoSupport = support.projectOnto(p);
 
 		if (this.isCollinearPointOnSegment(projectedPOntoSupport)) {
 			// The closest point to draw distance from
 			// is in the segment line
-			return support.distance(P);
+			return support.distance(p);
 		} else {
 			// The closest point to draw distance from
 			// is in one of the edges
 			Point2D first = firstPoint();
 			Point2D last = lastPoint();
 
-			double distanceFromFirst = first.distanceTo(P);
-			double distanceFromLast = last.distanceTo(P);
+			double distanceFromFirst = first.distanceTo(p);
+			double distanceFromLast = last.distanceTo(p);
 			return Math.min(distanceFromFirst, distanceFromLast);
 		}
 	}
@@ -348,7 +353,7 @@ public class LineSegment2D {
 		Point2D from = firstPoint();
 		Point2D to = lastPoint();
 		double totalDistance = from.distanceTo(collinearPoint) + to.distanceTo(collinearPoint);
-		return Utils.almostEqualsBoundsIncluded(this.length(),totalDistance);
+		return Utils.almostEqualsBoundsIncluded(this.length(), totalDistance);
 	}
 
 	// ===================================================================
@@ -364,49 +369,47 @@ public class LineSegment2D {
 		LineSegment2D that = (LineSegment2D) obj;
 
 		// Compare each field
-		return this.startPoint.equals(that.startPoint)
-				&& this.endPoint.equals(that.endPoint);
+		return this.startPoint.equals(that.startPoint) && this.endPoint.equals(that.endPoint);
 	}
 
 	@Override
 	public String toString() {
-		return "LineSegment2D[(" + startPoint.x() + "," + startPoint.y() + ")-("
-				+ endPoint.x() + "," + endPoint.y() + ")]";
+		return "LineSegment2D[(" + startPoint.x() + "," + startPoint.y() + ")-(" + endPoint.x() + "," + endPoint.y()
+				+ ")]";
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(startPoint,endPoint);
+		return Objects.hash(startPoint, endPoint);
 	}
+
 	/**
-	 * Renvoie le point du segment de droite qui est le plus proche 
+	 * Renvoie le point du segment de droite qui est le plus proche
+	 * 
 	 * @author Patrick
 	 * @param point2d
 	 * @return
 	 */
-	public Point2D closestPointTo(IPoint point2d){
-		List<Point2D> points=new ArrayList<>();
-		DoubleStream.iterate(0, d-> d <= 1.0, d-> d+0.05).forEach(d->
-			points.add( this.point(d) )
-		);
-		var tmp=points.stream().min((p,pother)-> Double.compare(p.distanceTo(point2d),pother.distanceTo(point2d) ));
-		if(tmp.isPresent()){
+	public Point2D closestPointTo(IPoint point2d) {
+		List<Point2D> points = new ArrayList<>(20);
+		DoubleStream.iterate(0, d -> d <= 1.0, d -> d + 0.05).forEach(d -> points.add(this.point(d)));
+		var tmp = points.stream().min((p, pother) -> Double.compare(p.distanceTo(point2d), pother.distanceTo(point2d)));
+		if (tmp.isPresent()) {
 			return tmp.get();
 		}
-		//should never happen
+		// should never happen
 		return null;
-		
+
 	}
+
 	/**
 	 * 
 	 * @param step must be within 0 and 1
 	 * @return
 	 */
-	public List<IPoint> pointsOfSegment(double step){
-		List<IPoint> points=new ArrayList<>();
-		DoubleStream.iterate(0, d-> d <= 1.0, d-> d+step).forEach(d->
-			points.add( this.point(d) )
-		);
+	public List<IPoint> pointsOfSegment(double step) {
+		List<IPoint> points = new ArrayList<>(20);
+		DoubleStream.iterate(0, d -> d <= 1.0, d -> d + step).forEach(d -> points.add(this.point(d)));
 
 		return points;
 	}

@@ -26,5 +26,5 @@ public class Sail extends Equipment {
     public void setOpenned(boolean openned) {
         this.openned = openned;
     }
-    
+
 }

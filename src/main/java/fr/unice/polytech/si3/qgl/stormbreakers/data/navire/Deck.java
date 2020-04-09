@@ -9,10 +9,7 @@ public class Deck implements Logable {
     private int length;
 
     @JsonCreator
-    public Deck(
-            @JsonProperty("width") int width,
-            @JsonProperty("length") int length
-    ) {
+    public Deck(@JsonProperty("width") int width, @JsonProperty("length") int length) {
         this.width = width;
         this.length = length;
     }
@@ -29,6 +26,6 @@ public class Deck implements Logable {
 
     @Override
     public String toLogs() {
-        return "d:"+length+width;
+        return "d:" + length + width;
     }
 }

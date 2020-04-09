@@ -36,7 +36,7 @@ public class IntPosition {
 
     @Override
     public String toString() {
-        return "Position (x: " + x + ", " + "y: " + y + ")";
+        return String.format("%s(x: %d,y: %d)", this.getClass().getSimpleName(), x, y);
     }
 
     public int distanceTo(IntPosition position) {

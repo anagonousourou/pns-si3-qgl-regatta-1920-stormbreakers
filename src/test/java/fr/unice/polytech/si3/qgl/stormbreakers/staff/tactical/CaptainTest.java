@@ -45,18 +45,18 @@ public class CaptainTest {
     @Test
     void accelerateTest() {
         Coordinator coordinator = mock(Coordinator.class);
-        TargetDefiner targetDefiner=new TargetDefiner(null, null, null, null);
-        rogers = new Captain(null, null, null, null, coordinator,targetDefiner);
+        TargetDefiner targetDefiner = new TargetDefiner(null, null, null, null);
+        rogers = new Captain(null, null, null, null, coordinator, targetDefiner);
         List<SailorAction> sailorsActions = List.of(new OarAction(1), new OarAction(3));
         when(coordinator.nbOars()).thenReturn(4);
 
         when(coordinator.addOaringSailorsOnEachSide()).thenReturn(sailorsActions);
 
-        
-
         assertTrue(sailorsActions.containsAll(this.rogers.accelerate(1230, 200)));
 
         assertEquals(List.of(), rogers.accelerate(200, 210), "Nothing to do");
+        assertEquals(List.of(), rogers.accelerate(0.0001, 0), "Nothing to do");
+        assertEquals(List.of(), rogers.accelerate(100, 120), "Nothing to do");
 
     }
 
@@ -68,13 +68,13 @@ public class CaptainTest {
         var m4 = new Sailor(4, 4, 4);
         List<Sailor> marins = List.of(m1, m2, m3, m4);
         CrewManager crewManager = new CrewManager(marins);
-        EquipmentsManager equipmentsManager=mock(EquipmentsManager.class);
+        EquipmentsManager equipmentsManager = mock(EquipmentsManager.class);
 
         marins.forEach(m -> assertFalse(m.isDoneTurn(), "par défaut  doneTurn est à false"));
 
         Coordinator coordinator = new Coordinator(crewManager, equipmentsManager);
 
-        rogers = new Captain(null, null, null, null, coordinator,null);
+        rogers = new Captain(null, null, null, null, coordinator, null);
 
         rogers.validateActions(List.of(new OarAction(1), new OarAction(3)));
 
@@ -88,7 +88,7 @@ public class CaptainTest {
     @Test
     void calculateSpeedTest() {
         Coordinator coordinator = mock(Coordinator.class);
-        rogers = new Captain(null, null, null, null, coordinator,null);
+        rogers = new Captain(null, null, null, null, coordinator, null);
 
         when(coordinator.nbOars()).thenReturn(2);
         assertEquals(165 * ((double) 1 / 2),
@@ -98,156 +98,174 @@ public class CaptainTest {
                 " should be 0 since no oarsAction");
 
     }
-    
+
     @Test
-    void actionsToOrientateTest1() {
-    	List<Sailor> sailors = List.of(
-    			new Sailor(0, new IntPosition(0, 0)),
-        		new Sailor(1, new IntPosition(0, 1)),
-        		new Sailor(2, new IntPosition(1, 0)),
-        		new Sailor(3, new IntPosition(1, 1)));
-    	CrewManager crewManager = new CrewManager(sailors);
-    	
-    	List<Equipment> equipments = List.of(
-    			new Oar(0, 0),
-    			new Oar(1, 0),
-    			new Oar(0, 1),
-    			new Oar(1, 1));
-    	EquipmentsManager equipmentsManager = new EquipmentsManager(equipments, 2);
+    void actionsToOrientateTest1OarsOnly() {
+        List<Sailor> sailors = List.of(new Sailor(0, new IntPosition(0, 0)), new Sailor(1, new IntPosition(0, 1)),
+                new Sailor(2, new IntPosition(1, 0)), new Sailor(3, new IntPosition(1, 1)));
+        CrewManager crewManager = new CrewManager(sailors);
+
+        List<Equipment> equipments = List.of(new Oar(0, 0), new Oar(1, 0), new Oar(0, 1), new Oar(1, 1));
+        EquipmentsManager equipmentsManager = new EquipmentsManager(equipments, 2);
         Navigator navigator = new Navigator();
         List<SailorAction> actions;
-        
+
         Coordinator coordinator = new Coordinator(crewManager, equipmentsManager);
-        rogers = new Captain(null, null, navigator, null, coordinator,null);
-        
-        actions = List.of(sailors.get(0).howToMoveTo(equipments.get(2).getPosition()),
-        		new OarAction(0),
-        		sailors.get(1).howToMoveTo(equipments.get(3).getPosition()),
-        		new OarAction(1));
-        
-        assertEquals(List.of(), rogers.actionsToOrientate(0));
-        //The orientation wanted is a possible OarsConfig
-        assertEquals(actions.toString(), rogers.actionsToOrientate(Math.PI/2).toString());
+        rogers = new Captain(null, null, navigator, null, coordinator, null);
+
+        actions = List.of(sailors.get(0).howToMoveTo(equipments.get(2).getPosition()), new OarAction(0),
+                sailors.get(1).howToMoveTo(equipments.get(3).getPosition()), new OarAction(1));
+
+        assertEquals(List.of(), rogers.actionsToOrientate(0, 100));
+        // The orientation wanted is a possible OarsConfig
+        assertEquals(actions.toString(), rogers.actionsToOrientate(Math.PI / 2, 100).toString());
     }
-    
+
     @Test
     void actionsToOrientateTest2() {
-    	List<Sailor> sailors = List.of(
-    			new Sailor(0, new IntPosition(0, 0)),
-        		new Sailor(1, new IntPosition(0, 1)),
-        		new Sailor(2, new IntPosition(1, 0)),
-        		new Sailor(3, new IntPosition(1, 1)));
-    	CrewManager crewManager = new CrewManager(sailors);
-    	
-    	List<Equipment> equipments = List.of(
-    			new Oar(0, 0),
-    			new Oar(1, 0),
-    			new Oar(0, 1),
-    			new Oar(1, 1));
-    	EquipmentsManager equipmentsManager = new EquipmentsManager(equipments, 2);
-        Navigator navigator = new Navigator();        
-        Coordinator coordinator = new Coordinator(crewManager, equipmentsManager);
-        rogers = new Captain(null, null, navigator, null, coordinator,null);
-        
-        List<SailorAction> actions = List.of(sailors.get(0).howToMoveTo(equipments.get(0).getPosition()),
-        		new OarAction(0));
-      //The orientation wanted is a possible OarsConfig
-        assertEquals(actions.toString(), rogers.actionsToOrientate(-Math.PI/4).toString());
-    }
-    
-    @Test
-    void actionsToOrientateTest3() {
-    	List<Sailor> sailors = List.of(
-    			new Sailor(0, new IntPosition(0, 0)),
-        		new Sailor(1, new IntPosition(0, 1)),
-        		new Sailor(2, new IntPosition(1, 0)),
-        		new Sailor(3, new IntPosition(1, 1)));
-    	CrewManager crewManager = new CrewManager(sailors);
-    	List<Equipment> equipments = List.of(
-        		new Oar(0, 0),
-    			new Oar(1, 0),
-    			new Oar(0, 1),
-    			new Oar(1, 1),
-    			new Gouvernail(2, 2));
-    	EquipmentsManager equipmentsManager = new EquipmentsManager(equipments, 3);
-    	Coordinator coordinator = new Coordinator(crewManager, equipmentsManager);
+        List<Sailor> sailors = List.of(
+
+                new Sailor(0, new IntPosition(0, 0)), new Sailor(1, new IntPosition(0, 1)),
+                new Sailor(2, new IntPosition(1, 0)), new Sailor(3, new IntPosition(1, 1))
+
+        );
+        CrewManager crewManager = new CrewManager(sailors);
+
+        List<Equipment> equipments = List.of(new Oar(0, 0), new Oar(1, 0), new Oar(0, 1), new Oar(1, 1));
+        EquipmentsManager equipmentsManager = new EquipmentsManager(equipments, 2);
         Navigator navigator = new Navigator();
-        rogers = new Captain(null, null, navigator, null, coordinator,null);
-        
-        
-        List<SailorAction> actualActions = rogers.actionsToOrientate(-Math.PI/5);
-        
-        assertEquals(2, actualActions.size(),"L'angle est suffisamment petit pour le gouvernail");
-        
-        var optTurnAction=actualActions.stream().filter(action->action.getType().equals(ActionType.TURN.actionCode )).findFirst();
-        if(optTurnAction.isPresent()){
-            var turnAction=(Turn)optTurnAction.get();
-            
-            assertEquals(-Math.PI/5,turnAction.getRotation() ,1e-3, "doit etre -pi/5 ");
-        }
+        Coordinator coordinator = new Coordinator(crewManager, equipmentsManager);
+        rogers = new Captain(null, null, navigator, null, coordinator, null);
+
+        List<SailorAction> actions = List.of(sailors.get(0).howToMoveTo(equipments.get(0).getPosition()),
+                new OarAction(0));
+        // The orientation wanted is a possible OarsConfig
+        assertEquals(actions.toString(), rogers.actionsToOrientate(-Math.PI / 4, 100).toString());
     }
-    
+
+    @Test
+    void actionsToOrientateTestWithRudder() {
+        List<Sailor> sailors = List.of(new Sailor(0, new IntPosition(0, 0)), new Sailor(1, new IntPosition(0, 1)),
+                new Sailor(2, new IntPosition(1, 0)), new Sailor(3, new IntPosition(1, 1)));
+        CrewManager crewManager = new CrewManager(sailors);
+        List<Equipment> equipments = List.of(new Oar(0, 0), new Oar(1, 0), new Oar(0, 1), new Oar(1, 1),
+                new Gouvernail(2, 2));
+        EquipmentsManager equipmentsManager = new EquipmentsManager(equipments, 3);
+        Coordinator coordinator = new Coordinator(crewManager, equipmentsManager);
+        Navigator navigator = new Navigator();
+        rogers = new Captain(null, null, navigator, null, coordinator, null);
+
+        List<SailorAction> actualActions = rogers.actionsToOrientate(-Math.PI / 5, 100.0);
+
+        assertEquals(2, actualActions.size(), "L'angle est suffisamment petit pour le gouvernail");
+
+        var optTurnAction = actualActions.stream().filter(action -> action.getType().equals(ActionType.TURN.actionCode))
+                .findFirst();
+        if (optTurnAction.isPresent()) {
+            var turnAction = (Turn) optTurnAction.get();
+
+            assertEquals(-Math.PI / 5, turnAction.getRotation(), 1e-3, "doit etre -pi/5 ");
+        }
+
+    }
+
+    @Test
+    void actionsToOrientateTestWithRudderLowSpeed() {
+        // vitesse requise faible (nulle) et rudder present et accessible
+        List<Sailor> sailors = List.of(new Sailor(0, new IntPosition(0, 0)), new Sailor(1, new IntPosition(0, 1)),
+                new Sailor(2, new IntPosition(1, 0)), new Sailor(3, new IntPosition(1, 1)));
+        CrewManager crewManager = new CrewManager(sailors);
+        List<Equipment> equipments = List.of(new Oar(0, 0), new Oar(1, 0), new Oar(0, 1), new Oar(1, 1),
+                new Gouvernail(2, 2));
+        EquipmentsManager equipmentsManager = new EquipmentsManager(equipments, 3);
+        Coordinator coordinator = new Coordinator(crewManager, equipmentsManager);
+        Navigator navigator = new Navigator();
+        rogers = new Captain(null, null, navigator, null, coordinator, null);
+
+        List<SailorAction> actualActions = rogers.actionsToOrientate(Math.PI / 2, 0.1);
+
+        assertEquals(2, actualActions.size(), "La vitesse est nulle donc on ramene dans -PI/4 à Pi/4");
+
+        var optTurnAction = actualActions.stream().filter(action -> action.getType().equals(ActionType.TURN.actionCode))
+                .findFirst();
+        if (optTurnAction.isPresent()) {
+            var turnAction = (Turn) optTurnAction.get();
+
+            assertEquals(Math.PI / 4, turnAction.getRotation(), 1e-3, "doit etre pi/4 ");
+        }
+
+    }
+
     @Test
     void actionsToOrientateTest4() {
-    	List<Sailor> sailors = List.of(
-    			new Sailor(0, new IntPosition(0, 0)),
-        		new Sailor(1, new IntPosition(0, 1)),
-        		new Sailor(2, new IntPosition(1, 0)),
-        		new Sailor(3, new IntPosition(1, 1)));
-    	CrewManager crewManager = new CrewManager(sailors);
-    	List<Equipment> equipments = List.of(
-        		new Oar(0, 0),
-    			new Oar(1, 0),
-    			new Oar(0, 1),
-    			new Oar(1, 1),
-    			new Gouvernail(0, 2));
-    	EquipmentsManager equipmentsManager = new EquipmentsManager(equipments, 2);
-    	Coordinator coordinator = new Coordinator(crewManager, equipmentsManager);
+        List<Sailor> sailors = List.of(new Sailor(0, new IntPosition(0, 0)), new Sailor(1, new IntPosition(0, 1)),
+                new Sailor(2, new IntPosition(1, 0)), new Sailor(3, new IntPosition(1, 1)));
+        CrewManager crewManager = new CrewManager(sailors);
+        List<Equipment> equipments = List.of(new Oar(0, 0), new Oar(1, 0), new Oar(0, 1), new Oar(1, 1),
+                new Gouvernail(0, 2));
+        EquipmentsManager equipmentsManager = new EquipmentsManager(equipments, 2);
+        Coordinator coordinator = new Coordinator(crewManager, equipmentsManager);
         Navigator navigator = new Navigator();
-        rogers = new Captain(null, null, navigator, null, coordinator,null);
-        
-        
-        List<SailorAction> actualActions = rogers.actionsToOrientate(Math.PI);
-        
+        rogers = new Captain(null, null, navigator, null, coordinator, null);
+
+        List<SailorAction> actualActions = rogers.actionsToOrientate(Math.PI, 180);
+
         assertEquals(6, actualActions.size());
-        var optTurnAction=actualActions.stream().filter(action->action.getType().equals(ActionType.TURN.actionCode )).findFirst();
-        if(optTurnAction.isPresent()){
-            var turnAction=(Turn)optTurnAction.get();
-            
-            assertEquals(Math.PI/4,turnAction.getRotation() ,1e-3, "doit etre pi/4 ");
+        var optTurnAction = actualActions.stream().filter(action -> action.getType().equals(ActionType.TURN.actionCode))
+                .findFirst();
+        if (optTurnAction.isPresent()) {
+            var turnAction = (Turn) optTurnAction.get();
+
+            assertEquals(Math.PI / 4, turnAction.getRotation(), 1e-3, "doit etre pi/4 ");
         }
     }
-    
+
+    @Test
+    void orientateWithRudderTest() {
+        List<Sailor> sailors = List.of(new Sailor(0, new IntPosition(0, 0)), new Sailor(1, new IntPosition(0, 1)),
+                new Sailor(2, new IntPosition(1, 0)), new Sailor(3, new IntPosition(1, 1)));
+        CrewManager crewManager = new CrewManager(sailors);
+        List<Equipment> equipments = List.of(new Gouvernail(0, 0));
+        EquipmentsManager equipmentsManager = new EquipmentsManager(equipments, 2);
+        Coordinator coordinator = new Coordinator(crewManager, equipmentsManager);
+        Navigator navigator = new Navigator();
+        rogers = new Captain(null, null, navigator, null, coordinator, null);
+
+        List<SailorAction> actions = rogers.orientateWithRudder(-Math.PI, 100);
+
+        assertEquals(2, actions.size(), "Pas de rames seulement une TurnAction et la MoveAction correspondante");
+        var optTurnAction = actions.stream().filter(action -> action.getType().equals(ActionType.TURN.actionCode))
+                .findFirst();
+        if (optTurnAction.isPresent()) {
+            var turnAction = (Turn) optTurnAction.get();
+
+            assertEquals(-Math.PI / 4, turnAction.getRotation(), 1e-3, "doit etre -pi/4 ");
+        }
+    }
+
     @Test
     void actionsToOrientateTest5() {
-    	List<Sailor> sailors = List.of(
-    			new Sailor(0, new IntPosition(0, 0)),
-        		new Sailor(1, new IntPosition(0, 1)),
-        		new Sailor(2, new IntPosition(1, 0)),
-        		new Sailor(3, new IntPosition(1, 1)));
-    	CrewManager crewManager = new CrewManager(sailors);
-    	List<Equipment> equipments = List.of(
-        		new Oar(0, 0),
-    			new Oar(1, 0),
-    			new Oar(0, 1),
-    			new Oar(1, 1),
-    			new Gouvernail(2, 2));
-    	EquipmentsManager equipmentsManager = new EquipmentsManager(equipments, 2);
-    	Coordinator coordinator = new Coordinator(crewManager, equipmentsManager);
+        List<Sailor> sailors = List.of(new Sailor(0, new IntPosition(0, 0)), new Sailor(1, new IntPosition(0, 1)),
+                new Sailor(2, new IntPosition(1, 0)), new Sailor(3, new IntPosition(1, 1)));
+        CrewManager crewManager = new CrewManager(sailors);
+        List<Equipment> equipments = List.of(
+
+                new Oar(0, 0), new Oar(1, 0), new Oar(0, 1), new Oar(1, 1), new Gouvernail(2, 2));
+        EquipmentsManager equipmentsManager = new EquipmentsManager(equipments, 2);
+        Coordinator coordinator = new Coordinator(crewManager, equipmentsManager);
         Navigator navigator = new Navigator();
-        rogers = new Captain(null, null, navigator, null, coordinator,null);
-        
-        
-        List<SailorAction> actualActions = rogers.actionsToOrientate(Math.PI/10);
+        rogers = new Captain(null, null, navigator, null, coordinator, null);
+
+        List<SailorAction> actualActions = rogers.actionsToOrientate(Math.PI / 10, 0.0);
         assertEquals(2, actualActions.size());
-        }
-    
+    }
+
     @Test
     void speedTakingIntoAccountWindNoWindTest() throws JsonProcessingException {
-        var allSailors= this.parser.fetchAllSailors(gameData);
-        var prevsPos=new HashMap<Integer,IntPosition>();
+        var allSailors = this.parser.fetchAllSailors(gameData);
+        var prevsPos = new HashMap<Integer, IntPosition>();
 
-        allSailors.forEach(a->prevsPos.computeIfAbsent(a.getId(), k-> new IntPosition(a.getPosition())  ));
+        allSailors.forEach(a -> prevsPos.computeIfAbsent(a.getId(), k -> new IntPosition(a.getPosition())));
 
         CrewManager crewManager = new CrewManager(allSailors);
         EquipmentsManager equipmentsManager = new EquipmentsManager(parser.fetchEquipments(gameData),
@@ -256,26 +274,25 @@ public class CaptainTest {
 
         WeatherAnalyst weatherAnalyst = mock(WeatherAnalyst.class);
 
-        rogers = new Captain(null, null, null, weatherAnalyst, coordinator,null);
+        rogers = new Captain(null, null, null, weatherAnalyst, coordinator, null);
 
-        when(weatherAnalyst.additionalSpeedExists()).thenReturn(false);
+        when(weatherAnalyst.speedFromWindExists()).thenReturn(false);
 
         List<SailorAction> result = rogers.adjustSpeedTakingIntoAccountWind(300, 0);
         assertFalse(result.isEmpty(), "should Send some actions");
 
-        result.stream().filter(action->action.getType().equals(ActionType.MOVING.actionCode)).map(action->(MoveAction)action)
-        .forEach(
-                moving-> prevsPos.compute(moving.getSailorId(), (k,v)-> new IntPosition(v.x()+moving.getXdistance(),v.y()+moving.getYdistance() ) )
-        );
+        result.stream().filter(action -> action.getType().equals(ActionType.MOVING.actionCode))
+                .map(action -> (MoveAction) action).forEach(moving -> prevsPos.compute(moving.getSailorId(),
+                        (k, v) -> new IntPosition(v.x() + moving.getXdistance(), v.y() + moving.getYdistance())));
 
-        allSailors.stream().filter(sailor->prevsPos.keySet().contains(sailor.getId()) ).forEach(sailor->assertEquals(sailor.getPosition(),prevsPos.get(sailor.getId()) , "Should be equals"));
-        
+        allSailors.stream().filter(sailor -> prevsPos.keySet().contains(sailor.getId())).forEach(
+                sailor -> assertEquals(sailor.getPosition(), prevsPos.get(sailor.getId()), "Should be equals"));
+
     }
 
     @Test
     void speedTakingIntoAccountWindTest() throws JsonProcessingException {
-        var allSailors= this.parser.fetchAllSailors(gameData);
-
+        var allSailors = this.parser.fetchAllSailors(gameData);
 
         CrewManager crewManager = new CrewManager(allSailors);
         EquipmentsManager equipmentsManager = new EquipmentsManager(parser.fetchEquipments(gameData),
@@ -284,18 +301,15 @@ public class CaptainTest {
 
         WeatherAnalyst weatherAnalyst = mock(WeatherAnalyst.class);
 
-        rogers = new Captain(null, null, null, weatherAnalyst, coordinator,null);
+        rogers = new Captain(null, null, null, weatherAnalyst, coordinator, null);
 
-        when(weatherAnalyst.additionalSpeedExists()).thenReturn(true);
+        when(weatherAnalyst.speedFromWindExists()).thenReturn(true);
         when(weatherAnalyst.potentialSpeedAcquirable()).thenReturn(200.56);
 
         List<SailorAction> results = rogers.adjustSpeedTakingIntoAccountWind(300, 0);
-        
 
         assertTrue(results.stream().anyMatch(action -> action.getType().equals(ActionType.LIFTSAIL.actionCode)),
                 "Il y a au moins un liftAction");
-        
-        
 
         // clear
 

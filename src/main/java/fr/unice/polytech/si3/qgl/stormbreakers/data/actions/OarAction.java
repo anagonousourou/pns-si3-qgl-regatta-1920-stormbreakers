@@ -24,8 +24,7 @@ public class OarAction extends SailorAction {
 
     @Override
     public String compatibleEquipmentType() {
-       return EquipmentType.OAR.code;
+        return EquipmentType.OAR.code;
     }
 
-    
 }

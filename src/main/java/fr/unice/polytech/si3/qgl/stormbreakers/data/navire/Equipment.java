@@ -8,9 +8,9 @@ import fr.unice.polytech.si3.qgl.stormbreakers.Logable;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.IntPosition;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
-@JsonSubTypes({ @JsonSubTypes.Type(value = Oar.class, name = "oar") ,
+@JsonSubTypes({ @JsonSubTypes.Type(value = Oar.class, name = "oar"),
         // @JsonSubTypes.Type(value = Sail.class, name="sail"),
-        @JsonSubTypes.Type(value = Gouvernail.class, name="rudder")//,
+        @JsonSubTypes.Type(value = Gouvernail.class, name = "rudder")// ,
         // @JsonSubTypes.Type(value = Vigie.class, name="watch")
 })
 
@@ -26,7 +26,7 @@ public abstract class Equipment implements Logable {
         this.type = type;
         this.x = x;
         this.y = y;
-        position=new IntPosition(x,y);
+        position = new IntPosition(x, y);
     }
 
     @JsonProperty("type")
@@ -45,17 +45,17 @@ public abstract class Equipment implements Logable {
     }
 
     public String getPosLog() {
-        return x+"."+y;
+        return x + "." + y;
     }
 
     public boolean isUsed() {
-		return this.used;
+        return this.used;
     }
+
     public IntPosition getPosition() {
         return position;
     }
 
-    
     public void setUsed(boolean b) {
         this.used = b;
     }

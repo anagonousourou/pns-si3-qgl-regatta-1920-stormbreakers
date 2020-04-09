@@ -1,10 +1,10 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.math;
 
 import java.util.Objects;
-import static java.lang.Math.hypot;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 import fr.unice.polytech.si3.qgl.stormbreakers.Logable;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.IPoint;
 import fr.unice.polytech.si3.qgl.stormbreakers.exceptions.ImpossibleAngleError;
@@ -13,7 +13,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.exceptions.ImpossibleAngleError;
  * Un point 2D dans une espace reel
  */
 
-public class Point2D implements Logable, IPoint{
+public class Point2D implements Logable, IPoint {
     private double x;
     private double y;
     private static final double EPS = Utils.EPSILON_COLLISION;
@@ -33,8 +33,6 @@ public class Point2D implements Logable, IPoint{
         this.x = fromOrigin.getDeltaX();
         this.y = fromOrigin.getDeltaY();
     }
-
-    
 
     /**
      * Donne l'angle entre l'axe x et le vecteur position retourne null si (0,0)
@@ -117,15 +115,12 @@ public class Point2D implements Logable, IPoint{
      * @return Vector le vecteur
      */
     public Vector getVectorTo(Point2D other) {
-        // TODO: 09/03/2020 Urgent Tests
-        return new Vector(other.x-this.x, other.y-this.y);
+        return new Vector(other.x - this.x, other.y - this.y);
     }
-
-    
 
     @Override
     public String toString() {
-        return String.format("%s(x: %f, y: %f)", this.getClass().getSimpleName(),x,y);
+        return String.format("%s(x: %f, y: %f)", this.getClass().getSimpleName(), x, y);
     }
 
     @Override
@@ -135,7 +130,8 @@ public class Point2D implements Logable, IPoint{
         if (!(obj instanceof Point2D))
             return false;
         Point2D other = (Point2D) obj;
-        return Utils.almostEqualsBoundsIncluded(other.x,this.x, EPS) && Utils.almostEqualsBoundsIncluded(other.y,this.y, EPS);
+        return Utils.almostEqualsBoundsIncluded(other.x, this.x, EPS)
+                && Utils.almostEqualsBoundsIncluded(other.y, this.y, EPS);
     }
 
     @Override
@@ -143,46 +139,35 @@ public class Point2D implements Logable, IPoint{
         return Objects.hash(x, y);
     }
 
-    /**
-     * Computes the orientation of the 3 points: returns +1 is the path P0->P1->P2
-     * turns Counter-Clockwise, -1 if the path turns Clockwise, and 0 if the point
-     * P2 is located on the line segment [P0 P1]. Algorithm taken from Sedgewick.
-     * 
-     * @param p0 the initial point
-     * @param p1 the middle point
-     * @param p2 the last point
-     * @return +1, 0 or -1, depending on the relative position of the points
-     */
-    public static int ccw(Point2D p0, Point2D p1, Point2D p2) {
-        double x0 = p0.x;
-        double y0 = p0.y;
-        double dx1 = p1.x - x0;
-        double dy1 = p1.y - y0;
-        double dx2 = p2.x - x0;
-        double dy2 = p2.y - y0;
-
-        if (dx1 * dy2 > dy1 * dx2)
-            return +1;
-        if (dx1 * dy2 < dy1 * dx2)
-            return -1;
-        if ((dx1 * dx2 < 0) || (dy1 * dy2 < 0))
-            return -1;
-        if (hypot(dx1, dy1) < hypot(dx2, dy2))
-            return +1;
-        return 0;
-    }
-
-    @Override @JsonProperty("y")
+    @Override
+    @JsonProperty("y")
     public double y() {
         return y;
     }
-    @Override @JsonProperty("x")
+
+    @Override
+    @JsonProperty("x")
     public double x() {
         return x;
     }
 
     @Override
     public String toLogs() {
-        return String.format("%f %f",x,y);
+        return String.format("%f %f", x, y);
+    }
+
+    public Point2D negate() {
+        return new Point2D(-x, -y);
+    }
+
+    public Point2D getRotatedAround(Point2D anchorPoint, double angle) {
+        // LATER: 15/03/2020 Tests
+        if (Utils.almostEquals(new Point2D(0, 0), anchorPoint)) {
+            return getRotatedBy(angle);
+        }
+
+        Vector fromAnchorToThis = new Vector(anchorPoint, this);
+        Vector rotatedVector = fromAnchorToThis.getRotatedBy(angle);
+        return anchorPoint.getTranslatedBy(rotatedVector);
     }
 }

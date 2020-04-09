@@ -274,7 +274,6 @@ public class Fraction {
 
     }
 
-    
     /**
      * Determine the Least Common Multiple (LCM) of two integers
      * 

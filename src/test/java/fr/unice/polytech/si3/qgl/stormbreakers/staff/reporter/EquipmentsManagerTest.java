@@ -15,6 +15,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Equipment;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Gouvernail;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Oar;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Sail;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Vigie;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.IntPosition;
 
 public class EquipmentsManagerTest {
@@ -28,6 +29,7 @@ public class EquipmentsManagerTest {
     Equipment r7 = new Sail(3, 1);
     Sail r8 = new Sail(3, 0);
     Equipment rudder=new Gouvernail(0, 0);
+    Vigie watch = new Vigie(0, 1);
 
     @BeforeEach
     void setUp() {
@@ -42,6 +44,14 @@ public class EquipmentsManagerTest {
 
         equipmentsManager = new EquipmentsManager(List.of(r1, r2, r3, r4, r5, r6,r7,r8,rudder), 3);
         assertTrue(this.equipmentsManager.rudderIsPresent(),"Il y a maintenant un gouvernail");
+    }
+    
+    @Test
+    void testWatchIsPresent() {
+        assertFalse(this.equipmentsManager.watchIsPresent(), "Pas de vigie");
+
+        equipmentsManager = new EquipmentsManager(List.of(r1, r2, r3, r4, r5, r6,r7,r8, watch), 3);
+        assertTrue(this.equipmentsManager.watchIsPresent(),"Il y a maintenant la vigie.");
     }
 
     @Test
@@ -77,6 +87,15 @@ public class EquipmentsManagerTest {
         assertThrows(NullPointerException.class, ()->{
             this.equipmentsManager.rudderPosition();
         });
+    }
+    
+    @Test
+    void testWatchPosition(){
+        assertThrows(NullPointerException.class, ()->{
+            this.equipmentsManager.watchPosition();
+        });
+        equipmentsManager = new EquipmentsManager(List.of(r1, r2, r3, r4, r5, r6,r7,r8, watch), 3);
+        assertEquals(new IntPosition(0, 1), this.equipmentsManager.watchPosition());
     }
     
     @Test

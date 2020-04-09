@@ -28,7 +28,7 @@ public class OutputBuilder {
 
         } catch (IOException e) {
             Logger.getInstance().log("Error writing actions");
-            Logger.getInstance().log(e.getMessage());
+            Logger.getInstance().logErrorMsg(e);
         }
 
         return jsonOutput;

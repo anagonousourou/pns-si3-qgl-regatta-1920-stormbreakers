@@ -24,7 +24,7 @@ public class LiftSail extends SailorAction {
 
     @Override
     public String compatibleEquipmentType() {
-       return EquipmentType.SAIL.code;
+        return EquipmentType.SAIL.code;
     }
 
 }

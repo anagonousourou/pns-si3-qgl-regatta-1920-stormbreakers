@@ -14,7 +14,7 @@ public class Logger {
 
     private Logger() {
         currentLogLine = new StringBuilder();
-        allLogs = new ArrayList<>();
+        allLogs = new ArrayList<>(MAX_LOG_LINES);
     }
 
     public static Logger getInstance() {
@@ -36,6 +36,16 @@ public class Logger {
             if (msg.length() != 0)
                 push(); // if something remains we're on a new log line
         }
+    }
+
+    public void addSeparatorThenLog(String msg) {
+        addSeparator();
+        log(msg);
+    }
+
+    public void logErrorMsg(Exception error) {
+        addSeparator();
+        log(error.getMessage());
     }
 
     /**
@@ -82,6 +92,16 @@ public class Logger {
 
     private void clearCurrentLogLine() {
         currentLogLine = new StringBuilder();
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder bld = new StringBuilder();
+        for (String string : getSavedData()) {
+            bld.append(string + "\n");
+        }
+
+        return bld.toString();
     }
 
     public List<String> getSavedData() {
