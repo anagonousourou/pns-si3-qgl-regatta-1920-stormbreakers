@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 
 public class VisuBump {
 
-    private static final String RAW_PATH = "/raw.visuals";
+    public static final String RAW_PATH = "/raw.visuals";
 
     public static void main(String[] args) {
         Displayer displayer = new Displayer();

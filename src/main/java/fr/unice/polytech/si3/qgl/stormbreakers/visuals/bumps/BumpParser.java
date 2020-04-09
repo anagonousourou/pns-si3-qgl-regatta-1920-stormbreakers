@@ -34,7 +34,7 @@ public class BumpParser {
     private static final String STEP_KEY = "STEP";
 
     private static final String CHECKPOINT_TOKEN = "checkpoint";
-    private static final String REEF_TOKEN = "reef";
+    static final String REEF_TOKEN = "reef";
     private static final String STREAM_TOKEN = "stream";
     private static final String SHIP_TOKEN = "ship";
 
@@ -130,7 +130,7 @@ public class BumpParser {
         return new Position(xPos,yPos,orientationPos);
     }
 
-    private VisibleEntity parseEntity(String firstEntityLine, String secondEntityLine) {
+    VisibleEntity parseEntity(String firstEntityLine, String secondEntityLine) {
         // ENTITY id NAME SHAPE SHAPE_PARAMS
         // "ENTITY \\d+ (\\w+) (\\w+) ((?:\\w| |\\d)+)"
         List<String> entityTokens = Arrays.asList(firstEntityLine.split(" "));
