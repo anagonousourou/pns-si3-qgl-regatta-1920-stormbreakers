@@ -198,7 +198,7 @@ public class Polygon extends Shape implements Orientable {
         Vector borderVector = new Vector(a, b);
         Vector toCompare = new Vector(a, t);
 
-        double scal = borderVector.scal(toCompare);
+        double scal = Vector.crossZ(borderVector, toCompare);
 
         Side side = null;
         if (Utils.almostEquals(scal, 0))
@@ -352,9 +352,6 @@ public class Polygon extends Shape implements Orientable {
 
         return new Polygon(orientation, expandedVertices, getAnchor());
     }
-
-
-
 
     // implements Drawable
     @Override

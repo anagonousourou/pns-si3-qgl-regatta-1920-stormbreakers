@@ -13,6 +13,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Equipment;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Gouvernail;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Oar;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Sail;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Vigie;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.processing.InputParser;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.processing.Logger;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.IntPosition;
@@ -24,7 +25,8 @@ public class EquipmentsManager implements PropertyChangeListener {
     private List<Oar> oars;
     private List<Sail> sails;
     private Gouvernail rudder = null;
-
+    private Vigie watch;
+    
     private List<Equipment> equipments;
     private InputParser parser;
 
@@ -53,6 +55,10 @@ public class EquipmentsManager implements PropertyChangeListener {
         var optRuddder = this.equipments.stream().filter(e -> e.getType().equals("rudder")).map(e -> (Gouvernail) e)
                 .findFirst();
         optRuddder.ifPresent(gouvernail -> this.rudder = gouvernail);
+        
+        Optional<Vigie> optVigie = this.equipments.stream().filter(e -> e.getType().equals("watch")).map(e -> (Vigie) e)
+                .findFirst();
+        optVigie.ifPresent(vigie -> this.watch = vigie);
     }
 
     /**
@@ -66,6 +72,19 @@ public class EquipmentsManager implements PropertyChangeListener {
 
     public boolean isRudderUsed() {
         return rudder.isUsed();
+    }
+    
+    /**
+     * Méthode qui renvoie si oui ou non il y a la vigie
+     * 
+     * @return
+     */
+    public boolean watchIsPresent() {
+        return this.watch != null;
+    }
+
+    public boolean isWatchUsed() {
+        return watch.isUsed();
     }
 
     public List<Oar> allLeftOars() {
@@ -118,6 +137,10 @@ public class EquipmentsManager implements PropertyChangeListener {
 
     public IntPosition rudderPosition() {
         return new IntPosition(rudder.x(), rudder.y());
+    }
+    
+    public IntPosition watchPosition() {
+        return new IntPosition(watch.x(), watch.y());
     }
 
     public int nbSails() {

@@ -10,6 +10,10 @@ public interface IPoint {
         return Math.hypot(other.x() - this.x(), other.y() - this.y());
     }
 
+    public default double distanceToOrigin() {
+        return Math.hypot(this.x(), this.y());
+    }
+
     public static double distance(double x1, double y1, double x2, double y2) {
         return Math.hypot(x2 - x1, y2 - y1);
     }

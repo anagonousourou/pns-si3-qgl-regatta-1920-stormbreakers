@@ -29,7 +29,7 @@ public abstract class Shape implements Logable, CanCollide , Drawable {
     }
 
     @JsonCreator
-    Shape(@JsonProperty("type") String type) {
+    public Shape(@JsonProperty("type") String type) {
         this.type = type;
         this.anchor = new Position(0, 0, 0);
     }
@@ -79,5 +79,6 @@ public abstract class Shape implements Logable, CanCollide , Drawable {
      * @return la forme étendue
      */
     public abstract Shape wrappingShape(double margin);
-
+    
+    
 }

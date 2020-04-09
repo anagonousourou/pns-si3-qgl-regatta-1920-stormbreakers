@@ -373,10 +373,6 @@ public class Circle extends Shape {
         return new Circle(radius + margin, anchor);
     }
 
-
-
-
-
     // implements Drawable
     @Override
     public Drawing getDrawing() {
