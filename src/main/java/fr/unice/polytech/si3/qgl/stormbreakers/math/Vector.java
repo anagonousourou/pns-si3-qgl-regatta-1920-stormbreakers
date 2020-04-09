@@ -31,6 +31,9 @@ public class Vector {
         double crossZ = vector1.dx * vector2.dy - vector2.dx * vector1.dy;
         return Utils.almostEquals(0, crossZ);
     }
+    public static double crossZ(Vector vector1, Vector vector2) {
+        return vector1.dx * vector2.dy - vector2.dx * vector1.dy;
+    }
 
     public double norm() {
         return Math.sqrt(dx * dx + dy * dy);

@@ -24,6 +24,7 @@ class PolygonTest {
     List<Point2D> rectangleVertices;
     private Polygon rectangle;
     private Polygon orientedRectangle;
+    private Polygon hexagon;
 
     List<Point2D> triangleVertices;
     private Polygon triangle;
@@ -39,9 +40,18 @@ class PolygonTest {
         Point2D rectB = new Point2D(-10, 5);
         Point2D rectC = new Point2D(-10, -5);
         Point2D rectD = new Point2D(10, -5);
+
+        Point2D hexA = new Point2D(2, 1);
+        Point2D hexB = new Point2D(2, -1);
+        Point2D hexC = new Point2D(0, -3);
+        Point2D hexD = new Point2D(-2, -1);
+        Point2D hexE = new Point2D(-2, 1);
+        Point2D hexF = new Point2D(0, 3);
+
         rectangleVertices = List.of(rectA, rectB, rectC, rectD);
 
         rectangle = new Polygon(0.0, rectangleVertices);
+        hexagon = new Polygon(0.0, List.of(hexA, hexB, hexC, hexD, hexE, hexF));
         orientedRectangle = new Polygon(0.5 * Math.PI, rectangleVertices);
 
         // LATER: 04/03/2020 Use more than rectangle
@@ -123,8 +133,8 @@ class PolygonTest {
         assertFalse(rectangle.isPtInside(new Point2D(0, -6))); // Is under
         assertFalse(rectangle.isPtInside(new Point2D(11, 0))); // Is to the right
 
-        assertTrue(rectangle.isPtInside(new Point2D(0, 5))); // Is on upper edge
-        assertTrue(rectangle.isPtInside(new Point2D(-10, 0))); // Is on left edge
+        assertTrue(rectangle.isPtInside(new Point2D(0, 4.99))); // Is on upper edge
+        assertTrue(rectangle.isPtInside(new Point2D(-9.99, 0))); // Is on left edge*/
     }
 
     @Test
@@ -137,8 +147,26 @@ class PolygonTest {
         assertFalse(orientedRectangle.isPtInside(new Point2D(0, -11))); // Is under
         assertFalse(orientedRectangle.isPtInside(new Point2D(6, 0))); // Is to the right
 
-        assertTrue(orientedRectangle.isPtInside(new Point2D(0, 10))); // Is on upper edge
-        assertTrue(orientedRectangle.isPtInside(new Point2D(-5, 0))); // Is on left edge
+        assertTrue(orientedRectangle.isPtInside(new Point2D(0, 9.999))); // Is on upper edge
+        assertTrue(orientedRectangle.isPtInside(new Point2D(-4.999, 0))); // Is on left edge
+    }
+
+    @Test
+    void isPtInsideHexagon() {
+        assertTrue(hexagon.isPtInside(new Point2D(0, 0))); // Is in
+        assertTrue(hexagon.isPtInside(new Point2D(1, 1))); // Is in
+        assertTrue(hexagon.isPtInside(new Point2D(-1, -1))); // Is in
+        assertTrue(hexagon.isPtInside(new Point2D(-1, 1))); // Is in
+        assertTrue(hexagon.isPtInside(new Point2D(0, 2))); // Is in
+        assertTrue(hexagon.isPtInside(new Point2D(0, 2.999))); // Is in
+        assertTrue(hexagon.isPtInside(new Point2D(0, -2))); // Is in
+
+        assertFalse(hexagon.isPtInside(new Point2D(3, 3))); // not in
+        assertFalse(hexagon.isPtInside(new Point2D(0, 3.1))); // not in
+        assertFalse(hexagon.isPtInside(new Point2D(0, 3.0001))); // not in
+
+        assertFalse(hexagon.isPtInside(new Point2D(10, 10))); // not in
+        assertFalse(hexagon.isPtInside(new Point2D(-100, 3.0001))); // not in
     }
 
     @Test
@@ -229,6 +257,11 @@ class PolygonTest {
         Polygon expanded = (Polygon) original.wrappingShape(margin);
 
         assertEquals(original.getVertices().size(), expanded.getVertices().size());
+        System.out.println(expanded.getVertices());
+        /*
+         * for (int i = 0; i < vertices.size(); i++) { assertEquals(margin,
+         * vertices.get(i).distanceTo(expanded.getVertices().get(i)), 1e-3); }
+         */
 
         List<Point2D> expandedVertices = expanded.getVertices();
         List<LineSegment2D> originalHull = original.getHull();
@@ -237,6 +270,7 @@ class PolygonTest {
             LineSegment2D border = originalHull.get(i);
             assertEquals(margin, (border.getSupportingLine()).distance(vertex), Utils.EPSILON);
         }
+
     }
 
     @Test
@@ -270,16 +304,10 @@ class PolygonTest {
     @Test
     public void wrappingShapeTestRe() {
 
-        List<Point2D> sommets = List.of(new Point2D(64, -224.0),
-         new Point2D(564.0, 576.0),
-                new Point2D(-96.0,
-                276.0),
-                 new Point2D(-296.0,
-                 -224.0),
-                
-                new Point2D(-236.0,
-                -404.0));
+        List<Point2D> sommets = List.of(new Point2D(64, -224.0), new Point2D(564.0, 576.0), new Point2D(-96.0, 276.0),
+                new Point2D(-296.0, -224.0),
 
+                new Point2D(-236.0, -404.0));
 
         Polygon rePart = new Polygon(0.0, sommets, new Position(2196, 4684.0));
 
@@ -291,4 +319,32 @@ class PolygonTest {
         assertTrue(rePart.wrappingShape(12).collidesWith(new LineSegment2D(depart, arrive)));
 
     }
+
+    @Test
+    void testIntersectsWithSegment() {
+        List<Point2D> vertices = new ArrayList<>();
+        // polygon
+        // 27.99999999999996 -748.0000000000001
+        vertices.add(new Point2D(28, -748));
+        // 568.0 -48.0-48.0
+        vertices.add(new Point2D(568.0, -48.0));
+        // 67.99999999999994 711.9999999999999
+        vertices.add(new Point2D(68, 712));
+        // -251.99999999999991 332.00000000000006
+        vertices.add(new Point2D(-252, 332));
+        // -411.99999999999994 -248.00000000000006
+        vertices.add(new Point2D(-412, -248));
+
+        Polygon polyReIsland = new Polygon(0, vertices, new Position(1172.0, 1548.0, 0.0));
+
+        Point2D A = new Point2D(1010, 2320);
+        Point2D B = new Point2D(1160, 2170);
+        Point2D C = new Point2D(1210, 2120);
+        LineSegment2D segmentAB = new LineSegment2D(A, B);
+        LineSegment2D segmentBC = new LineSegment2D(B, C);
+
+        assertFalse(polyReIsland.collidesWith(segmentAB));
+        assertTrue(polyReIsland.collidesWith(segmentBC));
+    }
+
 }

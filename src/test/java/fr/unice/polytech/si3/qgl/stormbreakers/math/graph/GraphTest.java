@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-
+import static org.mockito.Mockito.spy;
 import java.util.List;
 import java.util.Set;
 
@@ -46,25 +46,32 @@ public class GraphTest {
 
     @Test
     public void getLowestDistanceNodeTest() {
-        s1 = mock(Sommet.class);
-        s2 = mock(Sommet.class);
-        s3 = mock(Sommet.class);
-        s4 = mock(Sommet.class);
+        s1 = new Sommet(0,0);
+        s1= spy(s1);
+        s2 = new Sommet(300,300);
+        s2= spy(s2);
+        s3 = new Sommet(500,500);
+        s3= spy(s3);
+        s4 = new Sommet(700,700);
+        s4= spy(s4);
         graph = new Graph(null, null);
+        
+        Sommet destination= new Sommet(600,600);
         when(s1.getDistance()).thenReturn(200);
         when(s2.getDistance()).thenReturn(20);
         when(s3.getDistance()).thenReturn(2000);
         when(s4.getDistance()).thenReturn(100);
 
-        assertEquals(s2, graph.getLowestDistanceNode(Set.of(s1, s2, s3, s4)), "On doit trouver s2");
-        assertEquals(null, graph.getLowestDistanceNode(Set.of()), "On doit trouver null");
+
+        assertEquals(s4, graph.getLowestDistanceNode(Set.of(s1, s2, s3, s4),destination), "On doit trouver s4");
+        assertEquals(null, graph.getLowestDistanceNode(Set.of(),destination), "On doit trouver null");
 
     }
 
     @Test
     public void createSquaringTest() {
         streamManager = new StreamManager(null, null);
-        streamManager.setRecifs(List.of(reef1));
+        streamManager.setBoatsAndReefs(List.of(reef1));
         graph = new Graph(streamManager, null);
 
         graph.createSquaring(0.0, 0.0, 600, 600, 200);
@@ -125,10 +132,10 @@ public class GraphTest {
         graph = new Graph(streamManager, weatherAnalyst);
 
         graph.setNodes(Set.of(s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12));
-        graph.createLinkBetweenVertices(200);
+        // graph.createLinkBetweenVertices(200);
 
-        graph.calculateShortestPathFromSource(s12, s1);
-        
+        graph.calculateShortestPathFromSource(s12, s1, 200);
+
         assertEquals(5, s1.getShortestPath().size());
 
         // assertEquals(2, s10.getShortestPath().size());
@@ -276,9 +283,9 @@ public class GraphTest {
         graph = new Graph(streamManager, weatherAnalyst);
 
         graph.setNodes(Set.of(s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12));
-        graph.createLinkBetweenVertices(200);
+        // graph.createLinkBetweenVertices(200);
 
-        graph.calculateShortestPathFromSource(s12, s1);
+        graph.calculateShortestPathFromSource(s12, s1, 200);
 
         assertEquals(5, s1.getShortestPath().size());
 

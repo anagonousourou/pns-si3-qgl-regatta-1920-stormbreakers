@@ -41,6 +41,8 @@ public class BumpParser {
     private static final String CIRCLE_TOKEN = "circle";
     private static final String POLYGON_TOKEN = "polygon";
 
+    private static final String STORMBREAKERS_ID = "1652807864";
+
     public BumpParser(Scanner scanner) {
         positionsPerStep = new ArrayList<>();
 
@@ -111,7 +113,7 @@ public class BumpParser {
                     step = Integer.parseInt(stepString);
                 }
             }
-            if (currentLine.contains(POSITION_KEY)) {
+            if (currentLine.contains(POSITION_KEY + " " + STORMBREAKERS_ID)) {
                 Position position = buildPosition(Arrays.asList(currentTokens).subList(2,4+1));
                 positionsPerStep.add(new TupleRoundStepPosLines(round, step, position));
                 positions.add(position);

@@ -12,10 +12,9 @@ import fr.unice.polytech.si3.qgl.stormbreakers.visuals.bumps.VisibleEntity;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
 
-@JsonSubTypes({
-  @JsonSubTypes.Type(value = Courant.class, name="stream"),
-  @JsonSubTypes.Type(value = Recif.class, name="reef")
-})
+@JsonSubTypes({ @JsonSubTypes.Type(value = Courant.class, name = "stream"),
+    @JsonSubTypes.Type(value = OtherBoat.class, name = "ship"),
+    @JsonSubTypes.Type(value = Recif.class, name = "reef") })
 
 public abstract class OceanEntity implements Surface , VisibleEntity {
   private String type;
@@ -27,7 +26,7 @@ public abstract class OceanEntity implements Surface , VisibleEntity {
       @JsonProperty("shape") Shape shape) {
     this.type = type;
     this.position = position;
-    this.shape = shape;  
+    this.shape = shape;
     shape.setAnchor(position);
   }
 
@@ -37,8 +36,6 @@ public abstract class OceanEntity implements Surface , VisibleEntity {
   }
 
   public abstract OceanEntityType getEnumType();
-    
-  
 
   @JsonProperty("position")
   public Position getPosition() {

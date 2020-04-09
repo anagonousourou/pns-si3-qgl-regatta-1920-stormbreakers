@@ -28,6 +28,16 @@ public class Rectangle extends Shape {
         this.rectanglePolygon = buildAsPolygon();
 
     }
+    @JsonCreator
+    public Rectangle(@JsonProperty("width") double width, @JsonProperty("height") double height,
+            @JsonProperty("orientation") double orientation) {
+        super("rectangle");
+        this.width = width;
+        this.height = height;
+        this.orientation = orientation;
+        this.rectanglePolygon = buildAsPolygon();
+    }
+
 
     @Override
     public void setAnchor(Position newAnchor) {
@@ -40,7 +50,7 @@ public class Rectangle extends Shape {
         double halfLength = height / 2;
         double halfWidth = width / 2;
 
-        List<Point2D> rectangleVertices = new ArrayList<>();
+        List<Point2D> rectangleVertices = new ArrayList<>(4);
         rectangleVertices.add(new Point2D(halfLength, halfWidth));
         rectangleVertices.add(new Point2D(-halfLength, halfWidth));
         rectangleVertices.add(new Point2D(-halfLength, -halfWidth));
@@ -48,16 +58,7 @@ public class Rectangle extends Shape {
         return new Polygon(this.orientation, rectangleVertices, this.anchor);
     }
 
-    @JsonCreator
-    public Rectangle(@JsonProperty("width") double width, @JsonProperty("height") double height,
-            @JsonProperty("orientation") double orientation) {
-        super("rectangle");
-        this.width = width;
-        this.height = height;
-        this.orientation = orientation;
-        this.rectanglePolygon = buildAsPolygon();
-    }
-
+    
     @JsonProperty("width")
     public double getWidth() {
         return width;
@@ -254,9 +255,6 @@ public class Rectangle extends Shape {
     public Shape wrappingShape(double margin) {
         return rectanglePolygon.wrappingShape(margin);
     }
-
-
-
 
     // implements Drawable
     @Override

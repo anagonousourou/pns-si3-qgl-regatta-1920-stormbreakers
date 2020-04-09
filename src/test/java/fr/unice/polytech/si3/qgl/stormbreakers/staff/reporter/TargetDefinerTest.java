@@ -20,7 +20,6 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Boat;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Courant;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Wind;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.processing.InputParser;
-import fr.unice.polytech.si3.qgl.stormbreakers.math.graph.Cartographer;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.graph.Graph;
 import fr.unice.polytech.si3.qgl.stormbreakers.staff.tactical.Navigator;
 

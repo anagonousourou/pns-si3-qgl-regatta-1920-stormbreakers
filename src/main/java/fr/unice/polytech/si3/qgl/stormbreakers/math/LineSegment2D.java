@@ -391,7 +391,7 @@ public class LineSegment2D {
 	 * @return
 	 */
 	public Point2D closestPointTo(IPoint point2d) {
-		List<Point2D> points = new ArrayList<>();
+		List<Point2D> points = new ArrayList<>(20);
 		DoubleStream.iterate(0, d -> d <= 1.0, d -> d + 0.05).forEach(d -> points.add(this.point(d)));
 		var tmp = points.stream().min((p, pother) -> Double.compare(p.distanceTo(point2d), pother.distanceTo(point2d)));
 		if (tmp.isPresent()) {
@@ -408,7 +408,7 @@ public class LineSegment2D {
 	 * @return
 	 */
 	public List<IPoint> pointsOfSegment(double step) {
-		List<IPoint> points = new ArrayList<>();
+		List<IPoint> points = new ArrayList<>(20);
 		DoubleStream.iterate(0, d -> d <= 1.0, d -> d + step).forEach(d -> points.add(this.point(d)));
 
 		return points;
