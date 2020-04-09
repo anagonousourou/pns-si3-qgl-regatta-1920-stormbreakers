@@ -13,6 +13,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Gouvernail;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Oar;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Sail;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Sailor;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.RegattaGoal;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.*;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.IntPosition;
 import fr.unice.polytech.si3.qgl.stormbreakers.runner.game.InitGame;
@@ -21,6 +22,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.runner.serializing.Ship;
 import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.CrewManager;
 import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.EquipmentsManager;
 import fr.unice.polytech.si3.qgl.stormbreakers.staff.tactical.Coordinator;
+import fr.unice.polytech.si3.qgl.stormbreakers.visuals.draw.Displayer;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -43,12 +45,15 @@ public class Engine {
     private Ship ship;
     private Cockpit mjollnir;
     private List<OceanEntity> entitiesVisible;
+    private Displayer displayer;
 
     CrewManager crewManager;
     EquipmentsManager equipmentsManager;
     Coordinator coordinator;
 
-    Engine() throws IOException {
+    Engine(Displayer displayer) throws IOException {
+        this.displayer = displayer;
+
         mapper = new ObjectMapper();
         mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
         mapper.disable(MapperFeature.AUTO_DETECT_GETTERS);
@@ -81,7 +86,9 @@ public class Engine {
 
 
     public static void main(String[] args) throws IOException {
-        Engine engine = new Engine();
+        Displayer displayer = new Displayer();
+
+        Engine engine = new Engine(displayer);
         engine.runInitGame();
 
         engine.updateNextRound();
@@ -92,8 +99,17 @@ public class Engine {
             System.out.println(engine.ship.getPosition());
         }
 
-        System.out.println(engine.mjollnir.getLogs());
+        displayer.setShipShape(engine.boat.getShape());
+        displayer.setReefs(engine.entitiesVisible.stream()
+                .filter(ent -> OceanEntityType.RECIF.equals(ent.getEnumType())).map(ent -> (Recif) ent)
+                .collect(Collectors.toList()));
+        displayer.setStreams(engine.entitiesVisible.stream()
+                .filter(ent -> OceanEntityType.COURANT.equals(ent.getEnumType())).map(ent -> (Courant) ent)
+                .collect(Collectors.toList()));
+        displayer.setCheckpoints(((RegattaGoal)engine.initGame.getGoal()).getCheckpoints());
 
+        System.out.println(engine.mjollnir.getLogs());
+        displayer.disp();
     }
 
     private void updateNextRound() {
@@ -112,7 +128,7 @@ public class Engine {
 
 
         Position newPos = EngineUtils.nextPosition(positionInit,nbOarsRightActive,nbOarsLeftActive,nbOars,
-                rudder,wind,streams,nbsail,nbSailOpenned,shipShape,reefs,NB_STEP);
+                rudder,wind,streams,nbsail,nbSailOpenned,shipShape,reefs,NB_STEP,displayer);
 
         ship.setPosition(newPos);
     }

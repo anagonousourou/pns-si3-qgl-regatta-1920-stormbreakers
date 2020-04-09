@@ -7,6 +7,9 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Boat;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Courant;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.OceanEntity;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Wind;
+import fr.unice.polytech.si3.qgl.stormbreakers.visuals.draw.Displayer;
+import fr.unice.polytech.si3.qgl.stormbreakers.visuals.draw.drawings.DotDrawing;
+import fr.unice.polytech.si3.qgl.stormbreakers.visuals.draw.drawings.PosDrawing;
 
 import java.util.List;
 
@@ -51,7 +54,7 @@ public class EngineUtils {
 
     public static Position nextPosition(Position positionInit, int nbOarsRightActive, int nbOarsLeftActive, int nbOars,
                                         Gouvernail rudder, Wind wind, List<Courant> streams, int nbsail, int nbSailOpenned,
-                                        Shape shipShape, List<OceanEntity> reef, int nbStep/*, Affichage affichage*/){
+                                        Shape shipShape, List<OceanEntity> reef, int nbStep, Displayer displayer){
         double x = positionInit.x();
         double y = positionInit.y();
         double orientation = positionInit.getOrientation();
@@ -62,7 +65,7 @@ public class EngineUtils {
         double vitesseLineaire = vitesseOarLineaire + vitesseWindLineaire;
         double vitesseOrientation = Math.PI*(nbOarsRightActive-nbOarsLeftActive)/nbOars + angleGouvernail;
         for(int i = 0;i<nbStep;i++){
-            //if(affichage!=null) affichage.ajouterPosition(new Position(x,y,0));
+            if(displayer!=null) displayer.addDrawing(new DotDrawing(new Position(x,y,0)));
             Position positionAtStep = new Position(x,y,orientation);
             Boat shipAtState = new Boat(positionAtStep,0,0,0,null,shipShape);
             // TODO: 02/04/2020 Join speedX and speedY using vectors
@@ -79,6 +82,7 @@ public class EngineUtils {
             }
         }
         orientation = orientation - (Math.ceil((orientation + Math.PI)/(2*Math.PI))-1)*2*Math.PI;
+        //if(affichage!=null) affichage.setDeplacementBoat(new Position(x,y,orientation),shipShape);
         return new Position(x,y, orientation);
     }
 }
