@@ -47,6 +47,13 @@ public class VisuBump {
 
         //special(displayer,bumpParser);
 
+        try {
+            System.out.println(bumpParser.getJsonData());
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
+
         displayer.disp();
     }
 
@@ -70,7 +77,6 @@ public class VisuBump {
             String specialStr = new String(VisuBump.class.getResourceAsStream(RAW_PATH + "/special.json").readAllBytes());
 
             ObjectMapper mapper = new ObjectMapper();
-            // mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
             mapper.disable(MapperFeature.AUTO_DETECT_GETTERS);
             List<Recif> specials = mapper.readValue(specialStr, mapper.getTypeFactory().constructCollectionType(List.class, OceanEntity.class));
             displayer.setSpecial(new ArrayList<>(specials));
