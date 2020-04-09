@@ -45,7 +45,7 @@ public class VisuBump {
         displayer.setShipShape(bumpParser.getBoatShape());
         displayer.setShipPositions(bumpParser.getRoundPos());
 
-        special(displayer,bumpParser);
+        //special(displayer,bumpParser);
 
         displayer.disp();
     }
@@ -59,11 +59,6 @@ public class VisuBump {
     private static void special(Displayer displayer, BumpParser bumpParser) {
 
         drawOceanEntitiesFromJson(displayer);
-
-        Position pos1 = new Position(429.19198174687165,1521.872012168731,-1.0626895117766608);
-        Position pos2 = new Position(120.0,1488.0,0.0);
-        displayer.addDrawing(new SegmentDrawing(pos1,pos2));
-
 
     }
 
