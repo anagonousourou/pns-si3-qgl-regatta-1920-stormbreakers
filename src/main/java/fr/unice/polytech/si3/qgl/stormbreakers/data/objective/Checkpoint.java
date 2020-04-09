@@ -9,8 +9,9 @@ import fr.unice.polytech.si3.qgl.stormbreakers.Logable;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Shape;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Surface;
+import fr.unice.polytech.si3.qgl.stormbreakers.visuals.bumps.VisibleEntity;
 
-public class Checkpoint implements Logable, Surface {
+public class Checkpoint implements Logable, Surface , VisibleEntity {
     private Position position;
     private Shape shape;
 
@@ -71,4 +72,14 @@ public class Checkpoint implements Logable, Surface {
     public double getOrientation() {
         return this.position.getOrientation();
     }
+
+
+
+
+    // Implements Visible Entity
+    @Override
+    public String getType() {
+        return VisibleEntity.CHECKPOINT_TOKEN;
+    }
+
 }

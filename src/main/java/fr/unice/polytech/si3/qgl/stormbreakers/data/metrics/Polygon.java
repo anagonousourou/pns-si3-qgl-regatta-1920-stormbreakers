@@ -10,6 +10,8 @@ import fr.unice.polytech.si3.qgl.stormbreakers.Logable;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.processing.Logger;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.*;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Vector;
+import fr.unice.polytech.si3.qgl.stormbreakers.visuals.draw.drawings.Drawing;
+import fr.unice.polytech.si3.qgl.stormbreakers.visuals.draw.drawings.PolygonDrawing;
 
 public class Polygon extends Shape implements Orientable {
 
@@ -351,4 +353,9 @@ public class Polygon extends Shape implements Orientable {
         return new Polygon(orientation, expandedVertices, getAnchor());
     }
 
+    // implements Drawable
+    @Override
+    public Drawing getDrawing() {
+        return new PolygonDrawing(this);
+    }
 }
