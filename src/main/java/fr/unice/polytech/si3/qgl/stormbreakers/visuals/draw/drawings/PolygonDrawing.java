@@ -18,25 +18,26 @@ public class PolygonDrawing extends Drawing {
     private List<Point2D> vertices;
 
     public PolygonDrawing(Polygon polygon) {
-        super(getPolygonReCenteredBoundingCircle(polygon).getAnchor(),getPolygonReCenteredBoundingCircle(polygon).getRadius());
+        super(polygon.getAnchor(),getPolygonRadius(polygon));
         this.vertices = polygon.getActualVertices(polygon.getAnchor());
     }
 
     // TODO: 31/03/2020 Use AABB for updating display boundaries
 
-    public static Circle getPolygonReCenteredBoundingCircle(Polygon polygon) {
+    private static double getPolygonRadius(Polygon polygon) {
         List<Point2D> vertices = polygon.getActualVertices(polygon.getAnchor());
 
-        double xMin = vertices.stream().map(v -> v.x()).min(Double::compareTo).get();
-        double yMin = vertices.stream().map(v -> v.y()).min(Double::compareTo).get();
-        double xMax = vertices.stream().map(v -> v.x()).max(Double::compareTo).get();
-        double yMax = vertices.stream().map(v -> v.y()).max(Double::compareTo).get();
+        double maxDiameter = 0;
+        for (Point2D sommet1 : vertices) {
+            for (Point2D sommet2 : vertices) {
+                if (sommet1!=sommet2) {
+                    double dist = sommet1.distanceTo(sommet2);
+                    if (dist>maxDiameter) maxDiameter=dist;
+                }
+            }
+        }
 
-        Point2D diagMiddle = new LineSegment2D(new Point2D(xMin,yMin),new Point2D(xMax,yMax)).getMiddle();
-        Position center = new Position(diagMiddle.x(),diagMiddle.y(),0);
-
-        double radius = new Vector(xMax-xMin,yMax-yMin).scaleVector(0.5).norm();
-        return new Circle(radius,center);
+        return maxDiameter/2.0;
     }
 
     @Override
