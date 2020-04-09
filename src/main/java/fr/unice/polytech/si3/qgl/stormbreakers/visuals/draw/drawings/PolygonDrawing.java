@@ -57,6 +57,8 @@ public class PolygonDrawing extends Drawing {
             g.drawLine((int) last.x(), (int) last.y(), (int) vertex.x(), (int) vertex.y());
             last = vertex;
         }
+
+        new Arrow(getPosition(),getPosition().getOrientation()).draw(g,mapPoint);
     }
 
 }
