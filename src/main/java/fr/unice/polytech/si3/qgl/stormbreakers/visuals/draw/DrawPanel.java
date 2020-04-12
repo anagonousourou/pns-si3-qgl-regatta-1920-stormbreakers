@@ -3,12 +3,14 @@ package fr.unice.polytech.si3.qgl.stormbreakers.visuals.draw;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.IPoint;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
-import fr.unice.polytech.si3.qgl.stormbreakers.math.Vector;
 import fr.unice.polytech.si3.qgl.stormbreakers.visuals.draw.drawings.Drawing;
 import fr.unice.polytech.si3.qgl.stormbreakers.visuals.draw.drawings.PosDrawing;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,23 +34,14 @@ public class DrawPanel extends JPanel {
 
     // -- Drawing Panel config --
 
-    void setGraphValOrigin(Vector translation) {
-        setGraphValOrigin(translation.getDeltaX(),translation.getDeltaY());
-    }
-
-    void setGraphValOrigin(double dx, double dy) {
-        setOrigin(dx, dy);
-        repaint();
-    }
-
     /**
      * Places the center at canvas pos x y
      * @param x origin x
      * @param y origin y
      */
     private void setOrigin(double x, double y) {
-        this.originX = map(x,xValMin,xValMax,0,getWidth());
-        this.originY = map(y,yValMin,yValMax,0,getHeight());
+        this.originX = x;
+        this.originY = y;
     }
 
     // -- Queuing elements to draw --
@@ -58,7 +51,7 @@ public class DrawPanel extends JPanel {
     }
 
     public void drawElement(Drawing drawing){
-        zoomOutIfNeeded(drawing.getPosition(),drawing.getSize());
+        reframeIfNeeded(drawing.getPosition(),drawing.getSize());
         this.drawings.add(drawing);
         this.repaint();
     }
@@ -66,13 +59,32 @@ public class DrawPanel extends JPanel {
     // -- Drawing elements --
 
     public void paintDrawing(Graphics g, Drawing drawing) {
-        drawing.draw(g, this::valueToGraph);
+        drawing.draw(g);
     }
 
     @Override
     public void paint(Graphics g){
+        g.clearRect(0,0,getWidth(),getHeight());
+        Graphics2D g2d = (Graphics2D) g;
+        // Create a backup of the original transform
+        AffineTransform oldAT = g2d.getTransform();
+
+        //setView(g2d, xValMin, yValMin, xValMax, yValMax);
+
+        // frame the interest Box
+        // origin: xMin,yMin
+        // width: xMax-xMin
+        // height: yMax-yMin
+        double xRatio = getWidth()/(xValMax-xValMin);
+        double yRatio = getHeight()/(yValMax-yValMin);
+        g2d.translate(0,getHeight()); // Origin: top left -> bottom left
+        g2d.scale(xRatio,yRatio); // for box to fit
+        g2d.scale(1,-1); // y-axis: facing down -> facing up
+        g2d.translate(-xValMin,-yValMin); // Origin: bottom left -> (xMin,yMin))
+
+
+
         super.paint(g);
-        setOrigin(0,0);
 
         setBackground(Color.WHITE); // default
         drawAxes(g,new Point2D(0,0),Color.RED);
@@ -85,7 +97,7 @@ public class DrawPanel extends JPanel {
 
     private void drawAxes(Graphics g, Point2D center, Color color) {
         g.setColor(color);
-        Point2D graphPoint = valueToGraph(center);
+        Point2D graphPoint = center;
         int centerX = (int) graphPoint.x();
         int centerY = (int) graphPoint.y();
 
@@ -100,16 +112,16 @@ public class DrawPanel extends JPanel {
         return (value-oldMin)/(oldMax-oldMin) * (max-min) + min;
     }
 
-    public Point2D valueToGraph(IPoint p){
-        int x = (int) map(p.x(),xValMin,xValMax,0,getWidth());
-        int y = (int) map(p.y(),yValMin,yValMax,0,getHeight()); // Inverted Y
+    public Point2D valueAtPixel(Point p){
+        int x = (int) map(p.x,0,getWidth(),xValMin,xValMax);
+        int y = (int) map(getHeight()-p.y,0,getHeight(),yValMin,yValMax); // Inverted Y
 
-        return new Point2D(x, getHeight() - y);
+        return new Point2D(x, y);
     }
 
     // -- Adapt Map Boundaries --
 
-    private void zoomOutIfNeeded(Position p, double additionnalDelta) {
+    private void reframeIfNeeded(Position p, double additionnalDelta) {
         additionnalDelta += MARGIN;
 
         adaptXboundaries(p.x(),additionnalDelta);

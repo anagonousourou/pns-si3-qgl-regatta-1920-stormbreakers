@@ -1,13 +1,12 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.visuals.draw.drawings;
 
 
-import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.IPoint;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.LineSegment2D;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
 
 import java.awt.*;
-import java.util.function.UnaryOperator;
+import java.awt.geom.Line2D;
 
 public class SegmentDrawing extends Drawing {
 
@@ -39,15 +38,16 @@ public class SegmentDrawing extends Drawing {
     }
 
     @Override
-    public void draw(Graphics g, UnaryOperator<Point2D> mapPoint) {
-        Point2D mappedPoint1 = mapPoint.apply(this.firstPoint);
-        Point2D mappedPoint2 = mapPoint.apply(this.lastPoint);
-        int x1= (int) mappedPoint1.x();
-        int y1= (int) mappedPoint1.y();
-        int x2= (int) mappedPoint2.x();
-        int y2 =(int) mappedPoint2.y();
+    public void draw(Graphics g) {
+        double x1 = this.firstPoint.x();
+        double y1 = this.firstPoint.y();
+        double x2 = this.lastPoint.x();
+        double y2 = this.lastPoint.y();
+
+        // Draw
+        Graphics2D g2 = (Graphics2D) g;
         g.setColor(getColor());
-        g.drawLine(x1, y1, x2, y2);
+        g2.draw(new Line2D.Double(x1,y1,x2,y2));
     }
 
 }

@@ -17,7 +17,7 @@ public class DrawableManager extends JFrame {
     public DrawableManager() {
         super("Graph disp");
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        this.setSize(screenSize.width, screenSize.height);
+        this.setSize(screenSize.width, screenSize.height-50);
         this.drawPanel = new DrawPanel();
     }
 

@@ -6,7 +6,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
 
 import java.awt.*;
-import java.util.function.UnaryOperator;
+import java.awt.geom.Ellipse2D;
 
 public class CircleDrawing extends Drawing {
 
@@ -19,8 +19,8 @@ public class CircleDrawing extends Drawing {
     }
 
     @Override
-    public void draw(Graphics g, UnaryOperator<Point2D> mapPoint) {
-        super.draw(g,mapPoint);
+    public void draw(Graphics g) {
+        super.draw(g);
 
         // Actual coordinates
         double radius = getSize();
@@ -30,11 +30,12 @@ public class CircleDrawing extends Drawing {
         Point2D topRight = topLeft.getTranslatedBy(2*radius,0);
 
         // Graph coordinates
-        Point2D ovalTopLeft = mapPoint.apply(topLeft);
-        int ovalXRadius = (int) ovalTopLeft.distanceTo(mapPoint.apply(topRight));
-        int ovalYRadius = (int) ovalTopLeft.distanceTo(mapPoint.apply(bottomLeft));
-        // Drawn from top left corner
-        g.drawOval((int) ovalTopLeft.x(), (int) ovalTopLeft.y(), ovalXRadius , ovalYRadius);
+        double ovalXDiameter = topLeft.distanceTo(topRight);
+        double ovalYDiameter = topLeft.distanceTo(bottomLeft);
+
+        // Drawn from "pixel top left corner" ("real bottom-left" when y-axis reversed)
+        Graphics2D g2 = (Graphics2D) g;
+        g2.draw(new Ellipse2D.Double(bottomLeft.x(),bottomLeft.y(),ovalXDiameter,ovalYDiameter));
     }
 
 }

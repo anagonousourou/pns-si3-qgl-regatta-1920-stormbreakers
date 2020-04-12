@@ -1,16 +1,12 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.visuals.draw.drawings;
 
-import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Circle;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Polygon;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
-import fr.unice.polytech.si3.qgl.stormbreakers.math.LineSegment2D;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
-import fr.unice.polytech.si3.qgl.stormbreakers.math.Vector;
 
 import java.awt.*;
+import java.awt.geom.Line2D;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.function.UnaryOperator;
-import java.util.stream.Collectors;
 
 
 public class PolygonDrawing extends Drawing {
@@ -41,24 +37,25 @@ public class PolygonDrawing extends Drawing {
     }
 
     @Override
-    public void draw(Graphics g, UnaryOperator<Point2D> mapPoint) {
-        super.draw(g,mapPoint);
+    public void draw(Graphics g) {
+        super.draw(g);
 
-        List<Point2D> resizedShape = vertices.stream()
-                .map(mapPoint)
-                .collect(Collectors.toList());
+        List<Point2D> verticesCopy = new ArrayList<>(vertices);
 
         // Close the shape
-        Point2D last = resizedShape.remove(0);
-        resizedShape.add(last);
+        Point2D last = verticesCopy.remove(0);
+        verticesCopy.add(last);
 
+        // Drawn
+        Graphics2D g2 = (Graphics2D) g;
         g.setColor(getColor());
-        for (Point2D vertex : resizedShape) {
-            g.drawLine((int) last.x(), (int) last.y(), (int) vertex.x(), (int) vertex.y());
+
+        for (Point2D vertex : verticesCopy) {
+            g2.draw(new Line2D.Double(last.x(),last.y(),vertex.x(),vertex.y()));
             last = vertex;
         }
 
-        new Arrow(getPosition(),getPosition().getOrientation()).draw(g,mapPoint);
+        new Arrow(getPosition(),getPosition().getOrientation()).draw(g);
     }
 
 }

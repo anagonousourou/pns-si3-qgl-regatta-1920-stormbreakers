@@ -2,10 +2,8 @@ package fr.unice.polytech.si3.qgl.stormbreakers.visuals.draw.drawings;
 
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
-import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
 
 import java.awt.*;
-import java.util.function.UnaryOperator;
 
 public class PosDrawing extends Drawing {
 
@@ -20,9 +18,9 @@ public class PosDrawing extends Drawing {
     }
 
     @Override
-    public void draw(Graphics g, UnaryOperator<Point2D> mapPoint) {
-        new DotDrawing(getPosition()).draw(g,mapPoint);
-        new Arrow(getPosition(),getPosition().getOrientation()).draw(g,mapPoint);
+    public void draw(Graphics g) {
+        new DotDrawing(getPosition()).draw(g);
+        new Arrow(getPosition(),getPosition().getOrientation()).draw(g);
     }
 
 }
