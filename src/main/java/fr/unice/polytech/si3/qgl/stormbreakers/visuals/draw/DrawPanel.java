@@ -88,10 +88,15 @@ public class DrawPanel extends JPanel {
 
     @Override
     public void paint(Graphics g){
-        g.clearRect(0,0,getWidth(),getHeight());
+        super.paint(g);
+        setBackground(Color.WHITE); // default
+        //g.clearRect(0,0,getWidth(),getHeight());
+
         Graphics2D g2d = (Graphics2D) g;
         // Create a backup of the original transform
         AffineTransform oldAT = g2d.getTransform();
+
+        //g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
 
         // frame the interest Box
         // origin: xMin,yMin
@@ -104,10 +109,6 @@ public class DrawPanel extends JPanel {
         g2d.scale(1,-1); // y-axis: facing down -> facing up
         g2d.translate(-xValMin,-yValMin); // Origin: bottom left -> (xMin,yMin))
 
-
-        super.paint(g);
-
-        setBackground(Color.WHITE); // default
         drawAxes(g2d,new Point2D(0,0),Color.RED);
         g.setColor(Color.BLACK);
 
@@ -119,7 +120,7 @@ public class DrawPanel extends JPanel {
         g2d.setTransform(oldAT);
 
 
-        g2d.setFont(new Font(Font.SANS_SERIF,Font.PLAIN,12));
+        g2d.setFont(new Font(Font.SANS_SERIF,Font.PLAIN,28));
         g2d.setColor(Color.BLACK);
         String str = (lockedValue!=null)?lockedValue.toString():"Click to get cursor pos ..";
         g2d.drawString(str,0,getHeight());

@@ -1,6 +1,5 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.visuals.draw.drawings;
 
-
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.IPoint;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
 

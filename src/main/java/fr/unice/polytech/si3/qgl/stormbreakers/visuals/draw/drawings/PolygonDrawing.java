@@ -5,6 +5,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
 
 import java.awt.*;
 import java.awt.geom.Line2D;
+import java.awt.geom.Path2D;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,22 +37,23 @@ public class PolygonDrawing extends Drawing {
     @Override
     public void draw(Graphics g) {
         super.draw(g);
-
         List<Point2D> verticesCopy = new ArrayList<>(vertices);
 
-        // Close the shape
-        Point2D last = verticesCopy.remove(0);
-        verticesCopy.add(last);
-
         // Drawn
-        Graphics2D g2 = (Graphics2D) g;
+        Graphics2D g2d = (Graphics2D) g;
         g.setColor(getColor());
 
-        for (Point2D vertex : verticesCopy) {
-            g2.draw(new Line2D.Double(last.x(),last.y(),vertex.x(),vertex.y()));
-            last = vertex;
-        }
 
+        Path2D.Double path2D = new Path2D.Double();
+        Point2D firstPoint = verticesCopy.remove(0);
+
+        path2D.moveTo(firstPoint.x(),firstPoint.y());
+        for (Point2D vertex : verticesCopy) {
+            path2D.lineTo(vertex.x(),vertex.y());
+        }
+        path2D.closePath();
+
+        g2d.draw(path2D);
         new Arrow(getPosition(),getPosition().getOrientation()).draw(g);
     }
 
