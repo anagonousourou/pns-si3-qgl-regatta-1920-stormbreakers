@@ -11,28 +11,25 @@ import java.util.List;
 
 public class PolygonDrawing extends Drawing {
 
-    private List<Point2D> vertices;
+    private final List<Point2D> vertices;
 
     public PolygonDrawing(Polygon polygon) {
         super(polygon.getAnchor(),getPolygonRadius(polygon));
         this.vertices = polygon.getActualVertices(polygon.getAnchor());
     }
 
-    // TODO: 31/03/2020 Use AABB for updating display boundaries
-
     private static double getPolygonRadius(Polygon polygon) {
         List<Point2D> vertices = polygon.getActualVertices(polygon.getAnchor());
 
         double maxDiameter = 0;
-        for (Point2D sommet1 : vertices) {
-            for (Point2D sommet2 : vertices) {
-                if (sommet1!=sommet2) {
-                    double dist = sommet1.distanceTo(sommet2);
+        for (Point2D vertex1 : vertices) {
+            for (Point2D vertex2 : vertices) {
+                if (vertex1!=vertex2) {
+                    double dist = vertex1.distanceTo(vertex2);
                     if (dist>maxDiameter) maxDiameter=dist;
                 }
             }
         }
-
         return maxDiameter/2.0;
     }
 
