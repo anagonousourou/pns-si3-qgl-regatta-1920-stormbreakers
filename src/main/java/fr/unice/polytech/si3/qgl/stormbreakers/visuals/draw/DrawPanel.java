@@ -1,6 +1,5 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.visuals.draw;
 
-import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.IPoint;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
 import fr.unice.polytech.si3.qgl.stormbreakers.visuals.draw.drawings.Drawing;
@@ -28,8 +27,45 @@ public class DrawPanel extends JPanel {
     private double originX = 0;
     private double originY = 0;
 
+    private Point2D cursorValue;
+
     public DrawPanel() {
         super();
+
+        addMouseListener(new MouseListener() {
+            /**
+             * On left click updates cursorValue
+             * On right click resets cursorValue
+             * On any click repaints
+             * @param e MouseEvent
+             */
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getButton() == MouseEvent.BUTTON1) { // LEFT CLICK
+                    Point p = e.getPoint();
+                    cursorValue = valueAtPixel(p);
+                }
+                else if (e.getButton() == MouseEvent.BUTTON3) { // RIGHT CLICK
+                    cursorValue = null;
+                }
+                repaint();
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {}
+
+            @Override
+            public void mouseReleased(MouseEvent e) {}
+
+            @Override
+            public void mouseEntered(MouseEvent e) {}
+
+            @Override
+            public void mouseExited(MouseEvent e) {}
+        });
+
+
+
     }
 
     // -- Drawing Panel config --
@@ -69,8 +105,6 @@ public class DrawPanel extends JPanel {
         // Create a backup of the original transform
         AffineTransform oldAT = g2d.getTransform();
 
-        //setView(g2d, xValMin, yValMin, xValMax, yValMax);
-
         // frame the interest Box
         // origin: xMin,yMin
         // width: xMax-xMin
@@ -83,7 +117,6 @@ public class DrawPanel extends JPanel {
         g2d.translate(-xValMin,-yValMin); // Origin: bottom left -> (xMin,yMin))
 
 
-
         super.paint(g);
 
         setBackground(Color.WHITE); // default
@@ -93,6 +126,16 @@ public class DrawPanel extends JPanel {
         for (Drawing drawing : drawings) {
             paintDrawing(g,drawing);
         }
+
+        // Restore the original transform
+        g2d.setTransform(oldAT);
+
+
+        g2d.setFont(new Font(Font.SANS_SERIF,Font.PLAIN,12));
+        g2d.setColor(Color.BLACK);
+        String str = (cursorValue!=null)?cursorValue.toString():"Click to get cursor pos ..";
+        g2d.drawString(str,0,getHeight());
+
     }
 
     private void drawAxes(Graphics g, Point2D center, Color color) {
@@ -107,14 +150,15 @@ public class DrawPanel extends JPanel {
 
     // -- Position <-> Pixel --
 
-    double map(double value, double oldMin, double oldMax, double min, double max) {
+    private double map(double value, double oldMin, double oldMax, double min, double max) {
         // Y = (X-A)/(B-A) * (D-C) + C
         return (value-oldMin)/(oldMax-oldMin) * (max-min) + min;
     }
 
-    public Point2D valueAtPixel(Point p){
-        int x = (int) map(p.x,0,getWidth(),xValMin,xValMax);
-        int y = (int) map(getHeight()-p.y,0,getHeight(),yValMin,yValMax); // Inverted Y
+    private Point2D valueAtPixel(Point p){
+        double x = map(p.x,0,getWidth(),xValMin,xValMax);
+        int restoredY = getHeight()-p.y; // restore Y-axis orientation
+        double y = map(restoredY,0,getHeight(),yValMin,yValMax);
 
         return new Point2D(x, y);
     }
