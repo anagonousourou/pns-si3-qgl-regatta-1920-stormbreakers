@@ -1,10 +1,8 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.visuals.draw.drawings;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
-import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
 
 import java.awt.*;
-import java.util.function.UnaryOperator;
 
 public abstract class Drawing {
 
@@ -34,9 +32,9 @@ public abstract class Drawing {
         return color;
     }
 
-    public void draw(Graphics g, UnaryOperator<Point2D> mapPoint) {
+    public void draw(Graphics g) {
         g.setColor(getColor());
-        new DotDrawing(getPosition(),getColor()).draw(g,mapPoint);
+        new DotDrawing(getPosition(),getColor()).draw(g);
     }
 
     public void setColor(Color color) {

@@ -9,18 +9,29 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
+/**
+ * This class takes drawable objects to extract their drawings
+ * and add them to be displayed on a DrawPanel showed by this class
+ */
+
 public class DrawableManager extends JFrame {
 
-    private DrawPanel drawPanel;
+    private final DrawPanel drawPanel;
 
 
     public DrawableManager() {
-        super("Graph disp");
+        super("Graph display");
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        this.setSize(screenSize.width, screenSize.height);
+        this.setSize(screenSize.width, screenSize.height-50);
         this.drawPanel = new DrawPanel();
     }
 
+    /**
+     * Add a drawable element to display
+     * on the draw panel
+     * @param drawable the element to display
+     * @param color the display color
+     */
     public void addElement(Drawable drawable, Color color) {
         Drawing drawing = drawable.getDrawing();
         drawing.setColor(color);
@@ -31,6 +42,9 @@ public class DrawableManager extends JFrame {
         drawPanel.drawElement(drawable.getDrawing());
     }
 
+    /**
+     * Shows the DrawPanel where every element is drawn
+     */
     public void trace(){
         this.getContentPane().add(this.drawPanel);
         this.setVisible(true);

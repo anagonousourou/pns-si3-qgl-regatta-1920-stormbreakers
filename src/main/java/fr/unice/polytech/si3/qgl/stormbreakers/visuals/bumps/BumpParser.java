@@ -24,17 +24,17 @@ import java.util.stream.Collectors;
 
 public class BumpParser {
 
-    private List<TupleRoundStepPosLines> positionsPerStep;
+    private final List<TupleRoundStepPosLines> positionsPerStep;
 
-    private List<VisibleEntity> entities;
-    private List<Position> positions;
+    private final List<VisibleEntity> entities;
+    private final List<Position> positions;
 
     private static final String POSITION_KEY = "POSITION";
     private static final String ROUND_KEY = "ROUND";
     private static final String STEP_KEY = "STEP";
 
     private static final String CHECKPOINT_TOKEN = "checkpoint";
-    private static final String REEF_TOKEN = "reef";
+    static final String REEF_TOKEN = "reef";
     private static final String STREAM_TOKEN = "stream";
     private static final String SHIP_TOKEN = "ship";
 
@@ -55,9 +55,9 @@ public class BumpParser {
     }
 
     static class TupleRoundStepPosLines {
-        int round;
-        int step;
-        Position position;
+        final int round;
+        final int step;
+        final Position position;
 
         TupleRoundStepPosLines(int round, int step, Position position) {
             this.round = round;
@@ -66,7 +66,11 @@ public class BumpParser {
         }
     }
 
-    // TODO: 31/03/2020 Warning:(68, 18) Refactor this method to reduce its Cognitive Complexity from 18 to the 15 allowed.
+    /**
+     * Processes the input by parsing distinctly the bump header and the bump body
+     * Delegates object reconstruction to corresponding methods
+     * @param scanner the input scanner
+     */
     private void preparse(Scanner scanner) {
         System.out.println("Now parsing ...");
 
@@ -122,6 +126,11 @@ public class BumpParser {
 
     }
 
+    /**
+     * Creates position element from string tokens
+     * @param posComponents the string tokens
+     * @return the reconstructed position
+     */
     private Position buildPosition(List<String> posComponents) {
         List<Double> posComps = posComponents.stream().map(Double::parseDouble).collect(Collectors.toList());
         double xPos = posComps.get(0);
@@ -130,16 +139,18 @@ public class BumpParser {
         return new Position(xPos,yPos,orientationPos);
     }
 
-    private VisibleEntity parseEntity(String firstEntityLine, String secondEntityLine) {
-        // ENTITY id NAME SHAPE SHAPE_PARAMS
-        // "ENTITY \\d+ (\\w+) (\\w+) ((?:\\w| |\\d)+)"
+    /**
+     * Creates an entity from two string token lines
+     * @param firstEntityLine ENTITY id NAME SHAPE [SHAPE_PARAMS]
+     * @param secondEntityLine POSITION id X Y ORIENTATION
+     * @return the reconstructed entity
+     */
+    VisibleEntity parseEntity(String firstEntityLine, String secondEntityLine) {
         List<String> entityTokens = Arrays.asList(firstEntityLine.split(" "));
         String name = entityTokens.get(2);
         String shapeName = entityTokens.get(2 + 1);
         List<String> shapeParams = entityTokens.subList(4,entityTokens.size());
 
-        // POSITION id X Y ORIENTATION
-        // "POSITION \\d+ (-*\\d+\\.\\d+) (-*\\d+\\.\\d+) (-*\\d+\\.\\d+)"
         List<String> positionComponents = Arrays.asList(secondEntityLine.split(" "));
         Position position = buildPosition(positionComponents.subList(2,4+1));
         
@@ -147,6 +158,13 @@ public class BumpParser {
         return buildEntity(name,shape,position);
     }
 
+    /**
+     * Creates an entity from given parameters
+     * @param name entity's type
+     * @param shape entity's shape
+     * @param position entity's position
+     * @return the reconstructed entity
+     */
     private VisibleEntity buildEntity(String name, Shape shape, Position position) {
         if (STREAM_TOKEN.equals(name)) {
             return new Courant(position, shape,150.0);
@@ -163,6 +181,12 @@ public class BumpParser {
         return null;
     }
 
+    /**
+     * Creates a shape from given parameters
+     * @param shapeName shape's type
+     * @param shapeParams shape's additional parameters
+     * @return the reconstructed entity
+     */
     private Shape buildShape(String shapeName, List<String> shapeParams) {
         if (CIRCLE_TOKEN.equals(shapeName)) {
             // circle 150.0
@@ -181,24 +205,36 @@ public class BumpParser {
         return null;
     }
 
+    /**
+     * Retrieve parsed checkpoints
+     */
     public List<Checkpoint> getCheckpoints() {
         return entities.stream().filter(ent ->  VisibleEntity.CHECKPOINT_TOKEN.equals(ent.getType()))
                 .map(ent -> (Checkpoint) ent)
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Retrieve parsed reefs
+     */
     public List<Recif> getReefs() {
         return entities.stream().filter(ent ->  OceanEntityType.RECIF.entityCode.equals(ent.getType()))
                 .map(ent -> (Recif) ent)
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Retrieve parsed streams
+     */
     public List<Courant> getStreams() {
         return entities.stream().filter(ent ->  OceanEntityType.COURANT.entityCode.equals(ent.getType()))
                 .map(ent -> (Courant) ent)
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Retrieve parsed boat shape
+     */
     public Shape getBoatShape() {
         return entities.stream().filter(ent -> OceanEntityType.BOAT.entityCode.equals(ent.getType()))
                 .map(ent -> (Boat)ent)
@@ -206,10 +242,18 @@ public class BumpParser {
                 .collect(Collectors.toList()).get(0);
     }
 
+    /**
+     * Retrieve parsed boat positions per round
+     */
     public List<Position> getRoundPos() {
         return positionsPerStep.stream().filter(i -> i.step == 0).map(i -> i.position).collect(Collectors.toList());
     }
 
+    /**
+     * Retrieve parsed data as Json string
+     * @return Json string
+     * @throws JsonProcessingException if jackson's processing fails
+     */
     public String getJsonData() throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         //mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);

@@ -5,7 +5,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
 
 import java.awt.*;
-import java.util.function.UnaryOperator;
+import java.awt.geom.Line2D;
 
 public class DotDrawing extends Drawing {
 
@@ -24,14 +24,17 @@ public class DotDrawing extends Drawing {
     }
 
     @Override
-    public void draw(Graphics g, UnaryOperator<Point2D> mapPoint) {
-        Point2D mappedPoint = mapPoint.apply(getPosition().getPoint2D());
-        int x1= (int) mappedPoint.x();
-        int y1= (int) mappedPoint.y();
-        int size = (int) getSize();
+    public void draw(Graphics g) {
+        Point2D point = getPosition().getPoint2D();
+        double x1= point.x();
+        double y1= point.y();
+        double size = getSize();
+
         g.setColor(getColor());
-        g.drawLine(x1-size, y1, x1+size, y1);
-        g.drawLine(x1, y1-size, x1, y1+size);
+        // Drawn
+        Graphics2D g2 = (Graphics2D) g;
+        g2.draw(new Line2D.Double(x1-size,y1,x1+size,y1));
+        g2.draw(new Line2D.Double(x1,y1-size,x1,y1+size));
     }
 
 }

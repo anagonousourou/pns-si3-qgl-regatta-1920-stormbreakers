@@ -1,19 +1,25 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.visuals.draw;
 
-import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.IPoint;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
-import fr.unice.polytech.si3.qgl.stormbreakers.math.Vector;
 import fr.unice.polytech.si3.qgl.stormbreakers.visuals.draw.drawings.Drawing;
 import fr.unice.polytech.si3.qgl.stormbreakers.visuals.draw.drawings.PosDrawing;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Line2D;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class is a panel where added Drawings are displayed
+ */
+
 public class DrawPanel extends JPanel {
-    private List<Drawing> drawings =new ArrayList<>();
+    private final List<Drawing> drawings =new ArrayList<>();
 
     private double xValMin=Double.MAX_VALUE; // Can only go down
     private double yValMin=Double.MAX_VALUE;
@@ -22,98 +28,153 @@ public class DrawPanel extends JPanel {
 
     private static final double MARGIN = 10;
 
-    // Origin pos val
-    private double originX = 0;
-    private double originY = 0;
+    private Point2D lockedValue;
 
     public DrawPanel() {
         super();
+
+        addMouseListener(new MouseAdapter() {
+            /**
+             * On left click updates cursorValue
+             * On right click resets cursorValue
+             * On any click repaints
+             * @param e MouseEvent
+             */
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getButton() == MouseEvent.BUTTON1) { // LEFT CLICK
+                    Point p = e.getPoint();
+                    lockedValue = valueAtPixel(p);
+                }
+                else if (e.getButton() == MouseEvent.BUTTON3) { // RIGHT CLICK
+                    lockedValue = null;
+                }
+                repaint();
+            }
+        });
+
     }
 
     // -- Drawing Panel config --
 
-    void setGraphValOrigin(Vector translation) {
-        setGraphValOrigin(translation.getDeltaX(),translation.getDeltaY());
-    }
-
-    void setGraphValOrigin(double dx, double dy) {
-        setOrigin(dx, dy);
-        repaint();
-    }
-
-    /**
-     * Places the center at canvas pos x y
-     * @param x origin x
-     * @param y origin y
-     */
-    private void setOrigin(double x, double y) {
-        this.originX = map(x,xValMin,xValMax,0,getWidth());
-        this.originY = map(y,yValMin,yValMax,0,getHeight());
-    }
-
     // -- Queuing elements to draw --
 
+    /**
+     * Adds a position to display
+     * @param position the position
+     */
     public void drawPos(Position position) {
         drawings.add(new PosDrawing(position.x(),position.y()));
     }
 
+    /**
+     * Adds a drawing to display
+     * @param drawing the drawing
+     */
     public void drawElement(Drawing drawing){
-        zoomOutIfNeeded(drawing.getPosition(),drawing.getSize());
+        adaptBoundaries(drawing.getPosition(),drawing.getSize());
         this.drawings.add(drawing);
         this.repaint();
     }
 
     // -- Drawing elements --
 
+    /**
+     * Paints a drawing on the panel
+     */
     public void paintDrawing(Graphics g, Drawing drawing) {
-        drawing.draw(g, this::valueToGraph);
+        drawing.draw(g);
     }
 
     @Override
     public void paint(Graphics g){
         super.paint(g);
-        setOrigin(0,0);
-
         setBackground(Color.WHITE); // default
-        drawAxes(g,new Point2D(0,0),Color.RED);
+        //g.clearRect(0,0,getWidth(),getHeight());
+
+        Graphics2D g2d = (Graphics2D) g;
+        // Create a backup of the original transform
+        AffineTransform oldAT = g2d.getTransform();
+
+        //g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
+
+        // frame the interest Box
+        // origin: xMin,yMin
+        // width: xMax-xMin
+        // height: yMax-yMin
+        double xRatio = getWidth()/(xValMax-xValMin);
+        double yRatio = getHeight()/(yValMax-yValMin);
+        g2d.translate(0,getHeight()); // Origin: top left -> bottom left
+        g2d.scale(xRatio,yRatio); // for box to fit
+        g2d.scale(1,-1); // y-axis: facing down -> facing up
+        g2d.translate(-xValMin,-yValMin); // Origin: bottom left -> (xMin,yMin))
+
+        drawAxes(g2d,new Point2D(0,0),Color.RED);
         g.setColor(Color.BLACK);
 
         for (Drawing drawing : drawings) {
             paintDrawing(g,drawing);
         }
+
+        // Restore the original transform
+        g2d.setTransform(oldAT);
+
+
+        g2d.setFont(new Font(Font.SANS_SERIF,Font.PLAIN,28));
+        g2d.setColor(Color.BLACK);
+        String str = (lockedValue!=null)?lockedValue.toString():"Click to get cursor pos ..";
+        g2d.drawString(str,0,getHeight());
+
     }
 
-    private void drawAxes(Graphics g, Point2D center, Color color) {
-        g.setColor(color);
-        Point2D graphPoint = valueToGraph(center);
-        int centerX = (int) graphPoint.x();
-        int centerY = (int) graphPoint.y();
-
-        g.drawLine(0,centerY, getWidth(),centerY);  // (Ox)
-        g.drawLine(centerX,0, centerX,getHeight()); // (Oy)
+    /**
+     * Draws axis on the panel
+     * @param center the anchor point / origin
+     * @param color the drawing color
+     */
+    private void drawAxes(Graphics2D g2d, Point2D center, Color color) {
+        g2d.setColor(color);
+        g2d.draw(new Line2D.Double(0.0,center.y(),getWidth(),center.y())); // (Ox)
+        g2d.draw(new Line2D.Double(center.x(),0.0,center.x(),getHeight())); // (Oy)
     }
 
     // -- Position <-> Pixel --
 
-    double map(double value, double oldMin, double oldMax, double min, double max) {
+    /**
+     * Maps a given value from [oldMin,oldMax] to [min,max]
+     * @return the mapped value
+     */
+    private double map(double value, double oldMin, double oldMax, double min, double max) {
         // Y = (X-A)/(B-A) * (D-C) + C
         return (value-oldMin)/(oldMax-oldMin) * (max-min) + min;
     }
 
-    public Point2D valueToGraph(IPoint p){
-        int x = (int) map(p.x(),xValMin,xValMax,0,getWidth());
-        int y = (int) map(p.y(),yValMin,yValMax,0,getHeight()); // Inverted Y
+    /**
+     * Gets the value point corresponding to a given pixel
+     * from the panel
+     * @return the value point
+     */
+    private Point2D valueAtPixel(Point p){
+        double x = map(p.x,0,getWidth(),xValMin,xValMax);
+        int restoredY = getHeight()-p.y; // restore Y-axis orientation
+        double y = map(restoredY,0,getHeight(),yValMin,yValMax);
 
-        return new Point2D(x, getHeight() - y);
+        return new Point2D(x, y);
     }
 
     // -- Adapt Map Boundaries --
 
-    private void zoomOutIfNeeded(Position p, double additionnalDelta) {
-        additionnalDelta += MARGIN;
+    /**
+     * Adapts display boundaries
+     * when elements don't fit anymore
+     * @param p new element's position
+     * @param additionalDelta new element's width/height
+     */
+    private void adaptBoundaries(Position p, double additionalDelta) {
+        additionalDelta += MARGIN;
 
-        adaptXboundaries(p.x(),additionnalDelta);
-        adaptYboundaries(p.y(),additionnalDelta);
+        adaptXboundaries(p.x(),additionalDelta);
+        adaptYboundaries(p.y(),additionalDelta);
     }
 
     private void adaptXboundaries(double value,double delta) {

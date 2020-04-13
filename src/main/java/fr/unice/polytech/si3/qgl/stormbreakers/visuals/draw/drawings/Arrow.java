@@ -6,7 +6,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Vector;
 
 import java.awt.*;
-import java.util.function.UnaryOperator;
+import java.awt.geom.Line2D;
 
 public class Arrow extends Drawing {
     private static final double ARROW_SIZE = 100;
@@ -18,7 +18,7 @@ public class Arrow extends Drawing {
     }
 
     @Override
-    public void draw(Graphics g, UnaryOperator<Point2D> mapPoint) {
+    public void draw(Graphics g) {
         Vector dir = Vector.createUnitVector(this.orientation);
 
         Vector startToEnd = dir.scaleVector(getSize());
@@ -27,14 +27,15 @@ public class Arrow extends Drawing {
 
         Point2D anchor = getPosition().getPoint2D();
 
-        Point2D start = mapPoint.apply(anchor);
-        Point2D end = mapPoint.apply(anchor.getTranslatedBy(startToEnd));
-        Point2D left = mapPoint.apply(anchor.getTranslatedBy(startToEnd).getTranslatedBy(headLeft));
-        Point2D right = mapPoint.apply(anchor.getTranslatedBy(startToEnd).getTranslatedBy(headRight));
+        Point2D start = anchor;
+        Point2D end = anchor.getTranslatedBy(startToEnd);
+        Point2D left = anchor.getTranslatedBy(startToEnd).getTranslatedBy(headLeft);
+        Point2D right = anchor.getTranslatedBy(startToEnd).getTranslatedBy(headRight);
 
-        g.drawLine((int) start.x(),(int) start.y(),(int) end.x(),(int) end.y());
-        g.drawLine((int) end.x(),(int) end.y(),(int) left.x(),(int) left.y());
-        g.drawLine((int) end.x(),(int) end.y(),(int) right.x(),(int) right.y());
-
+        // Draw
+        Graphics2D g2 = (Graphics2D) g;
+        g2.draw(new Line2D.Double(start.x(),start.y(),end.x(),end.y()));
+        g2.draw(new Line2D.Double(end.x(),end.y(),left.x(),left.y()));
+        g2.draw(new Line2D.Double(end.x(),end.y(),right.x(),right.y()));
     }
 }

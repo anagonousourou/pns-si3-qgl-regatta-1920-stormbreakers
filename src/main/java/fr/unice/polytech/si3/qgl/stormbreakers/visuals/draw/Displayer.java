@@ -11,9 +11,14 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class manages the different map (Drawable) elements
+ * and adds them to be displayed in a drawPanel
+ */
+
 public class Displayer {
 
-    private DrawableManager drawableManager;
+    private final DrawableManager drawableManager;
 
     private List<Checkpoint> checkpoints;
     private List<Recif> reefs;
@@ -38,6 +43,9 @@ public class Displayer {
         return drawableManager;
     }
 
+    /**
+     * Tells the inner Drawable Manager to display added Drawables
+     */
     public void disp() {
         graphDrawableShapes(checkpoints,reefs,streams,shipPos);
         this.drawableManager.trace();
@@ -45,6 +53,9 @@ public class Displayer {
 
     // -------------
 
+    /**
+     * Adds for display every map element with their corresponding color
+     */
     private void graphDrawableShapes(List<Checkpoint> checkpoints, List<Recif> reefs, List<Courant> streams, List<Position> shipPos) {
         graphColoredShapes(new ArrayList<>(checkpoints), Color.GREEN);
         graphColoredShapes(new ArrayList<>(reefs),Color.RED);
@@ -56,49 +67,72 @@ public class Displayer {
         graphColoredShapes(List.of(shipShape),Color.ORANGE);
     }
 
+    /**
+     * Adds drawables for display with the specified color
+     * @param drawables list of drawables
+     * @param color display color
+     */
     private void graphColoredShapes(List<Drawable> drawables, Color color) {
         drawables.forEach(elt -> drawableManager.addElement(elt,color));
     }
 
     // -----------
+
+    /**
+     * Adds a list of drawables as "special" elements
+     */
     public void setSpecial(List<Drawable> special) {
         this.special = special;
     }
 
+    /**
+     * Adds a list of drawables as "checkpoints" elements
+     */
     public void setCheckpoints(List<Checkpoint> checkpoints){
         this.checkpoints= new ArrayList<>(checkpoints);
     }
 
+    /**
+     * Adds a list of drawables as "streams" elements
+     */
     public void setStreams(List<Courant> streams) {
         if(streams==null)return;
         this.streams = new ArrayList<>(streams);
     }
 
+    /**
+     * Adds a list of drawables as "reefs" elements
+     */
     public void setReefs(List<Recif> reefs){
         if(reefs==null)return;
         this.reefs = new ArrayList<>(reefs);
     }
 
+    /**
+     * Adds a list of positions representing the different ship steps
+     */
     public void setShipPositions(List<Position> shipPositions){
         if(shipPositions==null)return;
         this.shipPos = shipPositions;
     }
 
+    /**
+     * Sets the ship shape
+     */
     public void setShipShape(Shape boatShape) {
         if(boatShape==null)return;
         shipShape = boatShape;
     }
 
+    /**
+     * Adds any drawing as a "special" element
+     * by wrapping it as a Drawable
+     */
     public void addDrawing(Drawing drawing) {
         special.add(wrapDrawing(drawing));
     }
 
     private Drawable wrapDrawing(Drawing drawing) {
-        return new Drawable() {
-            @Override
-            public Drawing getDrawing() {
-                return drawing;
-            }
-        };
+        return () -> drawing;
     }
 }
