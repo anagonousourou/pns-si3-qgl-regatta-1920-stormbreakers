@@ -11,6 +11,11 @@ public class LabelDrawing extends Drawing {
     private static final double STRING_RADIUS = 0;
     private final String label;
 
+    public LabelDrawing(int number, Position position) {
+        super(position, STRING_RADIUS);
+        this.label = Integer.toString(number);
+    }
+
     public LabelDrawing(double number, Position position) {
         super(position, STRING_RADIUS);
         this.label = Double.toString(number);
@@ -30,15 +35,23 @@ public class LabelDrawing extends Drawing {
         IPoint canvasPos = getPosition().getPoint2D();
 
         // Drawn
-        Graphics2D g2 = (Graphics2D) g;
+        Graphics2D g2d = (Graphics2D) g;
+        Font backup = g2d.getFont();
 
-        FontMetrics fontMetrics = g2.getFontMetrics();
-        Rectangle2D textBounds = fontMetrics.getStringBounds(label, g2);
+        Font font = new Font(Font.SANS_SERIF,Font.PLAIN,100);
+        g2d.setFont(font);
+        Rectangle2D textBounds = font.getStringBounds(label,((Graphics2D) g).getFontRenderContext());
 
         //Drawn from bottom left corner
         float labelX = (float) (canvasPos.x()-(textBounds.getWidth()/2)); // we center text around X
         float labelY = (float) (canvasPos.y()); // Label is just above given (X,Y)
-        g2.drawString(label, labelX, labelY);
+
+        // All these shenanigans because of re-inverted Y
+        g2d.scale(1,-1); // Restore axis
+        g2d.drawString(label, labelX, -labelY);
+        g2d.scale(1,-1); // Re-invert axis
+
+        g2d.setFont(backup);
     }
 
 }
