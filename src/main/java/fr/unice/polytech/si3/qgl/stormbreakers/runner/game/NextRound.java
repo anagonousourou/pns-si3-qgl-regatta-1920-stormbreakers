@@ -2,6 +2,7 @@ package fr.unice.polytech.si3.qgl.stormbreakers.runner.game;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.OceanEntity;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Wind;
 import fr.unice.polytech.si3.qgl.stormbreakers.runner.serializing.Ship;
@@ -39,4 +40,11 @@ public class NextRound {
         return visibleEntities;
     }
 
+    public void setVisibleEntities(List<OceanEntity> visibleEntities) {
+        this.visibleEntities = visibleEntities;
+    }
+
+    public void setShipPos(Position position) {
+        this.ship.setPosition(position);
+    }
 }

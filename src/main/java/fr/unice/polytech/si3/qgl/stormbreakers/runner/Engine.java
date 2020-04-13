@@ -13,15 +13,14 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Gouvernail;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Oar;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Sail;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Sailor;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.RegattaGoal;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.*;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.IntPosition;
+import fr.unice.polytech.si3.qgl.stormbreakers.runner.game.GameConfig;
 import fr.unice.polytech.si3.qgl.stormbreakers.runner.game.InitGame;
 import fr.unice.polytech.si3.qgl.stormbreakers.runner.game.NextRound;
 import fr.unice.polytech.si3.qgl.stormbreakers.runner.serializing.Ship;
 import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.CrewManager;
 import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.EquipmentsManager;
-import fr.unice.polytech.si3.qgl.stormbreakers.staff.tactical.Coordinator;
 import fr.unice.polytech.si3.qgl.stormbreakers.visuals.draw.Displayer;
 
 import java.io.IOException;
@@ -36,24 +35,37 @@ public class Engine {
     private static final double WIND = 0;
 
     private static final String RAW_PATH = "/raw.runner";
-    String initGameJson;
-    InitGame initGame;
-    NextRound nextRound;
-    ObjectMapper mapper;
+    private String initGameJson;
+    private InitGame initGame;
+    private GameConfig game;
+    private NextRound nextRound;
+    private ObjectMapper mapper;
 
     private final Boat boat;
     private Ship ship;
     private Cockpit mjollnir;
-    private List<OceanEntity> entitiesVisible;
     private Displayer displayer;
 
-    CrewManager crewManager;
-    EquipmentsManager equipmentsManager;
-    Coordinator coordinator;
+    private CrewManager crewManager;
+    private EquipmentsManager equipmentsManager;
 
     Engine(Displayer displayer) throws IOException {
         this.displayer = displayer;
 
+        setupGameObj();
+
+        ship = initGame.getShip();
+        boat = ship.buildBoat();
+
+        nextRound = new NextRound(initGame.getShip(),new Wind(0,WIND), visibleEntitiesInRadius(ship.getPosition(),MID_VISION));
+
+        crewManager = new CrewManager(initGame.getSailors());
+        equipmentsManager = new EquipmentsManager(initGame.getEquipments(),boat.getDeckwidth(),null);
+
+        mjollnir = new Cockpit();
+    }
+
+    private void setupGameObj() throws IOException {
         mapper = new ObjectMapper();
         mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
         mapper.disable(MapperFeature.AUTO_DETECT_GETTERS);
@@ -62,28 +74,9 @@ public class Engine {
         initGameJson = new String(Engine.class.getResourceAsStream(RAW_PATH + "/initW9fise.json").readAllBytes());
         initGame = mapper.readValue(initGameJson, InitGame.class);
 
-        String entitiesJson = new String(Engine.class.getResourceAsStream(RAW_PATH + "/entitiesW9fise.json").readAllBytes());
-        entitiesVisible = mapper.readValue(entitiesJson, new TypeReference<List<OceanEntity>>() {});
-
-        ship = initGame.getShip();
-        boat = ship.buildBoat();
-
-        // TODO: 02/04/2020 Change for reefs in radius
-        nextRound = new NextRound(initGame.getShip(),new Wind(0,WIND), entitiesVisible);
-
-        crewManager = new CrewManager(initGame.getSailors());
-        equipmentsManager = new EquipmentsManager(initGame.getEquipments(),boat.getDeckwidth(),null);
-        coordinator = new Coordinator(crewManager,equipmentsManager);
-
-        mjollnir = new Cockpit();
+        String gameJson = new String(Engine.class.getResourceAsStream(RAW_PATH + "/gameW9fise.json").readAllBytes());
+        game = mapper.readValue( gameJson, GameConfig.class );
     }
-
-    private List<OceanEntity> visibleEntitiesInRadius(Position position, int radius) {
-        // TODO: 02/04/2020 Add Higher radius support
-        return entitiesVisible.stream().filter(ent -> position.distanceTo(ent.getPosition()) <= radius)
-                .collect(Collectors.toList());
-    }
-
 
     public static void main(String[] args) throws IOException {
         Displayer displayer = new Displayer();
@@ -94,22 +87,24 @@ public class Engine {
         engine.updateNextRound();
 
         System.out.println(engine.ship.getPosition());
-        for (int i=0; i<5; i++) {
+        for (int i=0; i<200; i++) {
             engine.runNextRound();
             System.out.println(engine.ship.getPosition());
         }
 
         displayer.setShipShape(engine.boat.getShape());
-        displayer.setReefs(engine.entitiesVisible.stream()
-                .filter(ent -> OceanEntityType.RECIF.equals(ent.getEnumType())).map(ent -> (Recif) ent)
-                .collect(Collectors.toList()));
-        displayer.setStreams(engine.entitiesVisible.stream()
-                .filter(ent -> OceanEntityType.COURANT.equals(ent.getEnumType())).map(ent -> (Courant) ent)
-                .collect(Collectors.toList()));
-        displayer.setCheckpoints(((RegattaGoal)engine.initGame.getGoal()).getCheckpoints());
+        displayer.setReefs(engine.game.getReefs());
+        displayer.setStreams(engine.game.getStreams());
+        displayer.setCheckpoints(engine.game.getCheckpoints());
 
         System.out.println(engine.mjollnir.getLogs());
         displayer.disp();
+    }
+
+    private List<OceanEntity> visibleEntitiesInRadius(Position position, int radius) {
+        // TODO: 02/04/2020 Add Higher radius support
+        return game.getEntities().stream().filter(ent -> position.distanceTo(ent.getPosition()) <= radius)
+                .collect(Collectors.toList());
     }
 
     private void updateNextRound() {
@@ -119,23 +114,17 @@ public class Engine {
         int nbOars = equipmentsManager.nbOars();
         Gouvernail rudder = (Gouvernail) equipmentsManager.equipmentAt(equipmentsManager.rudderPosition()).orElse(null);
         Wind wind = nextRound.getWind();
-        List<Courant> streams = retrieveStreams();
+        List<Courant> streams = game.getStreams();
         int nbsail = equipmentsManager.nbSails();
         int nbSailOpenned = equipmentsManager.nbOpennedSails();
         Shape shipShape = boat.getShape();
-        List<OceanEntity> reefs = entitiesVisible; // TODO: 02/04/2020 Change for reefs in radius
-
-
+        List<OceanEntity> reefs = game.getEntities();
 
         Position newPos = EngineUtils.nextPosition(positionInit,nbOarsRightActive,nbOarsLeftActive,nbOars,
                 rudder,wind,streams,nbsail,nbSailOpenned,shipShape,reefs,NB_STEP,displayer);
 
-        ship.setPosition(newPos);
-    }
-
-    private List<Courant> retrieveStreams() {
-        return entitiesVisible.stream().filter(ent -> OceanEntityType.COURANT.entityCode.equals(ent.getType()))
-                .map(c -> (Courant) c).collect(Collectors.toList());
+         nextRound.setShipPos(newPos);
+         nextRound.setVisibleEntities(visibleEntitiesInRadius(ship.getPosition(),MID_VISION));
     }
 
     void runInitGame() {
@@ -145,7 +134,7 @@ public class Engine {
     void runNextRound() {
         String nextRoundJson;
         List<SailorAction> crewActions;
-        cleanInfo();
+        resetEquipment();
         try {
             nextRoundJson = mapper.writer().writeValueAsString(nextRound);
             String crewActionsJson =  mjollnir.nextRound(nextRoundJson);
@@ -157,11 +146,11 @@ public class Engine {
         updateInfo(crewActions);
     }
 
-    private void cleanInfo() {
+    private void resetEquipment() {
         equipmentsManager.resetUsedStatus();
     }
 
-    void updateInfo(List<SailorAction> actions) {
+    private void updateInfo(List<SailorAction> actions) {
         // Move sailors around
         crewManager.executeMovingsInSailorAction(actions);
 
@@ -195,11 +184,11 @@ public class Engine {
         double newRotation = turnAction.getRotation();
         IntPosition marinPos = crewManager.getMarinById(turnAction.getSailorId())
                 .map(Sailor::getPosition).orElse(new IntPosition(0,0));
-        Gouvernail rudder = (Gouvernail) equipmentsManager.equipmentAt(marinPos).orElse(new Sail(0,0));
+        Gouvernail rudder = (Gouvernail) equipmentsManager.equipmentAt(marinPos).orElse(new Gouvernail(0,0));
         rudder.setOrientation(newRotation);
     }
 
-    void updateSailsState(SailorAction actionWithSail) {
+    private void updateSailsState(SailorAction actionWithSail) {
         if (ActionType.LIFTSAIL.actionCode.equals(actionWithSail.getType())) {
             LiftSail liftSail = (LiftSail) actionWithSail;
             IntPosition marinPos = crewManager.getMarinById(liftSail.getSailorId())
