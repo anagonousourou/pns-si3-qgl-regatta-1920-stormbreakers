@@ -22,6 +22,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.runner.serializing.Ship;
 import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.CrewManager;
 import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.EquipmentsManager;
 import fr.unice.polytech.si3.qgl.stormbreakers.visuals.draw.Displayer;
+import fr.unice.polytech.si3.qgl.stormbreakers.visuals.draw.drawings.PosDrawing;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -123,7 +124,10 @@ public class Engine {
         Position newPos = EngineUtils.nextPosition(positionInit,nbOarsRightActive,nbOarsLeftActive,nbOars,
                 rudder,wind,streams,nbsail,nbSailOpenned,shipShape,reefs,NB_STEP,displayer);
 
-         nextRound.setShipPos(newPos);
+        if(displayer!=null) displayer.addDrawing(new PosDrawing(newPos));
+
+
+        nextRound.setShipPos(newPos);
          nextRound.setVisibleEntities(visibleEntitiesInRadius(ship.getPosition(),MID_VISION));
     }
 

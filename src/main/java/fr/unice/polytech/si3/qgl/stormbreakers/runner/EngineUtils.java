@@ -9,8 +9,8 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.OceanEntity;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Wind;
 import fr.unice.polytech.si3.qgl.stormbreakers.visuals.draw.Displayer;
 import fr.unice.polytech.si3.qgl.stormbreakers.visuals.draw.drawings.DotDrawing;
-import fr.unice.polytech.si3.qgl.stormbreakers.visuals.draw.drawings.PosDrawing;
 
+import java.awt.*;
 import java.util.List;
 
 public class EngineUtils {
@@ -65,7 +65,7 @@ public class EngineUtils {
         double vitesseLineaire = vitesseOarLineaire + vitesseWindLineaire;
         double vitesseOrientation = Math.PI*(nbOarsRightActive-nbOarsLeftActive)/nbOars + angleGouvernail;
         for(int i = 0;i<nbStep;i++){
-            if(displayer!=null) displayer.addDrawing(new DotDrawing(new Position(x,y,0)));
+            if(displayer!=null) displayer.addDrawing(new DotDrawing(new Position(x,y,orientation), Color.GRAY));
             Position positionAtStep = new Position(x,y,orientation);
             Boat shipAtState = new Boat(positionAtStep,0,0,0,null,shipShape);
             // TODO: 02/04/2020 Join speedX and speedY using vectors
@@ -82,7 +82,6 @@ public class EngineUtils {
             }
         }
         orientation = orientation - (Math.ceil((orientation + Math.PI)/(2*Math.PI))-1)*2*Math.PI;
-        //if(affichage!=null) affichage.setDeplacementBoat(new Position(x,y,orientation),shipShape);
         return new Position(x,y, orientation);
     }
 }
