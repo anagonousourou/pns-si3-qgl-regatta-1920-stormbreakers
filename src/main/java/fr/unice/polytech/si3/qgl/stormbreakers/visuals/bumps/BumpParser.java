@@ -250,8 +250,8 @@ public class BumpParser {
     }
 
     /**
-     * Retrieve additional information from resource "special.json"
-     * @return additional information as Json string
+     * Retrieve parsed data as Json string
+     * @return Json string
      * @throws JsonProcessingException if jackson's processing fails
      */
     public String getJsonData() throws JsonProcessingException {
