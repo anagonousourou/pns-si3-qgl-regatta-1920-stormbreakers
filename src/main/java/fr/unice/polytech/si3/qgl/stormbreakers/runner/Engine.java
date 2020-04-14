@@ -72,7 +72,7 @@ public class Engine {
         mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
         mapper.disable(MapperFeature.AUTO_DETECT_GETTERS);
 
-        int weekNum = 10;
+        int weekNum = 11;
         String weekInputsPath = RAW_PATH + "\\week" + weekNum;
 
         initGameJson = new String(Engine.class.getResourceAsStream( weekInputsPath+ "/initgame.json").readAllBytes());
