@@ -76,7 +76,7 @@ public class EngineUtils {
             for(OceanEntity reef1 : reef) {
                 Boat newBoat = (new Boat(new Position(x, y, orientation), 0,0,0,null, shipShape));
                 if (newBoat.collidesWith(reef1)) {
-                    System.out.println("Collision !");
+                    System.err.println("Collision !");
                     return positionAtStep;
                 }
             }

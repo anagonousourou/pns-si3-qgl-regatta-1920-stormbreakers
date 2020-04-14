@@ -121,7 +121,8 @@ public class Polygon extends Shape implements Orientable {
             if (polygon.collidesWith(border))
                 return true;
         }
-        return false;
+        return polygon.vertices.stream().anyMatch(v -> this.isPtInside(v))
+                || this.vertices.stream().anyMatch(v -> polygon.isPtInside(v));
     }
 
     @Override
@@ -133,7 +134,7 @@ public class Polygon extends Shape implements Orientable {
                 return true;
             }
         }
-        return false;
+        return this.getBoundingCircle().collidesWith(circle);
     }
 
     @Override
