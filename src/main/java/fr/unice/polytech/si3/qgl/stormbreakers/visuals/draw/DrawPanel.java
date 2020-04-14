@@ -1,7 +1,11 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.visuals.draw;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Rectangle;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.LineSegment2D;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.RectanglePositioned;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.Vector;
 import fr.unice.polytech.si3.qgl.stormbreakers.visuals.draw.drawings.DotDrawing;
 import fr.unice.polytech.si3.qgl.stormbreakers.visuals.draw.drawings.Drawing;
 import fr.unice.polytech.si3.qgl.stormbreakers.visuals.draw.drawings.PosDrawing;
@@ -10,6 +14,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
 import java.util.ArrayList;
@@ -22,12 +27,16 @@ import java.util.List;
 public class DrawPanel extends JPanel {
     private final List<Drawing> drawings =new ArrayList<>();
 
+    // interest Box
     private double xValMin=Double.MAX_VALUE; // Can only go down
     private double yValMin=Double.MAX_VALUE;
     private double xValMax=Double.MIN_VALUE; // Can only go up
     private double yValMax=Double.MIN_VALUE;
-
     private static final double MARGIN = 10;
+
+    Point2D zoomCornerA;
+    Point2D zoomCornerC;
+    Point pointer;
 
     private Point2D lockedValue;
 
@@ -43,17 +52,51 @@ public class DrawPanel extends JPanel {
              */
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (e.getButton() == MouseEvent.BUTTON1) { // LEFT CLICK
-                    Point p = e.getPoint();
-                    lockedValue = valueAtPixel(p);
-                }
-                else if (e.getButton() == MouseEvent.BUTTON3) { // RIGHT CLICK
-                    lockedValue = null;
+                switch(e.getButton()) {
+                    case MouseEvent.BUTTON1: // LEFT CLICK
+                        if (e.isShiftDown()) {
+                            pointer = e.getPoint();
+                        } else {
+                            lockedValue = valueAtPixel(e.getPoint());
+                        }
+                        break;
+                    case MouseEvent.BUTTON2: // MIDDLE CLICK
+                        lockedValue = null;
+                        if (e.isShiftDown()) {
+                            pointer = null;
+                            zoomCornerA = null;
+                            zoomCornerC = null;
+                        }
+                        break;
+                    case MouseEvent.BUTTON3: // RIGHT CLICK
+                        if (e.isShiftDown()) {
+                            Point2D start = valueAtPixel(e.getPoint());
+                            Point2D end = valueAtPixel(pointer);
+                            if (pointer!=null) zoom(start,end);
+                        }
+                        break;
                 }
                 repaint();
             }
         });
 
+        this.addMouseMotionListener(new MouseMotionAdapter() {
+            @Override
+            public void mouseDragged(MouseEvent e) {
+
+            }
+        });
+    }
+
+    private void zoom(Point2D start, Point2D end) {
+        // We're trying to make a framing rectangle
+        Point2D center = new LineSegment2D(start,end).getMiddle();
+        Vector diagVector = new Vector(start,end);
+        double width = Math.abs(diagVector.getDeltaX());
+        double height= Math.abs(diagVector.getDeltaY());
+
+        zoomCornerA = center.getTranslatedBy(new Vector(-width/2,-height/2));
+        zoomCornerC = center.getTranslatedBy(new Vector(width/2,height/2));
     }
 
     // -- Drawing Panel config --
@@ -100,15 +143,11 @@ public class DrawPanel extends JPanel {
         //g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
 
         // frame the interest Box
-        // origin: xMin,yMin
-        // width: xMax-xMin
-        // height: yMax-yMin
-        double xRatio = getWidth()/(xValMax-xValMin);
-        double yRatio = getHeight()/(yValMax-yValMin);
-        g2d.translate(0,getHeight()); // Origin: top left -> bottom left
-        g2d.scale(xRatio,yRatio); // for box to fit
-        g2d.scale(1,-1); // y-axis: facing down -> facing up
-        g2d.translate(-xValMin,-yValMin); // Origin: bottom left -> (xMin,yMin))
+        if (zoomCornerA!=null && zoomCornerC!=null) {
+            frameSpecificBox(zoomCornerA.x(), zoomCornerA.y(), zoomCornerC.x(), zoomCornerC.y(), g2d);
+        } else {
+            frameSpecificBox(xValMin, yValMin, xValMax, yValMax, g2d);
+        }
 
         drawAxes(g2d,new Point2D(0,0),Color.RED);
         g.setColor(Color.BLACK);
@@ -134,6 +173,18 @@ public class DrawPanel extends JPanel {
         String str = (lockedValue!=null)?lockedValue.toString():"Click to get cursor pos ..";
         g2d.drawString(str,0,getHeight());
 
+    }
+
+    private void frameSpecificBox(double minX, double minY, double maxX, double maxY, Graphics2D g2d) {
+        // origin: xMin,yMin
+        // width: xMax-xMin
+        // height: yMax-yMin
+        double xRatio = getWidth()/(maxX-minX);
+        double yRatio = getHeight()/(maxY-minY);
+        g2d.translate(0,getHeight()); // Origin: top left -> bottom left
+        g2d.scale(xRatio,yRatio); // for box to fit
+        g2d.scale(1,-1); // y-axis: facing down -> facing up
+        g2d.translate(-minX,-minY); // Origin: bottom left -> (xMin,yMin))
     }
 
     /**
