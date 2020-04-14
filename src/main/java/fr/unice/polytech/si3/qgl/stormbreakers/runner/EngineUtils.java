@@ -3,10 +3,7 @@ package fr.unice.polytech.si3.qgl.stormbreakers.runner;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Shape;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Gouvernail;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Boat;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Courant;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.OceanEntity;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Wind;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.*;
 import fr.unice.polytech.si3.qgl.stormbreakers.visuals.draw.Displayer;
 import fr.unice.polytech.si3.qgl.stormbreakers.visuals.draw.drawings.DotDrawing;
 
@@ -54,7 +51,7 @@ public class EngineUtils {
 
     public static Position nextPosition(Position positionInit, int nbOarsRightActive, int nbOarsLeftActive, int nbOars,
                                         Gouvernail rudder, Wind wind, List<Courant> streams, int nbsail, int nbSailOpenned,
-                                        Shape shipShape, List<OceanEntity> reef, int nbStep, Displayer displayer){
+                                        Shape shipShape, List<Recif> reef, int nbStep, Displayer displayer){
         double x = positionInit.x();
         double y = positionInit.y();
         double orientation = positionInit.getOrientation();
@@ -76,7 +73,7 @@ public class EngineUtils {
             for(OceanEntity reef1 : reef) {
                 Boat newBoat = (new Boat(new Position(x, y, orientation), 0,0,0,null, shipShape));
                 if (newBoat.collidesWith(reef1)) {
-                    System.err.println("Collision !");
+                    System.err.println("Collision while leaving "+positionInit);
                     return positionAtStep;
                 }
             }

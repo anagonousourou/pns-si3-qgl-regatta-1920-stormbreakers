@@ -101,7 +101,7 @@ public class Engine {
         displayer.setStreams(engine.game.getStreams());
         displayer.setCheckpoints(engine.game.getCheckpoints());
 
-        engine.game.getCheckpoints().stream().forEach(cp ->
+        engine.game.getCheckpoints().forEach(cp ->
                 {
                     String label = "#" + engine.game.getCheckpoints().indexOf(cp);
                     displayer.addDrawing(new LabelDrawing(label,cp.getDrawing().getPosition()));
@@ -129,7 +129,7 @@ public class Engine {
         int nbsail = equipmentsManager.nbSails();
         int nbSailOpenned = equipmentsManager.nbOpennedSails();
         Shape shipShape = boat.getShape();
-        List<OceanEntity> reefs = game.getEntities();
+        List<Recif> reefs = game.getReefs();
 
         Position newPos = EngineUtils.nextPosition(positionInit,nbOarsRightActive,nbOarsLeftActive,nbOars,
                 rudder,wind,streams,nbsail,nbSailOpenned,shipShape,reefs,NB_STEP,displayer);
