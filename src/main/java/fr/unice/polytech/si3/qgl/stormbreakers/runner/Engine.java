@@ -22,6 +22,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.runner.serializing.Ship;
 import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.CrewManager;
 import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.EquipmentsManager;
 import fr.unice.polytech.si3.qgl.stormbreakers.visuals.draw.Displayer;
+import fr.unice.polytech.si3.qgl.stormbreakers.visuals.draw.drawings.LabelDrawing;
 import fr.unice.polytech.si3.qgl.stormbreakers.visuals.draw.drawings.PosDrawing;
 
 import java.io.IOException;
@@ -71,11 +72,13 @@ public class Engine {
         mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
         mapper.disable(MapperFeature.AUTO_DETECT_GETTERS);
 
+        int weekNum = 10;
+        String weekInputsPath = RAW_PATH + "\\week" + weekNum;
 
-        initGameJson = new String(Engine.class.getResourceAsStream(RAW_PATH + "/initW9fise.json").readAllBytes());
+        initGameJson = new String(Engine.class.getResourceAsStream( weekInputsPath+ "/initgame.json").readAllBytes());
         initGame = mapper.readValue(initGameJson, InitGame.class);
 
-        String gameJson = new String(Engine.class.getResourceAsStream(RAW_PATH + "/gameW9fise.json").readAllBytes());
+        String gameJson = new String(Engine.class.getResourceAsStream(weekInputsPath + "/game.json").readAllBytes());
         game = mapper.readValue( gameJson, GameConfig.class );
     }
 
@@ -97,6 +100,13 @@ public class Engine {
         displayer.setReefs(engine.game.getReefs());
         displayer.setStreams(engine.game.getStreams());
         displayer.setCheckpoints(engine.game.getCheckpoints());
+
+        engine.game.getCheckpoints().stream().forEach(cp ->
+                {
+                    String label = "#" + engine.game.getCheckpoints().indexOf(cp);
+                    displayer.addDrawing(new LabelDrawing(label,cp.getDrawing().getPosition()));
+                }
+        );
 
         System.out.println(engine.mjollnir.getLogs());
         displayer.disp();
