@@ -7,7 +7,7 @@ import java.awt.*;
 public abstract class Drawing {
 
     private final Position position;
-    private final double size;
+    private double size;
     private Color color;
 
     Drawing(Position position, double size, Color color) {
@@ -41,4 +41,7 @@ public abstract class Drawing {
         this.color = color;
     }
 
+    public void setSize(double newSize) {
+        this.size = newSize;
+    }
 }

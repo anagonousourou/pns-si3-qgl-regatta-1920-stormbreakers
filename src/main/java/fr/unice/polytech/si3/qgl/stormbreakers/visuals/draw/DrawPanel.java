@@ -2,6 +2,7 @@ package fr.unice.polytech.si3.qgl.stormbreakers.visuals.draw;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
+import fr.unice.polytech.si3.qgl.stormbreakers.visuals.draw.drawings.DotDrawing;
 import fr.unice.polytech.si3.qgl.stormbreakers.visuals.draw.drawings.Drawing;
 import fr.unice.polytech.si3.qgl.stormbreakers.visuals.draw.drawings.PosDrawing;
 
@@ -115,6 +116,14 @@ public class DrawPanel extends JPanel {
         for (Drawing drawing : drawings) {
             paintDrawing(g,drawing);
         }
+
+        if (lockedValue!=null) {
+            DotDrawing lockedCursor = new DotDrawing(new Position(lockedValue));
+            lockedCursor.setColor(new Color(255, 135, 0));
+            lockedCursor.setSize(25);
+            paintDrawing(g,lockedCursor);
+        }
+
 
         // Restore the original transform
         g2d.setTransform(oldAT);
