@@ -53,7 +53,7 @@ public class DrawPanel extends JPanel {
                 switch(e.getButton()) {
                     case MouseEvent.BUTTON1: // LEFT CLICK
                         if (e.isShiftDown()) {
-                            startZoomSelection();
+                            restartZoomSelection();
                         } else {
                             pickValue();
                         }
@@ -80,11 +80,10 @@ public class DrawPanel extends JPanel {
             @Override
             public void mouseMoved(MouseEvent e) {
                 pointer = e.getPoint();
-                if (e.isShiftDown()) {
-                    repaint();
-                } else {
+                if (!e.isShiftDown()) {
                     resetZoomSelection();
                 }
+                repaint();
             }
         });
     }
@@ -113,7 +112,7 @@ public class DrawPanel extends JPanel {
         return zoomSelectionStarted() && zoomCornerC==null;
     }
 
-    private void startZoomSelection() {
+    private void restartZoomSelection() {
         if (zoomInactive()) // we don't want to change corners when already zoomed in
             zoomCornerA = valueAtPixel(pointer);
     }
