@@ -80,7 +80,7 @@ public class TargetDefiner {
             if (target.distanceTo(boat) > courant.getStrength() + Utils.MAX_SPEED_OARS
                     && target.distanceTo(boat) < 2 * courant.getStrength() + Utils.MAX_SPEED_OARS) {
                 return new TupleDistanceOrientation(0.0,
-                        this.navigator.additionalOrientationNeeded(boat.getPosition(), target));
+                        this.navigator.additionalOrientationNeeded(boat.getPosition(), target),true);
             }
             return new TupleDistanceOrientation(target.distanceTo(boat) - speedDueToStream,
                     this.navigator.additionalOrientationNeeded(boat.getPosition(), target));

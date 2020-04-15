@@ -17,7 +17,8 @@ public class Cartographer {
     private final Graph graph;
     private final CheckpointsManager checkpointsManager;
     private RectangularSurface virtualMap;
-    private static final double MAP_MARGIN = 1500;
+    private static final double MAP_MARGIN_Y = 2000;
+    private static final double MAP_MARGIN_X = 6000;
     private static final double ECART = 50.0;
 
     public Cartographer(CheckpointsManager checkpointsManager, Graph graph, Boat boat) {
@@ -37,12 +38,17 @@ public class Cartographer {
     IPoint caseBuildMap(Checkpoint cp) {
         long t = System.currentTimeMillis();
         double ecart = ECART;
-        double height = Math.abs((boat.x() - cp.x())) + MAP_MARGIN;
-        double width = Math.abs((boat.y() - cp.y())) + MAP_MARGIN;
+        double height = Math.abs((boat.x() - cp.x())) + MAP_MARGIN_X;
+        double width = Math.abs((boat.y() - cp.y())) + MAP_MARGIN_Y;
 
         double d = boat.distanceTo(cp);
+        System.out.println("distanceToCp: " + d);
 
-        if (d >= 3000) {
+        if (d >= 6000) {
+            ecart = 300;
+        }
+
+        else if (d >= 3000) {
             ecart = 200;
         } else if (d >= 2000) {
             ecart = 150;

@@ -1,8 +1,10 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.staff.tactical;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.nullable;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -24,11 +26,14 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Equipment;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Gouvernail;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Oar;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Sailor;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Boat;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.processing.InputParser;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.IntPosition;
+import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.CheckpointsManager;
 import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.CrewManager;
 import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.EquipmentsManager;
 import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.TargetDefiner;
+import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.TupleDistanceOrientation;
 import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.WeatherAnalyst;
 
 public class CaptainTest {
@@ -349,6 +354,36 @@ public class CaptainTest {
         assertFalse(results.stream().anyMatch(action -> action.getType().equals(ActionType.LOWERSAIL.actionCode)),
                 "et Certainement pas de  LowerAction puique currentExternalSpeed==0 donc voiles supposées baissées ");
 
+    }
+
+
+    @Test
+    public void shouldMoveWhenTargetVeryClose() throws JsonProcessingException {
+            Boat boat=null;
+            CheckpointsManager checkpointsManager=mock(CheckpointsManager.class) ;
+            Navigator navigator=new Navigator();
+            WeatherAnalyst weatherAnalyst= mock(WeatherAnalyst.class);
+            when(weatherAnalyst.currentExternalSpeed()).thenReturn(0.0);
+            when(weatherAnalyst.potentialSpeedAcquirable()).thenReturn(0.0);
+            TargetDefiner targetDefiner=mock(TargetDefiner.class);
+            EquipmentsManager equipmentsManager= new EquipmentsManager(parser.fetchEquipments(gameData),
+                parser.fetchBoatWidth(gameData), parser);
+                var allSailors = this.parser.fetchAllSailors(gameData);
+
+        CrewManager crewManager = new CrewManager(allSailors);
+        
+        Coordinator coordinator=new Coordinator(crewManager, equipmentsManager);
+            when(targetDefiner.defineNextTarget()).thenReturn(new TupleDistanceOrientation(18.0,0.0,false) );
+            
+        
+            
+            Captain captain=new Captain(boat, checkpointsManager, navigator, weatherAnalyst, coordinator, targetDefiner);
+
+            List<SailorAction> actions=captain.nextRoundActions();
+
+            
+
+            assertTrue(actions.stream().anyMatch(action -> action.getType().equals(ActionType.OAR.actionCode)));
     }
 
 }
