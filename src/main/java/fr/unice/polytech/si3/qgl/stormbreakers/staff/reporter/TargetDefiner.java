@@ -55,10 +55,12 @@ public class TargetDefiner {
         IPoint cp = checkpointsManager.nextCheckpoint();
        
         if (!this.streamManager.thereIsObstacleBetweenOrAround(cp) && !this.streamManager.insideOpenStream()) {
+            System.out.println("Not using Pathfinding:");
             return new TupleDistanceOrientation(cp.distanceTo(boat),
                     this.navigator.additionalOrientationNeeded(boat.getPosition(), cp));
 
         }
+        System.out.println("Using pathfinding:");
         IPoint target = cartographer.nextPoint();
         Logger.getInstance().log(target.toString());
         boolean insideStream = streamManager.insideOpenStream();

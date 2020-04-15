@@ -83,17 +83,20 @@ public class InputParser {
 		List<Equipment> equipments = new ArrayList<>(30);
 		mapper.readTree(jString).get(SHIP_KEY).get(ENTITIES_KEY).forEach(e -> {
 			Equipment equipment = null;
+			
 			if (e.get("type").asText().equals("oar")) {
 				equipment = new Oar(e.get(XKEY).asInt(), e.get(YKEY).asInt());
 			} else if (e.get("type").asText().equals("rudder")) {
 				equipment = new Gouvernail(e.get(XKEY).asInt(), e.get(YKEY).asInt());
 			} else if (e.get("type").asText().equals("sail")) {
+				
 				equipment = new Sail(e.get(XKEY).asInt(), e.get(YKEY).asInt(), e.get("openned").asBoolean());
 
 			} else if (e.get("type").asText().equals("watch")) {
 				equipment = new Vigie(e.get(XKEY).asInt(), e.get(YKEY).asInt());
 				// ---
 			}
+			
 			if (equipment != null) {
 				equipments.add(equipment);
 			}

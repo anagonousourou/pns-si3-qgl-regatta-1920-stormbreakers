@@ -84,11 +84,11 @@ public class StreamManager implements PropertyChangeListener {
     }
 
     public boolean pointIsInsideOrAroundReef(IPoint point) {
-        return this.recifs.stream().anyMatch(recif -> recif.isInsideWrappingSurface(12.0, point));
+        return this.recifs.stream().anyMatch(recif -> recif.isInsideWrappingSurface(boat.securityMargin(), point));
     }
 
     public boolean pointIsInsideOrAroundReefOrBoat(IPoint point) {
-        return this.boatsAndReefs.stream().anyMatch(recif -> recif.isInsideWrappingSurface(12.0, point));
+        return this.boatsAndReefs.stream().anyMatch(recif -> recif.isInsideWrappingSurface(boat.securityMargin(), point));
     }
 
     /**
@@ -166,14 +166,13 @@ public class StreamManager implements PropertyChangeListener {
      */
     public boolean thereIsRecifsBetweenOrAround(IPoint depart, IPoint destination) {
         LineSegment2D segment2d = new LineSegment2D(depart, destination);
-        return this.recifs.stream().anyMatch(obstacle -> obstacle.intersectsWithWrappingSurface(12.0, segment2d));
+        return this.recifs.stream().anyMatch(obstacle -> obstacle.intersectsWithWrappingSurface(boat.securityMargin(), segment2d));
     }
 
     public boolean thereIsObstacleBetweenOrAround(IPoint cp) {
-		LineSegment2D segment2d = new LineSegment2D(boat, cp);
-        return this.obstacles.stream().anyMatch(obstacle -> obstacle.intersectsWithWrappingSurface(12.0, segment2d));
-	}
-
+        LineSegment2D segment2d = new LineSegment2D(boat, cp);
+        return this.obstacles.stream().anyMatch(obstacle -> obstacle.intersectsWithWrappingSurface(boat.securityMargin(), segment2d));
+    }
 
     /**
      * 
@@ -184,7 +183,7 @@ public class StreamManager implements PropertyChangeListener {
     public boolean thereIsRecifsOrBoatsBetweenOrAround(IPoint depart, IPoint destination) {
         LineSegment2D segment2d = new LineSegment2D(depart, destination);
         return this.boatsAndReefs.stream()
-                .anyMatch(obstacle -> obstacle.intersectsWithWrappingSurface(12.0, segment2d));
+                .anyMatch(obstacle -> obstacle.intersectsWithWrappingSurface(boat.securityMargin(), segment2d));
     }
 
     /**
@@ -460,5 +459,12 @@ public class StreamManager implements PropertyChangeListener {
         return this.obstacles;
     }
 
-	
+    public List<OceanEntity> getBoatsAndReefs() {
+        return new ArrayList<>(this.boatsAndReefs);
+    }
+
+    public double boatSecurityMargin(){
+        return this.boat.securityMargin();
+    }
+
 }

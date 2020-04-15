@@ -10,6 +10,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Shape;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.processing.InputParser;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.processing.Logger;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Surface;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.Utils;
 
 /**
  * Le bateau implémente Propertychange listener pour permettre la mise à jour
@@ -100,6 +101,10 @@ public class Boat implements PropertyChangeListener, Surface {
     @Override
     public double y() {
         return this.position.y();
+    }
+
+    public double securityMargin(){
+        return (Math.max(decklength,deckwidth) / (double)2) + Utils.EPS;
     }
 
 }

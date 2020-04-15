@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Test;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Rectangle;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Boat;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Recif;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
 import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.StreamManager;
@@ -70,7 +71,9 @@ public class GraphTest {
 
     @Test
     public void createSquaringTest() {
-        streamManager = new StreamManager(null, null);
+        Boat boat=mock(Boat.class);
+        when(boat.securityMargin()).thenReturn(6.0);
+        streamManager = new StreamManager(null, boat);
         streamManager.setBoatsAndReefs(List.of(reef1));
         graph = new Graph(streamManager, null);
 
@@ -297,5 +300,40 @@ public class GraphTest {
 
         assertTrue(s10.getShortestPath().isEmpty());
     }
+
+    @Test
+    public void computeAdjacentNodesTest(){
+        Recif reef=new Recif(new Position(500,300), 
+        new Rectangle(400,400,0.0)
+        );
+        Boat boat=mock(Boat.class);
+        when(boat.securityMargin()).thenReturn(6.0);
+        StreamManager streamManager=new StreamManager(null, boat);
+        streamManager.setBoatsAndReefs(List.of(
+            reef
+        ));
+        WeatherAnalyst weatherAnalyst=mock(WeatherAnalyst.class);
+        Graph graph=new Graph(streamManager, weatherAnalyst);
+
+        Sommet s1=new Sommet(500, 503);
+
+        Sommet s2=new Sommet(500,550);
+        Sommet s3=new Sommet(500,600);
+        Sommet s4=new Sommet(400,550);
+        Sommet s5=new Sommet(600,525);
+
+        assertTrue(streamManager.pointIsInsideOrAroundReefOrBoat(s1.getPoint()));
+
+        graph.addNode(s1);
+        graph.addNode(s2);
+        graph.addNode(s3);
+        graph.addNode(s4);
+        graph.addNode(s5);
+
+        assertTrue(s1.getAdjacentNodes().isEmpty());
+        graph.computeAdjacentNodes(s1, 50);
+        assertFalse(s1.getAdjacentNodes().isEmpty());
+    }
+
 
 }
