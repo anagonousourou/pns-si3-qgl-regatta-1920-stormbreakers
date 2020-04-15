@@ -60,7 +60,7 @@ public class VisuBump {
     }
 
     /**
-     * Shows for given shapes (by id) in the given least their wrapping shape
+     * Shows for given shapes (by id) in the given list their wrapping shape
      * @param indexes if null shows all wrapping shapes
      *        {@code new int[] {2,4,6}} will show shapes of indexes 2,4,6
      */
