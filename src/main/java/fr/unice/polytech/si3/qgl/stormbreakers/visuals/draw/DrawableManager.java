@@ -35,11 +35,11 @@ public class DrawableManager extends JFrame {
     public void addElement(Drawable drawable, Color color) {
         Drawing drawing = drawable.getDrawing();
         drawing.setColor(color);
-        drawPanel.drawElement(drawing);
+        drawPanel.addElement(drawing);
     }
 
     public void addElement(Drawable drawable) {
-        drawPanel.drawElement(drawable.getDrawing());
+        drawPanel.addElement(drawable.getDrawing());
     }
 
     /**
