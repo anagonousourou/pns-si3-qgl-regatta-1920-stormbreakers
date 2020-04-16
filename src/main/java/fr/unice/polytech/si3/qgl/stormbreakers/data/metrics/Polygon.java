@@ -102,6 +102,8 @@ public class Polygon extends Shape implements Orientable {
         return new Circle(getMaxRadius(), getAnchor());
     }
 
+    // -- COLLISION = Intersection Only
+
     @Override
     public boolean collidesWith(Shape shape) {
         return shape.collidesWith(this); // collide w/ polygon
@@ -121,8 +123,7 @@ public class Polygon extends Shape implements Orientable {
             if (polygon.collidesWith(border))
                 return true;
         }
-        return polygon.vertices.stream().anyMatch(v -> this.isPtInside(v))
-                || this.vertices.stream().anyMatch(v -> polygon.isPtInside(v));
+        return false;
     }
 
     @Override
@@ -134,7 +135,7 @@ public class Polygon extends Shape implements Orientable {
                 return true;
             }
         }
-        return this.getBoundingCircle().collidesWith(circle);
+        return false;
     }
 
     @Override
