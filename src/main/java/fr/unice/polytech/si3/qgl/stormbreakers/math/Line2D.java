@@ -188,7 +188,7 @@ public class Line2D {
 
     @Override
     public boolean equals(Object obj) {
-        if (super.equals(obj)) return true;
+        if (this == obj) return true;
         if (! (obj instanceof Line2D)) return false;
         Line2D other = (Line2D) obj;
 

@@ -253,7 +253,9 @@ class Line2DTest {
 
     @Test void testSameHashcode() {
         Line2D line1 = new Line2D(new Point2D(8,8),new Point2D(16,16));
+        Line2D line1bis = new Line2D(new Point2D(8,8),new Point2D(16,16));
         Line2D line2 = new Line2D(new Point2D(14,14),new Point2D(99,99));
+        assertEquals(line1.hashCode(),line1bis.hashCode());
         assertEquals(line1.hashCode(),line2.hashCode());
     }
 
