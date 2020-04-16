@@ -1,5 +1,6 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.math;
 
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -278,5 +279,66 @@ public class LineSegment2DTest {
 		assertFalse(lineSegmentVertical.contains(new Point2D(3,-5.2)));
 		assertTrue(lineSegmentVertical.contains(new Point2D(3,5)));
 		assertFalse(lineSegmentVertical.contains(new Point2D(3,5.2)));
+	}
+
+	// -- EQUALS and HASHCODE --
+
+	/*
+	 * Tests for equals
+	 */
+
+	@Test
+	void testEqualsWhenWrongObject() {
+		LineSegment2D segment2D = new LineSegment2D(new Point2D(-12,38),new Point2D(4,59));
+		Integer other = 0;
+		assertNotEquals(segment2D,other);
+	}
+
+	@Test void testEqualsWhenNullObject() {
+		LineSegment2D segment2D = new LineSegment2D(new Point2D(-12,38),new Point2D(4,59));
+		Integer other = null;
+		assertNotEquals(segment2D,other);
+	}
+
+	@Test void testEqualsWhenSameObject() {
+		LineSegment2D segment2D = new LineSegment2D(new Point2D(-12,38),new Point2D(4,59));
+		assertEquals(segment2D,segment2D);
+	}
+
+	@Test void testEqualsWhenSameValues() {
+		LineSegment2D segment1 = new LineSegment2D(new Point2D(-12,38),new Point2D(4,59));
+		LineSegment2D segment2 = new LineSegment2D(new Point2D(-12,38),new Point2D(4,59));
+		assertEquals(segment1,segment2);
+	}
+
+	@Test void testEqualsWhenSimilar() {
+		LineSegment2D segment1 = new LineSegment2D(new Point2D(8,8),new Point2D(99,99));
+		LineSegment2D segment2 = new LineSegment2D(new Point2D(14,14),new Point2D(16,16));
+		assertNotEquals(segment1,segment2);
+	}
+
+	@Test void testEqualsWhenDifferent() {
+		LineSegment2D segment1 = new LineSegment2D(new Point2D(8,8),new Point2D(16,16));
+		LineSegment2D segment2 = new LineSegment2D(new Point2D(8,8),new Point2D(99,8));
+		assertNotEquals(segment1,segment2);
+	}
+
+	/*
+	 * Tests for hashcode
+	 */
+
+	@Test void testSameHashcode() {
+		LineSegment2D segment1 = new LineSegment2D(new Point2D(14,14),new Point2D(99,99));
+		LineSegment2D segment2 = new LineSegment2D(new Point2D(14,14),new Point2D(99,99));
+		assertEquals(segment1.hashCode(),segment2.hashCode());
+	}
+
+	@Test void testDifferentHashcode() {
+		LineSegment2D segment1 = new LineSegment2D(new Point2D(8,8),new Point2D(16,16));
+		LineSegment2D segment2 = new LineSegment2D(new Point2D(8,8),new Point2D(99,8));
+		LineSegment2D segment3 = new LineSegment2D(new Point2D(14,14),new Point2D(99,99));
+
+		assertNotEquals(segment1.hashCode(),segment2.hashCode());
+		assertNotEquals(segment1.hashCode(),segment3.hashCode());
 	}
 }

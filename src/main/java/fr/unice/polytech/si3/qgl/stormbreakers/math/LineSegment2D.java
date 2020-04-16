@@ -361,11 +361,8 @@ public class LineSegment2D {
 
 	@Override
 	public boolean equals(Object obj) {
-		// // LATER: 08/03/2020 Add tests for equals
-		if (this == obj)
-			return true;
-		if (!(obj instanceof LineSegment2D))
-			return false;
+		if (this == obj) return true;
+		if (!(obj instanceof LineSegment2D)) return false;
 		LineSegment2D that = (LineSegment2D) obj;
 
 		// Compare each field
