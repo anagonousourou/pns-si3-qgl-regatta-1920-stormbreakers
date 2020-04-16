@@ -1,5 +1,6 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.math;
 
+import java.util.Objects;
 import java.util.Optional;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.exceptions.DegeneratedLine2DException;
@@ -185,5 +186,18 @@ public class Line2D {
         return "Line2D: anchor:" + anchor.toString() + "dir:" + direction.toString();
     }
 
-    // LATER: 07/03/2020 Equals && hashcode ?
+    @Override
+    public boolean equals(Object obj) {
+        if (super.equals(obj)) return true;
+        if (! (obj instanceof Line2D)) return false;
+        Line2D other = (Line2D) obj;
+
+        boolean sameDirection = Vector.areCollinear(this.direction,other.direction);
+        return sameDirection && this.distance(other.anchor)==0;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.direction.getOrientation()%Math.PI, projectOnto(new Point2D(0,0)));
+    }
 }
