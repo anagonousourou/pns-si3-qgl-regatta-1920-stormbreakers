@@ -217,7 +217,7 @@ public class LineSegment2D {
 	 * Returns the LineSegment which start from last point of this line segment, and
 	 * which ends at the fist point of this last segment.
 	 */
-	public LineSegment2D reverse() {
+	public LineSegment2D switchEnds() {
 		return new LineSegment2D(endPoint, startPoint);
 	}
 
