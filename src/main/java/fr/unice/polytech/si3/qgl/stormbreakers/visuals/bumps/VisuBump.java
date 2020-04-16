@@ -60,11 +60,11 @@ public class VisuBump {
     }
 
     /**
-     * Shows for given shapes (by id) in the given least their wrapping shape
+     * Shows for given shapes (by id) in the given list their wrapping shape
      * @param indexes if null shows all wrapping shapes
      *        {@code new int[] {2,4,6}} will show shapes of indexes 2,4,6
      */
-    private static void showWrappingShapes(List<Recif> reefs, int[] indexes, int margin, Displayer displayer) {
+    private static void showWrappingShapes(List<Recif> reefs, int[] indexes, double margin, Displayer displayer) {
         if (indexes != null) {
             for (int idx : indexes) {
                 showWrappingShape(reefs.get(idx), margin, displayer);
