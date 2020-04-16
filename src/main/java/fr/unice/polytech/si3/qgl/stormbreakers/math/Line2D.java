@@ -178,7 +178,7 @@ public class Line2D {
 
     public boolean contains(Point2D point2D) {
         double distance = distance(point2D);
-        return Utils.almostEquals(0, distance);
+        return Utils.almostEquals(0, distance,2.5e-3);
     }
 
     @Override

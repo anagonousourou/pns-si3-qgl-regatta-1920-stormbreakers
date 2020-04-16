@@ -146,6 +146,12 @@ class Line2DTest {
     	Point2D p1= new Point2D(7.5,7.5);
     	assertFalse(line.contains(p));
     	assertTrue(line.contains(p1));
+
+        Line2D line2 = new Line2D(new Point2D(-2,20),new Point2D(-10,1));
+        Point2D p2= new Point2D(-5,15);
+        Point2D p3= new Point2D(-4.95,13);
+        assertFalse(line2.contains(p2));
+        assertTrue(line2.contains(p3));
     }
 
 
