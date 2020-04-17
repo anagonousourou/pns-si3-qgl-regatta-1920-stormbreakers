@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.unice.polytech.si3.qgl.stormbreakers.Cockpit;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.*;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Circle;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Shape;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Gouvernail;
@@ -114,7 +115,8 @@ public class Engine {
 
     private List<OceanEntity> visibleEntitiesInRadius(Position position, int radius) {
         // TODO: 02/04/2020 Add Higher radius support
-        return game.getEntities().stream().filter(ent -> position.distanceTo(ent.getPosition()) <= radius)
+        Circle visibleArea = new Circle(radius,position);
+        return game.getEntities().stream().filter(ent -> ent.getShape().getBoundingCircle().collidesWith(visibleArea))
                 .collect(Collectors.toList());
     }
 
