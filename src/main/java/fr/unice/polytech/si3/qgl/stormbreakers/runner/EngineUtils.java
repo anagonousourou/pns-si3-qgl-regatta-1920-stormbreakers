@@ -4,6 +4,8 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Shape;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Gouvernail;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.*;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.LineSegment2D;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.Surface;
 import fr.unice.polytech.si3.qgl.stormbreakers.visuals.draw.Displayer;
 import fr.unice.polytech.si3.qgl.stormbreakers.visuals.draw.drawings.DotDrawing;
 
@@ -55,12 +57,14 @@ public class EngineUtils {
         double x = positionInit.x();
         double y = positionInit.y();
         double orientation = positionInit.getOrientation();
+
         if(rudder ==null) rudder = new Gouvernail(-1,-1);
         double angleGouvernail = rudder.getOrientation();
         double vitesseOarLineaire = oarSpeed(nbOars,nbOarsLeftActive,nbOarsRightActive);
         double vitesseWindLineaire = windAdditionnalSpeed(nbsail,nbSailOpenned,wind,orientation);
         double vitesseLineaire = vitesseOarLineaire + vitesseWindLineaire;
         double vitesseOrientation = Math.PI*(nbOarsRightActive-nbOarsLeftActive)/nbOars + angleGouvernail;
+
         for(int i = 0;i<nbStep;i++){
             if(displayer!=null) displayer.addDrawing(new DotDrawing(new Position(x,y,orientation), Color.GRAY));
             Position positionAtStep = new Position(x,y,orientation);
@@ -71,14 +75,20 @@ public class EngineUtils {
             orientation = orientation + vitesseOrientation/nbStep;
             vitesseLineaire = vitesseOarLineaire + windAdditionnalSpeed(nbsail,nbSailOpenned,wind,orientation);
             for(OceanEntity reef1 : reef) {
-                Boat newBoat = (new Boat(new Position(x, y, orientation), 0,0,0,null, shipShape));
-                if (newBoat.collidesWith(reef1)) {
-                    System.err.println("Collision while leaving "+positionInit);
+                Position currentNextPos = new Position(x, y, orientation);
+                Boat newBoat = (new Boat(currentNextPos, 0,0,0,null, shipShape));
+                if (newBoat.collidesWith(reef1) || collisionBetweenSteps(positionAtStep,currentNextPos,reef1) ) {
+                    System.err.println("Collision near "+ currentNextPos +" after leaving "+positionInit);
                     return positionAtStep;
                 }
             }
         }
         orientation = orientation - (Math.ceil((orientation + Math.PI)/(2*Math.PI))-1)*2*Math.PI;
         return new Position(x,y, orientation);
+    }
+
+    private static boolean collisionBetweenSteps(Position posBefore, Position posAfter, Surface obstacle) {
+        return posBefore.distanceTo(posAfter)!=0
+                && obstacle.getShape().collidesWith(new LineSegment2D(posBefore,posAfter));
     }
 }
