@@ -58,7 +58,7 @@ public class Captain {
         double distance = destination.getDistance();
 
         
-        if (Math.abs(orientation) >= 0.05 && this.coordinator.rudderIsPresent() && this.coordinator.rudderIsAccesible()) {
+        if (Math.abs(orientation) >= 0.05 && this.coordinator.rudderIsPresent() && this.coordinator.rudderIsAccesible() && !targetDefiner.curveTrajectoryIsSafe(objectif)) {
             
             distance = 0.0;
         }

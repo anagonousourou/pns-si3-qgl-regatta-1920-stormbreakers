@@ -8,7 +8,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
-import java.util.Date;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -114,10 +113,9 @@ public class CartographerTest {
 
         graph = new Graph(streamManager, weatherAnalyst);
         cartographer = new Cartographer(checkpointsManager, graph, boat);
-        Date before=new Date();
+        
         var result = cartographer.caseBuildMap(checkpoint1);
-        Date after= new Date();
-        System.out.println("time1 "+(after.getTime()-before.getTime()));
+        
         assertNotNull(result);
         assertNotEquals(checkpoint1, result, "Il doit y avoir une étape intermediaire");
     }

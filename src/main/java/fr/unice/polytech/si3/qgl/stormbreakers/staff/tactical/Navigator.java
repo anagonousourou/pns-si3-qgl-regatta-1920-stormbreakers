@@ -12,6 +12,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.math.Fraction;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Utils;
 import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.OarsConfig;
+import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.TupleDistanceOrientation;
 
 /**
  * Utilitaire de calcul destinés à la navigation
@@ -33,7 +34,7 @@ public class Navigator {
             return 0;
         }
 
-        Point2D target2d= new Point2D(target );
+        Point2D target2d = new Point2D(target);
 
         // On effectue un translation pour ramener virtuellement
         // Les coordonnées du bateau en (0,0)
@@ -116,5 +117,7 @@ public class Navigator {
         }
         return 0;
     }
+
+    
 
 }

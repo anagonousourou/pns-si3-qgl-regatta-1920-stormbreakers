@@ -4,17 +4,21 @@ public class TupleDistanceOrientation {
     private final double distance;
     private final double orientation;
     private final boolean strict;
+    
 
     public TupleDistanceOrientation(double distance, double orientation) {
         this.distance = distance;
         this.orientation = orientation;
         this.strict = false;
+        
+
     }
 
     public TupleDistanceOrientation(double distance, double orientation, boolean strict) {
         this.distance = distance;
         this.orientation = orientation;
         this.strict = strict;
+        
     }
 
     public double getDistance() {

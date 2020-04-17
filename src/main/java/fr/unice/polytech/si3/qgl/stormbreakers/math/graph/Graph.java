@@ -151,7 +151,7 @@ public class Graph {
         }
     }
 
-    List<Shape> caseInsideWrappingShape(Sommet vertex) {
+    List<Shape> determineShapesToConsider(Sommet vertex) {
         List<Shape> obstacles = new ArrayList<>(15);
         for (OceanEntity obstacle : this.streamManager.getBoatsAndReefs()) {
             if (obstacle.isInsideWrappingSurface(streamManager.boatSecurityMargin(), vertex.getPoint())) {
@@ -167,7 +167,7 @@ public class Graph {
     }
 
     void computeAdjacentNodes(Sommet vertex, double ecart) {
-        List<Shape> obstacles = caseInsideWrappingShape(vertex);
+        List<Shape> obstacles = determineShapesToConsider(vertex);
         for (Sommet v : this.nodes) {
             if (!v.equals(vertex)) {
                 double distance = v.getPoint().distanceTo(vertex.getPoint());

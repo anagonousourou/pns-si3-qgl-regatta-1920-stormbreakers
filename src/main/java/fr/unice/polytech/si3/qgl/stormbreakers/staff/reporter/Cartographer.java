@@ -44,11 +44,14 @@ public class Cartographer {
         double d = boat.distanceTo(cp);
         System.out.println("distanceToCp: " + d);
 
-        if (d >= 6000) {
-            ecart = 300;
+        if(d >= 9000){
+            ecart=400;
         }
-
-        else if (d >= 3000) {
+        else if (d >= 8000) {
+            ecart = 350;
+        } else if (d >= 6000) {
+            ecart = 300;
+        } else if (d >= 3000) {
             ecart = 200;
         } else if (d >= 2000) {
             ecart = 150;
