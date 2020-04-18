@@ -11,14 +11,15 @@ import org.junit.jupiter.api.Test;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.OarAction;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.SailorAction;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.UseWatch;
+import fr.unice.polytech.si3.qgl.stormbreakers.io.json.JsonOutputBuilder;
 
 class OutputBuilderTest {
 
-    private OutputBuilder outputBuilder;
+    private JsonOutputBuilder outputBuilder;
 
     @BeforeEach
     void setUp() {
-        outputBuilder = new OutputBuilder();
+        outputBuilder = new JsonOutputBuilder();
     }
 
 

@@ -3,13 +3,12 @@ package fr.unice.polytech.si3.qgl.stormbreakers.data.ocean;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
-import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Shape;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.processing.InputParser;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.processing.Logger;
+import fr.unice.polytech.si3.qgl.stormbreakers.exceptions.ParsingException;
+import fr.unice.polytech.si3.qgl.stormbreakers.io.InputParser;
+import fr.unice.polytech.si3.qgl.stormbreakers.io.Logger;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Surface;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Position;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Shape;
 
 /**
  * Le bateau implémente Propertychange listener pour permettre la mise à jour
@@ -82,7 +81,7 @@ public class Boat implements PropertyChangeListener, Surface {
         try {
             this.life = this.parser.fetchBoatLife(data);
             setPosition(this.parser.fetchBoatPosition(data));
-        } catch (JsonProcessingException e) {
+        } catch (ParsingException e) {
             Logger.getInstance().logErrorMsg(e);
         }
 

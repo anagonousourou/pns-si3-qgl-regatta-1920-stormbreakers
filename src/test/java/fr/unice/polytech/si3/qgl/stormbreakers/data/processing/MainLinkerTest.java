@@ -1,17 +1,15 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.data.processing;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertTimeout;
-import static java.time.Duration.ofMillis;
 
 import java.io.IOException;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class ElementsConstructorTest {
+public class MainLinkerTest {
 
-    private ElementsConstructor constructor;
+    private MainLinker constructor;
     private String game;
     private String gameArchipel;
     private String gameHarbour;
@@ -29,7 +27,7 @@ public class ElementsConstructorTest {
         round1 = new String(this.getClass().getResourceAsStream("/elementstest/round1.json").readAllBytes());
         roundArchipel = new String(
                 this.getClass().getResourceAsStream("/elementstest/round_archipel.json").readAllBytes());
-        constructor = new ElementsConstructor(gameArchipel);
+        constructor = new MainLinker(gameArchipel);
         roundHarbour = new String(
                 this.getClass().getResourceAsStream("/elementstest/round_harbour.json").readAllBytes());
                 roundHarbour2 = new String(
@@ -45,14 +43,14 @@ public class ElementsConstructorTest {
     @Test
     public void harbourTest() {
 
-        constructor = new ElementsConstructor(gameHarbour);
+        constructor = new MainLinker(gameHarbour);
         assertDoesNotThrow(() -> System.out.println(constructor.sendActions(roundHarbour)));
     }
 
     @Test
     public void harbour2Test() {
 
-        constructor = new ElementsConstructor(gameHarbour);
+        constructor = new MainLinker(gameHarbour);
         assertDoesNotThrow(() -> System.out.println(constructor.sendActions(roundHarbour2)));
     }
 

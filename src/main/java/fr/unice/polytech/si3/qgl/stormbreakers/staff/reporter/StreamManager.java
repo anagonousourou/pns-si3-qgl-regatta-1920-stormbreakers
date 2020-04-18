@@ -7,17 +7,16 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
-import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.IPoint;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Boat;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Courant;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.OceanEntity;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.OceanEntityType;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Recif;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.processing.InputParser;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.processing.Logger;
+import fr.unice.polytech.si3.qgl.stormbreakers.exceptions.ParsingException;
+import fr.unice.polytech.si3.qgl.stormbreakers.io.InputParser;
+import fr.unice.polytech.si3.qgl.stormbreakers.io.Logger;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.LineSegment2D;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.IPoint;
 
 /**
  * Classe pour gérér les streams
@@ -415,7 +414,7 @@ public class StreamManager implements PropertyChangeListener {
                     e -> e.getEnumType().equals(OceanEntityType.RECIF) || e.getEnumType().equals(OceanEntityType.BOAT))
                     .collect(Collectors.toList());
 
-        } catch (JsonProcessingException e) {
+        } catch (ParsingException e) {
 
             Logger.getInstance().logErrorMsg(e);
         }
