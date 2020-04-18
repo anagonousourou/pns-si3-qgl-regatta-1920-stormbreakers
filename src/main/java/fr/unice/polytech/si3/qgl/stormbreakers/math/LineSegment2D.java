@@ -224,11 +224,12 @@ public class LineSegment2D {
 	}
 
 	public boolean contains(IPoint point) {
-		return this.contains(new Point2D(point));
+		return Utils.almostEquals(0.0, this.distance(point));
+		
 	}
 
 	public boolean contains(double x, double y) {
-		return this.contains(new Point2D(x, y));
+		return Utils.almostEquals(0.0, this.distance(x,y));
 	}
 
 	/**
