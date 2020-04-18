@@ -5,8 +5,8 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import fr.unice.polytech.si3.qgl.stormbreakers.Logable;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.IPoint;
+import fr.unice.polytech.si3.qgl.stormbreakers.io.Logable;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.IPoint;
 import fr.unice.polytech.si3.qgl.stormbreakers.exceptions.ImpossibleAngleError;
 
 /**
@@ -14,8 +14,8 @@ import fr.unice.polytech.si3.qgl.stormbreakers.exceptions.ImpossibleAngleError;
  */
 
 public class Point2D implements Logable, IPoint {
-    private double x;
-    private double y;
+    private final double x;
+    private final double y;
     private static final double EPS = Utils.EPSILON_COLLISION;
 
     @JsonCreator

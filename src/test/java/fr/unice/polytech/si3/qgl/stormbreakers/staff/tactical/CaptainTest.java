@@ -10,31 +10,34 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.ActionType;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.OarAction;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.MoveAction;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.OarAction;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.SailorAction;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.Turn;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Equipment;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Gouvernail;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Oar;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Sailor;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.processing.InputParser;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Boat;
+import fr.unice.polytech.si3.qgl.stormbreakers.exceptions.ParsingException;
+import fr.unice.polytech.si3.qgl.stormbreakers.io.InputParser;
+import fr.unice.polytech.si3.qgl.stormbreakers.io.json.JsonInputParser;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.IntPosition;
+import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.CheckpointsManager;
 import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.CrewManager;
 import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.EquipmentsManager;
 import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.TargetDefiner;
+import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.TupleDistanceOrientation;
 import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.WeatherAnalyst;
 
 public class CaptainTest {
 
     Captain rogers;
-    InputParser parser = new InputParser();
+    InputParser parser = new JsonInputParser();
     String gameData;
 
     @BeforeEach
@@ -261,7 +264,7 @@ public class CaptainTest {
     }
 
     @Test
-    void speedTakingIntoAccountWindNoWindTest() throws JsonProcessingException {
+    void speedTakingIntoAccountWindNoWindTest() throws ParsingException {
         var allSailors = this.parser.fetchAllSailors(gameData);
         var prevsPos = new HashMap<Integer, IntPosition>();
 
@@ -291,7 +294,7 @@ public class CaptainTest {
     }
 
     @Test
-    void speedTakingIntoAccountWindTest() throws JsonProcessingException {
+    void speedTakingIntoAccountWindTest() throws ParsingException {
         var allSailors = this.parser.fetchAllSailors(gameData);
 
         CrewManager crewManager = new CrewManager(allSailors);
@@ -349,6 +352,36 @@ public class CaptainTest {
         assertFalse(results.stream().anyMatch(action -> action.getType().equals(ActionType.LOWERSAIL.actionCode)),
                 "et Certainement pas de  LowerAction puique currentExternalSpeed==0 donc voiles supposées baissées ");
 
+    }
+
+
+    @Test
+    public void shouldMoveWhenTargetVeryClose() throws ParsingException {
+            Boat boat=null;
+            CheckpointsManager checkpointsManager=mock(CheckpointsManager.class) ;
+            Navigator navigator=new Navigator();
+            WeatherAnalyst weatherAnalyst= mock(WeatherAnalyst.class);
+            when(weatherAnalyst.currentExternalSpeed()).thenReturn(0.0);
+            when(weatherAnalyst.potentialSpeedAcquirable()).thenReturn(0.0);
+            TargetDefiner targetDefiner=mock(TargetDefiner.class);
+            EquipmentsManager equipmentsManager= new EquipmentsManager(parser.fetchEquipments(gameData),
+                parser.fetchBoatWidth(gameData), parser);
+                var allSailors = this.parser.fetchAllSailors(gameData);
+
+        CrewManager crewManager = new CrewManager(allSailors);
+        
+        Coordinator coordinator=new Coordinator(crewManager, equipmentsManager);
+            when(targetDefiner.defineNextTarget()).thenReturn(new TupleDistanceOrientation(18.0,0.0,false) );
+            
+        
+            
+            Captain captain=new Captain(boat, checkpointsManager, navigator, weatherAnalyst, coordinator, targetDefiner);
+
+            List<SailorAction> actions=captain.nextRoundActions();
+
+            
+
+            assertTrue(actions.stream().anyMatch(action -> action.getType().equals(ActionType.OAR.actionCode)));
     }
 
 }

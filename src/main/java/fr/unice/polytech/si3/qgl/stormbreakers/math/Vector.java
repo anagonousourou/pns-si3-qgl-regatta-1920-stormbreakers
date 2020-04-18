@@ -2,14 +2,14 @@ package fr.unice.polytech.si3.qgl.stormbreakers.math;
 
 import java.util.Objects;
 
-import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.IPoint;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.IPoint;
 
 public class Vector {
 
     public static final Vector UnitX = new Vector(1, 0);
 
-    private double dx;
-    private double dy;
+    private final double dx;
+    private final double dy;
 
     public Vector(double dx, double dy) {
         this.dx = dx;

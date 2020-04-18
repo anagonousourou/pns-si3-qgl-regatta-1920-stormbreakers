@@ -7,15 +7,14 @@ import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Equipment;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Gouvernail;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Oar;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Sail;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Vigie;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.processing.InputParser;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.processing.Logger;
+import fr.unice.polytech.si3.qgl.stormbreakers.exceptions.ParsingException;
+import fr.unice.polytech.si3.qgl.stormbreakers.io.InputParser;
+import fr.unice.polytech.si3.qgl.stormbreakers.io.Logger;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.IntPosition;
 
 public class EquipmentsManager implements PropertyChangeListener {
@@ -170,7 +169,7 @@ public class EquipmentsManager implements PropertyChangeListener {
         String jString = (String) evt.getNewValue();
         try {
             this.setUp(this.parser.fetchEquipments(jString), this.parser.fetchBoatWidth(jString));
-        } catch (JsonProcessingException e) {
+        } catch (ParsingException e) {
             Logger.getInstance().logErrorMsg(e);
         }
 
