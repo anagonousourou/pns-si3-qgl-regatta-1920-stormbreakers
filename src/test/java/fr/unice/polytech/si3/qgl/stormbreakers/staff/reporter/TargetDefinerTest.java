@@ -12,14 +12,16 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Circle;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Rectangle;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Circle;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Position;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Rectangle;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Checkpoint;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Boat;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Courant;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Recif;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Wind;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.processing.InputParser;
+import fr.unice.polytech.si3.qgl.stormbreakers.io.InputParser;
+import fr.unice.polytech.si3.qgl.stormbreakers.io.json.JsonInputParser;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.graph.Graph;
 import fr.unice.polytech.si3.qgl.stormbreakers.staff.tactical.Navigator;
 
@@ -30,7 +32,7 @@ public class TargetDefinerTest {
   private StreamManager streamManager;
   private Boat boat;
 
-  private InputParser parser = new InputParser();
+  private InputParser parser = new JsonInputParser();
   private Courant courant1 = new Courant(new Position(500.0, 0.0, 0.0), new Rectangle(300, 600, 0.0), 40.0);
   private Courant courant2 = new Courant(new Position(900.0, 900.0, -0.52), new Rectangle(300, 600, 0.0), 80.0);
   private Courant courant3 = new Courant(new Position(500.0, 0.0, 0.0), new Rectangle(400, 600, 0.0), 100.0);
@@ -183,6 +185,24 @@ public class TargetDefinerTest {
 
     assertNotNull(reponse);
     
+  }
+
+
+  @Test
+  public void curveTrajectoryIsSafeTest(){
+    Boat boat = mock(Boat.class);
+    when(boat.x()).thenReturn(700.0);
+    when(boat.y()).thenReturn(200.0);
+
+    when(boat.getOrientation()).thenReturn(Math.PI/2);
+    StreamManager streamManager=new StreamManager(parser, boat);
+    Recif reef1=new Recif(new Position(600,400), new Rectangle(190*2, 100*2, 0));
+    streamManager.setBoatsAndReefs(List.of(reef1));
+    TargetDefiner targetDefiner=new TargetDefiner(null, streamManager, boat, navigator);
+
+    assertFalse(targetDefiner.curveTrajectoryIsSafe(new TupleDistanceOrientation(200, Math.PI/2 )));
+
+    assertTrue(targetDefiner.curveTrajectoryIsSafe(new TupleDistanceOrientation(200, -Math.PI/2 )));
   }
 
 }

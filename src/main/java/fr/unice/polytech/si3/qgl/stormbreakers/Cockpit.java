@@ -3,17 +3,17 @@ package fr.unice.polytech.si3.qgl.stormbreakers;
 import java.util.List;
 
 import fr.unice.polytech.si3.qgl.regatta.cockpit.ICockpit;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.processing.ElementsConstructor;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.processing.Logger;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.processing.MainLinker;
+import fr.unice.polytech.si3.qgl.stormbreakers.io.Logger;
 
 public class Cockpit implements ICockpit {
 
-	private ElementsConstructor elementsConstructor;
+	private MainLinker elementsConstructor;
 
 	public void initGame(String game) {
 		Logger.getInstance().addSeparatorThenLog("INIT");
 		Logger.getInstance().addSeparator();
-		this.elementsConstructor = new ElementsConstructor(game);
+		this.elementsConstructor = new MainLinker(game);
 	}
 
 	public String nextRound(String round) {

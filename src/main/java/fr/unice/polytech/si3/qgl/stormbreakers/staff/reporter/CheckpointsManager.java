@@ -3,10 +3,10 @@ package fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter;
 import java.util.ArrayList;
 import java.util.List;
 
-import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.IPoint;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.IPoint;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Checkpoint;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Boat;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.processing.Logger;
+import fr.unice.polytech.si3.qgl.stormbreakers.io.Logger;
 
 public class CheckpointsManager {
 

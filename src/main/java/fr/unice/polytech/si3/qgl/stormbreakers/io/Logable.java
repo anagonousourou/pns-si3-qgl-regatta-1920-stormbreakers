@@ -1,4 +1,4 @@
-package fr.unice.polytech.si3.qgl.stormbreakers;
+package fr.unice.polytech.si3.qgl.stormbreakers.io;
 
 import java.util.List;
 import java.util.stream.Collectors;
