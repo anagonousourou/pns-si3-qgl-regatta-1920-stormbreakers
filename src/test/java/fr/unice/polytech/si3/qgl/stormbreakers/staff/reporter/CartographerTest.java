@@ -8,20 +8,20 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
-import java.util.Date;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Circle;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Polygon;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Rectangle;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Circle;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Polygon;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Position;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Rectangle;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Checkpoint;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Boat;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Recif;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.processing.InputParser;
+import fr.unice.polytech.si3.qgl.stormbreakers.io.InputParser;
+import fr.unice.polytech.si3.qgl.stormbreakers.io.json.JsonInputParser;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.processing.ObservableData;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.graph.Graph;
@@ -100,7 +100,7 @@ public class CartographerTest {
     @Test
     public void lotOfObstaclesTest(){
         boat = new Boat(new Position(2306.962592519181, 5190.275946479242), 5, 5, 5, null);
-        InputParser parser=new InputParser();
+        InputParser parser=new JsonInputParser();
         ObservableData observableData=new ObservableData();
         streamManager = new StreamManager(parser, boat);
         observableData.addPropertyChangeListener(streamManager);
@@ -114,17 +114,16 @@ public class CartographerTest {
 
         graph = new Graph(streamManager, weatherAnalyst);
         cartographer = new Cartographer(checkpointsManager, graph, boat);
-        Date before=new Date();
+        
         var result = cartographer.caseBuildMap(checkpoint1);
-        Date after= new Date();
-        System.out.println("time1 "+(after.getTime()-before.getTime()));
+        
         assertNotNull(result);
         assertNotEquals(checkpoint1, result, "Il doit y avoir une étape intermediaire");
     }
     @Test
     public void obstaclesLikeWeek9() {
     	boat=new Boat(new Position(120, 1728), 5, 5, 5, null);
-    	 InputParser parser=new InputParser();
+    	 InputParser parser=new JsonInputParser();
          ObservableData observableData=new ObservableData();
          streamManager = new StreamManager(parser, boat);
          observableData.addPropertyChangeListener(streamManager);

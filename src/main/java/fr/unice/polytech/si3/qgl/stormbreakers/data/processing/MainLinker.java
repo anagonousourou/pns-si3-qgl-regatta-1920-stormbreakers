@@ -1,12 +1,15 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.data.processing;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
-import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Shape;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Boat;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Wind;
+import fr.unice.polytech.si3.qgl.stormbreakers.exceptions.ParsingException;
+import fr.unice.polytech.si3.qgl.stormbreakers.io.InputParser;
+import fr.unice.polytech.si3.qgl.stormbreakers.io.Logger;
+import fr.unice.polytech.si3.qgl.stormbreakers.io.json.JsonInputParser;
+import fr.unice.polytech.si3.qgl.stormbreakers.io.json.JsonOutputBuilder;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.graph.Graph;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Position;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Shape;
 import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.Cartographer;
 import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.CheckpointsManager;
 import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.CrewManager;
@@ -18,9 +21,9 @@ import fr.unice.polytech.si3.qgl.stormbreakers.staff.tactical.Captain;
 import fr.unice.polytech.si3.qgl.stormbreakers.staff.tactical.Coordinator;
 import fr.unice.polytech.si3.qgl.stormbreakers.staff.tactical.Navigator;
 
-public class ElementsConstructor {
-	private InputParser parser = new InputParser();
-	private OutputBuilder outputBuilder = new OutputBuilder();
+public class MainLinker {
+	private InputParser parser = new JsonInputParser();
+	private JsonOutputBuilder outputBuilder = new JsonOutputBuilder();
 	private CrewManager crewManager = null;
 	private EquipmentsManager equipmentsManager = null;
 	private Captain captain = null;
@@ -36,7 +39,7 @@ public class ElementsConstructor {
 	private Graph graph;
 	private Cartographer cartographer;
 
-	public ElementsConstructor(String game) {
+	public MainLinker(String game) {
 		try {
 			wind = new Wind(parser);// son état est modifié au gré des tours
 			crewManager = new CrewManager(this.parser.fetchAllSailors(game));// construit une fois pour toute
@@ -71,7 +74,7 @@ public class ElementsConstructor {
 			this.observableData.addPropertyChangeListener(this.boat);
 			this.observableData.addPropertyChangeListener(this.streamManager);
 
-		} catch (JsonProcessingException e) {
+		} catch (ParsingException e) {
 			Logger.getInstance().logErrorMsg(e);
 		}
 	}

@@ -10,22 +10,23 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Circle;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.IPoint;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Polygon;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Rectangle;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Circle;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.IPoint;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Polygon;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Position;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Rectangle;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Boat;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Courant;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Recif;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.processing.InputParser;
+import fr.unice.polytech.si3.qgl.stormbreakers.io.InputParser;
+import fr.unice.polytech.si3.qgl.stormbreakers.io.json.JsonInputParser;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
 
 public class StreamManagerTest {
 
     private StreamManager manager;
 
-    private InputParser parser = new InputParser();
+    private InputParser parser = new JsonInputParser();
     private Courant courant1 = new Courant(new Position(500.0, 0.0, 0.0), new Rectangle(300, 600, 0.0), 40.0);
     private Courant courant2 = new Courant(new Position(900.0, 900.0, -0.52), new Rectangle(300, 600, 0.0), 80.0);
     private Courant courant3 = new Courant(new Position(500.0, 0.0, 0.0), new Rectangle(400, 600, 0.0), 40.0);

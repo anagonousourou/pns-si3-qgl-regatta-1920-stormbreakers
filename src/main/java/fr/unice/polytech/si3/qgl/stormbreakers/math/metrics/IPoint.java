@@ -1,16 +1,16 @@
-package fr.unice.polytech.si3.qgl.stormbreakers.data.metrics;
+package fr.unice.polytech.si3.qgl.stormbreakers.math.metrics;
 
 public interface IPoint {
 
-    public double x();
+    double x();
 
-    public double y();
+    double y();
 
-    public default double distanceTo(IPoint other) {
+    default double distanceTo(IPoint other) {
         return Math.hypot(other.x() - this.x(), other.y() - this.y());
     }
 
-    public default double distanceToOrigin() {
+    default double distanceToOrigin() {
         return Math.hypot(this.x(), this.y());
     }
 

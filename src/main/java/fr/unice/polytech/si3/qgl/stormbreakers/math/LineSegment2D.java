@@ -6,7 +6,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.DoubleStream;
 
-import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.IPoint;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.IPoint;
 import fr.unice.polytech.si3.qgl.stormbreakers.exceptions.DegeneratedLine2DException;
 
 /**
@@ -18,8 +18,8 @@ public class LineSegment2D {
 	/**
 	 * Segment bounding points
 	 */
-	private Point2D startPoint;
-	private Point2D endPoint;
+	private final Point2D startPoint;
+	private final Point2D endPoint;
 
 	private final double length;
 	public static final double ACCURACY = 1e-12;
@@ -213,14 +213,6 @@ public class LineSegment2D {
 		return arrangedSupport.pointFromLineParameter(segmentParameter * length);
 	}
 
-	/**
-	 * Returns the LineSegment which start from last point of this line segment, and
-	 * which ends at the fist point of this last segment.
-	 */
-	public LineSegment2D reverse() {
-		return new LineSegment2D(endPoint, startPoint);
-	}
-
 	// ===================================================================
 
 	/**
@@ -231,18 +223,13 @@ public class LineSegment2D {
 		return getSupportingLine().contains(point2D);
 	}
 
-	public boolean contains(Point2D point2D) {
-		// Compute distance between segment and point
-		double distance = this.distance(point2D);
-		return Utils.almostEquals(0, distance);
+	public boolean contains(IPoint point) {
+		return Utils.almostEquals(0.0, this.distance(point));
+		
 	}
 
 	public boolean contains(double x, double y) {
-		return this.contains(new Point2D(x, y));
-	}
-
-	public boolean contains(IPoint point) {
-		return this.contains(point.x(), point.y());
+		return Utils.almostEquals(0.0, this.distance(x,y));
 	}
 
 	/**
@@ -361,11 +348,8 @@ public class LineSegment2D {
 
 	@Override
 	public boolean equals(Object obj) {
-		// // LATER: 08/03/2020 Add tests for equals
-		if (this == obj)
-			return true;
-		if (!(obj instanceof LineSegment2D))
-			return false;
+		if (this == obj) return true;
+		if (!(obj instanceof LineSegment2D)) return false;
 		LineSegment2D that = (LineSegment2D) obj;
 
 		// Compare each field

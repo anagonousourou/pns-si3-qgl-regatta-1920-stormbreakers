@@ -4,7 +4,7 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.Objects;
 
-import fr.unice.polytech.si3.qgl.stormbreakers.Logable;
+import fr.unice.polytech.si3.qgl.stormbreakers.io.Logable;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.MoveAction;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.IntPosition;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.MovementPath;

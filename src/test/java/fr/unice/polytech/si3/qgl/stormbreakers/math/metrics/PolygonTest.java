@@ -1,4 +1,4 @@
-package fr.unice.polytech.si3.qgl.stormbreakers.data.metrics;
+package fr.unice.polytech.si3.qgl.stormbreakers.math.metrics;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;

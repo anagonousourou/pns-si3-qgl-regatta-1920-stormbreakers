@@ -1,4 +1,4 @@
-package fr.unice.polytech.si3.qgl.stormbreakers.data.processing;
+package fr.unice.polytech.si3.qgl.stormbreakers.io;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -6,8 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 import java.util.List;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,6 +15,8 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Equipment;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Oar;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Sailor;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Checkpoint;
+import fr.unice.polytech.si3.qgl.stormbreakers.exceptions.ParsingException;
+import fr.unice.polytech.si3.qgl.stormbreakers.io.json.JsonInputParser;
 
 class InputParserTest {
 
@@ -32,8 +32,8 @@ class InputParserTest {
         private List<Equipment> equipments;
 
         @BeforeEach
-        void setUp() throws JsonProcessingException, IOException {
-                parser = new InputParser();
+        void setUp() throws ParsingException, IOException {
+                parser = new JsonInputParser();
 
                 initGameExample1 = "{\"goal\": {\"mode\": \"REGATTA\",\"checkpoints\": [{\"position\": {\"x\": 1000,\"y\": 0,\"orientation\": 0},\"shape\": {\"type\": \"circle\",\"radius\": 50}}]},\"shipCount\": 1,\"ship\": {\"type\": \"ship\",\"life\": 100,\"position\": {\"x\": 0,\"y\": 0,\"orientation\": 0},\"name\": \"Les copaings d'abord!\",\"deck\": {\"width\": 2,\"length\": 1},\"entities\": [{\"x\": 0,\"y\": 0,\"type\": \"oar\"},{\"x\": 1,\"y\": 0,\"type\": \"oar\"}],\"shape\": {\"type\": \"rectangle\",\"width\": 2,\"height\": 3,\"orientation\": 0}},\"sailors\": [{\"x\": 0,\"y\": 0,\"id\": 0,\"name\": \"Edward Teach\"},{\"x\": 0,\"y\": 1,\"id\": 1,\"name\": \"Tom Pouce\"}]}";
                 initGameExample2 = "{\"goal\": {\"mode\": \"REGATTA\",\"checkpoints\": [{\"position\": {\"x\": 1000,\"y\": 0,\"orientation\": 0},\"shape\": {\"type\": \"circle\",\"radius\": 50}},{\"position\": {\"x\": 0,\"y\": 0,\"orientation\": 0},\"shape\": {\"type\": \"circle\",\"radius\": 50}}]},\"shipCount\": 1,\"ship\": {\"type\": \"ship\",\"life\": 100,\"position\": {\"x\": 0,\"y\": 0,\"orientation\": 0},\"name\": \"Les copaings d'abord!\",\"deck\": {\"width\": 2,\"length\": 2},\"entities\": [{\"x\": 0,\"y\": 0,\"type\": \"oar\"},{\"x\": 1,\"y\": 0,\"type\": \"oar\"},{\"x\": 1,\"y\": 1,\"type\": \"rudder\"}],\"shape\": {\"type\": \"rectangle\",\"width\": 2,\"height\": 3,\"orientation\": 0}},\"sailors\": [{\"x\": 0,\"y\": 0,\"id\": 0,\"name\": \"Edward Teach\"},{\"x\": 0,\"y\": 1,\"id\": 1,\"name\": \"Tom Pouce\"}]}";
@@ -97,7 +97,7 @@ class InputParserTest {
         }
 
         @Test
-        void fetchStreamsTest() throws JsonProcessingException {
+        void fetchStreamsTest() throws ParsingException {
                 var result = parser.fetchStreams(streams1);
 
                 assertEquals(1, result.size(), "Un seul courant dans l'input");

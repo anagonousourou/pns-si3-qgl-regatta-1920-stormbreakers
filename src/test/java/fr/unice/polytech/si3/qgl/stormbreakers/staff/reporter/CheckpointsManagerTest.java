@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.*;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.*;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Boat;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
 import org.junit.jupiter.api.BeforeEach;

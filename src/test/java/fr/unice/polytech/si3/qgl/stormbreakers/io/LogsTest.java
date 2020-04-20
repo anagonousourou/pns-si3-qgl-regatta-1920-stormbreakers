@@ -1,4 +1,4 @@
-package fr.unice.polytech.si3.qgl.stormbreakers.data.processing;
+package fr.unice.polytech.si3.qgl.stormbreakers.io;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
