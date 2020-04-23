@@ -142,7 +142,6 @@ public class Circle extends Shape {
                 }
             } else {
                 // Even the supporting line doesn't intersect
-                // TODO: 23/04/2020 Missing Test where supporting lines don't intersect
                 return Optional.empty();
             }
         } else {
@@ -156,25 +155,20 @@ public class Circle extends Shape {
             else if (lineSegment2D.isCollinearPointOnSegment(secondPoint))
                 return Optional.of(secondPoint);
             else
-                // TODO: 23/04/2020 Missing Test where the intersection points are not on the line segment
                 return Optional.empty();
         }
     }
 
     /**
      * Computes the intersection point between this shape and a given line
-     * 
      * @param line2D the given line
-     * @return if it exists, the intersection point Note: The given line should be
-     *         given relative to this shape's coordinates
+     * @return if one exists, an intersection point
      */
     public Optional<Point2D> intersect(Line2D line2D) {
-        // TODO: 05/03/2020 Missing tests
         double distanceToCenter = line2D.distance(getAnchorPoint());
         double delta = distanceToCenter - radius;
         if (delta > 0) {
             // No collision
-            // TODO: 23/04/2020 Needs testing
             return Optional.empty();
         } else if (Utils.almostEqualsBoundsIncluded(0, delta)) {
             // Only One Intersection
@@ -182,7 +176,6 @@ public class Circle extends Shape {
             return Optional.of(this.projectOntoEdge(linePoint));
         } else {
             // Two Intersections
-            // TODO: 23/04/2020 Needs testing
             Point2D anIntersection = this.findFirstIntersectingPoint(line2D);
             return Optional.of(anIntersection);
         }
@@ -226,7 +219,7 @@ public class Circle extends Shape {
      *
      * @throws UnsupportedOperationException if no intersection point found so if
      *                                       the segment wasn't intersecting in the
-     *                                       first placeF
+     *                                       first place
      */
     Point2D findFirstIntersectingPoint(Line2D line2D) {
         // TODO: 05/03/2020 Tests
@@ -351,7 +344,6 @@ public class Circle extends Shape {
 
     @Override
     public boolean isInsideOpenShape(IPoint pt) {
-        // TODO: 23/04/2020 Test
         return distFromCenter(pt) < radius;
     }
 

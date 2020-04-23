@@ -10,6 +10,9 @@ import fr.unice.polytech.si3.qgl.stormbreakers.math.Fraction;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Line2D;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.LineSegment2D;
 
+import java.util.List;
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class CircleTest {
@@ -86,8 +89,7 @@ class CircleTest {
      * End of tests for equals
      */
 
-    @Test void testIntersectSegment() {
-
+    @Test void testIntersectSegment() { // non boolean methods
     	Position d1 = new Position(-90, 20);
     	Position a1 = new Position(90, 20);
     	Position d2 = new Position(20, -60);
@@ -96,20 +98,31 @@ class CircleTest {
     	Position dEdge = new Position(-50, 10);
     	Position aEdge = new Position(-50, -50);
     	Position dEdge2 = new Position(-50, -10);
+    	Position A6 = new Position(-80,60);
+    	Position B6 = new Position(80,60);
+    	Position A7 = new Position(60,60);
+    	Position B7 = new Position(70,70);
     	
-    	LineSegment2D l = new LineSegment2D(d1,a1);
-    	LineSegment2D l1 = new LineSegment2D(d2,a1);
-    	LineSegment2D lInCircle = new LineSegment2D(dIn, aIn);
-    	LineSegment2D lEdgeCircle = new LineSegment2D(dEdge, aEdge);
-    	LineSegment2D lEdgeCircleNoPoint = new LineSegment2D(dEdge2, aEdge);
-    	
-    	assertFalse(c1.intersect(l).isEmpty());
-        // TODO: 23/04/2020 Checkout this test
-    	//assertTrue(c1.intersect(l1).isEmpty());
-    	assertFalse(c1.intersect(lInCircle).isEmpty());
+    	LineSegment2D l = new LineSegment2D(d1,a1); // long segment across
+    	LineSegment2D l1 = new LineSegment2D(d2,a1); // Non intersecting line
+    	LineSegment2D lInCircle = new LineSegment2D(dIn, aIn); // Half way in (intersects)
+    	LineSegment2D lEdgeCircle = new LineSegment2D(dEdge, aEdge); // Tangent
+    	LineSegment2D lEdgeCircleNoPoint = new LineSegment2D(dEdge2, aEdge); // Tangent support only
+    	LineSegment2D noIntersectWithSupport = new LineSegment2D(A6,B6); // above
+        LineSegment2D onlyIntersectWithSupport = new LineSegment2D(A7,B7); // Intersecting support only
+
+    	assertTrue(c1.intersect(l).isPresent());
+    	assertTrue(c1.intersect(l1).isEmpty());
+    	assertTrue(c1.intersect(lInCircle).isPresent());
     	assertTrue(c1.intersect(lEdgeCircleNoPoint).isEmpty());
-    	
-       	Point2D c1XlEdgeCircle = c1.intersect(lEdgeCircle).get();
+    	assertTrue(c1.intersect(noIntersectWithSupport).isEmpty());
+    	assertTrue(c1.intersect(onlyIntersectWithSupport).isEmpty());
+
+        // Reminder : c1 radius 50, centered on (0,0)
+
+        Optional<Point2D> c1XlEdgeCircleOpt = c1.intersect(lEdgeCircle);
+        assertTrue(c1XlEdgeCircleOpt.isPresent());
+        Point2D c1XlEdgeCircle = c1XlEdgeCircleOpt.get();
        	assertEquals(Math.abs(-50),Math.abs(c1XlEdgeCircle.x()),Utils.EPSILON_COLLISION);// absolute values because of x symmetry
         assertEquals(0,c1XlEdgeCircle.y(),Utils.EPSILON_COLLISION);
 
@@ -118,7 +131,7 @@ class CircleTest {
         assertEquals(20,c1Xl.y(),Utils.EPSILON_COLLISION);
     }
     
-    @Test void testIntersectsSegment() {
+    @Test void testIntersectsSegment() { // boolean methods
     	Point2D d1 = new Point2D(-70, 20);
     	Point2D a1 = new Point2D(90, -40);
     	Point2D d2 = new Point2D(-50, -60);
@@ -134,12 +147,12 @@ class CircleTest {
     	LineSegment2D ls = new LineSegment2D(d1,a1); // intersecting long line
     	LineSegment2D ls1 = new LineSegment2D(d2,a1); // non intersecting long line
     	LineSegment2D lsEdgeCircle = new LineSegment2D(dEdge, aEdge); // tangent line
-        LineSegment2D ovelapping = new LineSegment2D(A4,B4); // short overlapping line
+        LineSegment2D overlapping = new LineSegment2D(A4,B4); // short overlapping line
         LineSegment2D inner = new LineSegment2D(A5,B5); // short inner line
         assertTrue(c1.collidesWith(ls));
     	assertFalse(c1.collidesWith(ls1));
     	assertTrue(c1.collidesWith(lsEdgeCircle));
-        assertTrue(c1.collidesWith(ovelapping));
+        assertTrue(c1.collidesWith(overlapping));
         assertTrue(c1.collidesWith(inner));
     	
     	//line 
@@ -150,6 +163,22 @@ class CircleTest {
     	assertTrue(c1.intersects(tangent));
     	assertFalse(c1.intersects(l1));
     }
+
+    @Test void testIntersectionPointWithLine() {
+        Circle circle = new Circle(50,new Position(10, 10));
+        Line2D above = new Line2D(new Point2D(-1,80),new Point2D(1, 80));
+        Line2D tangent = new Line2D(new Point2D(-1, 60),new Point2D(1, 60));
+        Line2D overlapping = new Line2D(new Point2D(-1, 15),new Point2D(1, 15));
+
+        assertEquals(Optional.empty(),circle.intersect(above));
+        assertEquals(Optional.of(new Point2D(10,60)),circle.intersect(tangent));
+        List<Point2D> possibleOutputs = List.of(
+                new Point2D(59.75,15),
+                new Point2D(-39.75,15)
+        );
+        Optional<Point2D> circleXoverlapping = circle.intersect(overlapping);
+        assertTrue(circleXoverlapping.isPresent() && possibleOutputs.contains(circle.intersect(overlapping).get()));
+    }
     
     @Test
     void findIntersectingPointTest() {
@@ -159,8 +188,21 @@ class CircleTest {
     	Point2D result2=new Point2D(0, -50);
     	Line2D l = new Line2D(d1,a1);
     	
-    	assertEquals(c1.findBothIntersectingPoints(l).getFirst(),result1);
-    	assertEquals(c1.findBothIntersectingPoints(l).getSecond(),result2);
+    	assertEquals(result1,c1.findBothIntersectingPoints(l).getFirst());
+    	assertEquals(result2,c1.findBothIntersectingPoints(l).getSecond());
+
+        Line2D tangent = new Line2D(new Point2D(-1, 50),new Point2D(1, 50));
+        assertEquals(new Point2D(0,50),c1.findFirstIntersectingPoint(tangent));
+
+        Line2D overlapping = new Line2D(new Point2D(-1, 5),new Point2D(1, 5));
+        List<Point2D> possibleOutputs = List.of(
+                new Point2D(49.75,5),
+                new Point2D(-49.75,5)
+        );
+        assertTrue(possibleOutputs.contains(c1.findFirstIntersectingPoint(overlapping)));
+
+
+
     }
 
     @Test
@@ -176,4 +218,11 @@ class CircleTest {
         assertFalse(c1.collidesWith(c4));
     }
 
+    @Test void testIsInsideOpenShape() {
+        Circle circle1 = new Circle(50,new Position(0,0));
+        assertTrue(circle1.isInsideOpenShape(new Point2D(10,10))); // inside
+        assertFalse(circle1.isInsideOpenShape(new Point2D(50,0))); // on border
+        assertFalse(circle1.isInsideOpenShape(new Point2D(0,50))); // on border
+        assertFalse(circle1.isInsideOpenShape(new Point2D(100,100))); // outside
+    }
 }
