@@ -273,15 +273,15 @@ public class Circle extends Shape {
         Point2D start = lineSegment2D.firstPoint(); // Always inside the circle
         Point2D end = lineSegment2D.lastPoint(); // Always outside the circle
 
+        // One of the ends is on the circle
         if (Utils.almostEquals(radius, this.distFromCenter(start)))
-            return start; // // TODO: 23/04/2020 needs testing
-
+            return start;
         if (Utils.almostEquals(radius, this.distFromCenter(end)))
             return end;
 
         Point2D testedPoint = new LineSegment2D(start, end).getMiddle();
-        while (!Utils.almostEquals(radius, this.distFromCenter(testedPoint))
-                && !Utils.almostEqualsBoundsIncluded(start.distanceTo(end), 0.0, 0.1)) {
+        while (!Utils.almostEquals(radius, this.distFromCenter(testedPoint), Utils.EPSILON_COLLISION)
+                && !Utils.almostEqualsBoundsIncluded(start.distanceTo(end), 0.0, Utils.EPSILON_COLLISION)) {
             double delta = distFromCenter(testedPoint) - radius;
             if (delta > 0) {
                 // We're outside the circle -> try closer to radius
@@ -292,7 +292,7 @@ public class Circle extends Shape {
             } else {
                 // It's a perfect match
                 // The last computed point is the one
-                return testedPoint; // TODO: 23/04/2020 needs testing
+                return testedPoint; // TODO: 23/04/2020 needs testing if possible (0.0 rare case)
             }
 
             // Recompute the guessing points
@@ -300,12 +300,11 @@ public class Circle extends Shape {
         }
 
         // We stopped looping
-        if (Utils.almostEqualsBoundsIncluded(start.distanceTo(end), 0.0, 0.1)) {
+        if (Utils.almostEquals(radius, this.distFromCenter(testedPoint),Utils.EPSILON_COLLISION)) {
             // because we found a close enough point
             return testedPoint;
         } else {
             // because we didn't find any Intersection
-            // TODO: 23/04/2020 Needs testing -> test through intersectionPoint method
             throw new UnsupportedOperationException("Tried to find line-circle intersection, but there wasn't any !");
         }
 

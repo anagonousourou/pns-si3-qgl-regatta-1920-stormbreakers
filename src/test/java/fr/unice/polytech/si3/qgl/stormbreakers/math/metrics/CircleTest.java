@@ -191,8 +191,15 @@ class CircleTest {
     	assertEquals(result1,c1.findBothIntersectingPoints(l).getFirst());
     	assertEquals(result2,c1.findBothIntersectingPoints(l).getSecond());
 
+        // TODO: 23/04/2020 Find first intersecting point tests
+        Line2D above = new Line2D(new Point2D(-1,80),new Point2D(1, 80));
+        assertThrows(UnsupportedOperationException.class, () -> c1.findFirstIntersectingPoint(above));
+
         Line2D tangent = new Line2D(new Point2D(-1, 50),new Point2D(1, 50));
         assertEquals(new Point2D(0,50),c1.findFirstIntersectingPoint(tangent));
+
+        Line2D overlappingHalfRadius = new Line2D(new Point2D(-1, 25),new Point2D(1, 25));
+        assertEquals(new Point2D(50*Math.sqrt(3)/2.0,25),c1.findFirstIntersectingPoint(overlappingHalfRadius));
 
         Line2D overlapping = new Line2D(new Point2D(-1, 5),new Point2D(1, 5));
         List<Point2D> possibleOutputs = List.of(
