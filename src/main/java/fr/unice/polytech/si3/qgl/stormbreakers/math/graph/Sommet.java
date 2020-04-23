@@ -15,7 +15,6 @@ public class Sommet {
 	private List<Sommet> shortestPath = new ArrayList<>(30);
 	private int distance = Integer.MAX_VALUE;
 	private Map<Sommet, Integer> adjacentNodes = new HashMap<>();
-	boolean extended = false;
 	boolean computedAdj= false;
 
 	public Sommet(IPoint pt) {

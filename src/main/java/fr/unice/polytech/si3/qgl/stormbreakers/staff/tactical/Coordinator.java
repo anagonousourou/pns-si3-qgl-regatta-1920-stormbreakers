@@ -131,22 +131,8 @@ public class Coordinator {
         return nbOpenned;
     }
 
-    public boolean allSailsAreOpenned() {
-        return this.nbSails() == this.nbSailsOpenned();
-    }
-
     private int nbSailsOpenned() {
         return this.equipmentsManager.nbOpennedSails();
-    }
-
-    public int nbMarinsOnLeftOars() {
-        return (int) this.equipmentsManager.allLeftOars().stream()
-                .filter(oar -> this.crewManager.marineAtPosition(oar.getPosition()).isPresent()).count();
-    }
-
-    public int nbMarinsOnRightOars() {
-        return (int) this.equipmentsManager.allRightOars().stream()
-                .filter(oar -> this.crewManager.marineAtPosition(oar.getPosition()).isPresent()).count();
     }
 
     public Map<Oar, List<Sailor>> marinsDisponiblesForOar() {
@@ -186,16 +172,6 @@ public class Coordinator {
         return this.activateNbOars(this.equipmentsManager.allRightOars(), nb);
     }
 
-    public List<SailorAction> activateOarsOnRight(int nb, List<Sailor> busy) {
-        // Use the isDoneTurn method to know if a sailor has been used or not
-        return this.activateNbOars(this.equipmentsManager.allRightOars(), nb, busy);
-    }
-
-    public List<SailorAction> activateOarsOnLeft(int nb, List<Sailor> busy) {
-        // Use the isDoneTurn method to know if a sailor has been used or not
-        return this.activateNbOars(this.equipmentsManager.allLeftOars(), nb, busy);
-    }
-
     List<SailorAction> activateNbOars(List<Oar> oars, int nb) {
         return this.activateNbOars(oars, nb, new ArrayList<>());
 
@@ -225,20 +201,6 @@ public class Coordinator {
 
         }
         return result;
-    }
-
-    /**
-     * @param nb différence entre nbdroite-nbgauche
-     * @return
-     */
-    public List<SailorAction> activateOars(int nb) {
-
-        if (nb > 0) {
-            return this.activateOarsOnRight(nb);
-        } else {
-            return this.activateOarsOnLeft(-nb);
-        }
-
     }
 
     public List<SailorAction> activateOarsNotStrict(int nb) {

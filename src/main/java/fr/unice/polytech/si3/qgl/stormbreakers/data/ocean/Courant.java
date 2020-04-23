@@ -36,8 +36,6 @@ public class Courant extends OceanEntity {
                 position.toString(), shape.toString());
     }
 
-    
-
     /**
      * Dis si le courant est compatible avec le traject défini par les parametres
      * 
@@ -135,28 +133,6 @@ public class Courant extends OceanEntity {
 
     public double speedProvided(IPoint depart, IPoint destination) {
         return Math.cos(this.getOrientation() - new Vector(depart, destination).getOrientation()) * this.getStrength();
-    }
-
-    public IPoint maximalPointToStay(IPoint depart, IPoint destination) {
-        Point2D current = new Point2D(depart.x(),depart.y());
-        Point2D prev = current;
-        Vector courantVector = Vector.createUnitVector(this.getPosition().getOrientation());
-        Vector biggerStreamVector = courantVector.scaleVector(2);
-        while (helpness(current, destination) > 0 && this.isPtInside(current)) {
-
-            prev = current;
-
-            current = current.getTranslatedBy(biggerStreamVector);
-
-        }
-        return prev;
-
-    }
-
-    public double helpness(IPoint depart, IPoint destination) {
-        Vector courantVector = Vector.createUnitVector(this.getPosition().getOrientation());
-        Vector trajectVector = new Vector(depart, destination);
-        return courantVector.scal(trajectVector);
     }
 
     @Override

@@ -102,14 +102,6 @@ public class EquipmentsManager implements PropertyChangeListener {
         return this.oars.size();
     }
 
-    List<Oar> usedRightOars() {
-        return rightOars.stream().filter(Oar::isUsed).collect(Collectors.toList());
-    }
-
-    List<Oar> usedLeftOars() {
-        return leftOars.stream().filter(Oar::isUsed).collect(Collectors.toList());
-    }
-
     public List<Oar> unusedOars() {
         return oars.stream().filter(Predicate.not(Oar::isUsed)).collect(Collectors.toList());
     }
@@ -122,16 +114,8 @@ public class EquipmentsManager implements PropertyChangeListener {
         return rightOars.stream().filter(Predicate.not(Oar::isUsed)).collect(Collectors.toList());
     }
 
-    List<Oar> toList() {
-        return oars;
-    }
-
     boolean oarPresentAt(IntPosition pos) {
         return this.oars.stream().anyMatch(oar -> oar.x() == pos.x() && oar.y() == pos.y());
-    }
-
-    Optional<Oar> oarAt(IntPosition pos) {
-        return this.oars.stream().filter(oar -> oar.x() == pos.x() && oar.y() == pos.y()).findFirst();
     }
 
     public IntPosition rudderPosition() {
@@ -185,10 +169,6 @@ public class EquipmentsManager implements PropertyChangeListener {
 
     public List<Sail> sails() {
         return sails;
-    }
-
-    public List<Sail> opennedSails() {
-        return this.sails.stream().filter(Sail::isOpenned).collect(Collectors.toList());
     }
 
     public List<Sail> closedSails() {

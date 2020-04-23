@@ -34,10 +34,6 @@ public class MoveAction extends SailorAction {
         return ydistance;
     }
 
-    public boolean longerThan(int distance) {
-        return Math.abs(this.xdistance) + Math.abs(this.ydistance) > distance;
-    }
-
     @Override
     public String toString() {
         return "MoveAction( id: " + this.getSailorId() + ", xd: " + this.xdistance + ", yd: " + this.ydistance + " )";
