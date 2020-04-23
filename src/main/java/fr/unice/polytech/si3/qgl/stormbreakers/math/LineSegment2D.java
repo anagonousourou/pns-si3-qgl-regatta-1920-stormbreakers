@@ -13,6 +13,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.exceptions.DegeneratedLine2DExcep
  * Line segment, defined as the set of points located between the two end
  * points.
  */
+// TODO: 16/04/2020 Remove @authors
 public class LineSegment2D {
 
 	/**
@@ -77,7 +78,8 @@ public class LineSegment2D {
 	 * @return true if the 2 line segments intersect
 	 */
 	public static boolean intersects(LineSegment2D edge1, LineSegment2D edge2) {
-		// LATER: 07/03/2020 Rework
+		// TODO: 07/03/2020 Rework if time
+		// TODO: 23/04/2020  Add lots of test cases HIGH PRIORITY
 		Point2D e1p1 = edge1.firstPoint();
 		Point2D e1p2 = edge1.lastPoint();
 		Point2D e2p1 = edge2.firstPoint();
@@ -192,7 +194,7 @@ public class LineSegment2D {
 	 * @author David Lebrisse - Stormbreakers
 	 */
 	public double segmentParameterOf(Point2D p) {
-		// LATER: 08/03/2020 Clamp k in [0,1] and corresponding tests
+		// TODO: 08/03/2020 Clamp k in [0,1] and corresponding tests
 		Vector supportDirection = startPoint.getVectorTo(endPoint).normalize();
 		Line2D arrangedSupport = new Line2D(startPoint, supportDirection);
 		return arrangedSupport.lineParameterOf(p) / length;
@@ -207,7 +209,7 @@ public class LineSegment2D {
 	 * @author David Lebrisse - Stormbreakers
 	 */
 	public Point2D point(double segmentParameter) {
-		// LATER: 08/03/2020 Clamp k in [0,1] and corresponding tests
+		// TODO: 08/03/2020 Clamp k in [0,1] and corresponding tests
 		Vector supportDirection = startPoint.getVectorTo(endPoint).normalize();
 		Line2D arrangedSupport = new Line2D(startPoint, supportDirection);
 		return arrangedSupport.pointFromLineParameter(segmentParameter * length);
@@ -219,6 +221,7 @@ public class LineSegment2D {
 	 * Returns true if the point (x, y) lies on the line covering the object, with
 	 * precision given by ACCURACY.
 	 */
+	// TODO: 23/04/2020 Remove
 	protected boolean supportContains(Point2D point2D) {
 		return getSupportingLine().contains(point2D);
 	}
@@ -301,6 +304,7 @@ public class LineSegment2D {
 			double min = Math.min(distanceFromFirst, distanceFromLast);
 
 			if (Utils.almostEquals(min, distanceFromFirst))
+				// TODO: 23/04/2020 Test this case
 				return first;
 			else
 				return last;
@@ -374,6 +378,7 @@ public class LineSegment2D {
 	 * @param point2d
 	 * @return
 	 */
+	// TODO: 23/04/2020 Remove
 	public Point2D closestPointTo(IPoint point2d) {
 		List<Point2D> points = new ArrayList<>(20);
 		DoubleStream.iterate(0, d -> d <= 1.0, d -> d + 0.05).forEach(d -> points.add(this.point(d)));

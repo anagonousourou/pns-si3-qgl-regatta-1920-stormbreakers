@@ -45,6 +45,7 @@ public class IntPosition {
 
     @Override
     public boolean equals(Object obj) {
+        // TODO: 23/04/2020 missing equals tests
         if (this == obj)
             return true;
         if (!(obj instanceof IntPosition))

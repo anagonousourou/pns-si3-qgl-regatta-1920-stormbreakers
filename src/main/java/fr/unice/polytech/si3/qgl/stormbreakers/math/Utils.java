@@ -35,8 +35,7 @@ public class Utils {
      * @param eps      delta
      * @return true if almost equal, false if not
      */
-    // LATER: 08/03/2020 Replace all tests usage by : assertEquals(double expected,
-    // double actual, double delta)
+    // TODO: 08/03/2020 Replace all tests usage by : assertEquals(double expected, double actual, double delta)
     public static boolean almostEquals(double expected, double result, double eps) {
         return Math.abs(expected - result) < (Math.abs(eps) - EPSILON);
     }
@@ -51,8 +50,7 @@ public class Utils {
      * @param eps      delta
      * @return true if almost equal, false if not
      */
-    // LATER: 08/03/2020 Replace all tests usage by : assertEquals(double expected,
-    // double actual, double delta)
+    // TODO: 08/03/2020 Replace all tests usage by : assertEquals(double expected, double actual, double delta)
     public static boolean almostEqualsBoundsIncluded(double expected, double result, double eps) {
         return Math.abs(expected - result) <= eps;
     }
@@ -65,6 +63,7 @@ public class Utils {
         return p1.distanceTo(p2) < EPSILON;
     }
 
+    // TODO: 23/04/2020 Remove ?
     public static boolean almostEqualsBoundsIncluded(IPoint p1, IPoint p2) {
         return p1.distanceTo(p2) <= EPSILON;
     }
@@ -102,7 +101,7 @@ public class Utils {
 
     public static double clamp(double value, double min, double max) {
         if (value <= min) {
-            return min;
+            return min; // TODO: 23/04/2020 Add test with this case
         }
         if (value >= max) {
             return max;

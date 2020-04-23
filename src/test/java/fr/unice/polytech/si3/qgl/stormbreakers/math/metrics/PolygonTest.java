@@ -54,7 +54,7 @@ class PolygonTest {
         hexagon = new Polygon(0.0, List.of(hexA, hexB, hexC, hexD, hexE, hexF));
         orientedRectangle = new Polygon(0.5 * Math.PI, rectangleVertices);
 
-        // LATER: 04/03/2020 Use more than rectangle
+        // TODO: 04/03/2020 Also use Circle and Polygon in this test
 
         Point2D triA = new Point2D(0, 10);
         Point2D triB = new Point2D(-5, 0);
@@ -98,14 +98,14 @@ class PolygonTest {
         List<Point2D> vertices = List.of(A, B, C);
         Polygon polygon = new Polygon(0.0, vertices);
 
-        // LATER: 15/03/2020 Maybe avoid computing points
+        // TODO: 15/03/2020 If time: add reference points manually
         List<Point2D> translatedVertices = vertices.stream().map(point -> point.getTranslatedBy(0, 10))
                 .collect(Collectors.toList());
         Polygon translatedPolygon = new Polygon(0.0, translatedVertices);
         polygon.setAnchor(new Position(0, 10));
         assertEquals(translatedPolygon.getHull(), polygon.getHull());
 
-        // LATER: 15/03/2020 Maybe avoid computing points
+        // TODO: 15/03/2020 If time: add reference points manually
         List<Point2D> rotatedVertices = vertices.stream().map(point -> point.getRotatedBy(Math.toRadians(50)))
                 .collect(Collectors.toList());
         Polygon rotatedPolygon = new Polygon(0.0, rotatedVertices);

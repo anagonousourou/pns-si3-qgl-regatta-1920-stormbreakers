@@ -107,9 +107,9 @@ public class Polygon extends Shape implements Orientable {
 
     @Override
     public boolean collidesWith(Polygon polygon) {
-        // LATER: 12/03/2020 Missing Test where bounding circles don't collide
         if (!this.getBoundingCircle().collidesWith(polygon.getBoundingCircle())) {
             // Bounding circles don't even intersect
+            // TODO: 23/04/2020 test when bounding circles don't collide
             return false;
         }
 
@@ -136,7 +136,6 @@ public class Polygon extends Shape implements Orientable {
 
     @Override
     public boolean collidesWith(LineSegment2D lineSegment2D) {
-        // LATER: 16/03/2020 If lineSegment inside
         List<LineSegment2D> edges = bordersActualPos;
 
         for (LineSegment2D border : edges) {
@@ -251,7 +250,7 @@ public class Polygon extends Shape implements Orientable {
 
     @Override
     public boolean isInsideOpenShape(IPoint pt) {
-        // LATER URGENT Auto-generated method stub
+        // TODO Test
         return isPtInside(pt);
     }
 
@@ -263,6 +262,7 @@ public class Polygon extends Shape implements Orientable {
         if (optPoint.isPresent()) {
             return optPoint.get();
         }
+        // TODO: 23/04/2020 Test this last part
         Logger.getInstance().log("returning null");
         return null;
     }
@@ -343,6 +343,7 @@ public class Polygon extends Shape implements Orientable {
         for (int ct = 0; ct < expandedLines.size() - 1; ct++) {
             Optional<Point2D> optExpandedVertex = (expandedLines.get(ct)).intersect(expandedLines.get(ct + 1));
             if (optExpandedVertex.isEmpty())
+                // TODO: 23/04/2020 Test with wrong polygon
                 throw new UnsupportedOperationException("Can't find expansion point with lines :"
                         + expandedLines.get(ct) + " and " + expandedLines.get(ct + 1));
             expandedVertices.add(optExpandedVertex.get());

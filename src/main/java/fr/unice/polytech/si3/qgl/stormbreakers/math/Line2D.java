@@ -55,6 +55,7 @@ public class Line2D {
      * 
      * @author David Lebrisse - Stormbreakers
      */
+    // TODO: 23/04/2020 Remove this unused method
     public double lineParameterOf(double x, double y) {
         return lineParameterOf(new Point2D(x, y));
     }
@@ -172,6 +173,7 @@ public class Line2D {
         return new Vector(direction);
     }
 
+    // TODO: 23/04/2020 Tests
     public Vector getNormalizedDirection() {
         return getDirection().normalize();
     }

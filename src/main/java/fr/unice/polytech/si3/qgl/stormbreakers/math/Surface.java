@@ -55,8 +55,7 @@ public interface Surface extends IPoint, Orientable {
 	 * @return
 	 */
 	default List<IPoint> avoidHit(IPoint depart, IPoint destination) {
-		// LATER: 16/03/2020 Figure out how to fix circle test
-		// LATER
+        // TODO: 23/04/2020 Finish/Add tests for circle and polygon
 		if (this.getShape().getType().equals("rectangle")) {
 			return Surface.avoidHitRectangle(this, depart, destination);
 		} else if (this.getShape().getType().equals("circle")) {
@@ -99,10 +98,11 @@ public interface Surface extends IPoint, Orientable {
 					return List.of(depart, fpt, secondPt.get(), destination);
 				}
 			} else {
+				// TODO: 23/04/2020 Add test case
 				return List.of(depart, fpt, destination);
 			}
 		}
-
+		// TODO: 23/04/2020 Add test case
 		return List.of(depart, destination);
 	}
 
@@ -118,6 +118,7 @@ public interface Surface extends IPoint, Orientable {
 	public default IPoint limitToSurface(IPoint depart, IPoint arrivee) {
 
 		if (this.isInsideOpenSurface(arrivee)) {
+			// TODO: 23/04/2020 Test this case
 			return arrivee;
 		}
 
@@ -126,6 +127,7 @@ public interface Surface extends IPoint, Orientable {
 		}
 	}
 
+	// TODO: 23/04/2020 Remove
 	public default boolean intersectsWithWrappingSurface(double margin, IPoint start, IPoint end) {
 		return this.getShape().wrappingShape(margin).collidesWith(new LineSegment2D(start, end));
 	}

@@ -48,6 +48,7 @@ public class RectangularSurface implements Surface {
         if (optResult.isPresent()) {
             return optResult.get();
         } else
+            // TODO: 23/04/2020 Test default value case
             return -1000.0;
     }
 
@@ -57,6 +58,7 @@ public class RectangularSurface implements Surface {
         if (optResult.isPresent()) {
             return optResult.get();
         } else
+            // TODO: 23/04/2020 Test default value case
             return -1000.0;
     }
 
@@ -66,6 +68,7 @@ public class RectangularSurface implements Surface {
         if (optResult.isPresent()) {
             return optResult.get();
         } else
+            // TODO: 23/04/2020 Test default value case
             return 1000.0;
     }
 
@@ -75,6 +78,7 @@ public class RectangularSurface implements Surface {
         if (optResult.isPresent()) {
             return optResult.get();
         } else
+            // TODO: 23/04/2020 Test default value case
             return 1000.0;
     }
 

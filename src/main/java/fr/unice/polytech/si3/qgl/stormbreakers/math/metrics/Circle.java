@@ -74,7 +74,7 @@ public class Circle extends Shape {
      *         given relative to this shape's coordinates
      */
     public boolean collidesWith(LineSegment2D lineSegment2D) {
-        // LATER: 14/03/2020 Tests
+        // TODO: 14/03/2020 Tests if missing (Full coverage)
         Line2D support = lineSegment2D.getSupportingLine();
         double distanceToCenter = support.distance(getAnchorPoint());
         double delta = distanceToCenter - radius;
@@ -111,7 +111,7 @@ public class Circle extends Shape {
      *         given relative to this shape's coordinates
      */
     public boolean intersects(Line2D line2D) {
-        // LATER: 05/03/2020 Tests
+        // TODO: 14/03/2020 Tests if missing (Full coverage)
         double distanceToCenter = line2D.distance(getAnchorPoint());
         double delta = distanceToCenter - radius;
         // delta > 0 : No collision
@@ -126,8 +126,6 @@ public class Circle extends Shape {
      * @return an intersection point if it exists
      */
     public Optional<Point2D> intersect(LineSegment2D lineSegment2D) {
-        // LATER Missing Test when supporting lines don't intersect and when the
-        // intersection points are not on the line segment
         Line2D support = lineSegment2D.getSupportingLine();
         double distanceToCenter = support.distance(getAnchorPoint());
         double delta = distanceToCenter - radius;
@@ -146,6 +144,7 @@ public class Circle extends Shape {
                 }
             } else {
                 // Even the supporting line doesn't intersect
+                // TODO: 23/04/2020 Missing Test where supporting lines don't intersect
                 return Optional.empty();
             }
         } else {
@@ -159,6 +158,7 @@ public class Circle extends Shape {
             else if (lineSegment2D.isCollinearPointOnSegment(secondPoint))
                 return Optional.of(secondPoint);
             else
+                // TODO: 23/04/2020 Missing Test where the intersection points are not on the line segment
                 return Optional.empty();
         }
     }
@@ -171,11 +171,12 @@ public class Circle extends Shape {
      *         given relative to this shape's coordinates
      */
     public Optional<Point2D> intersect(Line2D line2D) {
-        // LATER: 05/03/2020 Tests
+        // TODO: 05/03/2020 Missing tests
         double distanceToCenter = line2D.distance(getAnchorPoint());
         double delta = distanceToCenter - radius;
         if (delta > 0) {
             // No collision
+            // TODO: 23/04/2020 Needs testing
             return Optional.empty();
         } else if (Utils.almostEqualsBoundsIncluded(0, delta)) {
             // Only One Intersection
@@ -183,6 +184,7 @@ public class Circle extends Shape {
             return Optional.of(this.projectOntoEdge(linePoint));
         } else {
             // Two Intersections
+            // TODO: 23/04/2020 Needs testing
             Point2D anIntersection = this.findFirstIntersectingPoint(line2D);
             return Optional.of(anIntersection);
         }
@@ -231,7 +233,7 @@ public class Circle extends Shape {
      * @author David Lebrisse - Stormbreakers
      */
     Point2D findFirstIntersectingPoint(Line2D line2D) {
-        // LATER: 05/03/2020 Tests
+        // TODO: 05/03/2020 Tests
         Point2D anchorProjection = line2D.projectOnto(getAnchorPoint());
         Vector normalizedLineDirection = line2D.getNormalizedDirection();
         Point2D bounding1 = anchorProjection.getTranslatedBy(normalizedLineDirection.scaleVector(radius));
@@ -287,7 +289,7 @@ public class Circle extends Shape {
         Point2D end = lineSegment2D.lastPoint(); // Always outside the circle
 
         if (Utils.almostEquals(radius, this.distFromCenter(start)))
-            return start;
+            return start; // // TODO: 23/04/2020 needs testing
 
         if (Utils.almostEquals(radius, this.distFromCenter(end)))
             return end;
@@ -305,7 +307,7 @@ public class Circle extends Shape {
             } else {
                 // It's a perfect match
                 // The last computed point is the one
-                return testedPoint;
+                return testedPoint; // TODO: 23/04/2020 needs testing
             }
 
             // Recompute the guessing points
@@ -318,6 +320,7 @@ public class Circle extends Shape {
             return testedPoint;
         } else {
             // because we didn't find any Intersection
+            // TODO: 23/04/2020 Needs testing -> test through intersectionPoint method
             throw new UnsupportedOperationException("Tried to find line-circle intersection, but there wasn't any !");
         }
 
@@ -356,12 +359,13 @@ public class Circle extends Shape {
 
     @Override
     public boolean isInsideOpenShape(IPoint pt) {
+        // TODO: 23/04/2020 Test
         return distFromCenter(pt) < radius;
     }
 
     @Override
     public IPoint intersectionPoint(IPoint depart, IPoint arrive) {
-        // NEW Code to test LATER
+        // TODO: 23/04/2020 Code to test
         LineSegment2D lineSegment2D = new LineSegment2D(depart, arrive);
         return this.findOneIntersection(lineSegment2D);
     }
