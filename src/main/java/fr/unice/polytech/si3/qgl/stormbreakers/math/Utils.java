@@ -63,11 +63,6 @@ public class Utils {
         return p1.distanceTo(p2) < EPSILON;
     }
 
-    // TODO: 23/04/2020 Remove ?
-    public static boolean almostEqualsBoundsIncluded(IPoint p1, IPoint p2) {
-        return p1.distanceTo(p2) <= EPSILON;
-    }
-
     public static boolean almostEquals(Point2D p1, Point2D p2, double delta) {
         return p1.distanceTo(p2) < (Math.abs(delta) - EPSILON);
     }
