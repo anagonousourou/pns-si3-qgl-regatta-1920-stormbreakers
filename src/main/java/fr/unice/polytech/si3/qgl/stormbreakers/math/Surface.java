@@ -127,11 +127,6 @@ public interface Surface extends IPoint, Orientable {
 		}
 	}
 
-	// TODO: 23/04/2020 Remove
-	public default boolean intersectsWithWrappingSurface(double margin, IPoint start, IPoint end) {
-		return this.getShape().wrappingShape(margin).collidesWith(new LineSegment2D(start, end));
-	}
-
 	public default boolean isInsideWrappingSurface(double margin, IPoint point) {
 		return this.getShape().wrappingShape(margin).isPtInside(point);
 	}

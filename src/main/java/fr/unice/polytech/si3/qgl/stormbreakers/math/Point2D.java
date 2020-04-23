@@ -156,11 +156,6 @@ public class Point2D implements Logable, IPoint {
         return String.format("%f %f", x, y);
     }
 
-    // TODO: 23/04/2020 Remove
-    public Point2D negate() {
-        return new Point2D(-x, -y);
-    }
-
     public Point2D getRotatedAround(Point2D anchorPoint, double angle) {
         if (Utils.almostEquals(new Point2D(0, 0), anchorPoint)) {
             return getRotatedBy(angle);

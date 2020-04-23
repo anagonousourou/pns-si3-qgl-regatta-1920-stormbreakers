@@ -23,7 +23,6 @@ public class LineSegment2D {
 	private final Point2D endPoint;
 
 	private final double length;
-	public static final double ACCURACY = 1e-12;
 
 	// ===================================================================
 	// constructors
@@ -217,22 +216,8 @@ public class LineSegment2D {
 
 	// ===================================================================
 
-	/**
-	 * Returns true if the point (x, y) lies on the line covering the object, with
-	 * precision given by ACCURACY.
-	 */
-	// TODO: 23/04/2020 Remove
-	protected boolean supportContains(Point2D point2D) {
-		return getSupportingLine().contains(point2D);
-	}
-
 	public boolean contains(IPoint point) {
 		return Utils.almostEquals(0.0, this.distance(point));
-		
-	}
-
-	public boolean contains(double x, double y) {
-		return Utils.almostEquals(0.0, this.distance(x,y));
 	}
 
 	/**
@@ -369,26 +354,6 @@ public class LineSegment2D {
 	@Override
 	public int hashCode() {
 		return Objects.hash(startPoint, endPoint);
-	}
-
-	/**
-	 * Renvoie le point du segment de droite qui est le plus proche
-	 * 
-	 * @author Patrick
-	 * @param point2d
-	 * @return
-	 */
-	// TODO: 23/04/2020 Remove
-	public Point2D closestPointTo(IPoint point2d) {
-		List<Point2D> points = new ArrayList<>(20);
-		DoubleStream.iterate(0, d -> d <= 1.0, d -> d + 0.05).forEach(d -> points.add(this.point(d)));
-		var tmp = points.stream().min((p, pother) -> Double.compare(p.distanceTo(point2d), pother.distanceTo(point2d)));
-		if (tmp.isPresent()) {
-			return tmp.get();
-		}
-		// should never happen
-		return null;
-
 	}
 
 	/**

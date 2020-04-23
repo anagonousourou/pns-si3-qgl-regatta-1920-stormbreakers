@@ -204,14 +204,6 @@ public class Rectangle extends Shape {
         return "R" + "(" + width + "|" + height + "|" + orientation + ")";
     }
 
-    // TODO: 23/04/2020 Remove
-    public Point2D findPointNearestToPosition(Position other, Position rectangle) {
-        RectanglePositioned rect = new RectanglePositioned(this, rectangle);
-        Point2D p = new Point2D(other.x(), other.y());
-        var tmp = rect.closestPointTo(p);
-        return tmp.isPresent() ? tmp.get() : null;
-    }
-
     public boolean haveGoodOrientation(Checkpoint cp, Point2D boatposition, Point2D courantPos) {
         // tourner la plan pour que le courant est un angle 0
         Point2D ptCp = cp.getPosition().getPoint2D().getTranslatedBy(cp.getPosition().x() - courantPos.x(),

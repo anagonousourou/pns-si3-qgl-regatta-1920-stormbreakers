@@ -14,11 +14,6 @@ public class Line2D {
 
     private EquationDroite equationDroite;
 
-    /** Defines a new Straight line going through (x0,y0) with direction (dx,dy) */
-    public Line2D(double x0, double y0, double dx, double dy) {
-        this(new Point2D(x0, y0), new Vector(dx, dy));
-    }
-
     /** Defines a new Straight line going through the two given points. */
     public Line2D(Point2D p1, Point2D p2) {
         this(p1, p1.getVectorTo(p2));
@@ -45,19 +40,6 @@ public class Line2D {
 
     private boolean isVerticalLine() {
         return Vector.areCollinear(this.direction, Line2D.verticalDirection);
-    }
-
-    /**
-     * Computes the <i>line parameter</i> of the point given by (x,y) for this line
-     * The position is the number k such that if the point belong to the line, its
-     * location is given by x=x0+k*dx and y=y0+k*dy. Note: The point needs to be on
-     * the line.
-     * 
-     * @author David Lebrisse - Stormbreakers
-     */
-    // TODO: 23/04/2020 Remove this unused method
-    public double lineParameterOf(double x, double y) {
-        return lineParameterOf(new Point2D(x, y));
     }
 
     /**

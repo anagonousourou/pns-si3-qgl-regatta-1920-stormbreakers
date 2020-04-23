@@ -15,8 +15,6 @@ import static org.junit.jupiter.api.Assertions.*;
 class CircleTest {
 
     private Circle circle;
-    private Position d1;
-    private Position a1;
     private Circle c1;
     @BeforeEach
     void setUp() {
@@ -106,6 +104,7 @@ class CircleTest {
     	LineSegment2D lEdgeCircleNoPoint = new LineSegment2D(dEdge2, aEdge);
     	
     	assertFalse(c1.intersect(l).isEmpty());
+        // TODO: 23/04/2020 Checkout this test
     	//assertTrue(c1.intersect(l1).isEmpty());
     	assertFalse(c1.intersect(lInCircle).isEmpty());
     	assertTrue(c1.intersect(lEdgeCircleNoPoint).isEmpty());
