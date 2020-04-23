@@ -14,6 +14,8 @@ import org.junit.jupiter.api.Test;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.exceptions.DegeneratedLine2DException;
 
+import javax.sound.sampled.Line;
+
 public class LineSegment2DTest {
 	
 	Double delta = Math.pow(10, -3);
@@ -40,17 +42,37 @@ public class LineSegment2DTest {
 		Point2D p4 = new Point2D(40, 10);
 		Point2D p5 = new Point2D(15, 20);
 		Point2D p6 = new Point2D(30, 0);
+		Point2D p7 = new Point2D(20,0);
+		Point2D p8 = new Point2D(20,19);
 		
 		LineSegment2D edge1 = new LineSegment2D(p1, p2);
 		LineSegment2D edge2 = new LineSegment2D(p3, p4);
 		LineSegment2D edge3 = new LineSegment2D(p5, p6);
-		
+		LineSegment2D edge4 = new LineSegment2D(p7, p8);
+		LineSegment2D edge5 = new LineSegment2D(p5, p2);
+
+		// orthogonal intersecting
 		assertTrue(LineSegment2D.intersects(edge1, edge2));
 		assertTrue(LineSegment2D.intersects(edge2, edge1));
+
+		// at touching limit
 		assertTrue(LineSegment2D.intersects(edge1, edge3));
 		assertTrue(LineSegment2D.intersects(edge3, edge1));
+
+		// collinear points
+		assertTrue(LineSegment2D.intersects(edge1, edge5));
+		assertTrue(LineSegment2D.intersects(edge5, edge1));
+
+		// Same line segment
+		assertTrue(LineSegment2D.intersects(edge1, edge1));
+
+		// Non parrallel non touching lines
         assertFalse(LineSegment2D.intersects(edge2, edge3));
         assertFalse(LineSegment2D.intersects(edge3, edge2));
+
+        // Almost touching
+        assertFalse(LineSegment2D.intersects(edge2, edge4));
+		assertFalse(LineSegment2D.intersects(edge2, edge4));
 	}
 
 	@Test
@@ -172,13 +194,20 @@ public class LineSegment2DTest {
     @Test 
     void closestPointToTest() {
     	LineSegment2D line = new LineSegment2D(new Point2D(5,10),new Point2D(10,5));
+    	// Closest to endpoint
     	Point2D p= new Point2D(12,12);
     	assertEquals(7.5,line.closestPointTo(p).x(),Math.pow(10, -2));
     	assertEquals(7.5,line.closestPointTo(p).y(),Math.pow(10, -2));
 
+    	// Closest to an inner point
     	Point2D p2= new Point2D(18,6);
     	assertEquals(10,line.closestPointTo(p2).x(),Math.pow(10, -2));
     	assertEquals(5,line.closestPointTo(p2).y(),Math.pow(10, -2));
+
+    	// Closest to startpoint
+		Point2D p3= new Point2D(5,15);
+		assertEquals(5,line.closestPointTo(p3).x(),Math.pow(10, -2));
+		assertEquals(10,line.closestPointTo(p3).y(),Math.pow(10, -2));
 
     }
 

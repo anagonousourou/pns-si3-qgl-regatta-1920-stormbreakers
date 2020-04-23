@@ -110,37 +110,44 @@ class CircleTest {
     	assertTrue(c1.intersect(lEdgeCircleNoPoint).isEmpty());
     	
        	Point2D c1XlEdgeCircle = c1.intersect(lEdgeCircle).get();
-        assertTrue(Utils.almostEquals(Math.abs(c1XlEdgeCircle.x()),Math.abs(-50),Utils.EPSILON_COLLISION)); // absolute values because of x symmetry
-        assertTrue(Utils.almostEquals(c1XlEdgeCircle.y(),(0),Utils.EPSILON_COLLISION));
-        
+       	assertEquals(Math.abs(-50),Math.abs(c1XlEdgeCircle.x()),Utils.EPSILON_COLLISION);// absolute values because of x symmetry
+        assertEquals(0,c1XlEdgeCircle.y(),Utils.EPSILON_COLLISION);
 
        	Point2D c1Xl = c1.intersect(l).get();
-        assertTrue(Utils.almostEquals(Math.abs(c1Xl.x()),Math.abs(-45.83),Utils.EPSILON_COLLISION)); // absolute values because of x symmetry
-        assertTrue(Utils.almostEquals(c1Xl.y(),(20),Utils.EPSILON_COLLISION));
-       	
-    	
+       	assertEquals(Math.abs(-45.83),Math.abs(c1Xl.x()),Utils.EPSILON_COLLISION);// absolute values because of x symmetry
+        assertEquals(20,c1Xl.y(),Utils.EPSILON_COLLISION);
     }
     
     @Test void testIntersectsSegment() {
-
     	Point2D d1 = new Point2D(-70, 20);
     	Point2D a1 = new Point2D(90, -40);
     	Point2D d2 = new Point2D(-50, -60);
     	Position dEdge = new Position(-50, -20);
     	Position aEdge = new Position(-50, 20);
+    	Point2D A4 = new Point2D(-41,60);
+    	Point2D B4 = new Point2D(-11.5, 30);
+    	Point2D A5 = new Point2D(9,11);
+    	Point2D B5 = new Point2D(19,30);
+
     	
     	//lineSegment
-    	LineSegment2D ls = new LineSegment2D(d1,a1);
-    	LineSegment2D ls1 = new LineSegment2D(d2,a1);
-    	LineSegment2D lsEdgeCircle = new LineSegment2D(dEdge, aEdge);
-    	assertTrue(c1.collidesWith(ls));
+    	LineSegment2D ls = new LineSegment2D(d1,a1); // intersecting long line
+    	LineSegment2D ls1 = new LineSegment2D(d2,a1); // non intersecting long line
+    	LineSegment2D lsEdgeCircle = new LineSegment2D(dEdge, aEdge); // tangent line
+        LineSegment2D ovelapping = new LineSegment2D(A4,B4); // short overlapping line
+        LineSegment2D inner = new LineSegment2D(A5,B5); // short inner line
+        assertTrue(c1.collidesWith(ls));
     	assertFalse(c1.collidesWith(ls1));
     	assertTrue(c1.collidesWith(lsEdgeCircle));
+        assertTrue(c1.collidesWith(ovelapping));
+        assertTrue(c1.collidesWith(inner));
     	
     	//line 
     	Line2D l = new Line2D(d1,a1);
     	Line2D l1 = new Line2D(d2,a1);
+    	Line2D tangent = new Line2D(dEdge.getPoint2D(),aEdge.getPoint2D());
     	assertTrue(c1.intersects(l));
+    	assertTrue(c1.intersects(tangent));
     	assertFalse(c1.intersects(l1));
     }
     

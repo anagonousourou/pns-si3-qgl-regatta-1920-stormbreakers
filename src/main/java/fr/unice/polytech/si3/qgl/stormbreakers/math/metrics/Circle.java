@@ -74,7 +74,6 @@ public class Circle extends Shape {
      *         given relative to this shape's coordinates
      */
     public boolean collidesWith(LineSegment2D lineSegment2D) {
-        // TODO: 14/03/2020 Tests if missing (Full coverage)
         Line2D support = lineSegment2D.getSupportingLine();
         double distanceToCenter = support.distance(getAnchorPoint());
         double delta = distanceToCenter - radius;
@@ -111,7 +110,6 @@ public class Circle extends Shape {
      *         given relative to this shape's coordinates
      */
     public boolean intersects(Line2D line2D) {
-        // TODO: 14/03/2020 Tests if missing (Full coverage)
         double distanceToCenter = line2D.distance(getAnchorPoint());
         double delta = distanceToCenter - radius;
         // delta > 0 : No collision
@@ -228,9 +226,7 @@ public class Circle extends Shape {
      *
      * @throws UnsupportedOperationException if no intersection point found so if
      *                                       the segment wasn't intersecting in the
-     *                                       first place
-     *
-     * @author David Lebrisse - Stormbreakers
+     *                                       first placeF
      */
     Point2D findFirstIntersectingPoint(Line2D line2D) {
         // TODO: 05/03/2020 Tests
@@ -252,8 +248,6 @@ public class Circle extends Shape {
      * @throws UnsupportedOperationException if no intersection points found so if
      *                                       the segment wasn't intersecting in the
      *                                       first place
-     *
-     * @author David Lebrisse - Stormbreakers
      */
     Point2DPair findBothIntersectingPoints(Line2D line2D) {
         Point2D anchorProjection = line2D.projectOnto(getAnchorPoint());
@@ -280,8 +274,6 @@ public class Circle extends Shape {
      * @throws UnsupportedOperationException if no intersection point found so if
      *                                       the segment wasn't intersecting in the
      *                                       first place
-     *
-     * @author David Lebrisse - Stormbreakers
      */
     private Point2D findOneIntersection(LineSegment2D lineSegment2D) {
         // Calcul de l'intersection par dichotomie

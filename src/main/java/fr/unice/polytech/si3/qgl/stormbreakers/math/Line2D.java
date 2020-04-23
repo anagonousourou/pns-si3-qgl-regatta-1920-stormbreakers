@@ -47,8 +47,6 @@ public class Line2D {
      * parameter is the number k such that if the point belong to the line, its
      * location is given by P(k)=P0+k*direction, where P0 is the anchor. Note: The
      * point needs to be on the line.
-     * 
-     * @author David Lebrisse - Stormbreakers
      */
     public double lineParameterOf(Point2D p) {
         Vector relativeTranslation = new Vector(anchor, p);
@@ -60,7 +58,6 @@ public class Line2D {
      * x=x0+lineParameter*dx y=y0+lineParameter*dy
      * 
      * @return the projection
-     * @author David Lebrisse - Stormbreakers
      */
     public Point2D pointFromLineParameter(double lineParameter) {
         return anchor.getTranslatedBy(direction.scaleVector(lineParameter));
@@ -70,7 +67,6 @@ public class Line2D {
      * Computes the projection on the line of the point given by (x,y).
      * 
      * @return Point2D resulting from the projection
-     * @author David Lebrisse - Stormbreakers
      */
     public Point2D projectOnto(Point2D pointToProject) {
         Point2D projectionPoint;
@@ -90,7 +86,6 @@ public class Line2D {
      * 
      * @param other second line
      * @return if it exists, the intersection point
-     * @author David Lebrisse - Stormbreakers
      */
     public Optional<Point2D> intersect(Line2D other) {
         if (this.isVerticalLine() && other.isVerticalLine()) {

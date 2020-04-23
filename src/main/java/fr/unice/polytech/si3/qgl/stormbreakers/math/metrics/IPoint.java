@@ -10,7 +10,7 @@ public interface IPoint {
         return Math.hypot(other.x() - this.x(), other.y() - this.y());
     }
 
-    public static double distance(double x1, double y1, double x2, double y2) {
+    static double distance(double x1, double y1, double x2, double y2) {
         return Math.hypot(x2 - x1, y2 - y1);
     }
 
@@ -24,7 +24,7 @@ public interface IPoint {
      * @param p2 the last point
      * @return +1, 0 or -1, depending on the relative position of the points
      */
-    public static int ccw(IPoint p0, IPoint p1, IPoint p2) {
+    static int ccw(IPoint p0, IPoint p1, IPoint p2) {
         double x0 = p0.x();
         double y0 = p0.y();
         double dx1 = p1.x() - x0;
@@ -43,7 +43,7 @@ public interface IPoint {
         return 0;
     }
 
-    public static IPoint centerPoints(IPoint aPoint, IPoint bPoint) {
+    static IPoint centerPoints(IPoint aPoint, IPoint bPoint) {
         return new IPoint() {
 
             @Override

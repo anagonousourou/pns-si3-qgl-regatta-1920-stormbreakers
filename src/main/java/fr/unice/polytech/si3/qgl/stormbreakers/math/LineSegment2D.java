@@ -13,7 +13,6 @@ import fr.unice.polytech.si3.qgl.stormbreakers.exceptions.DegeneratedLine2DExcep
  * Line segment, defined as the set of points located between the two end
  * points.
  */
-// TODO: 16/04/2020 Remove @authors
 public class LineSegment2D {
 
 	/**
@@ -56,16 +55,7 @@ public class LineSegment2D {
 	 * @return true if the 2 line segments intersect
 	 */
 	public boolean intersects(LineSegment2D edge2) {
-
-		Point2D e1p1 = this.firstPoint();
-		Point2D e1p2 = this.lastPoint();
-		Point2D e2p1 = edge2.firstPoint();
-		Point2D e2p2 = edge2.lastPoint();
-
-		boolean b1 = IPoint.ccw(e1p1, e1p2, e2p1) * IPoint.ccw(e1p1, e1p2, e2p2) <= 0;
-		boolean b2 = IPoint.ccw(e2p1, e2p2, e1p1) * IPoint.ccw(e2p1, e2p2, e1p2) <= 0;
-
-		return b1 && b2;
+		return LineSegment2D.intersects(this,edge2);
 	}
 
 	/**
@@ -78,7 +68,6 @@ public class LineSegment2D {
 	 */
 	public static boolean intersects(LineSegment2D edge1, LineSegment2D edge2) {
 		// TODO: 07/03/2020 Rework if time
-		// TODO: 23/04/2020  Add lots of test cases HIGH PRIORITY
 		Point2D e1p1 = edge1.firstPoint();
 		Point2D e1p2 = edge1.lastPoint();
 		Point2D e2p1 = edge2.firstPoint();
@@ -93,7 +82,6 @@ public class LineSegment2D {
 	 * Returns the intersection with a given lineSegment
 	 * 
 	 * @return if exists the intersection point
-	 * @author David Lebrisse - Stormbreakers
 	 */
 	public Optional<Point2D> intersection(LineSegment2D other) {
 		Line2D thisSupport = this.getSupportingLine();
@@ -138,7 +126,6 @@ public class LineSegment2D {
 	 * 
 	 * @param point one of the bounding points
 	 * @return the opposite bounding point, or null if point is not a bounding point
-	 * @author David Lebrisse - Stormbreakers
 	 */
 	public Point2D oppositeBoundingPoint(Point2D point) {
 		if (point.equals(startPoint))
@@ -189,8 +176,6 @@ public class LineSegment2D {
 	 * segment The parameter is the number k in [0,1] such that if the point belong
 	 * to the line, its location is given by P(k)=P0+k*direction, where startPoint
 	 * is P(0) and endPoint is P(1) Note: The point needs to be on the line.
-	 * 
-	 * @author David Lebrisse - Stormbreakers
 	 */
 	public double segmentParameterOf(Point2D p) {
 		// TODO: 08/03/2020 Clamp k in [0,1] and corresponding tests
@@ -205,7 +190,6 @@ public class LineSegment2D {
 	 * in [0,1]
 	 * 
 	 * @return the projection
-	 * @author David Lebrisse - Stormbreakers
 	 */
 	public Point2D point(double segmentParameter) {
 		// TODO: 08/03/2020 Clamp k in [0,1] and corresponding tests
@@ -223,8 +207,6 @@ public class LineSegment2D {
 	/**
 	 * Gets the minimum distance from the point (x, y) to any point of this segment
 	 * line.
-	 * 
-	 * @author David Lebrisse - Stormbreakers
 	 */
 	public double distance(double x, double y) {
 		return distance(new Point2D(x, y));
@@ -232,8 +214,6 @@ public class LineSegment2D {
 
 	/**
 	 * Gets the minimum distance from the point P to any point of this segment line.
-	 * 
-	 * @author David Lebrisse - Stormbreakers
 	 */
 	public double distance(Point2D p) {
 		Line2D support = this.getSupportingLine();
@@ -268,7 +248,6 @@ public class LineSegment2D {
 	 * Computes the line segment point closest to a given point
 	 * 
 	 * @param point2D the given point
-	 * @author David Lebrisse - Stormbreakers
 	 */
 	public Point2D closestPointTo(Point2D point2D) {
 		Line2D support = this.getSupportingLine();
@@ -289,7 +268,6 @@ public class LineSegment2D {
 			double min = Math.min(distanceFromFirst, distanceFromLast);
 
 			if (Utils.almostEquals(min, distanceFromFirst))
-				// TODO: 23/04/2020 Test this case
 				return first;
 			else
 				return last;
@@ -301,7 +279,6 @@ public class LineSegment2D {
 	 * Computes the line supporting this line segment
 	 * 
 	 * @return supporting line
-	 * @author David Lebrisse - Stormbreakers
 	 */
 	public Line2D getSupportingLine() {
 		return new Line2D(this.firstPoint(), this.lastPoint());
@@ -311,7 +288,6 @@ public class LineSegment2D {
 	 * Computes the line supporting this line segment
 	 * 
 	 * @return supporting line
-	 * @author David Lebrisse - Stormbreakers
 	 */
 	public Point2D getMiddle() {
 		Point2D from = firstPoint();
@@ -323,7 +299,6 @@ public class LineSegment2D {
 	 * Checks if the given collinearPoint is in this line segment
 	 * 
 	 * @return true if it is the case, false if not
-	 * @author David Lebrisse - Stormbreakers
 	 */
 	public boolean isCollinearPointOnSegment(Point2D collinearPoint) {
 		Point2D from = firstPoint();
