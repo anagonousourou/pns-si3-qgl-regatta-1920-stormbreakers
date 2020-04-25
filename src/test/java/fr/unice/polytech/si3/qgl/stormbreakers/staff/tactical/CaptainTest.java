@@ -354,34 +354,4 @@ public class CaptainTest {
 
     }
 
-
-    @Test
-    public void shouldMoveWhenTargetVeryClose() throws ParsingException {
-            Boat boat=null;
-            CheckpointsManager checkpointsManager=mock(CheckpointsManager.class) ;
-            Navigator navigator=new Navigator();
-            WeatherAnalyst weatherAnalyst= mock(WeatherAnalyst.class);
-            when(weatherAnalyst.currentExternalSpeed()).thenReturn(0.0);
-            when(weatherAnalyst.potentialSpeedAcquirable()).thenReturn(0.0);
-            TargetDefiner targetDefiner=mock(TargetDefiner.class);
-            EquipmentsManager equipmentsManager= new EquipmentsManager(parser.fetchEquipments(gameData),
-                parser.fetchBoatWidth(gameData), parser);
-                var allSailors = this.parser.fetchAllSailors(gameData);
-
-        CrewManager crewManager = new CrewManager(allSailors);
-        
-        Coordinator coordinator=new Coordinator(crewManager, equipmentsManager);
-            when(targetDefiner.defineNextTarget()).thenReturn(new TupleDistanceOrientation(18.0,0.0,false) );
-            
-        
-            
-            Captain captain=new Captain(boat, checkpointsManager, navigator, weatherAnalyst, coordinator, targetDefiner);
-
-            List<SailorAction> actions=captain.nextRoundActions();
-
-            
-
-            assertTrue(actions.stream().anyMatch(action -> action.getType().equals(ActionType.OAR.actionCode)));
-    }
-
 }
