@@ -22,6 +22,12 @@ public class Polygon extends Shape implements Orientable {
         LEFT, RIGHT, MIDDLE
     }
 
+    /**
+     * 
+     * @param orientation
+     * @param vertices position des sommet par rapport au centre du polygon
+     * @param anchor
+     */
     public Polygon(double orientation, List<Point2D> vertices, Position anchor) {
         super("polygon", anchor);
         this.orientation = orientation;

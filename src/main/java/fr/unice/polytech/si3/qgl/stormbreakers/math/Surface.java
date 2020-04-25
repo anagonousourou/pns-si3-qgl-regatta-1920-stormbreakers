@@ -55,7 +55,6 @@ public interface Surface extends IPoint, Orientable {
 	 * @return
 	 */
 	default List<IPoint> avoidHit(IPoint depart, IPoint destination) {
-        // TODO: 23/04/2020 Finish/Add tests for circle and polygon
 		if (this.getShape().getType().equals("rectangle")) {
 			return Surface.avoidHitRectangle(this, depart, destination);
 		} else if (this.getShape().getType().equals("circle")) {
@@ -98,11 +97,9 @@ public interface Surface extends IPoint, Orientable {
 					return List.of(depart, fpt, secondPt.get(), destination);
 				}
 			} else {
-				// TODO: 23/04/2020 Add test case
 				return List.of(depart, fpt, destination);
 			}
 		}
-		// TODO: 23/04/2020 Add test case
 		return List.of(depart, destination);
 	}
 

@@ -20,6 +20,7 @@ public class SurfaceTest {
 	private Surface s;
 	private Surface surfaceCircle;
 	private Surface orientedSurface;
+	private Surface polygonsurface;	
 	private Position depart;
 	private Position destination;
 	private Position d1;
@@ -32,7 +33,7 @@ public class SurfaceTest {
 	private Rectangle rectangle;
 	private Rectangle rectangleOriented;
 	private Circle cercle;
-
+	private Polygon polygon;
 	private Surface carre;
 	private Surface triangle;
 	private LineSegment2D line1 = new LineSegment2D(new Point2D(0, 0), new Point2D(300, 300));
@@ -51,6 +52,13 @@ public class SurfaceTest {
 		cercle = new Circle(300);
 		s = new Recif(new Position(1000, 500.0), rectangle);
 		surfaceCircle = new Recif(new Position(1000, 500), cercle);
+		
+		polygon = new Polygon(0.0,
+				List.of(new Point2D(-150,-150),
+						new Point2D(250,150),
+						new Point2D(-200,200)),
+				new Position(0, 0));
+		polygonsurface = new Recif(new Position(1000, 500), polygon);
 		depart = new Position(0, 0);
 		destination = new Position(1200.0, 1200.0);
 		d1 = new Position(400, 900);
@@ -151,11 +159,19 @@ public class SurfaceTest {
 		// test Circle
         // TODO: 16/03/2020 Rethink this test
 		// assertTrue(avoidHitRectangleHelper(surfaceCircle, depart, d3));
-
+		
 		// test polygon
 		// TODO: 23/04/2020 Add tests with polygon
-
+		assertTrue(avoidHitRectangleHelper(polygonsurface, depart, d3));
+		assertTrue(avoidHitRectangleHelper(polygonsurface,depart, destination));
+		assertTrue(avoidHitRectangleHelper(polygonsurface,d1, a1));
+		assertTrue(avoidHitRectangleHelper(polygonsurface,a1, d1));
+		assertTrue(avoidHitRectangleHelper(polygonsurface,a2, d2));
+		assertTrue(avoidHitRectangleHelper(polygonsurface,d2, a2));
+		assertTrue(avoidHitRectangleHelper(polygonsurface,a2, d2));
 	}
+	
+
 
 	private boolean avoidHitRectangleHelper(Surface surface, Position depart, Position destination) {
 		List<IPoint> list = surface.avoidHit(depart, destination);
