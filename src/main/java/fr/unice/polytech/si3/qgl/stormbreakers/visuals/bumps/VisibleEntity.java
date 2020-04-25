@@ -1,6 +1,6 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.visuals.bumps;
 
-import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Shape;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Shape;
 import fr.unice.polytech.si3.qgl.stormbreakers.visuals.draw.Drawable;
 import fr.unice.polytech.si3.qgl.stormbreakers.visuals.draw.drawings.Drawing;
 

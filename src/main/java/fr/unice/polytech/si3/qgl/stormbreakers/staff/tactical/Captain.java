@@ -11,6 +11,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.math.Utils;
 import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.CheckpointsManager;
 import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.OarsConfig;
 import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.TargetDefiner;
+import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.TupleDistanceOrientation;
 import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.WeatherAnalyst;
 
 public class Captain {
@@ -26,6 +27,7 @@ public class Captain {
     private WeatherAnalyst weatherAnalyst;
 
     private TargetDefiner targetDefiner;
+    private TupleDistanceOrientation objectif;
 
     public Captain(Boat boat, CheckpointsManager checkpointsManager, Navigator navigator, WeatherAnalyst weatherAnalyst,
             Coordinator coordinator, TargetDefiner targetDefiner) {
@@ -53,10 +55,12 @@ public class Captain {
         if (destination == null) {
             return List.of();
         }
-
+        this.objectif=destination;
         double orientation = destination.getOrientation();
         double distance = destination.getDistance();
-        if (Math.abs(orientation) >= 0.05 && this.coordinator.rudderIsPresent() && this.coordinator.rudderIsAccesible()) {
+
+        
+        if (Math.abs(orientation) >= 0.05 && this.coordinator.rudderIsPresent() && this.coordinator.rudderIsAccesible() && !targetDefiner.curveTrajectoryIsSafe(objectif)) {
             
             distance = 0.0;
         }
@@ -251,8 +255,15 @@ public class Captain {
                     this.accelerate(distance, currentSpeed + minAdditionalSpeed));
 
         }
+
+        if(Utils.almostEquals(currentSpeed, 0.0) && objectif!=null && !objectif.isStrict()){
+            return this.validateActions(this.coordinator.addOaringSailorsOnEachSide());
+        }
+        
         return List.of();
 
     }
 
+
+    
 }

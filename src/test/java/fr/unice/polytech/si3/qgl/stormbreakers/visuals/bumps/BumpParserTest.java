@@ -1,8 +1,8 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.visuals.bumps;
 
-import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Polygon;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.ShapeType;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Polygon;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Position;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.ShapeType;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Recif;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

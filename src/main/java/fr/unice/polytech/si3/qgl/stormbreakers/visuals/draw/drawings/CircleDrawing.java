@@ -1,8 +1,8 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.visuals.draw.drawings;
 
 
-import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Circle;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Circle;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Position;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
 
 import java.awt.*;

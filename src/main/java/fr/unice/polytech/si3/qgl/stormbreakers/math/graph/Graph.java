@@ -6,8 +6,11 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.IPoint;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.processing.Logger;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.IPoint;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Shape;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.OceanEntity;
+import fr.unice.polytech.si3.qgl.stormbreakers.io.Logger;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.LineSegment2D;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Utils;
 import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.StreamManager;
@@ -115,8 +118,6 @@ public class Graph {
 
     }
 
-    
-
     // NEW
     public void calculateShortestPathFromSource(Sommet depart, Sommet destination, double ecart) {
         Sommet currentNode = null;
@@ -129,7 +130,7 @@ public class Graph {
 
         while (!unsettledNodes.isEmpty() && !settledNodes.contains(destination)) {
 
-            currentNode = getLowestDistanceNode(unsettledNodes,destination);
+            currentNode = getLowestDistanceNode(unsettledNodes, destination);
             unsettledNodes.remove(currentNode);
 
             if (!currentNode.computedAdj) {// si on n'a pas déja déterminé les noeuds adjacents de ce noeud
@@ -150,13 +151,29 @@ public class Graph {
         }
     }
 
+    List<Shape> determineShapesToConsider(Sommet vertex) {
+        List<Shape> obstacles = new ArrayList<>(15);
+        for (OceanEntity obstacle : this.streamManager.getBoatsAndReefs()) {
+            if (obstacle.isInsideWrappingSurface(streamManager.boatSecurityMargin(), vertex.getPoint())) {
+
+                obstacles.add(obstacle.getShape());
+            } else {
+                obstacles.add(obstacle.getShape().wrappingShape(streamManager.boatSecurityMargin()));
+            }
+        }
+
+        return obstacles;
+
+    }
+
     void computeAdjacentNodes(Sommet vertex, double ecart) {
+        List<Shape> obstacles = determineShapesToConsider(vertex);
         for (Sommet v : this.nodes) {
             if (!v.equals(vertex)) {
                 double distance = v.getPoint().distanceTo(vertex.getPoint());
 
-                if (distance <= ecart * Math.sqrt(2)
-                        && !this.streamManager.thereIsRecifsOrBoatsBetweenOrAround(vertex.getPoint(), v.getPoint())) {
+                if (distance <= ecart * Math.sqrt(2) && obstacles.stream().noneMatch(
+                        obstacle -> obstacle.collidesWith(new LineSegment2D(vertex.getPoint(), v.getPoint())))) {
                     double cout = distance - streamManager.speedProvided(vertex.getPoint(), v.getPoint())
                             - this.weatherAnalyst.speedProvided(vertex.getPoint(), v.getPoint());
                     if (cout < 0) {
@@ -170,13 +187,16 @@ public class Graph {
                 }
             }
         }
+
     }
 
     // NEW
-    public Sommet getLowestDistanceNode(Set<Sommet> unsettledNodes,Sommet destination) {
-        var optResult = unsettledNodes.stream().min((a, b) -> Double.compare(a.getDistance()+a.getPoint().distanceTo(destination.getPoint()), b.getDistance()+b.getPoint().distanceTo(destination.getPoint())));
+    public Sommet getLowestDistanceNode(Set<Sommet> unsettledNodes, Sommet destination) {
+        var optResult = unsettledNodes.stream()
+                .min((a, b) -> Double.compare(a.getDistance() + a.getPoint().distanceTo(destination.getPoint()),
+                        b.getDistance() + b.getPoint().distanceTo(destination.getPoint())));
 
-    	if (optResult.isPresent()) {
+        if (optResult.isPresent()) {
             return optResult.get();
         }
         Logger.getInstance().log(unsettledNodes.toString());
@@ -247,4 +267,5 @@ public class Graph {
         }
         return null;
     }
+
 }

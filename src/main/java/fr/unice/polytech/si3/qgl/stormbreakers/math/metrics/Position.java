@@ -1,11 +1,11 @@
-package fr.unice.polytech.si3.qgl.stormbreakers.data.metrics;
+package fr.unice.polytech.si3.qgl.stormbreakers.math.metrics;
 
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import fr.unice.polytech.si3.qgl.stormbreakers.Logable;
+import fr.unice.polytech.si3.qgl.stormbreakers.io.Logable;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Utils;
 import fr.unice.polytech.si3.qgl.stormbreakers.visuals.draw.Drawable;
@@ -13,9 +13,9 @@ import fr.unice.polytech.si3.qgl.stormbreakers.visuals.draw.drawings.Drawing;
 import fr.unice.polytech.si3.qgl.stormbreakers.visuals.draw.drawings.PosDrawing;
 
 public class Position implements Logable, IPoint , Drawable {
-    private double x;
-    private double y;
-    private double orientation;
+    private final double x;
+    private final double y;
+    private final double orientation;
 
     @JsonCreator
     public Position(@JsonProperty("x") double x, @JsonProperty("y") double y,
@@ -28,7 +28,7 @@ public class Position implements Logable, IPoint , Drawable {
     public Position(Position toCopy) {
        this(toCopy.x,toCopy.y,toCopy.orientation);
     }
-  
+
     public Position(IPoint point2D) {
         this(point2D.x(),point2D.y());
     }

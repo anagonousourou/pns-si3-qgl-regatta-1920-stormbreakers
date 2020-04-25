@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.IPoint;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.IPoint;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Utils;
 

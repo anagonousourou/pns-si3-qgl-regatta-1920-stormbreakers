@@ -5,10 +5,10 @@ import java.beans.PropertyChangeListener;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.core.JsonProcessingException;
 
-import fr.unice.polytech.si3.qgl.stormbreakers.data.processing.InputParser;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.processing.Logger;
+import fr.unice.polytech.si3.qgl.stormbreakers.exceptions.ParsingException;
+import fr.unice.polytech.si3.qgl.stormbreakers.io.InputParser;
+import fr.unice.polytech.si3.qgl.stormbreakers.io.Logger;
 
 public class Wind implements PropertyChangeListener {
     private double orientation = 0.0;
@@ -41,7 +41,7 @@ public class Wind implements PropertyChangeListener {
         try {
             this.orientation = this.parser.fetchWindOrientation(jString);
             this.strength = this.parser.fetchWindStrength(jString);
-        } catch (JsonProcessingException e) {
+        } catch (ParsingException e) {
             Logger.getInstance().logErrorMsg(e);
         }
 

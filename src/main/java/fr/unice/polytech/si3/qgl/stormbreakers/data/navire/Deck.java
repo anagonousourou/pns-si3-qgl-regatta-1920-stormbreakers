@@ -2,7 +2,7 @@ package fr.unice.polytech.si3.qgl.stormbreakers.data.navire;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import fr.unice.polytech.si3.qgl.stormbreakers.Logable;
+import fr.unice.polytech.si3.qgl.stormbreakers.io.Logable;
 
 public class Deck implements Logable {
     private int width;

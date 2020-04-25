@@ -7,13 +7,10 @@ import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.unice.polytech.si3.qgl.stormbreakers.Cockpit;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.*;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Circle;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Shape;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Gouvernail;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Oar;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Sail;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Sailor;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.*;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Circle;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Position;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Shape;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.*;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.IntPosition;
 import fr.unice.polytech.si3.qgl.stormbreakers.runner.game.GameConfig;
@@ -29,6 +26,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.visuals.draw.drawings.PosDrawing;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class Engine {

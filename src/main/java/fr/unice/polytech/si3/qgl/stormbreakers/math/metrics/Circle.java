@@ -1,4 +1,4 @@
-package fr.unice.polytech.si3.qgl.stormbreakers.data.metrics;
+package fr.unice.polytech.si3.qgl.stormbreakers.math.metrics;
 
 import java.util.AbstractMap;
 import java.util.Objects;

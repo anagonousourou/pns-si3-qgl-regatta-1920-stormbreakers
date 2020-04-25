@@ -1,8 +1,8 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.math;
 
-import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Rectangle;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Shape;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Position;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Rectangle;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Shape;
 
 public class RectangularSurface implements Surface {
     private double x;
