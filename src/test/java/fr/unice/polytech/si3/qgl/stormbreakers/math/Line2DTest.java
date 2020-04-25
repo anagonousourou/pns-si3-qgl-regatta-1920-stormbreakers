@@ -271,4 +271,13 @@ class Line2DTest {
         assertNotEquals(line1.hashCode(),line2.hashCode());
     }
 
+    @Test void testNormalizedDirection() {
+        Point2D start = new Point2D(0,0);
+        for (int i=-49; i<50; i+=10) {
+            for (int j=-49; j<50; j+=10) {
+                assertEquals(1, new Line2D(start,new Point2D(i,j)).getNormalizedDirection().norm(),Utils.EPSILON);
+            }
+        }
+    }
+
 }

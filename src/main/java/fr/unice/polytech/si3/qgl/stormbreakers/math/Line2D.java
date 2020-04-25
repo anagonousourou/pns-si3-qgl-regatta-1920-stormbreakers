@@ -150,7 +150,6 @@ public class Line2D {
         return new Vector(direction);
     }
 
-    // TODO: 23/04/2020 Tests
     public Vector getNormalizedDirection() {
         return getDirection().normalize();
     }
