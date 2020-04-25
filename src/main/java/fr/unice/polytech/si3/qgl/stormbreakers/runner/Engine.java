@@ -71,7 +71,7 @@ public class Engine {
         mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
         mapper.disable(MapperFeature.AUTO_DETECT_GETTERS);
 
-        int weekNum = 11;
+        int weekNum = 6;
         String weekInputsPath = RAW_PATH + "\\week" + weekNum;
 
         initGameJson = new String(Engine.class.getResourceAsStream( weekInputsPath+ "/initgame.json").readAllBytes());
@@ -90,7 +90,7 @@ public class Engine {
         engine.updateNextRound();
 
         System.out.println(engine.ship.getPosition());
-        for (int i=0; i<200; i++) {
+        for (int i=0; i<500; i++) {
             engine.runNextRound();
             System.out.println(engine.ship.getPosition());
         }
@@ -100,10 +100,17 @@ public class Engine {
         displayer.setStreams(engine.game.getStreams());
         displayer.setCheckpoints(engine.game.getCheckpoints());
 
+        /*
         engine.game.getCheckpoints().forEach(cp ->
                 {
                     String label = "#" + engine.game.getCheckpoints().indexOf(cp);
                     displayer.addDrawing(new LabelDrawing(label,cp.getDrawing().getPosition()));
+                }
+        );*/
+
+        engine.game.getReefs().forEach(r ->
+                {
+                    displayer.addDrawing(r.getShape().wrappingShape(engine.boat.securityMargin()).getDrawing());
                 }
         );
 
@@ -123,7 +130,11 @@ public class Engine {
         int nbOarsRightActive = equipmentsManager.nbRightOars() - equipmentsManager.unusedRightOars().size();
         int nbOarsLeftActive  = equipmentsManager.nbLeftOars() - equipmentsManager.unusedLeftOars().size();
         int nbOars = equipmentsManager.nbOars();
-        Gouvernail rudder = (Gouvernail) equipmentsManager.equipmentAt(equipmentsManager.rudderPosition()).orElse(null);
+        Gouvernail rudder = null;
+        if (equipmentsManager.rudderIsPresent()) {
+            Optional<Equipment> rudderOpt = equipmentsManager.equipmentAt(equipmentsManager.rudderPosition());
+            if (rudderOpt.isPresent()) rudder = (Gouvernail) rudderOpt.get();
+        }
         Wind wind = nextRound.getWind();
         List<Courant> streams = game.getStreams();
         int nbsail = equipmentsManager.nbSails();
