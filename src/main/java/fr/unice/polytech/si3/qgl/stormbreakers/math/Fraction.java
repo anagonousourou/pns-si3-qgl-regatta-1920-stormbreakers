@@ -146,8 +146,6 @@ public class Fraction {
 
     public void setValue(int numerator, int denominator) {
 
-        // TODO: 23/04/2020  Add test with positive denominator
-
         // Support negative numbers.
 
         if (denominator == 0) {

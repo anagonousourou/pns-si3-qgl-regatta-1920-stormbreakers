@@ -34,6 +34,15 @@ class FractionTest {
     void testEvalWhenSimple() {
         Fraction fraction = new Fraction(5, 2);
         assertEquals(2.5, fraction.eval());
+
+        fraction = new Fraction(-5, 2);
+        assertEquals(-2.5, fraction.eval());
+
+        fraction = new Fraction(5, -2);
+        assertEquals(-2.5, fraction.eval());
+
+        fraction = new Fraction(-5, -2);
+        assertEquals(2.5, fraction.eval());
     }
 
     /*

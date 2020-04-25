@@ -161,7 +161,6 @@ public class Point2D implements Logable, IPoint {
             return getRotatedBy(angle);
         }
 
-        // TODO: 23/04/2020 Test when rotated around a far away point
         Vector fromAnchorToThis = new Vector(anchorPoint, this);
         Vector rotatedVector = fromAnchorToThis.getRotatedBy(angle);
         return anchorPoint.getTranslatedBy(rotatedVector);

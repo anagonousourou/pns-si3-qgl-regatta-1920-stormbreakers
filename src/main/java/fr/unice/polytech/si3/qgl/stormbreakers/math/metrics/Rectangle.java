@@ -45,7 +45,6 @@ public class Rectangle extends Shape {
     }
 
     private Polygon buildAsPolygon() {
-        // TODO: 16/03/2020 Quick test if time
         double halfLength = height / 2;
         double halfWidth = width / 2;
 
@@ -117,10 +116,7 @@ public class Rectangle extends Shape {
 
     @Override
     public boolean collidesWith(LineSegment2D lineSegment2D) {
-
-        // TODO: 12/03/2020 Check/Fix polygon collision
         return new RectanglePositioned(this, this.getAnchor()).intersectsWith(lineSegment2D);
-
     }
 
     @Override

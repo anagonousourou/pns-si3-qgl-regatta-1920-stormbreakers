@@ -54,8 +54,6 @@ class PolygonTest {
         hexagon = new Polygon(0.0, List.of(hexA, hexB, hexC, hexD, hexE, hexF));
         orientedRectangle = new Polygon(0.5 * Math.PI, rectangleVertices);
 
-        // TODO: 04/03/2020 Also use Circle and Polygon in this test
-
         Point2D triA = new Point2D(0, 10);
         Point2D triB = new Point2D(-5, 0);
         Point2D triC = new Point2D(5, 0);
