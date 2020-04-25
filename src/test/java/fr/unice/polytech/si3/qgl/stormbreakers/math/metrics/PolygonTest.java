@@ -385,6 +385,12 @@ class PolygonTest {
         assertFalse(square.isInsideOpenShape(new Point2D(50,50)));
         assertFalse(square.isInsideOpenShape(new Point2D(50.5,50.5)));
 
+        Polygon squareRotated = new Polygon(Math.PI/4,points,anchor);
+        double maxY = Math.sqrt(2) * 50;
+        assertTrue(squareRotated.isInsideOpenShape(new Point2D(0,maxY-0.5)));
+        assertFalse(squareRotated.isInsideOpenShape(new Point2D(0,maxY)));
+        assertFalse(squareRotated.isInsideOpenShape(new Point2D(0,maxY+0.5)));
+
 
         points = new ArrayList<>(List.of(
                 new Point2D(0,50),
@@ -394,7 +400,7 @@ class PolygonTest {
         ));
         anchor = new Position(1000,1000);
         Polygon square2 = new Polygon(0,points,anchor);
-        assertTrue(square2.isInsideOpenShape(new Point2D(0,1049.5)));
-        assertFalse(square2.isInsideOpenShape(new Point2D(0,1050)));
-        assertFalse(square2.isInsideOpenShape(new Point2D(0,1050.5)));    }
+        assertTrue(square2.isInsideOpenShape(new Point2D(1000,1049.5)));
+        assertFalse(square2.isInsideOpenShape(new Point2D(1000,1050)));
+        assertFalse(square2.isInsideOpenShape(new Point2D(1000,1050.5)));    }
 }

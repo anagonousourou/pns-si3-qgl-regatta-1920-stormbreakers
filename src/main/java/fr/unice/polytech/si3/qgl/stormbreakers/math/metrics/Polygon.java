@@ -194,14 +194,14 @@ public class Polygon extends Shape implements Orientable {
         Vector borderVector = new Vector(a, b);
         Vector toCompare = new Vector(a, t);
 
-        double scal = Vector.crossZ(borderVector, toCompare);
+        double val = Vector.crossZ(borderVector, toCompare);
 
         Side side = null;
-        if (Utils.almostEquals(scal, 0))
+        if (Utils.almostEquals(val, 0))
             side = Side.MIDDLE;
-        else if (scal < 0)
+        else if (val < 0)
             side = Side.LEFT;
-        else if (scal > 0)
+        else if (val > 0)
             side = Side.RIGHT;
 
         return side;
@@ -249,8 +249,29 @@ public class Polygon extends Shape implements Orientable {
 
     @Override
     public boolean isInsideOpenShape(IPoint pt) {
-        // TODO Test
-        return isPtInside(pt);
+        Iterator<LineSegment2D> it = bordersActualPos.iterator();
+        Side lastSide = null;
+
+        while (it.hasNext()) {
+            LineSegment2D currentBorder = it.next();
+
+            Side currentSide = getPointSideComparedToVector(currentBorder.firstPoint(), currentBorder.lastPoint(),
+                    pt);
+
+            if (currentSide==Side.MIDDLE) return false; // The point is on one of the borders
+
+            if (lastSide == null) {
+                // Side of point compared to one edge
+                lastSide = currentSide;
+            } else if (currentSide != lastSide) {
+                // If the point changes side when cycling through borders
+                // The point is outside the CONVEX polygon
+                return false;
+            }
+        }
+
+        // If we reach here then the point is inside
+        return true;
     }
 
     @Override
