@@ -222,7 +222,6 @@ public class Circle extends Shape {
      *                                       first place
      */
     Point2D findFirstIntersectingPoint(Line2D line2D) {
-        // TODO: 05/03/2020 Tests
         Point2D anchorProjection = line2D.projectOnto(getAnchorPoint());
         Vector normalizedLineDirection = line2D.getNormalizedDirection();
         Point2D bounding1 = anchorProjection.getTranslatedBy(normalizedLineDirection.scaleVector(radius));
@@ -348,7 +347,6 @@ public class Circle extends Shape {
 
     @Override
     public IPoint intersectionPoint(IPoint depart, IPoint arrive) {
-        // TODO: 23/04/2020 Code to test
         LineSegment2D lineSegment2D = new LineSegment2D(depart, arrive);
         return this.findOneIntersection(lineSegment2D);
     }

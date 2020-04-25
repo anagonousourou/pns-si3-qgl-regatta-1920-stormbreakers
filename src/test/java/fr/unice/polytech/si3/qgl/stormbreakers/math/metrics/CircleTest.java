@@ -191,7 +191,6 @@ class CircleTest {
     	assertEquals(result1,c1.findBothIntersectingPoints(l).getFirst());
     	assertEquals(result2,c1.findBothIntersectingPoints(l).getSecond());
 
-        // TODO: 23/04/2020 Find first intersecting point tests
         Line2D above = new Line2D(new Point2D(-1,80),new Point2D(1, 80));
         assertThrows(UnsupportedOperationException.class, () -> c1.findFirstIntersectingPoint(above));
 

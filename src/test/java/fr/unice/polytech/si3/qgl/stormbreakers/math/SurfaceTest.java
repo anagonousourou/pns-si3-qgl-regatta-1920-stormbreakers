@@ -153,7 +153,7 @@ public class SurfaceTest {
 		// assertTrue(avoidHitRectangleHelper(surfaceCircle, depart, d3));
 
 		// test polygon
-		// TODO: 23/04/2020 Add tests
+		// TODO: 23/04/2020 Add tests with polygon
 
 	}
 

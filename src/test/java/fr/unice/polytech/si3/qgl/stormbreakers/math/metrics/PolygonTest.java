@@ -228,6 +228,10 @@ class PolygonTest {
         assertTrue(triangle.collidesWith(upsideDownTriangleEdgeToEdge));
         assertFalse(triangle.collidesWith(upsideDownTriangleApart));
 
+
+        // Very far appart
+        Polygon rectangleFarApart = new Polygon(0, rectangleVertices, new Position(10000, 10000));
+        assertFalse(orientedRectangle.collidesWith(rectangleFarApart)); // No collision
     }
 
     @Test
@@ -347,4 +351,50 @@ class PolygonTest {
         assertTrue(polyReIsland.collidesWith(segmentBC));
     }
 
+    @Test void testBoundingCircle() {
+        List<Point2D> points = new ArrayList<>(List.of(
+           new Point2D(50,50),
+           new Point2D(-50,50),
+           new Point2D(-50,-50),
+           new Point2D(50,-50)
+        ));
+        Position anchor = new Position(1000,1000);
+        Polygon square = new Polygon(0,points,anchor);
+        assertEquals(new Circle(50*Math.sqrt(2), anchor),square.getBoundingCircle());
+
+        points = new ArrayList<>(List.of(
+                new Point2D(0,100),
+                new Point2D(-50,-50),
+                new Point2D(50,-50)
+        ));
+        anchor = new Position(0,0);
+        Polygon triangle = new Polygon(0,points,anchor);
+        assertEquals(new Circle(100, anchor),triangle.getBoundingCircle());
+    }
+
+    @Test void testIsPointInsideOpenShape() {
+        List<Point2D> points = new ArrayList<>(List.of(
+                new Point2D(50,50),
+                new Point2D(-50,50),
+                new Point2D(-50,-50),
+                new Point2D(50,-50)
+        ));
+        Position anchor = new Position(0,0);
+        Polygon square = new Polygon(0,points,anchor);
+        assertTrue(square.isInsideOpenShape(new Point2D(49.5,49.5)));
+        assertFalse(square.isInsideOpenShape(new Point2D(50,50)));
+        assertFalse(square.isInsideOpenShape(new Point2D(50.5,50.5)));
+
+
+        points = new ArrayList<>(List.of(
+                new Point2D(0,50),
+                new Point2D(-50,0),
+                new Point2D(0,-50),
+                new Point2D(50,0)
+        ));
+        anchor = new Position(1000,1000);
+        Polygon square2 = new Polygon(0,points,anchor);
+        assertTrue(square2.isInsideOpenShape(new Point2D(0,1049.5)));
+        assertFalse(square2.isInsideOpenShape(new Point2D(0,1050)));
+        assertFalse(square2.isInsideOpenShape(new Point2D(0,1050.5)));    }
 }

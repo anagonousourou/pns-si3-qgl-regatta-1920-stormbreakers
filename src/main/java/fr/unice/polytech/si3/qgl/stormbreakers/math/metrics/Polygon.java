@@ -109,7 +109,6 @@ public class Polygon extends Shape implements Orientable {
     public boolean collidesWith(Polygon polygon) {
         if (!this.getBoundingCircle().collidesWith(polygon.getBoundingCircle())) {
             // Bounding circles don't even intersect
-            // TODO: 23/04/2020 test when bounding circles don't collide
             return false;
         }
 
@@ -234,8 +233,8 @@ public class Polygon extends Shape implements Orientable {
     }
 
     public double getMaxRadius() {
-        IPoint center = getAnchorPoint();
-        var optfarPt = this.vertices.stream().max((a, b) -> Double.compare(center.distanceTo(a), center.distanceTo(b)));
+        IPoint center = new Point2D(0,0);
+        var optfarPt = this.vertices.stream().max(Comparator.comparingDouble(center::distanceTo));
 
         if (optfarPt.isPresent()) {
             return center.distanceTo(optfarPt.get());
