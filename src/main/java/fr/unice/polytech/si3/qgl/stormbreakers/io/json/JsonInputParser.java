@@ -8,13 +8,13 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Equipment;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Gouvernail;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Rudder;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Oar;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Sail;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Sailor;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Vigie;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Watch;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Checkpoint;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Courant;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Stream;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.OceanEntity;
 import fr.unice.polytech.si3.qgl.stormbreakers.exceptions.ParsingException;
 import fr.unice.polytech.si3.qgl.stormbreakers.io.InputParser;
@@ -105,13 +105,13 @@ public class JsonInputParser implements InputParser {
 				if (e.get("type").asText().equals("oar")) {
 					equipment = new Oar(e.get(XKEY).asInt(), e.get(YKEY).asInt());
 				} else if (e.get("type").asText().equals("rudder")) {
-					equipment = new Gouvernail(e.get(XKEY).asInt(), e.get(YKEY).asInt());
+					equipment = new Rudder(e.get(XKEY).asInt(), e.get(YKEY).asInt());
 				} else if (e.get("type").asText().equals("sail")) {
 
 					equipment = new Sail(e.get(XKEY).asInt(), e.get(YKEY).asInt(), e.get("openned").asBoolean());
 
 				} else if (e.get("type").asText().equals("watch")) {
-					equipment = new Vigie(e.get(XKEY).asInt(), e.get(YKEY).asInt());
+					equipment = new Watch(e.get(XKEY).asInt(), e.get(YKEY).asInt());
 					// ---
 				}
 
@@ -228,7 +228,7 @@ public class JsonInputParser implements InputParser {
 	 */
 
 	@Override
-	public List<Courant> fetchStreams(String jString) throws ParsingException {
+	public List<Stream> fetchStreams(String jString) throws ParsingException {
 
 		JsonNode visibleEntities;
 		try {
@@ -237,7 +237,7 @@ public class JsonInputParser implements InputParser {
 				return List.of();
 			} else {
 				return mapper.readValue(visibleEntities.toString(),
-						mapper.getTypeFactory().constructCollectionType(List.class, Courant.class));
+						mapper.getTypeFactory().constructCollectionType(List.class, Stream.class));
 			}
 		} catch (JsonProcessingException e) {
 			throw new ParsingException(e);

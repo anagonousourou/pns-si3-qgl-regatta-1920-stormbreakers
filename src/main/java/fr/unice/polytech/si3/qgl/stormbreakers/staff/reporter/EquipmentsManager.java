@@ -8,10 +8,10 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Equipment;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Gouvernail;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Rudder;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Oar;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Sail;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Vigie;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Watch;
 import fr.unice.polytech.si3.qgl.stormbreakers.exceptions.ParsingException;
 import fr.unice.polytech.si3.qgl.stormbreakers.io.InputParser;
 import fr.unice.polytech.si3.qgl.stormbreakers.io.Logger;
@@ -23,8 +23,8 @@ public class EquipmentsManager implements PropertyChangeListener {
     private List<Oar> rightOars;
     private List<Oar> oars;
     private List<Sail> sails;
-    private Gouvernail rudder = null;
-    private Vigie watch;
+    private Rudder rudder = null;
+    private Watch watch;
     
     private List<Equipment> equipments;
     private InputParser parser;
@@ -51,13 +51,13 @@ public class EquipmentsManager implements PropertyChangeListener {
             this.leftOars = this.oars.stream().filter(oar -> oar.y() < widthship / 2).collect(Collectors.toList());
             this.rightOars = this.oars.stream().filter(oar -> oar.y() >= widthship / 2).collect(Collectors.toList());
         }
-        var optRuddder = this.equipments.stream().filter(e -> e.getType().equals("rudder")).map(e -> (Gouvernail) e)
+        var optRuddder = this.equipments.stream().filter(e -> e.getType().equals("rudder")).map(e -> (Rudder) e)
                 .findFirst();
         optRuddder.ifPresent(gouvernail -> this.rudder = gouvernail);
         
-        Optional<Vigie> optVigie = this.equipments.stream().filter(e -> e.getType().equals("watch")).map(e -> (Vigie) e)
+        Optional<Watch> optWatch = this.equipments.stream().filter(e -> e.getType().equals("watch")).map(e -> (Watch) e)
                 .findFirst();
-        optVigie.ifPresent(vigie -> this.watch = vigie);
+        optWatch.ifPresent(watch -> this.watch = watch);
     }
 
     /**
@@ -155,7 +155,7 @@ public class EquipmentsManager implements PropertyChangeListener {
      * 
      * @param isOpened
      * @return List<Sail> - liste de voile ouverte si true sinon retourne les voiles
-     *         baisse
+     *         baissees
      */
     public List<Sail> sails(boolean isOpened) {
         if (isOpened) {

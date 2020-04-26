@@ -17,10 +17,10 @@ import fr.unice.polytech.si3.qgl.stormbreakers.math.RectanglePositioned;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Utils;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Vector;
 
-public class Courant extends OceanEntity {
+public class Stream extends OceanEntity {
     private double strength;
 
-    public Courant(@JsonProperty("position") Position position, @JsonProperty("shape") Shape shape,
+    public Stream(@JsonProperty("position") Position position, @JsonProperty("shape") Shape shape,
             @JsonProperty("strength") double strength) {
         super("stream", position, shape);
         this.strength = strength;
@@ -32,7 +32,7 @@ public class Courant extends OceanEntity {
 
     @Override
     public String toString() {
-        return String.format("%s(strength= %f, position= %s, shape= %s)", OceanEntityType.COURANT.shortCode, strength,
+        return String.format("%s(strength= %f, position= %s, shape= %s)", OceanEntityType.STREAM.shortCode, strength,
                 position.toString(), shape.toString());
     }
 
@@ -161,7 +161,7 @@ public class Courant extends OceanEntity {
 
     @Override
     public OceanEntityType getEnumType() {
-        return OceanEntityType.COURANT;
+        return OceanEntityType.STREAM;
     }
 
 }

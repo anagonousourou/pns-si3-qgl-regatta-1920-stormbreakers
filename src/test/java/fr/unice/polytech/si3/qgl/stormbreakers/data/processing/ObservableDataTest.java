@@ -75,7 +75,7 @@ public class ObservableDataTest {
         observableData.setValue(round2);
 
         assertEquals(1, streamManager.getStreams().size());
-        assertEquals(11, streamManager.getRecifs().size());
+        assertEquals(11, streamManager.getReefs().size());
         assertEquals(13, streamManager.getObstacles().size());
 
         

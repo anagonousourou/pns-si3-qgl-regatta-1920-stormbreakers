@@ -10,19 +10,19 @@ import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.IPoint;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Utils;
 
-public class Sommet {
+public class Vertex {
 	private IPoint point;
-	private List<Sommet> shortestPath = new ArrayList<>(30);
+	private List<Vertex> shortestPath = new ArrayList<>(30);
 	private int distance = Integer.MAX_VALUE;
-	private Map<Sommet, Integer> adjacentNodes = new HashMap<>();
+	private Map<Vertex, Integer> adjacentNodes = new HashMap<>();
 	boolean extended = false;
 	boolean computedAdj= false;
 
-	public Sommet(IPoint pt) {
+	public Vertex(IPoint pt) {
 		point = new Point2D(pt);
 	}
 
-	public Sommet(double x, double y) {
+	public Vertex(double x, double y) {
 		point = new Point2D(x, y);
 	}
 
@@ -40,17 +40,17 @@ public class Sommet {
 		if (this == other) {
 			return true;
 		}
-		if (!(other instanceof Sommet)) {
+		if (!(other instanceof Vertex)) {
 			return false;
 		}
 
-		Sommet s = (Sommet) other;
+		Vertex s = (Vertex) other;
 
 		return Utils.almostEquals(s.getPoint(), this.getPoint());
 
 	}
 
-	public void addDestination(Sommet destination, int distance) {
+	public void addDestination(Vertex destination, int distance) {
 		adjacentNodes.putIfAbsent(destination, distance);
 	}
 
@@ -75,15 +75,15 @@ public class Sommet {
 		this.distance = distance;
 	}
 
-	public List<Sommet> getShortestPath() {
+	public List<Vertex> getShortestPath() {
 		return this.shortestPath;
 	}
 
-	public void setShortestPath(List<Sommet> shortestPath2) {
+	public void setShortestPath(List<Vertex> shortestPath2) {
 		this.shortestPath = shortestPath2;
 	}
 
-	public Map<Sommet, Integer> getAdjacentNodes() {
+	public Map<Vertex, Integer> getAdjacentNodes() {
 		return this.adjacentNodes;
 	}
 

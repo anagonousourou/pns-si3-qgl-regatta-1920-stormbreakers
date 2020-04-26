@@ -19,7 +19,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.OarAction;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.SailorAction;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.Turn;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Equipment;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Gouvernail;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Rudder;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Oar;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Sailor;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Boat;
@@ -69,11 +69,11 @@ public class CaptainTest {
         var m2 = new Sailor(2, 2, 2);
         var m3 = new Sailor(3, 3, 3);
         var m4 = new Sailor(4, 4, 4);
-        List<Sailor> marins = List.of(m1, m2, m3, m4);
-        CrewManager crewManager = new CrewManager(marins);
+        List<Sailor> sailors = List.of(m1, m2, m3, m4);
+        CrewManager crewManager = new CrewManager(sailors);
         EquipmentsManager equipmentsManager = mock(EquipmentsManager.class);
 
-        marins.forEach(m -> assertFalse(m.isDoneTurn(), "par défaut  doneTurn est à false"));
+        sailors.forEach(m -> assertFalse(m.isDoneTurn(), "par défaut  doneTurn est à false"));
 
         Coordinator coordinator = new Coordinator(crewManager, equipmentsManager);
 
@@ -152,7 +152,7 @@ public class CaptainTest {
                 new Sailor(2, new IntPosition(1, 0)), new Sailor(3, new IntPosition(1, 1)));
         CrewManager crewManager = new CrewManager(sailors);
         List<Equipment> equipments = List.of(new Oar(0, 0), new Oar(1, 0), new Oar(0, 1), new Oar(1, 1),
-                new Gouvernail(2, 2));
+                new Rudder(2, 2));
         EquipmentsManager equipmentsManager = new EquipmentsManager(equipments, 3);
         Coordinator coordinator = new Coordinator(crewManager, equipmentsManager);
         Navigator navigator = new Navigator();
@@ -179,7 +179,7 @@ public class CaptainTest {
                 new Sailor(2, new IntPosition(1, 0)), new Sailor(3, new IntPosition(1, 1)));
         CrewManager crewManager = new CrewManager(sailors);
         List<Equipment> equipments = List.of(new Oar(0, 0), new Oar(1, 0), new Oar(0, 1), new Oar(1, 1),
-                new Gouvernail(2, 2));
+                new Rudder(2, 2));
         EquipmentsManager equipmentsManager = new EquipmentsManager(equipments, 3);
         Coordinator coordinator = new Coordinator(crewManager, equipmentsManager);
         Navigator navigator = new Navigator();
@@ -205,7 +205,7 @@ public class CaptainTest {
                 new Sailor(2, new IntPosition(1, 0)), new Sailor(3, new IntPosition(1, 1)));
         CrewManager crewManager = new CrewManager(sailors);
         List<Equipment> equipments = List.of(new Oar(0, 0), new Oar(1, 0), new Oar(0, 1), new Oar(1, 1),
-                new Gouvernail(0, 2));
+                new Rudder(0, 2));
         EquipmentsManager equipmentsManager = new EquipmentsManager(equipments, 2);
         Coordinator coordinator = new Coordinator(crewManager, equipmentsManager);
         Navigator navigator = new Navigator();
@@ -228,7 +228,7 @@ public class CaptainTest {
         List<Sailor> sailors = List.of(new Sailor(0, new IntPosition(0, 0)), new Sailor(1, new IntPosition(0, 1)),
                 new Sailor(2, new IntPosition(1, 0)), new Sailor(3, new IntPosition(1, 1)));
         CrewManager crewManager = new CrewManager(sailors);
-        List<Equipment> equipments = List.of(new Gouvernail(0, 0));
+        List<Equipment> equipments = List.of(new Rudder(0, 0));
         EquipmentsManager equipmentsManager = new EquipmentsManager(equipments, 2);
         Coordinator coordinator = new Coordinator(crewManager, equipmentsManager);
         Navigator navigator = new Navigator();
@@ -253,7 +253,7 @@ public class CaptainTest {
         CrewManager crewManager = new CrewManager(sailors);
         List<Equipment> equipments = List.of(
 
-                new Oar(0, 0), new Oar(1, 0), new Oar(0, 1), new Oar(1, 1), new Gouvernail(2, 2));
+                new Oar(0, 0), new Oar(1, 0), new Oar(0, 1), new Oar(1, 1), new Rudder(2, 2));
         EquipmentsManager equipmentsManager = new EquipmentsManager(equipments, 2);
         Coordinator coordinator = new Coordinator(crewManager, equipmentsManager);
         Navigator navigator = new Navigator();

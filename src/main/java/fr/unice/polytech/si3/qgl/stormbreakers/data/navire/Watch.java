@@ -1,8 +1,8 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.data.navire;
 
-public class Vigie extends Equipment {
+public class Watch extends Equipment {
 
-    public Vigie(int x, int y) {
+    public Watch(int x, int y) {
         super(EquipmentType.WATCH.code, x, y);
     }
 

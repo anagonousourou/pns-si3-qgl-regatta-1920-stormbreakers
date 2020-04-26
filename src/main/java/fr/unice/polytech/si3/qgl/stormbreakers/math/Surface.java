@@ -9,7 +9,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Polygon;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Position;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Rectangle;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Shape;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Recif;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Reef;
 
 /**
  * Represents entities that have a positioned shape
@@ -62,13 +62,13 @@ public interface Surface extends IPoint, Orientable {
 		} else if (this.getShape().getType().equals("circle")) {
 			Position position = new Position(this.x(), this.y());
 			Circle c = (Circle) this.getShape();
-			Recif recif = new Recif(position, new Rectangle(c.getRadius() * 2, c.getRadius() * 2, 0));
+			Reef recif = new Reef(position, new Rectangle(c.getRadius() * 2, c.getRadius() * 2, 0));
 			return Surface.avoidHitRectangle(recif, depart, destination);
 		} else {
 			Polygon polygon = (Polygon) this.getShape();
 			double r = polygon.getMaxRadius();
 			Position position = new Position(this.x(), this.y());
-			Recif recif = new Recif(position, new Rectangle(r * 2, r * 2, 0));
+			Reef recif = new Reef(position, new Rectangle(r * 2, r * 2, 0));
 			return Surface.avoidHitRectangle(recif, depart, destination);
 		}
 	}

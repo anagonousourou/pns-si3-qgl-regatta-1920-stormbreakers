@@ -6,10 +6,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Position;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Shape;
 
-public class Recif extends OceanEntity {
+public class Reef extends OceanEntity {
 
     @JsonCreator
-    public Recif(@JsonProperty("position") Position position, @JsonProperty("shape") Shape shape) {
+    public Reef(@JsonProperty("position") Position position, @JsonProperty("shape") Shape shape) {
         super("reef", position, shape);
     }
 
@@ -21,7 +21,7 @@ public class Recif extends OceanEntity {
 
     @Override
     public OceanEntityType getEnumType() {
-        return OceanEntityType.RECIF;
+        return OceanEntityType.REEF;
     }
 
     @Override
