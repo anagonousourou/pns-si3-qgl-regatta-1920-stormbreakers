@@ -233,32 +233,6 @@ public class StreamManager implements PropertyChangeListener {
     }
 
     /**
-     * Lets define a trajectory as a list of points such that 1- the last point is
-     * the destination 2- the first is the boat position 3- if we remove any point
-     * in the middle the path will collide with an obstacle
-     * 
-     * in this method we assume that both the boat and the destination are not
-     * inside a stream
-     * 
-     * @return
-     */
-    public List<IPoint> trajectoryToAvoidObstacles(IPoint depart, IPoint destination) {
-        if (this.thereIsObstacleBetween(depart, destination)) {
-            OceanEntity obstacleEntity = this.firstObstacleBetween(depart, destination);
-            if (obstacleEntity.getEnumType().equals(OceanEntityType.COURANT)) {
-                Courant courant = (Courant) obstacleEntity;
-                if (!courant.isCompatibleWith(depart, destination)) {
-                    return courant.avoidHit(depart, destination);
-                }
-            } else {// reef
-                return obstacleEntity.avoidHit(depart, destination);
-            }
-        }
-
-        return List.of(depart, destination);
-    }
-
-    /**
      * We assume boatPoint and checkPoint are in the same stream
      * 
      * @param boatPoint

@@ -136,56 +136,8 @@ public class SurfaceTest {
 		assertTrue(triangle.intersectsWith(lineTriangle1));
 		assertFalse(triangle.intersectsWith(lineTriangle2));
 		assertTrue(triangle.intersectsWith(lineTriangle3));
-	}
-
-	@Test
-	public void avoidHitTest() {
-		// Test Rectangle
-		
-		assertTrue(avoidHitRectangleHelper(s,depart, destination));
-		assertTrue(avoidHitRectangleHelper(s,d1, a1));
-		assertTrue(avoidHitRectangleHelper(s,a1, d1));
-		assertTrue(avoidHitRectangleHelper(s,a2, d2));
-		assertTrue(avoidHitRectangleHelper(s,d2, a2));
-		assertTrue(avoidHitRectangleHelper(s,a2, d2));
-		
-		assertFalse(orientedSurface.isPtInside(d2));
-		assertFalse(orientedSurface.isPtInside(a2));
-		var segment = new LineSegment2D(a2, d2);
-		assertTrue(orientedSurface.intersectsWith(segment));
-
-		assertTrue(avoidHitRectangleHelper(orientedSurface, d2, a2));
-
-		// test Circle
-        // TODO: 16/03/2020 Rethink this test
-		// assertTrue(avoidHitRectangleHelper(surfaceCircle, depart, d3));
-		
-		// test polygon
-		// TODO: 23/04/2020 Add tests with polygon
-		assertTrue(avoidHitRectangleHelper(polygonsurface, depart, d3));
-		assertTrue(avoidHitRectangleHelper(polygonsurface,depart, destination));
-		assertTrue(avoidHitRectangleHelper(polygonsurface,d1, a1));
-		assertTrue(avoidHitRectangleHelper(polygonsurface,a1, d1));
-		assertTrue(avoidHitRectangleHelper(polygonsurface,a2, d2));
-		assertTrue(avoidHitRectangleHelper(polygonsurface,d2, a2));
-		assertTrue(avoidHitRectangleHelper(polygonsurface,a2, d2));
-	}
+	}	
 	
-
-
-	private boolean avoidHitRectangleHelper(Surface surface, Position depart, Position destination) {
-		List<IPoint> list = surface.avoidHit(depart, destination);
-		
-		for (int i = 0; i < list.size() - 1; i++) {
-			LineSegment2D l = new LineSegment2D(list.get(i), list.get(i + 1));
-			if (surface.intersectsWith(l)) {
-				
-				return false;
-			}
-
-		}
-		return true;
-	}
 
 	
 }
