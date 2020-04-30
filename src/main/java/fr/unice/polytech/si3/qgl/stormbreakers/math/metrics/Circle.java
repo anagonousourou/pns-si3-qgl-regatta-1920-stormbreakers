@@ -176,8 +176,15 @@ public class Circle extends Shape {
             return Optional.of(this.projectOntoEdge(linePoint));
         } else {
             // Two Intersections
-            Point2D anIntersection = this.findFirstIntersectingPoint(line2D);
-            return Optional.of(anIntersection);
+            Point2D anIntersection;
+            try {
+                anIntersection = this.findFirstIntersectingPoint(line2D);
+                return Optional.of(anIntersection);
+            } catch (UnsupportedOperationException e) {
+                e.printStackTrace();
+                return Optional.empty();
+            }
+
         }
     }
 
@@ -251,8 +258,22 @@ public class Circle extends Shape {
         LineSegment2D firstLineSegment = new LineSegment2D(anchorProjection, bounding1);
         LineSegment2D secondLineSegment = new LineSegment2D(anchorProjection, bounding2);
 
-        Point2D firstIntersection = findOneIntersection(firstLineSegment);
-        Point2D secondIntersection = findOneIntersection(secondLineSegment);
+        Point2D firstIntersection;
+        try {
+            firstIntersection = findOneIntersection(firstLineSegment);
+        } catch (UnsupportedOperationException e) {
+            e.printStackTrace();
+            firstIntersection = null;
+        }
+
+        Point2D secondIntersection;
+        try {
+            secondIntersection = findOneIntersection(secondLineSegment);
+        } catch (UnsupportedOperationException e) {
+            e.printStackTrace();
+            secondIntersection = null;
+        }
+
         return new Point2DPair(firstIntersection, secondIntersection);
     }
 
@@ -345,10 +366,23 @@ public class Circle extends Shape {
         return distFromCenter(pt) < radius;
     }
 
+    /**
+     * Given any point pair, returns if it exists, the intersection point
+     * else returns {@code null};
+     */
     @Override
     public IPoint intersectionPoint(IPoint depart, IPoint arrive) {
         LineSegment2D lineSegment2D = new LineSegment2D(depart, arrive);
-        return this.findOneIntersection(lineSegment2D);
+        Point2D intersection;
+
+        try {
+            intersection = findOneIntersection(lineSegment2D);
+        } catch (UnsupportedOperationException e) {
+            e.printStackTrace();
+            intersection = null;
+        }
+
+        return intersection;
     }
 
     @Override
