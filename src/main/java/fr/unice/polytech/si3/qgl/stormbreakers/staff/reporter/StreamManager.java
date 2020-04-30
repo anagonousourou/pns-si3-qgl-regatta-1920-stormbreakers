@@ -8,10 +8,10 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Boat;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Courant;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Stream;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.OceanEntity;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.OceanEntityType;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Recif;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Reef;
 import fr.unice.polytech.si3.qgl.stormbreakers.exceptions.ParsingException;
 import fr.unice.polytech.si3.qgl.stormbreakers.io.InputParser;
 import fr.unice.polytech.si3.qgl.stormbreakers.io.Logger;
@@ -23,11 +23,11 @@ import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.IPoint;
  */
 public class StreamManager implements PropertyChangeListener {
 
-    private List<Courant> courants;
+    private List<Stream> courants;
 
     private List<OceanEntity> obstacles;
     private List<OceanEntity> boatsAndReefs;
-    private List<Recif> recifs;
+    private List<Reef> recifs;
     private final InputParser parser;
     private final Boat boat;
 
@@ -82,7 +82,7 @@ public class StreamManager implements PropertyChangeListener {
      * @return the stream the boat is inside null if the boat is not inside any
      *         stream
      */
-    public Courant streamAroundBoat() {
+    public Stream streamAroundBoat() {
         var optCourant = this.courants.stream().filter(courant -> courant.isPtInside(boat)).findAny();
         if (optCourant.isPresent()) {
             return optCourant.get();
@@ -96,7 +96,7 @@ public class StreamManager implements PropertyChangeListener {
      * @param point
      * @return an optional of the stream surrounding point
      */
-    public Optional<Courant> streamAroundPoint(IPoint point) {
+    public Optional<Stream> streamAroundPoint(IPoint point) {
         return this.courants.stream().filter(courant -> courant.isPtInside(point)).findAny();
     }
 
@@ -160,7 +160,7 @@ public class StreamManager implements PropertyChangeListener {
         if (this.pointIsInsideOpenStream(depart) && this.pointIsInsideStream(destination)) {
             var optCourant = this.streamAroundPoint(depart);
             if (optCourant.isPresent()) {
-                Courant courant = optCourant.get();
+                Stream courant = optCourant.get();
                 return courant.speedProvided(depart, destination);
             }
 
@@ -169,7 +169,7 @@ public class StreamManager implements PropertyChangeListener {
         if (this.pointIsInsideOpenStream(destination) && this.pointIsInsideStream(depart)) {
             var optCourant = this.streamAroundPoint(destination);
             if (optCourant.isPresent()) {
-                Courant courant = optCourant.get();
+                Stream courant = optCourant.get();
                 return courant.speedProvided(depart, destination);
             }
 
@@ -224,7 +224,7 @@ public class StreamManager implements PropertyChangeListener {
 
         var optCourant = this.streamAroundPoint(insideIPoint);
         if (optCourant.isPresent()) {
-            Courant courant = optCourant.get();
+            Stream courant = optCourant.get();
             return courant.speedProvided(depart, courant.limitToSurface(insideIPoint, outsideIPoint));
         }
 
@@ -275,9 +275,9 @@ public class StreamManager implements PropertyChangeListener {
         return List.of(departPoint, destination);// LATER
     }
 
-    public Courant firstStreamBetween(IPoint destination) {
+    public Stream firstStreamBetween(IPoint destination) {
         LineSegment2D segment2d = new LineSegment2D(destination, boat);
-        List<Courant> streamsOnTrajectory = this.courants.stream().filter(courant -> courant.intersectsWith(segment2d))
+        List<Stream> streamsOnTrajectory = this.courants.stream().filter(courant -> courant.intersectsWith(segment2d))
                 .collect(Collectors.toList());
 
         if (streamsOnTrajectory.size() == 1) {
@@ -328,9 +328,9 @@ public class StreamManager implements PropertyChangeListener {
             var entities = parser.fetchOceanEntities(s);
             this.obstacles = entities;
             this.courants = entities.stream().filter(e -> e.getEnumType().equals(OceanEntityType.COURANT))
-                    .map(e -> (Courant) e).collect(Collectors.toList());
+                    .map(e -> (Stream) e).collect(Collectors.toList());
             this.recifs = entities.stream().filter(e -> e.getEnumType().equals(OceanEntityType.RECIF))
-                    .map(e -> (Recif) e).collect(Collectors.toList());
+                    .map(e -> (Reef) e).collect(Collectors.toList());
 
             this.boatsAndReefs = entities.stream().filter(
                     e -> e.getEnumType().equals(OceanEntityType.RECIF) || e.getEnumType().equals(OceanEntityType.BOAT))
@@ -345,7 +345,7 @@ public class StreamManager implements PropertyChangeListener {
     /**
      * @param courants the streams to set
      */
-    public void setCourants(List<Courant> courants) {
+    public void setCourants(List<Stream> courants) {
         this.courants = courants;
     }
 
@@ -356,7 +356,7 @@ public class StreamManager implements PropertyChangeListener {
     /**
      * @param recifs the recifs to set
      */
-    public void setRecifs(List<Recif> recifs) {
+    public void setRecifs(List<Reef> recifs) {
         this.recifs = recifs;
 
     }
@@ -368,11 +368,11 @@ public class StreamManager implements PropertyChangeListener {
         this.boatsAndReefs = boatsAndReefs;
     }
 
-    public List<Recif> getRecifs() {
+    public List<Reef> getRecifs() {
         return this.recifs;
     }
 
-    public List<Courant> getStreams() {
+    public List<Stream> getStreams() {
         return this.courants;
     }
 

@@ -12,10 +12,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Equipment;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Gouvernail;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Rudder;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Oar;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Sail;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Vigie;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Watch;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.IntPosition;
 
 public class EquipmentsManagerTest {
@@ -28,8 +28,8 @@ public class EquipmentsManagerTest {
     Equipment r6 = new Oar(3, 2);
     Equipment r7 = new Sail(3, 1);
     Sail r8 = new Sail(3, 0);
-    Equipment rudder=new Gouvernail(0, 0);
-    Vigie watch = new Vigie(0, 1);
+    Equipment rudder=new Rudder(0, 0);
+    Watch watch = new Watch(0, 1);
 
     @BeforeEach
     void setUp() {

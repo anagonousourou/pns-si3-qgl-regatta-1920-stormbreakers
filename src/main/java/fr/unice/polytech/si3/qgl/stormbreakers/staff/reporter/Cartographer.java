@@ -9,7 +9,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Boat;
 import fr.unice.polytech.si3.qgl.stormbreakers.io.Logger;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.RectangularSurface;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.graph.Graph;
-import fr.unice.polytech.si3.qgl.stormbreakers.math.graph.Sommet;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.graph.Vertex;
 
 public class Cartographer {
 
@@ -69,10 +69,10 @@ public class Cartographer {
 
         System.out.println("createSquaring: " + (System.currentTimeMillis() - t));
 
-        var depart = new Sommet(boat);
+        var depart = new Vertex(boat);
         depart = graph.addNode(depart);
 
-        var destination = new Sommet(cp);
+        var destination = new Vertex(cp);
         destination = graph.addNode(destination);
 
         // en principe inutile
@@ -80,7 +80,7 @@ public class Cartographer {
 
         graph.calculateShortestPathFromSource(depart, destination, ecart);
 
-        List<Sommet> path = graph.reducePath(destination);
+        List<Vertex> path = graph.reducePath(destination);
 
         System.out.println("Djisktra: " + (System.currentTimeMillis() - t));
         System.out.println("Path computed: " + path);

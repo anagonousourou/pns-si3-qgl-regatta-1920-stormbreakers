@@ -2,7 +2,7 @@ package fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.IPoint;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Boat;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Courant;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Stream;
 import fr.unice.polytech.si3.qgl.stormbreakers.io.Logger;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Utils;
@@ -41,7 +41,7 @@ public class TargetDefiner {
         return this.streamManager.thereIsStreamBetween(checkpointsManager.nextCheckpoint());
     }
 
-    Courant nextStreamOnTrajectory() {
+    Stream nextStreamOnTrajectory() {
         if (thereIsStreamOnTrajectory()) {
             return this.streamManager.firstStreamBetween(checkpointsManager.nextCheckpoint().getPosition());
         }

@@ -16,8 +16,8 @@ import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Polygon;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Position;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Rectangle;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Boat;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Courant;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Recif;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Stream;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Reef;
 import fr.unice.polytech.si3.qgl.stormbreakers.io.InputParser;
 import fr.unice.polytech.si3.qgl.stormbreakers.io.json.JsonInputParser;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
@@ -27,17 +27,17 @@ public class StreamManagerTest {
     private StreamManager manager;
 
     private InputParser parser = new JsonInputParser();
-    private Courant courant1 = new Courant(new Position(500.0, 0.0, 0.0), new Rectangle(300, 600, 0.0), 40.0);
-    private Courant courant2 = new Courant(new Position(900.0, 900.0, -0.52), new Rectangle(300, 600, 0.0), 80.0);
-    private Courant courant3 = new Courant(new Position(500.0, 0.0, 0.0), new Rectangle(400, 600, 0.0), 40.0);
-    private Courant courant4 = new Courant(new Position(500.0, 500.0, 0.78539), new Rectangle(400, 400, 0.0), 80.0);
-    private Recif recifTriangle = new Recif(new Position(-200, 300.0, 0),
+    private Stream courant1 = new Stream(new Position(500.0, 0.0, 0.0), new Rectangle(300, 600, 0.0), 40.0);
+    private Stream courant2 = new Stream(new Position(900.0, 900.0, -0.52), new Rectangle(300, 600, 0.0), 80.0);
+    private Stream courant3 = new Stream(new Position(500.0, 0.0, 0.0), new Rectangle(400, 600, 0.0), 40.0);
+    private Stream courant4 = new Stream(new Position(500.0, 500.0, 0.78539), new Rectangle(400, 400, 0.0), 80.0);
+    private Reef recifTriangle = new Reef(new Position(-200, 300.0, 0),
             new Polygon(0.0, List.of(new Point2D(100, 100), new Point2D(0, -100), new Point2D(-100, 100))));
 
-    private Recif recifCercle = new Recif(new Position(300, 600), new Circle(200));
-    private Recif recifCarre = new Recif(new Position(500, 200), new Rectangle(200, 200, 0));
+    private Reef recifCercle = new Reef(new Position(300, 600), new Circle(200));
+    private Reef recifCarre = new Reef(new Position(500, 200), new Rectangle(200, 200, 0));
 
-    private Courant courantCarre = new Courant(new Position(500, 200), new Rectangle(200, 200, 0), 100);
+    private Stream courantCarre = new Stream(new Position(500, 200), new Rectangle(200, 200, 0), 100);
 
     Position pointA = new Position(200, 200);
     Position pointB = new Position(500, 400);
@@ -52,7 +52,7 @@ public class StreamManagerTest {
     @Test
     void insideStreamTest() {
         Boat boat = mock(Boat.class);
-        List<Courant> courants = List.of(courant1, courant2);
+        List<Stream> courants = List.of(courant1, courant2);
         manager = new StreamManager(parser, boat);
         manager.setCourants(courants);
 
@@ -76,7 +76,7 @@ public class StreamManagerTest {
     @Test
     void streamAroundBoatTest() {
         Boat boat = mock(Boat.class);
-        List<Courant> courants = List.of(courant1, courant2);
+        List<Stream> courants = List.of(courant1, courant2);
         manager = new StreamManager(parser, boat);
         manager.setCourants(courants);
 
@@ -100,7 +100,7 @@ public class StreamManagerTest {
     @Test
     void thereIsStreamBetweenTest() {
         Boat boat = mock(Boat.class);
-        List<Courant> courants = List.of(courant1, courant2);
+        List<Stream> courants = List.of(courant1, courant2);
         manager = new StreamManager(parser, boat);
         manager.setCourants(courants);
 
@@ -117,7 +117,7 @@ public class StreamManagerTest {
     void firstStreamBetweenTest() {
 
         Boat boat = mock(Boat.class);
-        List<Courant> courants = List.of(courant1, courant2);
+        List<Stream> courants = List.of(courant1, courant2);
         manager = new StreamManager(parser, boat);
         manager.setCourants(courants);
 

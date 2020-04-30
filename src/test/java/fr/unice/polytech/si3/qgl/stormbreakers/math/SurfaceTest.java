@@ -14,7 +14,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Polygon;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Position;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Rectangle;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Shape;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Recif;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Reef;
 
 public class SurfaceTest {
 	private Surface s;
@@ -48,17 +48,17 @@ public class SurfaceTest {
 	public void setUp() {
 		rectangle = new Rectangle(1000.0, 800.0, 0.0);
 		rectangleOriented=new Rectangle(500, 500, 0.78539);
-		orientedSurface= new Recif(new Position(1000, 500), rectangleOriented );
+		orientedSurface= new Reef(new Position(1000, 500), rectangleOriented );
 		cercle = new Circle(300);
-		s = new Recif(new Position(1000, 500.0), rectangle);
-		surfaceCircle = new Recif(new Position(1000, 500), cercle);
+		s = new Reef(new Position(1000, 500.0), rectangle);
+		surfaceCircle = new Reef(new Position(1000, 500), cercle);
 		
 		polygon = new Polygon(0.0,
 				List.of(new Point2D(-150,-150),
 						new Point2D(250,150),
 						new Point2D(-200,200)),
 				new Position(0, 0));
-		polygonsurface = new Recif(new Position(1000, 500), polygon);
+		polygonsurface = new Reef(new Position(1000, 500), polygon);
 		depart = new Position(0, 0);
 		destination = new Position(1200.0, 1200.0);
 		d1 = new Position(400, 900);

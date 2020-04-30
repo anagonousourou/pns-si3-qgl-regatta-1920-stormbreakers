@@ -17,7 +17,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.StreamManager;
 import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.WeatherAnalyst;
 
 public class Graph {
-    private Set<Sommet> nodes = new HashSet<>();
+    private Set<Vertex> nodes = new HashSet<>();
     private StreamManager streamManager;
     private WeatherAnalyst weatherAnalyst;
 
@@ -26,7 +26,7 @@ public class Graph {
         this.streamManager = streamManager;
     }
 
-    public Sommet addNode(Sommet nodeA) {
+    public Vertex addNode(Vertex nodeA) {
         if (nodes.add(nodeA)) {
             return nodeA;
         } else {
@@ -36,11 +36,11 @@ public class Graph {
 
     }
 
-    private static void calculateMinimumDistance(Sommet evaluationNode, int edgeWeigh, Sommet sourceNode) {
+    private static void calculateMinimumDistance(Vertex evaluationNode, int edgeWeigh, Vertex sourceNode) {
         int sourceDistance = sourceNode.getDistance();
         if (sourceDistance + edgeWeigh < evaluationNode.getDistance()) {
             evaluationNode.setDistance(sourceDistance + edgeWeigh);
-            List<Sommet> shortestPath = new ArrayList<>(sourceNode.getShortestPath());
+            List<Vertex> shortestPath = new ArrayList<>(sourceNode.getShortestPath());
             shortestPath.add(sourceNode);
             evaluationNode.setShortestPath(shortestPath);
         }
@@ -52,7 +52,7 @@ public class Graph {
         for (double x = xmin; x <= xmax; x = x + ecart) {
             for (double y = ymin; y <= ymax; y = y + ecart) {
                 if (!streamManager.pointIsInsideOrAroundReefOrBoat(new Point2D(x, y))) {
-                    this.addNode(new Sommet(x, y));
+                    this.addNode(new Vertex(x, y));
                 }
 
             }
@@ -65,14 +65,14 @@ public class Graph {
     }
 
     // NEW
-    public List<Sommet> reducePath(Sommet sommet) {
+    public List<Vertex> reducePath(Vertex sommet) {
         // ?? morceau de chemin trop court pour etre atteint
-        List<Sommet> result = new ArrayList<>(sommet.getShortestPath());
+        List<Vertex> result = new ArrayList<>(sommet.getShortestPath());
         result.add(sommet);
         return reducePath(result);
     }
 
-    List<Sommet> reducePath(List<Sommet> result) {
+    List<Vertex> reducePath(List<Vertex> result) {
         int i = 1;
         while (i < result.size() - 1) {
             if (!this.streamManager.thereIsObstacleBetween(result.get(i - 1).getPoint(),
@@ -93,7 +93,7 @@ public class Graph {
      */
     public void createLinkBetweenVertices(double ecart) {
         long t = System.currentTimeMillis();
-        for (Sommet node : nodes) {
+        for (Vertex node : nodes) {
             nodes.stream().filter(n -> !n.equals(node)).forEach(n -> {
                 double distance = n.getPoint().distanceTo(node.getPoint());
 
@@ -119,12 +119,12 @@ public class Graph {
     }
 
     // NEW
-    public void calculateShortestPathFromSource(Sommet depart, Sommet destination, double ecart) {
-        Sommet currentNode = null;
+    public void calculateShortestPathFromSource(Vertex depart, Vertex destination, double ecart) {
+        Vertex currentNode = null;
         depart.setDistance(0);
 
-        Set<Sommet> settledNodes = new HashSet<>(6000);
-        Set<Sommet> unsettledNodes = new HashSet<>(6000);
+        Set<Vertex> settledNodes = new HashSet<>(6000);
+        Set<Vertex> unsettledNodes = new HashSet<>(6000);
 
         unsettledNodes.add(depart);
 
@@ -138,8 +138,8 @@ public class Graph {
                 currentNode.computedAdj = true;
             }
 
-            for (Entry<Sommet, Integer> adjacencyPair : currentNode.getAdjacentNodes().entrySet()) {
-                Sommet adjacentNode = adjacencyPair.getKey();
+            for (Entry<Vertex, Integer> adjacencyPair : currentNode.getAdjacentNodes().entrySet()) {
+                Vertex adjacentNode = adjacencyPair.getKey();
                 int edgeWeight = adjacencyPair.getValue();
                 if (!settledNodes.contains(adjacentNode)) {
                     calculateMinimumDistance(adjacentNode, edgeWeight, currentNode);
@@ -151,7 +151,7 @@ public class Graph {
         }
     }
 
-    List<Shape> determineShapesToConsider(Sommet vertex) {
+    List<Shape> determineShapesToConsider(Vertex vertex) {
         List<Shape> obstacles = new ArrayList<>(15);
         for (OceanEntity obstacle : this.streamManager.getBoatsAndReefs()) {
             if (obstacle.isInsideWrappingSurface(streamManager.boatSecurityMargin(), vertex.getPoint())) {
@@ -166,9 +166,9 @@ public class Graph {
 
     }
 
-    void computeAdjacentNodes(Sommet vertex, double ecart) {
+    void computeAdjacentNodes(Vertex vertex, double ecart) {
         List<Shape> obstacles = determineShapesToConsider(vertex);
-        for (Sommet v : this.nodes) {
+        for (Vertex v : this.nodes) {
             if (!v.equals(vertex)) {
                 double distance = v.getPoint().distanceTo(vertex.getPoint());
 
@@ -191,7 +191,7 @@ public class Graph {
     }
 
     // NEW
-    public Sommet getLowestDistanceNode(Set<Sommet> unsettledNodes, Sommet destination) {
+    public Vertex getLowestDistanceNode(Set<Vertex> unsettledNodes, Vertex destination) {
         var optResult = unsettledNodes.stream()
                 .min((a, b) -> Double.compare(a.getDistance() + a.getPoint().distanceTo(destination.getPoint()),
                         b.getDistance() + b.getPoint().distanceTo(destination.getPoint())));
@@ -213,7 +213,7 @@ public class Graph {
         return String.format("%s(nodes:%s)", this.getClass().getSimpleName(), this.nodes.toString());
     }
 
-    public void setNodes(Set<Sommet> nodes) {
+    public void setNodes(Set<Vertex> nodes) {
         this.nodes = new HashSet<>(nodes);
     }
 
@@ -222,8 +222,8 @@ public class Graph {
     }
 
     // NEW
-    public Sommet addNodeAndLink(Sommet vertex, double ecart) {
-        final Sommet ourSommet = this.addNode(vertex);
+    public Vertex addNodeAndLink(Vertex vertex, double ecart) {
+        final Vertex ourSommet = this.addNode(vertex);
         nodes.stream().filter(node -> node != ourSommet).forEach(n -> {
             double distance = n.getPoint().distanceTo(ourSommet.getPoint());
             if (distance <= ecart * Math.sqrt(2)) {
@@ -254,12 +254,12 @@ public class Graph {
     }
 
     public void clearShortestPaths() {
-        for (Sommet sommet : nodes) {
+        for (Vertex sommet : nodes) {
             sommet.clearShortestPath();
         }
     }
 
-    public Sommet findVertexFor(IPoint cp) {
+    public Vertex findVertexFor(IPoint cp) {
 
         var optResult = nodes.stream().filter(sommet -> Utils.almostEquals(sommet.getPoint(), cp)).findAny();
         if (optResult.isPresent()) {

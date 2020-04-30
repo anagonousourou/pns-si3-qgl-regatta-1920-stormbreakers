@@ -6,7 +6,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Equipment;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Oar;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Sailor;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Checkpoint;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Courant;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Stream;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.OceanEntity;
 import fr.unice.polytech.si3.qgl.stormbreakers.exceptions.ParsingException;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Position;
@@ -52,7 +52,7 @@ public interface InputParser {
 	 * @throws ParsingException
 	 */
 
-	List<Courant> fetchStreams(String jString) throws ParsingException;
+	List<Stream> fetchStreams(String jString) throws ParsingException;
 
 	/**
 	 * Renvoie les courants LATER

@@ -11,7 +11,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.ActionType;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.MoveAction;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.OarAction;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.EquipmentType;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Gouvernail;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Rudder;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Oar;
 
 class LogableTest {
@@ -31,7 +31,7 @@ class LogableTest {
     void testListLoggingEquipment() {
         List<Logable> logables = new ArrayList<>();
         logables.add(new Oar(0, 0));
-        logables.add(new Gouvernail(0, 1));
+        logables.add(new Rudder(0, 1));
 
         String result = Logable.listToLogs(logables, ",", "[", "]");
         assertTrue(result.contains(EquipmentType.OAR.shortCode));

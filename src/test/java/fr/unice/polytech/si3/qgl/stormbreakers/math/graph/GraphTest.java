@@ -16,27 +16,27 @@ import org.junit.jupiter.api.Test;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Position;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Rectangle;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Boat;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Recif;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Reef;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
 import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.StreamManager;
 import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.WeatherAnalyst;
 
 public class GraphTest {
-    private Sommet s1;
-    private Sommet s2;
-    private Sommet s3;
-    private Sommet s4;
-    private Sommet s5;
-    private Sommet s6;
-    private Sommet s7;
-    private Sommet s8;
-    private Sommet s9;
-    private Sommet s10;
-    private Sommet s11;
-    private Sommet s12;
-    private Sommet s13;
+    private Vertex s1;
+    private Vertex s2;
+    private Vertex s3;
+    private Vertex s4;
+    private Vertex s5;
+    private Vertex s6;
+    private Vertex s7;
+    private Vertex s8;
+    private Vertex s9;
+    private Vertex s10;
+    private Vertex s11;
+    private Vertex s12;
+    private Vertex s13;
     private Graph graph;
-    private Recif reef1 = new Recif(new Position(300, 300), new Rectangle(400, 400, 0.0));
+    private Reef reef1 = new Reef(new Position(300, 300), new Rectangle(400, 400, 0.0));
     private StreamManager streamManager;
     private WeatherAnalyst weatherAnalyst;
 
@@ -47,17 +47,17 @@ public class GraphTest {
 
     @Test
     public void getLowestDistanceNodeTest() {
-        s1 = new Sommet(0,0);
+        s1 = new Vertex(0,0);
         s1= spy(s1);
-        s2 = new Sommet(300,300);
+        s2 = new Vertex(300,300);
         s2= spy(s2);
-        s3 = new Sommet(500,500);
+        s3 = new Vertex(500,500);
         s3= spy(s3);
-        s4 = new Sommet(700,700);
+        s4 = new Vertex(700,700);
         s4= spy(s4);
         graph = new Graph(null, null);
         
-        Sommet destination= new Sommet(600,600);
+        Vertex destination= new Vertex(600,600);
         when(s1.getDistance()).thenReturn(200);
         when(s2.getDistance()).thenReturn(20);
         when(s3.getDistance()).thenReturn(2000);
@@ -85,19 +85,19 @@ public class GraphTest {
 
     @Test
     public void createLinkBetweenVerticesTest() {
-        s1 = new Sommet(0, 0);
-        s2 = new Sommet(200, 0);
-        s3 = new Sommet(400, 0);
-        s4 = new Sommet(600, 0);
-        s5 = new Sommet(0, 200);
-        s6 = new Sommet(600, 200);
-        s7 = new Sommet(0, 400);
-        s8 = new Sommet(600, 400);
-        s9 = new Sommet(0, 600);
-        s10 = new Sommet(200, 600);
-        s11 = new Sommet(400, 600);
-        s12 = new Sommet(600, 600);
-        s13 = new Sommet(200, 200);
+        s1 = new Vertex(0, 0);
+        s2 = new Vertex(200, 0);
+        s3 = new Vertex(400, 0);
+        s4 = new Vertex(600, 0);
+        s5 = new Vertex(0, 200);
+        s6 = new Vertex(600, 200);
+        s7 = new Vertex(0, 400);
+        s8 = new Vertex(600, 400);
+        s9 = new Vertex(0, 600);
+        s10 = new Vertex(200, 600);
+        s11 = new Vertex(400, 600);
+        s12 = new Vertex(600, 600);
+        s13 = new Vertex(200, 200);
 
         streamManager = mock(StreamManager.class);
         when(streamManager.speedProvided(any(), any())).thenReturn(0.0);
@@ -114,18 +114,18 @@ public class GraphTest {
 
     @Test
     public void calculateShortestPathFromSourceTest() {
-        s1 = new Sommet(0, 0);
-        s2 = new Sommet(200, 0);
-        s3 = new Sommet(400, 0);
-        s4 = new Sommet(600, 0);
-        s5 = new Sommet(0, 200);
-        s6 = new Sommet(600, 200);
-        s7 = new Sommet(0, 400);
-        s8 = new Sommet(600, 400);
-        s9 = new Sommet(0, 600);
-        s10 = new Sommet(200, 600);
-        s11 = new Sommet(400, 600);
-        s12 = new Sommet(600, 600);
+        s1 = new Vertex(0, 0);
+        s2 = new Vertex(200, 0);
+        s3 = new Vertex(400, 0);
+        s4 = new Vertex(600, 0);
+        s5 = new Vertex(0, 200);
+        s6 = new Vertex(600, 200);
+        s7 = new Vertex(0, 400);
+        s8 = new Vertex(600, 400);
+        s9 = new Vertex(0, 600);
+        s10 = new Vertex(200, 600);
+        s11 = new Vertex(400, 600);
+        s12 = new Vertex(600, 600);
 
         streamManager = mock(StreamManager.class);
         when(streamManager.speedProvided(any(), any())).thenReturn(0.0);
@@ -147,19 +147,19 @@ public class GraphTest {
     @Test
     public void reducePathTest() {
 
-        s1 = new Sommet(0, 0);
-        s2 = new Sommet(200, 0);
-        s3 = new Sommet(400, 0);
-        s4 = new Sommet(600, 0);
-        s5 = new Sommet(0, 200);
-        s6 = new Sommet(600, 200);
-        s7 = new Sommet(0, 400);
-        s8 = new Sommet(600, 400);
-        s9 = new Sommet(0, 600);
-        s10 = new Sommet(200, 600);
-        s11 = new Sommet(400, 600);
-        s12 = new Sommet(600, 600);
-        Sommet sommet = mock(Sommet.class);
+        s1 = new Vertex(0, 0);
+        s2 = new Vertex(200, 0);
+        s3 = new Vertex(400, 0);
+        s4 = new Vertex(600, 0);
+        s5 = new Vertex(0, 200);
+        s6 = new Vertex(600, 200);
+        s7 = new Vertex(0, 400);
+        s8 = new Vertex(600, 400);
+        s9 = new Vertex(0, 600);
+        s10 = new Vertex(200, 600);
+        s11 = new Vertex(400, 600);
+        s12 = new Vertex(600, 600);
+        Vertex sommet = mock(Vertex.class);
         streamManager = mock(StreamManager.class);
         when(sommet.getShortestPath()).thenReturn(List.of(s1, s5, s7, s9, s10, s11));
 
@@ -174,18 +174,18 @@ public class GraphTest {
 
     @Test
     public void hasAsVertexTest() {
-        s1 = new Sommet(0, 0);
-        s2 = new Sommet(200, 0);
-        s3 = new Sommet(400, 0);
-        s4 = new Sommet(600, 0);
-        s5 = new Sommet(0, 200);
-        s6 = new Sommet(600, 200);
-        s7 = new Sommet(0, 400);
-        s8 = new Sommet(600, 400);
-        s9 = new Sommet(0, 600);
-        s10 = new Sommet(200, 600);
-        s11 = new Sommet(400, 600);
-        s12 = new Sommet(600, 600);
+        s1 = new Vertex(0, 0);
+        s2 = new Vertex(200, 0);
+        s3 = new Vertex(400, 0);
+        s4 = new Vertex(600, 0);
+        s5 = new Vertex(0, 200);
+        s6 = new Vertex(600, 200);
+        s7 = new Vertex(0, 400);
+        s8 = new Vertex(600, 400);
+        s9 = new Vertex(0, 600);
+        s10 = new Vertex(200, 600);
+        s11 = new Vertex(400, 600);
+        s12 = new Vertex(600, 600);
 
         graph = new Graph(null, null);
         graph.setNodes(Set.of(s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12));
@@ -197,18 +197,18 @@ public class GraphTest {
 
     @Test
     public void findVertexForTest() {
-        s1 = new Sommet(0, 0);
-        s2 = new Sommet(200, 0);
-        s3 = new Sommet(400, 0);
-        s4 = new Sommet(600, 0);
-        s5 = new Sommet(0, 200);
-        s6 = new Sommet(600, 200);
-        s7 = new Sommet(0, 400);
-        s8 = new Sommet(600, 400);
-        s9 = new Sommet(0, 600);
-        s10 = new Sommet(200, 600);
-        s11 = new Sommet(400, 600);
-        s12 = new Sommet(600, 600);
+        s1 = new Vertex(0, 0);
+        s2 = new Vertex(200, 0);
+        s3 = new Vertex(400, 0);
+        s4 = new Vertex(600, 0);
+        s5 = new Vertex(0, 200);
+        s6 = new Vertex(600, 200);
+        s7 = new Vertex(0, 400);
+        s8 = new Vertex(600, 400);
+        s9 = new Vertex(0, 600);
+        s10 = new Vertex(200, 600);
+        s11 = new Vertex(400, 600);
+        s12 = new Vertex(600, 600);
 
         graph = new Graph(null, null);
         graph.setNodes(Set.of(s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12));
@@ -222,19 +222,19 @@ public class GraphTest {
     @Test
     public void addNodeAndLinkTest() {
         // we setUp a graph and we link its vertices
-        s1 = new Sommet(0, 0);
-        s2 = new Sommet(200, 0);
-        s3 = new Sommet(400, 0);
-        s4 = new Sommet(600, 0);
-        s5 = new Sommet(0, 200);
-        s6 = new Sommet(600, 200);
-        s7 = new Sommet(0, 400);
-        s8 = new Sommet(600, 400);
-        s9 = new Sommet(0, 600);
-        s10 = new Sommet(200, 600);
-        s11 = new Sommet(400, 600);
-        s12 = new Sommet(600, 600);
-        s13 = new Sommet(200, 200);
+        s1 = new Vertex(0, 0);
+        s2 = new Vertex(200, 0);
+        s3 = new Vertex(400, 0);
+        s4 = new Vertex(600, 0);
+        s5 = new Vertex(0, 200);
+        s6 = new Vertex(600, 200);
+        s7 = new Vertex(0, 400);
+        s8 = new Vertex(600, 400);
+        s9 = new Vertex(0, 600);
+        s10 = new Vertex(200, 600);
+        s11 = new Vertex(400, 600);
+        s12 = new Vertex(600, 600);
+        s13 = new Vertex(200, 200);
 
         streamManager = mock(StreamManager.class);
         when(streamManager.speedProvided(any(), any())).thenReturn(0.0);
@@ -246,7 +246,7 @@ public class GraphTest {
         graph.createLinkBetweenVertices(200);
 
         // we add a new Vertex
-        var vertex1 = new Sommet(300, 300);
+        var vertex1 = new Vertex(300, 300);
         graph.addNodeAndLink(vertex1, 200);
 
         assertEquals(1, vertex1.getAdjacentNodes().size(), "Un seul voisin");
@@ -254,7 +254,7 @@ public class GraphTest {
         assertEquals(6, s13.getAdjacentNodes().size(), "Un  voisin s'ajoute");
 
         // we add a new Vertex again
-        var vertex2 = new Sommet(900, 800);
+        var vertex2 = new Vertex(900, 800);
 
         graph.addNodeAndLink(vertex1, 200);
 
@@ -265,18 +265,18 @@ public class GraphTest {
 
     @Test
     public void clearShortestPathsTest() {
-        s1 = new Sommet(0, 0);
-        s2 = new Sommet(200, 0);
-        s3 = new Sommet(400, 0);
-        s4 = new Sommet(600, 0);
-        s5 = new Sommet(0, 200);
-        s6 = new Sommet(600, 200);
-        s7 = new Sommet(0, 400);
-        s8 = new Sommet(600, 400);
-        s9 = new Sommet(0, 600);
-        s10 = new Sommet(200, 600);
-        s11 = new Sommet(400, 600);
-        s12 = new Sommet(600, 600);
+        s1 = new Vertex(0, 0);
+        s2 = new Vertex(200, 0);
+        s3 = new Vertex(400, 0);
+        s4 = new Vertex(600, 0);
+        s5 = new Vertex(0, 200);
+        s6 = new Vertex(600, 200);
+        s7 = new Vertex(0, 400);
+        s8 = new Vertex(600, 400);
+        s9 = new Vertex(0, 600);
+        s10 = new Vertex(200, 600);
+        s11 = new Vertex(400, 600);
+        s12 = new Vertex(600, 600);
 
         streamManager = mock(StreamManager.class);
         when(streamManager.speedProvided(any(), any())).thenReturn(0.0);
@@ -303,7 +303,7 @@ public class GraphTest {
 
     @Test
     public void computeAdjacentNodesTest(){
-        Recif reef=new Recif(new Position(500,300), 
+        Reef reef=new Reef(new Position(500,300), 
         new Rectangle(400,400,0.0)
         );
         Boat boat=mock(Boat.class);
@@ -315,12 +315,12 @@ public class GraphTest {
         WeatherAnalyst weatherAnalyst=mock(WeatherAnalyst.class);
         Graph graph=new Graph(streamManager, weatherAnalyst);
 
-        Sommet s1=new Sommet(500, 503);
+        Vertex s1=new Vertex(500, 503);
 
-        Sommet s2=new Sommet(500,550);
-        Sommet s3=new Sommet(500,600);
-        Sommet s4=new Sommet(400,550);
-        Sommet s5=new Sommet(600,525);
+        Vertex s2=new Vertex(500,550);
+        Vertex s3=new Vertex(500,600);
+        Vertex s4=new Vertex(400,550);
+        Vertex s5=new Vertex(600,525);
 
         assertTrue(streamManager.pointIsInsideOrAroundReefOrBoat(s1.getPoint()));
 

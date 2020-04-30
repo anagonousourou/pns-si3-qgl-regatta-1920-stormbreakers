@@ -17,8 +17,8 @@ import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Position;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Rectangle;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Checkpoint;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Boat;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Courant;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Recif;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Stream;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Reef;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Wind;
 import fr.unice.polytech.si3.qgl.stormbreakers.io.InputParser;
 import fr.unice.polytech.si3.qgl.stormbreakers.io.json.JsonInputParser;
@@ -33,10 +33,10 @@ public class TargetDefinerTest {
   private Boat boat;
 
   private InputParser parser = new JsonInputParser();
-  private Courant courant1 = new Courant(new Position(500.0, 0.0, 0.0), new Rectangle(300, 600, 0.0), 40.0);
-  private Courant courant2 = new Courant(new Position(900.0, 900.0, -0.52), new Rectangle(300, 600, 0.0), 80.0);
-  private Courant courant3 = new Courant(new Position(500.0, 0.0, 0.0), new Rectangle(400, 600, 0.0), 100.0);
-  private Courant courant4 = new Courant(new Position(500.0, 500.0, 0.78539), new Rectangle(400, 400, 0.0), 80.0);
+  private Stream courant1 = new Stream(new Position(500.0, 0.0, 0.0), new Rectangle(300, 600, 0.0), 40.0);
+  private Stream courant2 = new Stream(new Position(900.0, 900.0, -0.52), new Rectangle(300, 600, 0.0), 80.0);
+  private Stream courant3 = new Stream(new Position(500.0, 0.0, 0.0), new Rectangle(400, 600, 0.0), 100.0);
+  private Stream courant4 = new Stream(new Position(500.0, 500.0, 0.78539), new Rectangle(400, 400, 0.0), 80.0);
 
   private Checkpoint cp1 = new Checkpoint(new Position(1500, 300), new Circle(50));
   private Checkpoint cp2 = new Checkpoint(new Position(300, 1500), new Circle(50));
@@ -196,7 +196,7 @@ public class TargetDefinerTest {
 
     when(boat.getOrientation()).thenReturn(Math.PI/2);
     StreamManager streamManager=new StreamManager(parser, boat);
-    Recif reef1=new Recif(new Position(600,400), new Rectangle(190*2, 100*2, 0));
+    Reef reef1=new Reef(new Position(600,400), new Rectangle(190*2, 100*2, 0));
     streamManager.setBoatsAndReefs(List.of(reef1));
     TargetDefiner targetDefiner=new TargetDefiner(null, streamManager, boat, navigator);
 

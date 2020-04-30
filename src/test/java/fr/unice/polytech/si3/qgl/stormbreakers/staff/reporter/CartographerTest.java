@@ -21,7 +21,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Shape;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.ShapeType;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Checkpoint;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Boat;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Recif;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Reef;
 import fr.unice.polytech.si3.qgl.stormbreakers.io.InputParser;
 import fr.unice.polytech.si3.qgl.stormbreakers.io.json.JsonInputParser;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.processing.ObservableData;
@@ -38,19 +38,19 @@ public class CartographerTest {
     private StreamManager streamManager;
     private WeatherAnalyst weatherAnalyst;
     private CheckpointsManager checkpointsManager;
-    private Recif reefRectangle1;
-    private Recif reefTriangle;
-    private Recif reefRectangle2;
+    private Reef reefRectangle1;
+    private Reef reefTriangle;
+    private Reef reefRectangle2;
     private Cartographer cartographer;
     private String round2;
     private String round3;
 
     @BeforeEach
     public void setUp() throws IOException {
-        reefTriangle = new Recif(new Position(600, 600),
+        reefTriangle = new Reef(new Position(600, 600),
                 new Polygon(0.0, List.of(new Point2D(100, -100), new Point2D(100, 100), new Point2D(-100, -100))));
-        reefRectangle1 = new Recif(new Position(350, 200), new Rectangle(200, 300, 0.0));
-        reefRectangle2 = new Recif(new Position(1000, 500), new Rectangle(200, 400, 0.0));
+        reefRectangle1 = new Reef(new Position(350, 200), new Rectangle(200, 300, 0.0));
+        reefRectangle2 = new Reef(new Position(1000, 500), new Rectangle(200, 400, 0.0));
         round2 = new String(this.getClass().getResourceAsStream("/observabletest/round2.json").readAllBytes());
         round3 = new String(this.getClass().getResourceAsStream("/observabletest/round3.json").readAllBytes());
     }

@@ -21,11 +21,11 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.SailorAction;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.Turn;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.UseWatch;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Equipment;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Gouvernail;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Rudder;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Oar;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Sail;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Sailor;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Vigie;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Watch;
 import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.CrewManager;
 import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.EquipmentsManager;
 
@@ -37,8 +37,8 @@ public class CoordinatorTest {
 	private Sailor m1, m2, m3, m4, m5, m6;
 	private Sail s1, s2, s3, s4;
 	private Oar o1, o2, o3, o4, o5, o6;
-	private Gouvernail r1, r2;
-	private Vigie w1, w2;
+	private Rudder r1, r2;
+	private Watch w1, w2;
 	
 	private List<Equipment> equipments;
 	private List<Oar> rames;
@@ -58,10 +58,10 @@ public class CoordinatorTest {
 		m4 = new Sailor(3, 	1, 3);
 		m5 = new Sailor(4, 	4, 2);
 		m6 = new Sailor(5, 	6, 3);
-		r1 = new Gouvernail(2, 3);
-		r2 = new Gouvernail(10, 7);
-		w1 = new Vigie(1, 0);
-		w2 = new Vigie(10, 7);
+		r1 = new Rudder(2, 3);
+		r2 = new Rudder(10, 7);
+		w1 = new Watch(1, 0);
+		w2 = new Watch(10, 7);
 		o1 = new Oar(0, 0);
 		o2 = new Oar(0, 2);
 		o3 = new Oar(2, 0);
