@@ -73,19 +73,6 @@ public class StreamManager implements PropertyChangeListener {
         return this.courants.stream().anyMatch(courant -> courant.isInsideOpenSurface(point));
     }
 
-    /**
-     * 
-     * @param point
-     * @return if point is inside a reef including limits
-     */
-    public boolean pointIsInsideRecif(IPoint point) {
-        return this.recifs.stream().anyMatch(recif -> recif.isPtInside(point));
-    }
-
-    public boolean pointIsInsideOrAroundReef(IPoint point) {
-        return this.recifs.stream().anyMatch(recif -> recif.isInsideWrappingSurface(boat.securityMargin(), point));
-    }
-
     public boolean pointIsInsideOrAroundReefOrBoat(IPoint point) {
         return this.boatsAndReefs.stream().anyMatch(recif -> recif.isInsideWrappingSurface(boat.securityMargin(), point));
     }
@@ -152,17 +139,6 @@ public class StreamManager implements PropertyChangeListener {
      * @param destination
      * @return
      */
-    public boolean thereIsRecifsBetween(IPoint depart, IPoint destination) {
-        LineSegment2D segment2d = new LineSegment2D(depart, destination);
-        return this.recifs.stream().anyMatch(obstacle -> obstacle.intersectsWith(segment2d));
-    }
-
-    /**
-     * 
-     * @param depart
-     * @param destination
-     * @return
-     */
     public boolean thereIsRecifsBetweenOrAround(IPoint depart, IPoint destination) {
         LineSegment2D segment2d = new LineSegment2D(depart, destination);
         return this.recifs.stream().anyMatch(obstacle -> obstacle.intersectsWithWrappingSurface(boat.securityMargin(), segment2d));
@@ -171,18 +147,6 @@ public class StreamManager implements PropertyChangeListener {
     public boolean thereIsObstacleBetweenOrAround(IPoint cp) {
         LineSegment2D segment2d = new LineSegment2D(boat, cp);
         return this.obstacles.stream().anyMatch(obstacle -> obstacle.intersectsWithWrappingSurface(boat.securityMargin(), segment2d));
-    }
-
-    /**
-     * 
-     * @param depart
-     * @param destination
-     * @return
-     */
-    public boolean thereIsRecifsOrBoatsBetweenOrAround(IPoint depart, IPoint destination) {
-        LineSegment2D segment2d = new LineSegment2D(depart, destination);
-        return this.boatsAndReefs.stream()
-                .anyMatch(obstacle -> obstacle.intersectsWithWrappingSurface(boat.securityMargin(), segment2d));
     }
 
     /**
@@ -266,48 +230,6 @@ public class StreamManager implements PropertyChangeListener {
 
         return 0.0;
 
-    }
-
-    /**
-     * Lets define a trajectory as a list of points such that 1- the last point is
-     * the destination 2- the first is the boat position 3- if we remove any point
-     * in the middle the path will collide with an obstacle
-     * 
-     * in this method we assume that both the boat and the destination are not
-     * inside a stream
-     * 
-     * @return
-     */
-    public List<IPoint> trajectoryToAvoidObstacles(IPoint depart, IPoint destination) {
-        if (this.thereIsObstacleBetween(depart, destination)) {
-            OceanEntity obstacleEntity = this.firstObstacleBetween(depart, destination);
-            if (obstacleEntity.getEnumType().equals(OceanEntityType.COURANT)) {
-                Courant courant = (Courant) obstacleEntity;
-                if (!courant.isCompatibleWith(depart, destination)) {
-                    return courant.avoidHit(depart, destination);
-                }
-            } else {// reef
-                return obstacleEntity.avoidHit(depart, destination);
-            }
-        }
-
-        return List.of(depart, destination);
-    }
-
-    /**
-     * We assume that the destination is in a stream
-     * 
-     * @param destination
-     * @return immutable list
-     */
-    public List<IPoint> trajectoryToReachAPointInsideStream(IPoint depart, IPoint destination) {
-        // LATER simply implement a weighted graph
-        /**
-         * due to the hassle to handle the case we the stream is not in the good
-         * direction we do nothing in this method
-         */
-
-        return List.of(depart, destination);
     }
 
     /**

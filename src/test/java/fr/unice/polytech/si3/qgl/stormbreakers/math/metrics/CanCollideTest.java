@@ -12,16 +12,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class CanCollideTest {
     // Existing shapes
     // Circle - Polygon - Rectangle
-
-    private List<Point2D> examplePolygonVertices;
-
     @BeforeEach
-    void setUp() {
-        Point2D A = new Point2D(0, 0);
-        Point2D B = new Point2D(10, -13);
-        Point2D C = new Point2D(-50, 0.05);
-        examplePolygonVertices = List.of(A, B, C);
-    }
+    void setUp() { }
 
     @Test
     void collidesWithShapeTestCirclePolygon() {

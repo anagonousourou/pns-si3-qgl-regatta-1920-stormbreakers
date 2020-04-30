@@ -114,10 +114,11 @@ class InputParserTest {
                 
 
         }
-        
+
+        @Test
         void testWeek6FISA() {
         	Cockpit cockpit= new Cockpit();
         	  assertDoesNotThrow(() -> cockpit.initGame(streams4));
-        	}
+        }
 
 }

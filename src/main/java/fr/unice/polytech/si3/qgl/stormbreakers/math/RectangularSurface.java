@@ -48,6 +48,7 @@ public class RectangularSurface implements Surface {
         if (optResult.isPresent()) {
             return optResult.get();
         } else
+        	
             return -1000.0;
     }
 

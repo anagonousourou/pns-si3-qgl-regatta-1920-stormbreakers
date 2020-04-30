@@ -1,6 +1,5 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter;
 
-import java.beans.PropertyChangeListener;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -22,10 +21,6 @@ public class CrewManager {
 
     public Optional<Sailor> getMarinById(int id) {
         return marins.stream().filter(m -> m.getId() == id).findFirst();
-    }
-
-    public void addListener(PropertyChangeListener propertyChangeListener) {
-        this.marins.forEach(marin -> marin.addPropertyChangeListener(propertyChangeListener));
     }
 
     public void executeMoves(List<MoveAction> moves) {
@@ -68,15 +63,6 @@ public class CrewManager {
 
     public Optional<Sailor> availableSailorAtPosition(IntPosition position) {
         return getAvailableSailors().stream().filter(m -> m.getPosition().distanceTo(position) == 0).findFirst();
-    }
-
-    /**
-     *
-     * @param position
-     * @return a optional encapsulating the closest Marine to position
-     */
-    public Optional<Sailor> marineClosestTo(IntPosition position) {
-        return marineClosestTo(position, marins);
     }
 
     public Optional<Sailor> availableSailorClosestTo(IntPosition position) {

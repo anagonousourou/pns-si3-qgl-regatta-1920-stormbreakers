@@ -21,10 +21,6 @@ public class EquationDroite {
 		this.yIntercept = y1 - this.slope * x1;
 	}
 
-	public double orientationDroite() {
-		return Math.atan(slope);
-	}
-
 	/**
 	 * Returns y = f(x)
 	 * 

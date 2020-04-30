@@ -6,7 +6,7 @@ public enum OceanEntityType {
 	public final String entityCode;
 	public final String shortCode;
 
-	private OceanEntityType(String entityCode, String shortCode) {
+	OceanEntityType(String entityCode, String shortCode) {
 
 		this.entityCode = entityCode;
 		this.shortCode = shortCode;

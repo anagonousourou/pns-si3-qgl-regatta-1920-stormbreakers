@@ -45,7 +45,6 @@ public class Rectangle extends Shape {
     }
 
     private Polygon buildAsPolygon() {
-        // LATER: 16/03/2020 Quick test
         double halfLength = height / 2;
         double halfWidth = width / 2;
 
@@ -99,7 +98,6 @@ public class Rectangle extends Shape {
 
     // =========
     // Methods for all shapes
-    // LATER: 12/03/2020 Make Rectangle a Polygon -> FIXES StreamManagerTests
 
     @Override
     public boolean collidesWith(Shape shape) {
@@ -118,10 +116,7 @@ public class Rectangle extends Shape {
 
     @Override
     public boolean collidesWith(LineSegment2D lineSegment2D) {
-
-        // LATER: 12/03/2020 Figure out why polygon collision doesn't work in tests
         return new RectanglePositioned(this, this.getAnchor()).intersectsWith(lineSegment2D);
-
     }
 
     @Override
@@ -205,15 +200,6 @@ public class Rectangle extends Shape {
         return "R" + "(" + width + "|" + height + "|" + orientation + ")";
     }
 
-    // LATER: 15/03/2020 KEEP ?
-    public Point2D findPointNearestToPosition(Position other, Position rectangle) {
-        RectanglePositioned rect = new RectanglePositioned(this, rectangle);
-        Point2D p = new Point2D(other.x(), other.y());
-        var tmp = rect.closestPointTo(p);
-        return tmp.isPresent() ? tmp.get() : null;
-    }
-
-    // LATER: 15/03/2020 KEEP
     public boolean haveGoodOrientation(Checkpoint cp, Point2D boatposition, Point2D courantPos) {
         // tourner la plan pour que le courant est un angle 0
         Point2D ptCp = cp.getPosition().getPoint2D().getTranslatedBy(cp.getPosition().x() - courantPos.x(),

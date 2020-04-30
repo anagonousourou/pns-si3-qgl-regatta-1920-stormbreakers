@@ -41,10 +41,6 @@ public class TargetDefiner {
         return this.streamManager.thereIsStreamBetween(checkpointsManager.nextCheckpoint());
     }
 
-    boolean thereIsObstaclesOnTrajectory() {
-        return this.streamManager.thereIsObstacleBetween(checkpointsManager.nextCheckpoint());
-    }
-
     Courant nextStreamOnTrajectory() {
         if (thereIsStreamOnTrajectory()) {
             return this.streamManager.firstStreamBetween(checkpointsManager.nextCheckpoint().getPosition());

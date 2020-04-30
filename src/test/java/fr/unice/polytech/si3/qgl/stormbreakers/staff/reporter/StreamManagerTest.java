@@ -190,34 +190,6 @@ public class StreamManagerTest {
     }
 
     @Test
-    void trajectoryToAvoidObstaclesTest() {
-        StreamManager streamManager = new StreamManager(parser, null);
-        streamManager.setObstacles(List.of(recifCarre, recifCercle, recifTriangle));
-
-        List<IPoint> trajectory = streamManager.trajectoryToAvoidObstacles(pointA, pointC);
-
-        assertEquals(4, trajectory.size());
-        assertEquals(pointA, trajectory.get(0), "Le premier élément de la trajectoire doit etre le depart");
-        assertEquals(pointC, trajectory.get(trajectory.size() - 1));
-        trajectory = streamManager.trajectoryToAvoidObstacles(pointA, pointB);
-
-        assertEquals(2, trajectory.size());
-        assertEquals(pointA, trajectory.get(0), "Le premier élément de la trajectoire doit etre le depart");
-        assertEquals(pointB, trajectory.get(1));
-
-        // we set with streams to explore another branch of if/else
-        streamManager.setObstacles(List.of(courant3, courant4, recifTriangle));
-
-        trajectory = streamManager.trajectoryToAvoidObstacles(pointI, pointH);
-
-        assertEquals(4, trajectory.size());
-
-        trajectory = streamManager.trajectoryToAvoidObstacles(pointH, pointI);
-        assertEquals(2, trajectory.size());
-
-    }
-
-    @Test
     void trajectoryLeaveStreamAndReachPointTest() {
         StreamManager streamManager = new StreamManager(parser, null);
 
