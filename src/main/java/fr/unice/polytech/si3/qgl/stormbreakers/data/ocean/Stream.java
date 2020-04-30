@@ -32,7 +32,7 @@ public class Stream extends OceanEntity {
 
     @Override
     public String toString() {
-        return String.format("%s(strength= %f, position= %s, shape= %s)", OceanEntityType.COURANT.shortCode, strength,
+        return String.format("%s(strength= %f, position= %s, shape= %s)", OceanEntityType.STREAM.shortCode, strength,
                 position.toString(), shape.toString());
     }
 
@@ -137,7 +137,7 @@ public class Stream extends OceanEntity {
 
     @Override
     public OceanEntityType getEnumType() {
-        return OceanEntityType.COURANT;
+        return OceanEntityType.STREAM;
     }
 
 }

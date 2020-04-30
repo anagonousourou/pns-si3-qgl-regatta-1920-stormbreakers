@@ -98,7 +98,7 @@ public class Graph {
                 double distance = n.getPoint().distanceTo(node.getPoint());
 
                 if (distance <= ecart * Math.sqrt(2)
-                        && !this.streamManager.thereIsRecifsBetweenOrAround(n.getPoint(), node.getPoint())) {
+                        && !this.streamManager.thereIsReefBetweenOrAround(n.getPoint(), node.getPoint())) {
                     double cout = distance - streamManager.speedProvided(node.getPoint(), n.getPoint())
                             - this.weatherAnalyst.speedProvided(node.getPoint(), n.getPoint());
                     if (cout < 0) {
@@ -222,46 +222,46 @@ public class Graph {
     }
 
     // NEW
-    public Vertex addNodeAndLink(Vertex vertex, double ecart) {
-        final Vertex ourSommet = this.addNode(vertex);
-        nodes.stream().filter(node -> node != ourSommet).forEach(n -> {
-            double distance = n.getPoint().distanceTo(ourSommet.getPoint());
-            if (distance <= ecart * Math.sqrt(2)) {
-                double cout = distance - streamManager.speedProvided(ourSommet.getPoint(), n.getPoint())
-                        - this.weatherAnalyst.speedProvided(ourSommet.getPoint(), n.getPoint());
-                double coutNodeSommet = distance - streamManager.speedProvided(n.getPoint(), ourSommet.getPoint())
-                        - this.weatherAnalyst.speedProvided(n.getPoint(), ourSommet.getPoint());
-                if (cout < 0) {
-                    ourSommet.addDestination(n, 0);
+    public Vertex addNodeAndLink(Vertex vertex, double gap) {
+        final Vertex ourVertex = this.addNode(vertex);
+        nodes.stream().filter(node -> node != ourVertex).forEach(n -> {
+            double distance = n.getPoint().distanceTo(ourVertex.getPoint());
+            if (distance <= gap * Math.sqrt(2)) {
+                double cost = distance - streamManager.speedProvided(ourVertex.getPoint(), n.getPoint())
+                        - this.weatherAnalyst.speedProvided(ourVertex.getPoint(), n.getPoint());
+                double costNodeVertex = distance - streamManager.speedProvided(n.getPoint(), ourVertex.getPoint())
+                        - this.weatherAnalyst.speedProvided(n.getPoint(), ourVertex.getPoint());
+                if (cost < 0) {
+                    ourVertex.addDestination(n, 0);
 
                 } else {
 
-                    ourSommet.addDestination(n, (int) cout);
+                    ourVertex.addDestination(n, (int) cost);
 
                 }
 
-                if (coutNodeSommet < 0) {
-                    n.addDestination(ourSommet, 0);
+                if (costNodeVertex < 0) {
+                    n.addDestination(ourVertex, 0);
                 } else {
 
-                    n.addDestination(ourSommet, (int) coutNodeSommet);
+                    n.addDestination(ourVertex, (int) costNodeVertex);
                 }
 
             }
         });
 
-        return ourSommet;
+        return ourVertex;
     }
 
     public void clearShortestPaths() {
-        for (Vertex sommet : nodes) {
-            sommet.clearShortestPath();
+        for (Vertex vertex : nodes) {
+        	vertex.clearShortestPath();
         }
     }
 
     public Vertex findVertexFor(IPoint cp) {
 
-        var optResult = nodes.stream().filter(sommet -> Utils.almostEquals(sommet.getPoint(), cp)).findAny();
+        var optResult = nodes.stream().filter(vertex -> Utils.almostEquals(vertex.getPoint(), cp)).findAny();
         if (optResult.isPresent()) {
             return optResult.get();
         }

@@ -60,7 +60,7 @@ public class CartographerTest {
 
         boat = new Boat(new Position(-5000, -5000), 5, 5, 5, null);
         streamManager = new StreamManager(null, boat);
-        streamManager.setRecifs(List.of(reefRectangle1, reefRectangle2, reefTriangle));
+        streamManager.setReefs(List.of(reefRectangle1, reefRectangle2, reefTriangle));
         streamManager.setObstacles(List.of(reefRectangle1, reefRectangle2, reefTriangle));
         weatherAnalyst = new WeatherAnalyst(null, boat, null);
         checkpointsManager = mock(CheckpointsManager.class);
@@ -84,7 +84,7 @@ public class CartographerTest {
     public void caseBuildMapTestNoWindNoStreams() {
         boat = new Boat(new Position(300, 500), 5, 5, 5, null);
         streamManager = new StreamManager(null, boat);
-        streamManager.setRecifs(List.of(reefRectangle1, reefRectangle2, reefTriangle));
+        streamManager.setReefs(List.of(reefRectangle1, reefRectangle2, reefTriangle));
         streamManager.setObstacles(List.of(reefRectangle1, reefRectangle2, reefTriangle));
         weatherAnalyst = new WeatherAnalyst(null, boat, null);
 

@@ -55,9 +55,9 @@ public class EquipmentsManager implements PropertyChangeListener {
                 .findFirst();
         optRuddder.ifPresent(gouvernail -> this.rudder = gouvernail);
         
-        Optional<Watch> optVigie = this.equipments.stream().filter(e -> e.getType().equals("watch")).map(e -> (Watch) e)
+        Optional<Watch> optWatch = this.equipments.stream().filter(e -> e.getType().equals("watch")).map(e -> (Watch) e)
                 .findFirst();
-        optVigie.ifPresent(vigie -> this.watch = vigie);
+        optWatch.ifPresent(watch -> this.watch = watch);
     }
 
     /**
@@ -139,7 +139,7 @@ public class EquipmentsManager implements PropertyChangeListener {
      * 
      * @param isOpened
      * @return List<Sail> - liste de voile ouverte si true sinon retourne les voiles
-     *         baisse
+     *         baissees
      */
     public List<Sail> sails(boolean isOpened) {
         if (isOpened) {

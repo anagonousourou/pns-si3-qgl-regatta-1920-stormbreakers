@@ -45,7 +45,7 @@ public interface Surface extends IPoint, Orientable {
 		return this.intersectsWith(segment2d);
 	}
 
-	
+
 
 	/**
 	 * Give the intersection of segment [depart,arrive] if arrivee is outside the

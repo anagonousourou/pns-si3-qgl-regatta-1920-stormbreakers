@@ -41,10 +41,10 @@ public class CoordinatorTest {
 	private Watch w1, w2;
 	
 	private List<Equipment> equipments;
-	private List<Oar> rames;
-	private List<Sail> voilesOuvertes;
-	private List<Sail> voilesBaissees;
-	private List<Sailor> marinsDisponibles;
+	private List<Oar> oars;
+	private List<Sail> opennedSails;
+	private List<Sail> closedSails;
+	private List<Sailor> availableSailors;
 	
 	@BeforeEach
 	void setup(){
@@ -69,31 +69,31 @@ public class CoordinatorTest {
 		o5 = new Oar(4, 0);
 		o6 = new Oar(4, 2);
 		
-		marinsDisponibles = List.of(m1, m2, m3, m4, m5, m6);
-		rames = List.of(o1, o2, o3, o4, o5, o6);
-		voilesOuvertes = List.of(s1, s3);
-		voilesBaissees = List.of(s2, s4);
+		availableSailors = List.of(m1, m2, m3, m4, m5, m6);
+		oars = List.of(o1, o2, o3, o4, o5, o6);
+		opennedSails = List.of(s1, s3);
+		closedSails = List.of(s2, s4);
 		equipments = List.of(s1, s2, s3, s4);
 		
 		equipmentsManager= mock(EquipmentsManager.class);
 		crewManager = mock(CrewManager.class);
 		coordinator=  new Coordinator(crewManager, equipmentsManager);
-		when(crewManager.marins()).thenReturn(marinsDisponibles);
-		when(equipmentsManager.sails(true)).thenReturn(voilesOuvertes);
-		when(equipmentsManager.sails(false)).thenReturn(voilesBaissees);
+		when(crewManager.sailors()).thenReturn(availableSailors);
+		when(equipmentsManager.sails(true)).thenReturn(opennedSails);
+		when(equipmentsManager.sails(false)).thenReturn(closedSails);
 	}
 	
 	@Test
 	void leftSailorsOnOarsTest() {
 		when(equipmentsManager.allLeftOars()).thenReturn(List.of(o1,o3,o5));
-		when(crewManager.marineAtPosition(o1.getPosition())).thenReturn(Optional.of(m1));
+		when(crewManager.sailorAtPosition(o1.getPosition())).thenReturn(Optional.of(m1));
 		assertTrue(coordinator.leftSailorsOnOars().contains(m1) && coordinator.leftSailorsOnOars().size()==1);
 	}
 	
 	@Test
 	void rightSailorsOnOarsTest() {
 		when(equipmentsManager.allRightOars()).thenReturn(List.of(o2,o4,o6));
-		when(crewManager.marineAtPosition(o6.getPosition())).thenReturn(Optional.of(m5));
+		when(crewManager.sailorAtPosition(o6.getPosition())).thenReturn(Optional.of(m5));
         assertEquals(1, coordinator.rightSailorsOnOars().size());
 	}
     @Test
@@ -101,11 +101,11 @@ public class CoordinatorTest {
     	// Setup sans utiliser Mockito
     	List<Equipment> newVersion = new ArrayList<>(equipments);
     	newVersion.add(r1);
-    	coordinator=  new Coordinator(new CrewManager(marinsDisponibles), new EquipmentsManager(newVersion, 4));
+    	coordinator=  new Coordinator(new CrewManager(availableSailors), new EquipmentsManager(newVersion, 4));
     	
     	// Orientaiton valide, au moins 1 marin proche
     	List<SailorAction> toTest1 = coordinator.activateRudder(Math.PI/4);
-    	Optional<Sailor> sailorChosen1 = coordinator.marineForRudder();
+    	Optional<Sailor> sailorChosen1 = coordinator.sailorForRudder();
     	assertTrue(toTest1.get(0) instanceof MoveAction);
     	int expectedX = sailorChosen1.get().getPosition().x() + ((MoveAction) toTest1.get(0)).getXdistance();
     	int expectedY = sailorChosen1.get().getPosition().y() + ((MoveAction) toTest1.get(0)).getYdistance();
@@ -118,7 +118,7 @@ public class CoordinatorTest {
     	// Aucun marin proche
     	newVersion.remove(r1);
     	newVersion.add(r2);
-    	coordinator =  new Coordinator(new CrewManager(marinsDisponibles), new EquipmentsManager(newVersion, 4));
+    	coordinator =  new Coordinator(new CrewManager(availableSailors), new EquipmentsManager(newVersion, 4));
 		List<SailorAction> toTest3 = coordinator.activateRudder(Math.PI/2);
 		
     	assertTrue(toTest3.isEmpty());
@@ -127,8 +127,8 @@ public class CoordinatorTest {
     @Test
 	void activateNbOarsTest() {
     	// Marins dispo, rames présentes
-    	coordinator =  new Coordinator(new CrewManager(marinsDisponibles), new EquipmentsManager(new ArrayList<Equipment>(rames), 4));
-    	List<SailorAction> toOar1 = coordinator.activateNbOars(rames, 3, new ArrayList<>());
+    	coordinator =  new Coordinator(new CrewManager(availableSailors), new EquipmentsManager(new ArrayList<Equipment>(oars), 4));
+    	List<SailorAction> toOar1 = coordinator.activateNbOars(oars, 3, new ArrayList<>());
     	assertTrue(toOar1.get(0) instanceof MoveAction);
     	int expectedX = m1.getPosition().x() + ((MoveAction) toOar1.get(0)).getXdistance();
     	int expectedY = m1.getPosition().y() + ((MoveAction) toOar1.get(0)).getYdistance();
@@ -142,15 +142,15 @@ public class CoordinatorTest {
     	// Marin#0 est indispo
     	m1 = mock(Sailor.class);
     	when(m1.isDoneTurn()).thenReturn(true);
-    	marinsDisponibles = List.of(m1, m2, m3, m4, m5, m6);
-    	coordinator=  new Coordinator(new CrewManager(marinsDisponibles), new EquipmentsManager(new ArrayList<Equipment>(rames), 4));
+    	availableSailors = List.of(m1, m2, m3, m4, m5, m6);
+    	coordinator=  new Coordinator(new CrewManager(availableSailors), new EquipmentsManager(new ArrayList<Equipment>(oars), 4));
     	
-    	List<SailorAction> toOar2 = coordinator.activateNbOars(rames, 3, new ArrayList<>());
+    	List<SailorAction> toOar2 = coordinator.activateNbOars(oars, 3, new ArrayList<>());
     	assertEquals(1, toOar2.get(0).getSailorId());
     	assertEquals(1, toOar2.get(1).getSailorId());
     	
     	// Aucun marin dispo
-    	List<SailorAction> toOar3 = coordinator.activateNbOars(rames, 3, new ArrayList<>(marinsDisponibles));
+    	List<SailorAction> toOar3 = coordinator.activateNbOars(oars, 3, new ArrayList<>(availableSailors));
     	assertTrue(toOar3.isEmpty());
 	}
 	
@@ -160,43 +160,43 @@ public class CoordinatorTest {
 	 *
 	 */
 	@Test
-	void marinsDisponiblesVoilesTest() {
+	void availableSailorsForSailsTest() {
 		Map<Equipment, List<Sailor>> results;
-		results = coordinator.marinsDisponiblesVoiles(true);
+		results = coordinator.availableSailorsForSails(true);
 		
 		assertTrue(results.containsKey(s1));
 		assertTrue(results.containsKey(s3));
 		assertEquals(List.of(m3, m5, m6), results.get(s1));
-		assertEquals(marinsDisponibles, results.get(s3));
+		assertEquals(availableSailors, results.get(s3));
 		
-		results = coordinator.marinsDisponiblesVoiles(false);
+		results = coordinator.availableSailorsForSails(false);
 		assertTrue(results.containsKey(s2));
 		assertTrue(results.containsKey(s4));
 		assertEquals(List.of(m2, m4, m5), results.get(s2));
 		assertEquals(List.of(m1, m2, m3, m4, m5), results.get(s4));
 		
-		when(crewManager.marins()).thenReturn(List.of());
-		results = coordinator.marinsDisponiblesVoiles(false);
+		when(crewManager.sailors()).thenReturn(List.of());
+		results = coordinator.availableSailorsForSails(false);
 		assertEquals(List.of(), results.get(s2));
 		assertEquals(List.of(), results.get(s4));
 		
 		when(equipmentsManager.sails(true)).thenReturn(List.of());
-		assertTrue(coordinator.marinsDisponiblesVoiles(true).isEmpty());
+		assertTrue(coordinator.availableSailorsForSails(true).isEmpty());
 	}
 	
 	@Test
 	void canLiftAllSailsTest() {
 		assertTrue(coordinator.canLiftAllSails());
-		when(crewManager.marins()).thenReturn(List.of(m4));
+		when(crewManager.sailors()).thenReturn(List.of(m4));
 		assertFalse(coordinator.canLiftAllSails());
-		when(crewManager.marins()).thenReturn(List.of(m4, m5));
+		when(crewManager.sailors()).thenReturn(List.of(m4, m5));
 		assertTrue(coordinator.canLiftAllSails());
 	}
 
 	@Test
 	void canLowerAllSailsTest(){
 		assertTrue(coordinator.canLowerAllSails());
-		when(crewManager.marins()).thenReturn(List.of());
+		when(crewManager.sailors()).thenReturn(List.of());
 		assertFalse(coordinator.canLowerAllSails());
 	}
 
@@ -589,7 +589,7 @@ public class CoordinatorTest {
 		// Setup sans utiliser Mockito
     	List<Equipment> newVersion = new ArrayList<>(equipments);
     	newVersion.add(w1);
-    	coordinator =  new Coordinator(new CrewManager(marinsDisponibles), new EquipmentsManager(newVersion, 4));
+    	coordinator =  new Coordinator(new CrewManager(availableSailors), new EquipmentsManager(newVersion, 4));
     	
     	// Orientaiton valide, au moins 1 marin proche
     	Optional<Sailor> sailorForRudder = coordinator.findSailorForWatch();
@@ -611,7 +611,7 @@ public class CoordinatorTest {
     	// Aucun marin proche
     	newVersion.remove(w1);
     	newVersion.add(w2);
-    	coordinator =  new Coordinator(new CrewManager(marinsDisponibles), new EquipmentsManager(newVersion, 4));
+    	coordinator =  new Coordinator(new CrewManager(availableSailors), new EquipmentsManager(newVersion, 4));
 		List<SailorAction> toTest3 = coordinator.setSailorToWatch();
 		
     	assertTrue(toTest3.isEmpty());

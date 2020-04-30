@@ -21,7 +21,7 @@ public class Reef extends OceanEntity {
 
     @Override
     public OceanEntityType getEnumType() {
-        return OceanEntityType.RECIF;
+        return OceanEntityType.REEF;
     }
 
     @Override

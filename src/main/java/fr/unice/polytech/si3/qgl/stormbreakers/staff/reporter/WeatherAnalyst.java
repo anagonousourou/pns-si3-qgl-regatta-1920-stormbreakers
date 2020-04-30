@@ -70,10 +70,10 @@ public class WeatherAnalyst {
         return 0.0;
     }
 
-    public double speedProvided(IPoint depart, IPoint arrive) {
+    public double speedProvided(IPoint start, IPoint finish) {
         if (wind != null && equipmentsManager.nbSails() != 0) {
             return wind.getStrength()
-                    * Math.cos(new Vector(depart, arrive).getOrientation() - this.wind.getOrientation());
+                    * Math.cos(new Vector(start, finish).getOrientation() - this.wind.getOrientation());
         }
         return 0.0;
     }

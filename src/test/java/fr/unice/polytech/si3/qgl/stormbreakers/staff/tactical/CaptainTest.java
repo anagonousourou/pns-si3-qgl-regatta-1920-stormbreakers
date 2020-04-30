@@ -69,11 +69,11 @@ public class CaptainTest {
         var m2 = new Sailor(2, 2, 2);
         var m3 = new Sailor(3, 3, 3);
         var m4 = new Sailor(4, 4, 4);
-        List<Sailor> marins = List.of(m1, m2, m3, m4);
-        CrewManager crewManager = new CrewManager(marins);
+        List<Sailor> sailors = List.of(m1, m2, m3, m4);
+        CrewManager crewManager = new CrewManager(sailors);
         EquipmentsManager equipmentsManager = mock(EquipmentsManager.class);
 
-        marins.forEach(m -> assertFalse(m.isDoneTurn(), "par défaut  doneTurn est à false"));
+        sailors.forEach(m -> assertFalse(m.isDoneTurn(), "par défaut  doneTurn est à false"));
 
         Coordinator coordinator = new Coordinator(crewManager, equipmentsManager);
 

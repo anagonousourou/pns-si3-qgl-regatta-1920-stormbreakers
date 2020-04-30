@@ -20,7 +20,7 @@ public class SurfaceTest {
 	private Surface s;
 	private Surface surfaceCircle;
 	private Surface orientedSurface;
-	private Surface polygonsurface;	
+	private Surface polygonsurface;
 	private Position depart;
 	private Position destination;
 	private Position d1;
@@ -52,7 +52,7 @@ public class SurfaceTest {
 		cercle = new Circle(300);
 		s = new Reef(new Position(1000, 500.0), rectangle);
 		surfaceCircle = new Reef(new Position(1000, 500), cercle);
-		
+
 		polygon = new Polygon(0.0,
 				List.of(new Point2D(-150,-150),
 						new Point2D(250,150),
@@ -136,8 +136,8 @@ public class SurfaceTest {
 		assertTrue(triangle.intersectsWith(lineTriangle1));
 		assertFalse(triangle.intersectsWith(lineTriangle2));
 		assertTrue(triangle.intersectsWith(lineTriangle3));
-	}	
-	
+	}
+
 
 	
 }

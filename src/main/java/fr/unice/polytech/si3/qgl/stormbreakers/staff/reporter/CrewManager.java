@@ -13,19 +13,19 @@ import fr.unice.polytech.si3.qgl.stormbreakers.math.IntPosition;
 
 public class CrewManager {
 
-    private final List<Sailor> marins;
+    private final List<Sailor> sailors;
 
-    public CrewManager(List<Sailor> marins) {
-        this.marins = marins;
+    public CrewManager(List<Sailor> sailors) {
+        this.sailors = sailors;
     }
 
-    public Optional<Sailor> getMarinById(int id) {
-        return marins.stream().filter(m -> m.getId() == id).findFirst();
+    public Optional<Sailor> getSailorById(int id) {
+        return sailors.stream().filter(m -> m.getId() == id).findFirst();
     }
 
     public void executeMoves(List<MoveAction> moves) {
         for (MoveAction m : moves) {
-            var optMarin = this.getMarinById(m.getSailorId());
+            var optMarin = this.getSailorById(m.getSailorId());
             optMarin.ifPresent(sailor -> sailor.move(m));
         }
     }
@@ -41,7 +41,7 @@ public class CrewManager {
                 .map(x -> (MoveAction) x).collect(Collectors.toList());
 
         for (MoveAction move : moves) {
-            Optional<Sailor> sailorOpt = getMarinById(move.getSailorId());
+            Optional<Sailor> sailorOpt = getSailorById(move.getSailorId());
             sailorOpt.ifPresent(sailor -> sailor.move(move));
 
         }
@@ -50,15 +50,15 @@ public class CrewManager {
 
     @Override
     public String toString() {
-        return marins.toString();
+        return sailors.toString();
     }
 
-    public boolean marinAround(IntPosition position) {
-        return this.marins.stream().anyMatch(m -> m.canReach(position));
+    public boolean sailorAround(IntPosition position) {
+        return this.sailors.stream().anyMatch(m -> m.canReach(position));
     }
 
-    public Optional<Sailor> marineAtPosition(IntPosition position) {
-        return marins.stream().filter(m -> m.getPosition().distanceTo(position) == 0).findFirst();
+    public Optional<Sailor> sailorAtPosition(IntPosition position) {
+        return sailors.stream().filter(m -> m.getPosition().distanceTo(position) == 0).findFirst();
     }
 
     public Optional<Sailor> availableSailorAtPosition(IntPosition position) {
@@ -66,7 +66,7 @@ public class CrewManager {
     }
 
     public Optional<Sailor> availableSailorClosestTo(IntPosition position) {
-        return marineClosestTo(position, getAvailableSailors());
+        return sailorClosestTo(position, getAvailableSailors());
     }
 
     /**
@@ -76,16 +76,16 @@ public class CrewManager {
      * @param sailors  list of sailors
      * @return Optional which contains the closest sailors if there is any
      */
-    public Optional<Sailor> marineClosestTo(IntPosition position, List<Sailor> sailors) {
+    public Optional<Sailor> sailorClosestTo(IntPosition position, List<Sailor> sailors) {
         return sailors.stream().min(Comparator.comparingInt(a -> a.getDistanceTo(position)));
     }
 
     public void resetAvailability() {
-        this.marins.forEach(m -> m.setDoneTurn(false));
+        this.sailors.forEach(m -> m.setDoneTurn(false));
     }
 
-    public List<Sailor> marins() {
-        return marins;
+    public List<Sailor> sailors() {
+        return sailors;
     }
 
     public List<Sailor> getAvailableSailorsIn(List<Sailor> sailors) {
@@ -93,7 +93,7 @@ public class CrewManager {
     }
 
     public List<Sailor> getAvailableSailors() {
-        return getAvailableSailorsIn(marins);
+        return getAvailableSailorsIn(sailors);
     }
 
     public List<Sailor> getSailorsWhoCanReach(List<Sailor> sailors, IntPosition position) {
@@ -111,7 +111,7 @@ public class CrewManager {
     public MoveAction bringClosestSailorCloserTo(List<Sailor> sailors, IntPosition position) {
         // LATER: 27/02/2020 Verify Tests
         MoveAction move = null;
-        Optional<Sailor> closestSailorOpt = marineClosestTo(position, sailors);
+        Optional<Sailor> closestSailorOpt = sailorClosestTo(position, sailors);
 
         if (closestSailorOpt.isPresent()) {
             Sailor closestSailor = closestSailorOpt.get();
