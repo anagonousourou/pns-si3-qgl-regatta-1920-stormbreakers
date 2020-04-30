@@ -59,7 +59,6 @@ public interface Surface extends IPoint, Orientable {
 	public default IPoint limitToSurface(IPoint depart, IPoint arrivee) {
 
 		if (this.isInsideOpenSurface(arrivee)) {
-			// TODO: 23/04/2020 Test this case
 			return arrivee;
 		}
 

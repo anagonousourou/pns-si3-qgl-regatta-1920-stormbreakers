@@ -67,7 +67,6 @@ public class LineSegment2D {
 	 * @return true if the 2 line segments intersect
 	 */
 	public static boolean intersects(LineSegment2D edge1, LineSegment2D edge2) {
-		// TODO: 07/03/2020 Rework if time
 		Point2D e1p1 = edge1.firstPoint();
 		Point2D e1p2 = edge1.lastPoint();
 		Point2D e2p1 = edge2.firstPoint();
@@ -178,7 +177,6 @@ public class LineSegment2D {
 	 * is P(0) and endPoint is P(1) Note: The point needs to be on the line.
 	 */
 	public double segmentParameterOf(Point2D p) {
-		// TODO: 08/03/2020 Clamp k in [0,1] and corresponding tests
 		Vector supportDirection = startPoint.getVectorTo(endPoint).normalize();
 		Line2D arrangedSupport = new Line2D(startPoint, supportDirection);
 		return arrangedSupport.lineParameterOf(p) / length;
@@ -192,7 +190,6 @@ public class LineSegment2D {
 	 * @return the projection
 	 */
 	public Point2D point(double segmentParameter) {
-		// TODO: 08/03/2020 Clamp k in [0,1] and corresponding tests
 		Vector supportDirection = startPoint.getVectorTo(endPoint).normalize();
 		Line2D arrangedSupport = new Line2D(startPoint, supportDirection);
 		return arrangedSupport.pointFromLineParameter(segmentParameter * length);

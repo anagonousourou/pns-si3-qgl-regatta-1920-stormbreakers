@@ -96,14 +96,14 @@ class PolygonTest {
         List<Point2D> vertices = List.of(A, B, C);
         Polygon polygon = new Polygon(0.0, vertices);
 
-        // TODO: 15/03/2020 If time: add reference points manually
+
         List<Point2D> translatedVertices = vertices.stream().map(point -> point.getTranslatedBy(0, 10))
                 .collect(Collectors.toList());
         Polygon translatedPolygon = new Polygon(0.0, translatedVertices);
         polygon.setAnchor(new Position(0, 10));
         assertEquals(translatedPolygon.getHull(), polygon.getHull());
 
-        // TODO: 15/03/2020 If time: add reference points manually
+
         List<Point2D> rotatedVertices = vertices.stream().map(point -> point.getRotatedBy(Math.toRadians(50)))
                 .collect(Collectors.toList());
         Polygon rotatedPolygon = new Polygon(0.0, rotatedVertices);

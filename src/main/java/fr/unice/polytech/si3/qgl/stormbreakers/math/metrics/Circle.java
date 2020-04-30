@@ -312,7 +312,7 @@ public class Circle extends Shape {
             } else {
                 // It's a perfect match
                 // The last computed point is the one
-                return testedPoint; // TODO: 23/04/2020 needs testing if possible (0.0 rare case)
+                return testedPoint; 
             }
 
             // Recompute the guessing points

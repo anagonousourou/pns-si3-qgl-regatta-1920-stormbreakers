@@ -288,7 +288,6 @@ public class Polygon extends Shape implements Orientable {
         if (optPoint.isPresent()) {
             return optPoint.get();
         }
-        // TODO: 23/04/2020 Test this last part
         Logger.getInstance().log("returning null");
         return null;
     }
@@ -369,7 +368,6 @@ public class Polygon extends Shape implements Orientable {
         for (int ct = 0; ct < expandedLines.size() - 1; ct++) {
             Optional<Point2D> optExpandedVertex = (expandedLines.get(ct)).intersect(expandedLines.get(ct + 1));
             if (optExpandedVertex.isEmpty())
-                // TODO: 23/04/2020 Test with wrong polygon
                 throw new UnsupportedOperationException("Can't find expansion point with lines :"
                         + expandedLines.get(ct) + " and " + expandedLines.get(ct + 1));
             expandedVertices.add(optExpandedVertex.get());
