@@ -379,9 +379,10 @@ class PolygonTest {
         ));
         Position anchor = new Position(0,0);
         Polygon square = new Polygon(0,points,anchor);
-        assertTrue(square.isInsideOpenShape(new Point2D(49.5,49.5)));
-        assertFalse(square.isInsideOpenShape(new Point2D(50,50)));
-        assertFalse(square.isInsideOpenShape(new Point2D(50.5,50.5)));
+        assertTrue(square.isInsideOpenShape(new Point2D(49.5,49.5))); // le bateau est dans la forme
+        assertFalse(square.isInsideOpenShape(new Point2D(50,50))); // Le bateau est  sur le coin de la forme
+        assertFalse(square.isInsideOpenShape(new Point2D(50,49.5))); // Le bateau est  sur une arrete de la forme
+        assertFalse(square.isInsideOpenShape(new Point2D(50.5,50.5))); // le bateau est en dehors de la surface
 
         Polygon squareRotated = new Polygon(Math.PI/4,points,anchor);
         double maxY = Math.sqrt(2) * 50;
