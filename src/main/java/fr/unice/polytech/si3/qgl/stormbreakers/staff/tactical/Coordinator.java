@@ -134,7 +134,7 @@ public class Coordinator {
         return this.equipmentsManager.nbOpennedSails();
     }
 
-    public Map<Oar, List<Sailor>> marinsDisponiblesForOar() {
+    public Map<Oar, List<Sailor>> availableSailorsForOar() {
         HashMap<Oar, List<Sailor>> results = new HashMap<>();
         this.equipmentsManager.oars().forEach(oar -> results.put(oar, this.crewManager.sailors().stream()
                 .filter(m -> m.canReach(oar.getPosition())).collect(Collectors.toList())));
