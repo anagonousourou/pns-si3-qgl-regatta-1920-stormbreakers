@@ -87,6 +87,7 @@ public class Boat extends OceanEntity implements PropertyChangeListener, Surface
 
     }
 
+    @Override
     public Position getPosition() {
         return position;
     }

@@ -7,10 +7,16 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Boat;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Stream;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.OceanEntity;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Wind;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Position;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Shape;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Gouvernail;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.*;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.LineSegment2D;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.Surface;
 import fr.unice.polytech.si3.qgl.stormbreakers.visuals.draw.Displayer;
 import fr.unice.polytech.si3.qgl.stormbreakers.visuals.draw.drawings.DotDrawing;
-import fr.unice.polytech.si3.qgl.stormbreakers.visuals.draw.drawings.PosDrawing;
 
+import java.awt.*;
 import java.util.List;
 
 public class EngineUtils {
@@ -54,18 +60,20 @@ public class EngineUtils {
 
     public static Position nextPosition(Position positionInit, int nbOarsRightActive, int nbOarsLeftActive, int nbOars,
                                         Rudder rudder, Wind wind, List<Stream> streams, int nbsail, int nbSailOpenned,
-                                        Shape shipShape, List<OceanEntity> reef, int nbStep, Displayer displayer){
+                                        Shape shipShape, List<Reef> reef, int nbStep, Displayer displayer){
         double x = positionInit.x();
         double y = positionInit.y();
         double orientation = positionInit.getOrientation();
+
         if(rudder ==null) rudder = new Rudder(-1,-1);
         double angleGouvernail = rudder.getOrientation();
         double vitesseOarLineaire = oarSpeed(nbOars,nbOarsLeftActive,nbOarsRightActive);
         double vitesseWindLineaire = windAdditionnalSpeed(nbsail,nbSailOpenned,wind,orientation);
         double vitesseLineaire = vitesseOarLineaire + vitesseWindLineaire;
         double vitesseOrientation = Math.PI*(nbOarsRightActive-nbOarsLeftActive)/nbOars + angleGouvernail;
+
         for(int i = 0;i<nbStep;i++){
-            if(displayer!=null) displayer.addDrawing(new DotDrawing(new Position(x,y,0)));
+            if(displayer!=null) displayer.addDrawing(new DotDrawing(new Position(x,y,orientation), Color.GRAY));
             Position positionAtStep = new Position(x,y,orientation);
             Boat shipAtState = new Boat(positionAtStep,0,0,0,null,shipShape);
             // TODO: 02/04/2020 Join speedX and speedY using vectors
@@ -74,15 +82,20 @@ public class EngineUtils {
             orientation = orientation + vitesseOrientation/nbStep;
             vitesseLineaire = vitesseOarLineaire + windAdditionnalSpeed(nbsail,nbSailOpenned,wind,orientation);
             for(OceanEntity reef1 : reef) {
-                Boat newBoat = (new Boat(new Position(x, y, orientation), 0,0,0,null, shipShape));
-                if (newBoat.collidesWith(reef1)) {
-                    System.out.println("Collision !");
+                Position currentNextPos = new Position(x, y, orientation);
+                Boat newBoat = (new Boat(currentNextPos, 0,0,0,null, shipShape));
+                if (newBoat.collidesWith(reef1) || collisionBetweenSteps(positionAtStep,currentNextPos,reef1) ) {
+                    System.err.println("Collision near "+ currentNextPos +" after leaving "+positionInit);
                     return positionAtStep;
                 }
             }
         }
         orientation = orientation - (Math.ceil((orientation + Math.PI)/(2*Math.PI))-1)*2*Math.PI;
-        //if(affichage!=null) affichage.setDeplacementBoat(new Position(x,y,orientation),shipShape);
         return new Position(x,y, orientation);
+    }
+
+    private static boolean collisionBetweenSteps(Position posBefore, Position posAfter, Surface obstacle) {
+        return posBefore.distanceTo(posAfter)!=0
+                && obstacle.getShape().collidesWith(new LineSegment2D(posBefore,posAfter));
     }
 }

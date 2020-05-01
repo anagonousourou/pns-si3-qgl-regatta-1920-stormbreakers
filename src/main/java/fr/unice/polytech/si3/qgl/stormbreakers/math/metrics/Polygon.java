@@ -108,6 +108,8 @@ public class Polygon extends Shape implements Orientable {
         return new Circle(getMaxRadius(), getAnchor());
     }
 
+    // -- COLLISION = Intersection Only
+
     @Override
     public boolean collidesWith(Shape shape) {
         return shape.collidesWith(this); // collide w/ polygon

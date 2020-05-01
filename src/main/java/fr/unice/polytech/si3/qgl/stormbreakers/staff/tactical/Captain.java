@@ -48,6 +48,8 @@ public class Captain {
         this.coordinator.resetAvailability();
         this.checkpointsManager.updateCheckpoint(boat);
 
+        if (checkpointsManager.nextCheckpoint()==null) return List.of(); // No NPE when run already completed
+
         var destination = this.targetDefiner.defineNextTarget();
 
         if (destination == null) {
