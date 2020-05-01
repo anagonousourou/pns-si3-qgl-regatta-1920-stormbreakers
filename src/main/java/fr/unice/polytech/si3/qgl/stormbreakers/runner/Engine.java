@@ -31,6 +31,8 @@ import java.util.stream.Collectors;
 
 public class Engine {
 
+    public static final int WEEK_NUM = 6;
+
     private static final int MID_VISION = 1000;
     private static final int NB_STEP = 10;
     private static final double WIND = 0;
@@ -71,8 +73,7 @@ public class Engine {
         mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
         mapper.disable(MapperFeature.AUTO_DETECT_GETTERS);
 
-        int weekNum = 6;
-        String weekInputsPath = RAW_PATH + "\\week" + weekNum;
+        String weekInputsPath = RAW_PATH + "\\week" + WEEK_NUM;
 
         initGameJson = new String(Engine.class.getResourceAsStream( weekInputsPath+ "/initgame.json").readAllBytes());
         initGame = mapper.readValue(initGameJson, InitGame.class);
