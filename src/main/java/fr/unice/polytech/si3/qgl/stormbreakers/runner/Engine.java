@@ -140,7 +140,7 @@ public class Engine {
         int nbsail = equipmentsManager.nbSails();
         int nbSailOpenned = equipmentsManager.nbOpennedSails();
         Shape shipShape = boat.getShape();
-        List<Recif> reefs = game.getReefs();
+        List<Reef> reefs = game.getReefs();
 
         Position newPos = EngineUtils.nextPosition(positionInit,nbOarsRightActive,nbOarsLeftActive,nbOars,
                 rudder,wind,streams,nbsail,nbSailOpenned,shipShape,reefs,NB_STEP,displayer);

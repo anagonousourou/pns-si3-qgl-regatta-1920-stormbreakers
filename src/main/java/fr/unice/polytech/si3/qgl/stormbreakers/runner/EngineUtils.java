@@ -9,7 +9,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.OceanEntity;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Wind;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Position;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Shape;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Gouvernail;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Rudder;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.*;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.LineSegment2D;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Surface;

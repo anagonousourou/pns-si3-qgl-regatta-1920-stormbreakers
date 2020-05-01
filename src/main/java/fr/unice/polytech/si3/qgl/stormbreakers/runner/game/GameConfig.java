@@ -39,17 +39,17 @@ public class GameConfig {
         return ship;
     }
 
-    public List<Recif> getReefs() {
+    public List<Reef> getReefs() {
         return entities.stream()
-                .filter(ent -> OceanEntityType.RECIF.equals(ent.getEnumType()))
-                .map(ent -> (Recif) ent)
+                .filter(ent -> OceanEntityType.REEF.equals(ent.getEnumType()))
+                .map(ent -> (Reef) ent)
                 .collect(Collectors.toList());
     }
 
-    public List<Courant> getStreams() {
+    public List<Stream> getStreams() {
         return entities.stream()
-                .filter(ent -> OceanEntityType.COURANT.equals(ent.getEnumType()))
-                .map(ent -> (Courant) ent)
+                .filter(ent -> OceanEntityType.STREAM.equals(ent.getEnumType()))
+                .map(ent -> (Stream) ent)
                 .collect(Collectors.toList());
     }
 }
