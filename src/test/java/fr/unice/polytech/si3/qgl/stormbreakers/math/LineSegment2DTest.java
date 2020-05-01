@@ -14,7 +14,6 @@ import org.junit.jupiter.api.Test;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.exceptions.DegeneratedLine2DException;
 
-import javax.sound.sampled.Line;
 
 public class LineSegment2DTest {
 	

@@ -49,8 +49,11 @@ public class TargetDefiner {
     }
 
     public TupleDistanceOrientation defineNextTarget() {
+        this.checkpointsManager.updateCheckpoint(boat);
         IPoint cp = checkpointsManager.nextCheckpoint();
-
+        if (cp == null) {
+            return null;
+        }
         if (!this.streamManager.thereIsObstacleBetweenOrAround(cp) && !this.streamManager.insideOpenStream()) {
             System.out.println("Not using Pathfinding:");
             return new TupleDistanceOrientation(cp.distanceTo(boat),
@@ -99,7 +102,7 @@ public class TargetDefiner {
 
         double linearSpeed = goal.getDistance();
         double orientationSpeed = goal.getOrientation();
-        
+
         for (int i = 0; i < nbStep; i++) {
 
             x = x + Math.cos(orientation) * linearSpeed / nbStep;

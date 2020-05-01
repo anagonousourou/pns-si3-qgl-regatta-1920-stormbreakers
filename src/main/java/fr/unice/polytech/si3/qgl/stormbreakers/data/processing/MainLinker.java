@@ -67,7 +67,7 @@ public class MainLinker {
 
 			targetDefiner = new TargetDefiner(checkpointsManager, streamManager, boat, navigator, cartographer);
 
-			captain = new Captain(boat, checkpointsManager, navigator, seaElements, coordinator, targetDefiner);
+			captain = new Captain( navigator, seaElements, coordinator, targetDefiner);
 
 			this.observableData.addPropertyChangeListener(this.wind);
 			this.observableData.addPropertyChangeListener(this.equipmentsManager);

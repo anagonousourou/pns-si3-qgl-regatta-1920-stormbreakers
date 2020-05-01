@@ -13,22 +13,18 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Circle;import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.IPoint;
-import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Polygon;
-import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Position;
-import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Rectangle;
-import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Shape;
-import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.ShapeType;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Checkpoint;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Boat;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Reef;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.processing.ObservableData;
 import fr.unice.polytech.si3.qgl.stormbreakers.io.InputParser;
 import fr.unice.polytech.si3.qgl.stormbreakers.io.json.JsonInputParser;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.processing.ObservableData;
-import fr.unice.polytech.si3.qgl.stormbreakers.math.LineSegment2D;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
-import fr.unice.polytech.si3.qgl.stormbreakers.math.RectangularSurface;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.graph.Graph;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Circle;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Polygon;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Position;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Rectangle;
 
 public class CartographerTest {
 

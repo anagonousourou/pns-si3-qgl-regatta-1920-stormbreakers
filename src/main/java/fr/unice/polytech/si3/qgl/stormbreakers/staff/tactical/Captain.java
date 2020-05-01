@@ -6,9 +6,7 @@ import java.util.Optional;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.ActionType;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.SailorAction;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Boat;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Utils;
-import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.CheckpointsManager;
 import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.OarsConfig;
 import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.TargetDefiner;
 import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.TupleDistanceOrientation;
@@ -16,9 +14,9 @@ import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.WeatherAnalyst;
 
 public class Captain {
 
-    private Boat boat;
+    
 
-    private CheckpointsManager checkpointsManager;
+   
     private Coordinator coordinator;
     private Navigator navigator;
 
@@ -29,10 +27,10 @@ public class Captain {
     private TargetDefiner targetDefiner;
     private TupleDistanceOrientation goal;
 
-    public Captain(Boat boat, CheckpointsManager checkpointsManager, Navigator navigator, WeatherAnalyst weatherAnalyst,
+    public Captain(Navigator navigator, WeatherAnalyst weatherAnalyst,
             Coordinator coordinator, TargetDefiner targetDefiner) {
-        this.boat = boat;
-        this.checkpointsManager = checkpointsManager;
+        
+        
         this.navigator = navigator;
         this.coordinator = coordinator;
         this.weatherAnalyst = weatherAnalyst;
@@ -46,7 +44,7 @@ public class Captain {
     public List<SailorAction> nextRoundActions() {
         // On remet le statut doneTurn de tous les marins à false
         this.coordinator.resetAvailability();
-        this.checkpointsManager.updateCheckpoint(boat);
+        
 
         var destination = this.targetDefiner.defineNextTarget();
 
