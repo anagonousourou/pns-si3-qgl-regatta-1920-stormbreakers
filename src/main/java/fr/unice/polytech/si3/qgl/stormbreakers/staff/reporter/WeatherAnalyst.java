@@ -1,6 +1,6 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter;
 
-import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.IPoint;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.IPoint;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Boat;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Wind;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Utils;
@@ -70,10 +70,10 @@ public class WeatherAnalyst {
         return 0.0;
     }
 
-    public double speedProvided(IPoint depart, IPoint arrive) {
+    public double speedProvided(IPoint start, IPoint finish) {
         if (wind != null && equipmentsManager.nbSails() != 0) {
             return wind.getStrength()
-                    * Math.cos(new Vector(depart, arrive).getOrientation() - this.wind.getOrientation());
+                    * Math.cos(new Vector(start, finish).getOrientation() - this.wind.getOrientation());
         }
         return 0.0;
     }

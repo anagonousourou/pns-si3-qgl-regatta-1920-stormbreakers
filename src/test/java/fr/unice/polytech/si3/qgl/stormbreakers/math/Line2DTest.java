@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
 
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.*;
 
 class Line2DTest {
@@ -145,6 +146,12 @@ class Line2DTest {
     	Point2D p1= new Point2D(7.5,7.5);
     	assertFalse(line.contains(p));
     	assertTrue(line.contains(p1));
+
+        Line2D line2 = new Line2D(new Point2D(-2,20),new Point2D(-10,1));
+        Point2D p2= new Point2D(-5,15);
+        Point2D p3= new Point2D(-4.95,13);
+        assertFalse(line2.contains(p2));
+        assertTrue(line2.contains(p3));
     }
 
 
@@ -203,4 +210,74 @@ class Line2DTest {
             assertEquals(point2D, line.pointFromLineParameter(line.lineParameterOf(point2D)));
         }
     }
+
+    // -- EQUALS and HASHCODE --
+
+    /*
+     * Tests for equals
+     */
+
+    @Test
+    void testEqualsWhenWrongObject() {
+        Line2D line2D = new Line2D(new Point2D(-12,38),new Point2D(4,59));
+        Integer other = 0;
+        assertNotEquals(line2D,other);
+    }
+
+    @Test void testEqualsWhenNullObject() {
+        Line2D line2D = new Line2D(new Point2D(-12,38),new Point2D(4,59));
+        Integer other = null;
+        assertNotEquals(line2D,other);
+    }
+
+    @Test void testEqualsWhenSameObject() {
+        Line2D line2D = new Line2D(new Point2D(-12,38),new Point2D(4,59));
+        assertEquals(line2D,line2D);
+    }
+
+    @Test void testEqualsWhenSameValues() {
+        Line2D line1 = new Line2D(new Point2D(-12,38),new Point2D(4,59));
+        Line2D line2 = new Line2D(new Point2D(-12,38),new Point2D(4,59));
+        assertEquals(line1,line2);
+    }
+
+    @Test void testEqualsWhenSimilar() {
+        Line2D line1 = new Line2D(new Point2D(8,8),new Point2D(16,16));
+        Line2D line2 = new Line2D(new Point2D(14,14),new Point2D(99,99));
+        assertEquals(line1,line2);
+    }
+
+    @Test void testEqualsWhenDifferent() {
+        Line2D line1 = new Line2D(new Point2D(8,8),new Point2D(16,16));
+        Line2D line2 = new Line2D(new Point2D(8,8),new Point2D(99,8));
+        assertNotEquals(line1,line2);
+    }
+
+    /*
+     * Tests for hashcode
+     */
+
+    @Test void testSameHashcode() {
+        Line2D line1 = new Line2D(new Point2D(8,8),new Point2D(16,16));
+        Line2D line1bis = new Line2D(new Point2D(8,8),new Point2D(16,16));
+        Line2D line2 = new Line2D(new Point2D(14,14),new Point2D(99,99));
+        assertEquals(line1.hashCode(),line1bis.hashCode());
+        assertEquals(line1.hashCode(),line2.hashCode());
+    }
+
+    @Test void testDifferentHashcode() {
+        Line2D line1 = new Line2D(new Point2D(8,8),new Point2D(16,16));
+        Line2D line2 = new Line2D(new Point2D(8,8),new Point2D(99,8));
+        assertNotEquals(line1.hashCode(),line2.hashCode());
+    }
+
+    @Test void testNormalizedDirection() {
+        Point2D start = new Point2D(0,0);
+        for (int i=-49; i<50; i+=10) {
+            for (int j=-49; j<50; j+=10) {
+                assertEquals(1, new Line2D(start,new Point2D(i,j)).getNormalizedDirection().norm(),Utils.EPSILON);
+            }
+        }
+    }
+
 }

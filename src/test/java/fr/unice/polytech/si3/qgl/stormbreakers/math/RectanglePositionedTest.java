@@ -6,8 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
-import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Rectangle;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Position;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Rectangle;
 
 public class RectanglePositionedTest {
     RectanglePositioned rectanglePositioned;
@@ -15,10 +15,8 @@ public class RectanglePositionedTest {
     Rectangle rectangle1=new Rectangle(30,90,0);
     Rectangle rectangle2=new Rectangle(30,90,Math.PI/2);
     Rectangle rectangle3=new Rectangle(30,30,Math.PI/4);
-    Rectangle rectangle4=new Rectangle(30,90,(2*Math.PI)/3);
 
     Position position1=new Position(10, 10);
-    Position position2=new Position(10, -10);
 
     @Test
     void pointsTestNoOrientation(){

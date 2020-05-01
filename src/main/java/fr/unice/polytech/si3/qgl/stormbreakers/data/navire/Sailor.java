@@ -1,13 +1,12 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.data.navire;
 
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import fr.unice.polytech.si3.qgl.stormbreakers.Logable;
+import fr.unice.polytech.si3.qgl.stormbreakers.io.Logable;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.MoveAction;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.IntPosition;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.MovementPath;
@@ -16,8 +15,6 @@ import fr.unice.polytech.si3.qgl.stormbreakers.math.MovementPath;
  * classe qui représente un marin
  */
 public class Sailor implements Logable {
-    @JsonIgnoreProperties({"position","onEquipment","doneTurn"})
-
     private final int id;
     private IntPosition position;
     private boolean onEquipment = false;
@@ -28,9 +25,6 @@ public class Sailor implements Logable {
      * To Know wether a Marine is used or not alternative to List of busy Marines
      */
     private boolean doneTurn = false;
-
-    // Potentiellement à enlever
-    private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
     @JsonCreator
     public Sailor(@JsonProperty("id") int id, @JsonProperty("x") int x, @JsonProperty("y") int y) {
@@ -45,15 +39,6 @@ public class Sailor implements Logable {
     public Sailor(int id, IntPosition pos, String name) {
         this(id, pos.x(), pos.y());
         this.name = name;
-
-    }
-
-    public void addPropertyChangeListener(PropertyChangeListener listener) {
-        this.pcs.addPropertyChangeListener(listener);
-    }
-
-    public void removePropertyChangeListener(PropertyChangeListener listener) {
-        this.pcs.removePropertyChangeListener(listener);
     }
 
     /**

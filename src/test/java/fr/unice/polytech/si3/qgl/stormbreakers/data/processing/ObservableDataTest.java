@@ -10,10 +10,12 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Rectangle;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Position;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Rectangle;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Boat;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Wind;
+import fr.unice.polytech.si3.qgl.stormbreakers.io.InputParser;
+import fr.unice.polytech.si3.qgl.stormbreakers.io.json.JsonInputParser;
 import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.EquipmentsManager;
 import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.StreamManager;
 
@@ -23,7 +25,7 @@ public class ObservableDataTest {
     private StreamManager streamManager;
     private String round;
     private String round2;
-    InputParser parser = new InputParser();
+    InputParser parser = new JsonInputParser();
 
     @BeforeEach
     void setUp() throws IOException {
@@ -73,7 +75,7 @@ public class ObservableDataTest {
         observableData.setValue(round2);
 
         assertEquals(1, streamManager.getStreams().size());
-        assertEquals(11, streamManager.getRecifs().size());
+        assertEquals(11, streamManager.getReefs().size());
         assertEquals(13, streamManager.getObstacles().size());
 
         

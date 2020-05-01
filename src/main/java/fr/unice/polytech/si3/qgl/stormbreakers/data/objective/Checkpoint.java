@@ -5,13 +5,12 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import fr.unice.polytech.si3.qgl.stormbreakers.Logable;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Shape;
+import fr.unice.polytech.si3.qgl.stormbreakers.io.Logable;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Position;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Shape;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Surface;
-import fr.unice.polytech.si3.qgl.stormbreakers.visuals.bumps.VisibleEntity;
 
-public class Checkpoint implements Logable, Surface , VisibleEntity {
+public class Checkpoint implements Logable, Surface {
     private Position position;
     private Shape shape;
 
@@ -72,14 +71,4 @@ public class Checkpoint implements Logable, Surface , VisibleEntity {
     public double getOrientation() {
         return this.position.getOrientation();
     }
-
-
-
-
-    // Implements Visible Entity
-    @Override
-    public String getType() {
-        return VisibleEntity.CHECKPOINT_TOKEN;
-    }
-
 }

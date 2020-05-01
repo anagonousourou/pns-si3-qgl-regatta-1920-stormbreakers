@@ -1,6 +1,6 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.math;
 
-import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.IPoint;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.IPoint;
 
 public class EquationDroite {
 	// ax+b
@@ -19,10 +19,6 @@ public class EquationDroite {
 	public EquationDroite(double x1, double y1, double x2, double y2) {
 		this.slope = (y2 - y1) / (x2 - x1);
 		this.yIntercept = y1 - this.slope * x1;
-	}
-
-	public double orientationDroite() {
-		return Math.atan(slope);
 	}
 
 	/**

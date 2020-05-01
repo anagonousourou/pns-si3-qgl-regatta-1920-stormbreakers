@@ -142,4 +142,21 @@ class Point2DTest {
     /*
      * End of tests for equals
      */
+
+    @Test void testGetRotatedAround() {
+        double x = 10;
+        double y = 10;
+        Point2D anchor = new Point2D(x,y);
+        assertEquals(new Point2D(x+7,y), new Point2D(x+7,y).getRotatedAround(anchor, 0));
+        assertEquals(new Point2D(x,y+7), new Point2D(x,y+7).getRotatedAround(anchor, 2*Math.PI));
+
+        assertEquals(new Point2D(x,y), new Point2D(x,y).getRotatedAround(anchor, 0.94545));
+
+        assertEquals(new Point2D(x,y+5), new Point2D(x+5,y).getRotatedAround(anchor, Math.PI/2));
+        assertEquals(new Point2D(x-5,y), new Point2D(x,y+5).getRotatedAround(anchor, Math.PI/2));
+        assertEquals(new Point2D(x,y-5), new Point2D(x+5,y).getRotatedAround(anchor, -Math.PI/2));
+
+        assertEquals(new Point2D(x+7*Math.sqrt(2)/2,y+7*Math.sqrt(2)/2), new Point2D(x+7,y).getRotatedAround(anchor, Math.PI/4));
+        assertEquals(new Point2D(x+7*Math.sqrt(2)/2,y-7*Math.sqrt(2)/2), new Point2D(x+7,y).getRotatedAround(anchor, -Math.PI/4));
+    }
 }

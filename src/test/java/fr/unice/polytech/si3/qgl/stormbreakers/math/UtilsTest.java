@@ -1,10 +1,9 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.math;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.Assert.*;
 
 public class UtilsTest {
 	
@@ -129,4 +128,16 @@ public class UtilsTest {
     	//Strict test
     	assertTrue(Utils.within(d6 + 0.0999, d7));
     }
+
+    @Test
+	void clampTest() {
+    	assertEquals(0, Utils.clamp(-10,0,10),Utils.EPSILON);
+    	assertEquals(10,Utils.clamp(20,0,10),Utils.EPSILON);
+
+		assertEquals(5, Utils.clamp(4.999,5,10),Utils.EPSILON);
+		assertEquals(5.001, Utils.clamp(5.001,5,10),Utils.EPSILON);
+
+		assertEquals(9.999,Utils.clamp(9.999,0,10),Utils.EPSILON);
+		assertEquals(10,Utils.clamp(10.001,0,10),Utils.EPSILON);
+	}
 }

@@ -2,8 +2,8 @@ package fr.unice.polytech.si3.qgl.stormbreakers.data.ocean;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Shape;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Position;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Shape;
 
 public class OtherBoat extends OceanEntity {
     private int life;

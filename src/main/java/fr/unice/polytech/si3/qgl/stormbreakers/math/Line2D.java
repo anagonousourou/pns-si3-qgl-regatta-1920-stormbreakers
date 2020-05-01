@@ -1,5 +1,6 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.math;
 
+import java.util.Objects;
 import java.util.Optional;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.exceptions.DegeneratedLine2DException;
@@ -12,11 +13,6 @@ public class Line2D {
     private Vector direction;
 
     private EquationDroite equationDroite;
-
-    /** Defines a new Straight line going through (x0,y0) with direction (dx,dy) */
-    public Line2D(double x0, double y0, double dx, double dy) {
-        this(new Point2D(x0, y0), new Vector(dx, dy));
-    }
 
     /** Defines a new Straight line going through the two given points. */
     public Line2D(Point2D p1, Point2D p2) {
@@ -47,24 +43,10 @@ public class Line2D {
     }
 
     /**
-     * Computes the <i>line parameter</i> of the point given by (x,y) for this line
-     * The position is the number k such that if the point belong to the line, its
-     * location is given by x=x0+k*dx and y=y0+k*dy. Note: The point needs to be on
-     * the line.
-     * 
-     * @author David Lebrisse - Stormbreakers
-     */
-    public double lineParameterOf(double x, double y) {
-        return lineParameterOf(new Point2D(x, y));
-    }
-
-    /**
      * Computes the <i>line parameter</i> of the given point P for this line The
      * parameter is the number k such that if the point belong to the line, its
      * location is given by P(k)=P0+k*direction, where P0 is the anchor. Note: The
      * point needs to be on the line.
-     * 
-     * @author David Lebrisse - Stormbreakers
      */
     public double lineParameterOf(Point2D p) {
         Vector relativeTranslation = new Vector(anchor, p);
@@ -76,7 +58,6 @@ public class Line2D {
      * x=x0+lineParameter*dx y=y0+lineParameter*dy
      * 
      * @return the projection
-     * @author David Lebrisse - Stormbreakers
      */
     public Point2D pointFromLineParameter(double lineParameter) {
         return anchor.getTranslatedBy(direction.scaleVector(lineParameter));
@@ -86,7 +67,6 @@ public class Line2D {
      * Computes the projection on the line of the point given by (x,y).
      * 
      * @return Point2D resulting from the projection
-     * @author David Lebrisse - Stormbreakers
      */
     public Point2D projectOnto(Point2D pointToProject) {
         Point2D projectionPoint;
@@ -106,7 +86,6 @@ public class Line2D {
      * 
      * @param other second line
      * @return if it exists, the intersection point
-     * @author David Lebrisse - Stormbreakers
      */
     public Optional<Point2D> intersect(Line2D other) {
         if (this.isVerticalLine() && other.isVerticalLine()) {
@@ -177,7 +156,7 @@ public class Line2D {
 
     public boolean contains(Point2D point2D) {
         double distance = distance(point2D);
-        return Utils.almostEquals(0, distance);
+        return Utils.almostEquals(0, distance,2.5e-3);
     }
 
     @Override
@@ -185,5 +164,18 @@ public class Line2D {
         return "Line2D: anchor:" + anchor.toString() + "dir:" + direction.toString();
     }
 
-    // LATER: 07/03/2020 Equals && hashcode ?
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (! (obj instanceof Line2D)) return false;
+        Line2D other = (Line2D) obj;
+
+        boolean sameDirection = Vector.areCollinear(this.direction,other.direction);
+        return sameDirection && this.distance(other.anchor)==0;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.direction.getOrientation()%Math.PI, projectOnto(new Point2D(0,0)));
+    }
 }

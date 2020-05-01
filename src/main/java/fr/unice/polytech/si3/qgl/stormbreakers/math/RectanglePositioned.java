@@ -3,9 +3,9 @@ package fr.unice.polytech.si3.qgl.stormbreakers.math;
 import java.util.List;
 import java.util.Optional;
 
-import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.IPoint;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Rectangle;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.IPoint;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Position;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Rectangle;
 
 public class RectanglePositioned {
 
@@ -102,18 +102,6 @@ public class RectanglePositioned {
     public Optional<LineSegment2D> edgeOfIntersection(LineSegment2D lineSegment2D) {
         return List.of(largeur1, longueur1, largeur2, longueur2).stream()
                 .filter(s -> lineSegment2D.intersects(lineSegment2D)).findFirst();
-    }
-
-    /**
-     * Retourne le point du rectangle le plus proche de point2d
-     * 
-     * @param point2d
-     * @return
-     */
-    // LATER: 15/03/2020 KEEP
-    public Optional<Point2D> closestPointTo(IPoint point2d) {
-        return List.of(largeur1, longueur1, largeur2, longueur2).stream().map(l -> l.closestPointTo(point2d))
-                .min((p, pother) -> Double.compare(p.distanceTo(point2d), pother.distanceTo(point2d)));
     }
 
     /**

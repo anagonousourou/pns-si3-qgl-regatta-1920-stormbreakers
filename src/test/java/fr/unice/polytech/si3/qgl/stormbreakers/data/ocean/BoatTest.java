@@ -8,9 +8,10 @@ import java.io.IOException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Rectangle;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.processing.InputParser;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Position;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Rectangle;
+import fr.unice.polytech.si3.qgl.stormbreakers.io.InputParser;
+import fr.unice.polytech.si3.qgl.stormbreakers.io.json.JsonInputParser;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.processing.ObservableData;
 
 public class BoatTest {
@@ -24,7 +25,7 @@ public class BoatTest {
     void setUp() throws IOException {
         boatJsonRound = new String(this.getClass().getResourceAsStream("/shiptest/ship.json").readAllBytes());
         boatJsonPos = new Position(80,100,30);
-        parser=new InputParser();
+        parser=new JsonInputParser();
         boatInitPosition = new Position(400,50.6);
         boat=new Boat(boatInitPosition, 6, 3, 50,parser,new Rectangle(5, 5, 0.0));
     }

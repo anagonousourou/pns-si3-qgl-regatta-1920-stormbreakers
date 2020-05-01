@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.IPoint;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.IPoint;
 
 public class Utils {
 
@@ -28,15 +28,13 @@ public class Utils {
     /**
      * Boolean function analog to JUnit
      * <code>assertEquals(double expected, double actual, double delta)</code>
-     * without allowing bounds Bounds : actual-delta, actual+delta
+     * without allowing bounds : actual-delta, actual+delta
      * 
      * @param expected expected value
      * @param result   actual value
      * @param eps      delta
      * @return true if almost equal, false if not
      */
-    // LATER: 08/03/2020 Replace all tests usage by : assertEquals(double expected,
-    // double actual, double delta)
     public static boolean almostEquals(double expected, double result, double eps) {
         return Math.abs(expected - result) < (Math.abs(eps) - EPSILON);
     }
@@ -44,15 +42,13 @@ public class Utils {
     /**
      * Boolean function analog to JUnit
      * <code>assertEquals(double expected, double actual, double delta)</code>
-     * allowing bounds Bounds : actual-delta, actual+delta
+     * allowing bounds : actual-delta, actual+delta
      * 
      * @param expected expected value
      * @param result   actual value
      * @param eps      delta
      * @return true if almost equal, false if not
      */
-    // LATER: 08/03/2020 Replace all tests usage by : assertEquals(double expected,
-    // double actual, double delta)
     public static boolean almostEqualsBoundsIncluded(double expected, double result, double eps) {
         return Math.abs(expected - result) <= eps;
     }
@@ -63,10 +59,6 @@ public class Utils {
 
     public static boolean almostEquals(IPoint p1, IPoint p2) {
         return p1.distanceTo(p2) < EPSILON;
-    }
-
-    public static boolean almostEqualsBoundsIncluded(IPoint p1, IPoint p2) {
-        return p1.distanceTo(p2) <= EPSILON;
     }
 
     public static boolean almostEquals(Point2D p1, Point2D p2, double delta) {
@@ -101,14 +93,7 @@ public class Utils {
     }
 
     public static double clamp(double value, double min, double max) {
-        if (value <= min) {
-            return min;
-        }
-        if (value >= max) {
-            return max;
-        }
-        return value;
-        // Math.min(Math.max(value, min), max)
+        return Math.min(Math.max(value, min), max);
     }
 
 }

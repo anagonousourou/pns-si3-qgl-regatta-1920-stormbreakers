@@ -5,18 +5,17 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
-import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Shape;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Position;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Shape;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Surface;
-import fr.unice.polytech.si3.qgl.stormbreakers.visuals.bumps.VisibleEntity;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
 
-@JsonSubTypes({ @JsonSubTypes.Type(value = Courant.class, name = "stream"),
+@JsonSubTypes({ @JsonSubTypes.Type(value = Stream.class, name = "stream"),
     @JsonSubTypes.Type(value = OtherBoat.class, name = "ship"),
-    @JsonSubTypes.Type(value = Recif.class, name = "reef") })
+    @JsonSubTypes.Type(value = Reef.class, name = "reef") })
 
-public abstract class OceanEntity implements Surface , VisibleEntity {
+public abstract class OceanEntity implements Surface {
   private String type;
   protected Position position;
   protected Shape shape;
