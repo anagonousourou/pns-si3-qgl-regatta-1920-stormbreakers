@@ -30,7 +30,7 @@ public class MainLinker {
 	private Boat boat = null;
 	private CheckpointsManager checkpointsManager = null;
 	private Navigator navigator = new Navigator();
-	private WeatherAnalyst seaElements;
+	private WeatherAnalyst weatherAnalyst;
 	private Wind wind;
 	private Coordinator coordinator;
 	private ObservableData observableData = new ObservableData();
@@ -57,17 +57,17 @@ public class MainLinker {
 			boat = new Boat(position, decklength, deckwidth, life, parser, boatShape);
 
 			coordinator = new Coordinator(crewManager, equipmentsManager);
-			seaElements = new WeatherAnalyst(wind, boat, equipmentsManager);
+			weatherAnalyst = new WeatherAnalyst(wind, boat, equipmentsManager);
 
 			streamManager = new StreamManager(parser, boat);
 
-			graph = new Graph(streamManager, seaElements);
+			graph = new Graph(streamManager, weatherAnalyst);
 
 			cartographer = new Cartographer(checkpointsManager, graph, boat);
 
 			targetDefiner = new TargetDefiner(checkpointsManager, streamManager, boat, navigator, cartographer);
 
-			captain = new Captain( navigator, seaElements, coordinator, targetDefiner);
+			captain = new Captain( navigator, weatherAnalyst, coordinator, targetDefiner);
 
 			this.observableData.addPropertyChangeListener(this.wind);
 			this.observableData.addPropertyChangeListener(this.equipmentsManager);
