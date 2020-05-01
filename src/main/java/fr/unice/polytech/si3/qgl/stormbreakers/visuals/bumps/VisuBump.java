@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.OceanEntity;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Recif;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Reef;
 import fr.unice.polytech.si3.qgl.stormbreakers.visuals.draw.Displayer;
 import fr.unice.polytech.si3.qgl.stormbreakers.visuals.draw.Drawable;
 import fr.unice.polytech.si3.qgl.stormbreakers.visuals.draw.drawings.*;
@@ -45,7 +45,7 @@ public class VisuBump {
 
         //special(displayer,bumpParser);
 
-        List<Recif> reefs = bumpParser.getReefs();
+        List<Reef> reefs = bumpParser.getReefs();
         addNumbersFor(new ArrayList<>(reefs),displayer);
         showWrappingShapes(reefs, null, 30, displayer);
 
@@ -64,14 +64,14 @@ public class VisuBump {
      * @param indexes if null shows all wrapping shapes
      *        {@code new int[] {2,4,6}} will show shapes of indexes 2,4,6
      */
-    private static void showWrappingShapes(List<Recif> reefs, int[] indexes, double margin, Displayer displayer) {
+    private static void showWrappingShapes(List<Reef> reefs, int[] indexes, double margin, Displayer displayer) {
         if (indexes != null) {
             for (int idx : indexes) {
                 showWrappingShape(reefs.get(idx), margin, displayer);
             }
         }
         else {
-            for (Recif recif : reefs) {
+            for (Reef recif : reefs) {
                 showWrappingShape(recif, margin, displayer);
             }
         }
@@ -80,7 +80,7 @@ public class VisuBump {
     /**
      * Shows for a given shape it's wrapping shape
      */
-    private static void showWrappingShape(Recif recif, double margin, Displayer displayer) {
+    private static void showWrappingShape(Reef recif, double margin, Displayer displayer) {
         displayer.addDrawing(recif.getShape().wrappingShape(margin).getDrawing());
     }
 
@@ -116,7 +116,7 @@ public class VisuBump {
 
             ObjectMapper mapper = new ObjectMapper();
             mapper.disable(MapperFeature.AUTO_DETECT_GETTERS);
-            List<Recif> specials = mapper.readValue(specialStr, mapper.getTypeFactory().constructCollectionType(List.class, OceanEntity.class));
+            List<Reef> specials = mapper.readValue(specialStr, mapper.getTypeFactory().constructCollectionType(List.class, OceanEntity.class));
             displayer.setSpecial(new ArrayList<>(specials));
 
         } catch (IOException e) {

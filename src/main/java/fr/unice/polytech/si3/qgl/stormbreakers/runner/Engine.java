@@ -7,9 +7,9 @@ import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.unice.polytech.si3.qgl.stormbreakers.Cockpit;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.*;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Shape;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Gouvernail;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Position;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Shape;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Rudder;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Oar;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Sail;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Sailor;
@@ -101,10 +101,10 @@ public class Engine {
 
         displayer.setShipShape(engine.boat.getShape());
         displayer.setReefs(engine.entitiesVisible.stream()
-                .filter(ent -> OceanEntityType.RECIF.equals(ent.getEnumType())).map(ent -> (Recif) ent)
+                .filter(ent -> OceanEntityType.REEF.equals(ent.getEnumType())).map(ent -> (Reef) ent)
                 .collect(Collectors.toList()));
         displayer.setStreams(engine.entitiesVisible.stream()
-                .filter(ent -> OceanEntityType.COURANT.equals(ent.getEnumType())).map(ent -> (Courant) ent)
+                .filter(ent -> OceanEntityType.STREAM.equals(ent.getEnumType())).map(ent -> (Stream) ent)
                 .collect(Collectors.toList()));
         displayer.setCheckpoints(((RegattaGoal)engine.initGame.getGoal()).getCheckpoints());
 
@@ -117,9 +117,9 @@ public class Engine {
         int nbOarsRightActive = equipmentsManager.nbRightOars() - equipmentsManager.unusedRightOars().size();
         int nbOarsLeftActive  = equipmentsManager.nbLeftOars() - equipmentsManager.unusedLeftOars().size();
         int nbOars = equipmentsManager.nbOars();
-        Gouvernail rudder = (Gouvernail) equipmentsManager.equipmentAt(equipmentsManager.rudderPosition()).orElse(null);
+        Rudder rudder = (Rudder) equipmentsManager.equipmentAt(equipmentsManager.rudderPosition()).orElse(null);
         Wind wind = nextRound.getWind();
-        List<Courant> streams = retrieveStreams();
+        List<Stream> streams = retrieveStreams();
         int nbsail = equipmentsManager.nbSails();
         int nbSailOpenned = equipmentsManager.nbOpennedSails();
         Shape shipShape = boat.getShape();
@@ -133,9 +133,9 @@ public class Engine {
         ship.setPosition(newPos);
     }
 
-    private List<Courant> retrieveStreams() {
-        return entitiesVisible.stream().filter(ent -> OceanEntityType.COURANT.entityCode.equals(ent.getType()))
-                .map(c -> (Courant) c).collect(Collectors.toList());
+    private List<Stream> retrieveStreams() {
+        return entitiesVisible.stream().filter(ent -> OceanEntityType.STREAM.entityCode.equals(ent.getType()))
+                .map(c -> (Stream) c).collect(Collectors.toList());
     }
 
     void runInitGame() {
@@ -185,7 +185,7 @@ public class Engine {
     }
 
     private void updateOarsState(OarAction oarAction) {
-        IntPosition marinPos = crewManager.getMarinById(oarAction.getSailorId())
+        IntPosition marinPos = crewManager.getSailorById(oarAction.getSailorId())
                 .map(Sailor::getPosition).orElse(new IntPosition(0,0));
         Oar oar = (Oar) equipmentsManager.equipmentAt(marinPos).orElse(new Oar(0,0));
         oar.setUsed(true);
@@ -193,22 +193,22 @@ public class Engine {
 
     private void updateRudderOrientation(Turn turnAction) {
         double newRotation = turnAction.getRotation();
-        IntPosition marinPos = crewManager.getMarinById(turnAction.getSailorId())
+        IntPosition marinPos = crewManager.getSailorById(turnAction.getSailorId())
                 .map(Sailor::getPosition).orElse(new IntPosition(0,0));
-        Gouvernail rudder = (Gouvernail) equipmentsManager.equipmentAt(marinPos).orElse(new Sail(0,0));
+        Rudder rudder = (Rudder) equipmentsManager.equipmentAt(marinPos).orElse(new Sail(0,0));
         rudder.setOrientation(newRotation);
     }
 
     void updateSailsState(SailorAction actionWithSail) {
         if (ActionType.LIFTSAIL.actionCode.equals(actionWithSail.getType())) {
             LiftSail liftSail = (LiftSail) actionWithSail;
-            IntPosition marinPos = crewManager.getMarinById(liftSail.getSailorId())
+            IntPosition marinPos = crewManager.getSailorById(liftSail.getSailorId())
                     .map(Sailor::getPosition).orElse(new IntPosition(0,0));
             Sail sail = (Sail) equipmentsManager.equipmentAt(marinPos).orElse(new Sail(0,0));
             sail.setOpenned(true);
         } else if (ActionType.LOWERSAIL.actionCode.equals(actionWithSail.getType())) {
             LiftSail liftSail = (LiftSail) actionWithSail;
-            IntPosition marinPos = crewManager.getMarinById(liftSail.getSailorId())
+            IntPosition marinPos = crewManager.getSailorById(liftSail.getSailorId())
                     .map(Sailor::getPosition).orElse(new IntPosition(0,0));
             Sail sail = (Sail) equipmentsManager.equipmentAt(marinPos).orElse(new Sail(0,0));
             sail.setOpenned(false);

@@ -1,9 +1,9 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.visuals.bumps;
 
-import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Polygon;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.ShapeType;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Recif;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Polygon;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Position;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.ShapeType;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Reef;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -29,7 +29,7 @@ class BumpParserTest {
 
         VisibleEntity reefEntity = bumpParser.parseEntity(firstLine,secondLine);
         assertEquals(BumpParser.REEF_TOKEN,reefEntity.getType());
-        Recif reef = (Recif) reefEntity;
+        Reef reef = (Reef) reefEntity;
 
         assertEquals(ShapeType.POLYGON,reef.getShape().getTypeEnum());
         Polygon polygonReef = (Polygon) reef.getShape();

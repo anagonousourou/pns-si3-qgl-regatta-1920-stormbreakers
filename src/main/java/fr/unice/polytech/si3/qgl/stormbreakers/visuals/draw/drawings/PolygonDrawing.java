@@ -1,6 +1,6 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.visuals.draw.drawings;
 
-import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Polygon;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Polygon;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
 
 import java.awt.*;

@@ -5,7 +5,6 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import fr.unice.polytech.si3.qgl.stormbreakers.Logable;
 import fr.unice.polytech.si3.qgl.stormbreakers.io.Logable;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.MoveAction;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.IntPosition;

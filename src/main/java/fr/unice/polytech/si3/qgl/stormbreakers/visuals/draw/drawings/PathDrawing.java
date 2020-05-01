@@ -1,6 +1,6 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.visuals.draw.drawings;
 
-import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Position;
 
 import java.awt.*;
 import java.awt.geom.Path2D;

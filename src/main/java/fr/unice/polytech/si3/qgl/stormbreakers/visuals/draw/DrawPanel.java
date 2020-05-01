@@ -1,6 +1,6 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.visuals.draw;
 
-import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Position;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.*;
 import fr.unice.polytech.si3.qgl.stormbreakers.visuals.draw.drawings.DotDrawing;
 import fr.unice.polytech.si3.qgl.stormbreakers.visuals.draw.drawings.Drawing;

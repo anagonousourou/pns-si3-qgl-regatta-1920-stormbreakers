@@ -1,10 +1,10 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.runner;
 
-import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Shape;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Gouvernail;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Position;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Shape;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Rudder;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Boat;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Courant;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Stream;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.OceanEntity;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Wind;
 import fr.unice.polytech.si3.qgl.stormbreakers.visuals.draw.Displayer;
@@ -30,10 +30,10 @@ public class EngineUtils {
         return 165.0*(nbOarsRightActive+nbOarsLeftActive)/nbOars;
     }
 
-    public static double streamSpeedX(List<Courant> streams, Boat ship){
+    public static double streamSpeedX(List<Stream> streams, Boat ship){
         if(streams==null)return 0;
         double res = 0;
-        for(Courant stream1 : streams) {
+        for(Stream stream1 : streams) {
             if (ship.collidesWith(stream1)) {
                 res +=stream1.getStrength()*Math.cos(stream1.getPosition().getOrientation());
             }
@@ -41,10 +41,10 @@ public class EngineUtils {
         return res;
     }
 
-    public static double streamSpeedY(List<Courant>streams, Boat ship){
+    public static double streamSpeedY(List<Stream>streams, Boat ship){
         if(streams==null)return 0;
         double res = 0;
-        for(Courant stream1 : streams) {
+        for(Stream stream1 : streams) {
             if (ship.collidesWith(stream1)) {
                 res += stream1.getStrength() * Math.sin(stream1.getPosition().getOrientation());
             }
@@ -53,12 +53,12 @@ public class EngineUtils {
     }
 
     public static Position nextPosition(Position positionInit, int nbOarsRightActive, int nbOarsLeftActive, int nbOars,
-                                        Gouvernail rudder, Wind wind, List<Courant> streams, int nbsail, int nbSailOpenned,
+                                        Rudder rudder, Wind wind, List<Stream> streams, int nbsail, int nbSailOpenned,
                                         Shape shipShape, List<OceanEntity> reef, int nbStep, Displayer displayer){
         double x = positionInit.x();
         double y = positionInit.y();
         double orientation = positionInit.getOrientation();
-        if(rudder ==null) rudder = new Gouvernail(-1,-1);
+        if(rudder ==null) rudder = new Rudder(-1,-1);
         double angleGouvernail = rudder.getOrientation();
         double vitesseOarLineaire = oarSpeed(nbOars,nbOarsLeftActive,nbOarsRightActive);
         double vitesseWindLineaire = windAdditionnalSpeed(nbsail,nbSailOpenned,wind,orientation);

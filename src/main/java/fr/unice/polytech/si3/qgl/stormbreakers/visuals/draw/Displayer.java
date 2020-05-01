@@ -1,10 +1,10 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.visuals.draw;
 
-import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Shape;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Position;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Shape;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Checkpoint;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Courant;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Recif;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Stream;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Reef;
 import fr.unice.polytech.si3.qgl.stormbreakers.visuals.draw.drawings.Drawing;
 
 import java.awt.*;
@@ -21,8 +21,8 @@ public class Displayer {
     private final DrawableManager drawableManager;
 
     private List<Checkpoint> checkpoints;
-    private List<Recif> reefs;
-    private List<Courant> streams;
+    private List<Reef> reefs;
+    private List<Stream> streams;
     private List<Position> shipPos;
     private Shape shipShape;
 
@@ -56,7 +56,7 @@ public class Displayer {
     /**
      * Adds for display every map element with their corresponding color
      */
-    private void graphDrawableShapes(List<Checkpoint> checkpoints, List<Recif> reefs, List<Courant> streams, List<Position> shipPos) {
+    private void graphDrawableShapes(List<Checkpoint> checkpoints, List<Reef> reefs, List<Stream> streams, List<Position> shipPos) {
         graphColoredShapes(new ArrayList<>(checkpoints), Color.GREEN);
         graphColoredShapes(new ArrayList<>(reefs),Color.RED);
         graphColoredShapes(new ArrayList<>(streams),Color.BLUE);
@@ -95,7 +95,7 @@ public class Displayer {
     /**
      * Adds a list of drawables as "streams" elements
      */
-    public void setStreams(List<Courant> streams) {
+    public void setStreams(List<Stream> streams) {
         if(streams==null)return;
         this.streams = new ArrayList<>(streams);
     }
@@ -103,7 +103,7 @@ public class Displayer {
     /**
      * Adds a list of drawables as "reefs" elements
      */
-    public void setReefs(List<Recif> reefs){
+    public void setReefs(List<Reef> reefs){
         if(reefs==null)return;
         this.reefs = new ArrayList<>(reefs);
     }

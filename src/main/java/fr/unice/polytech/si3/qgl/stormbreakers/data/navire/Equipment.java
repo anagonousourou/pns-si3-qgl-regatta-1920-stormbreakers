@@ -11,7 +11,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.math.IntPosition;
 @JsonSubTypes({ @JsonSubTypes.Type(value = Oar.class, name = "oar"),
         // @JsonSubTypes.Type(value = Sail.class, name="sail"),
         @JsonSubTypes.Type(value = Rudder.class, name = "rudder")// ,
-        // @JsonSubTypes.Type(value = Vigie.class, name="watch")
+        // @JsonSubTypes.Type(value = Watch.class, name="watch")
 })
 
 public abstract class Equipment implements Logable {

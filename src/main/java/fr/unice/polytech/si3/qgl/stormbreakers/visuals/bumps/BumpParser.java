@@ -5,15 +5,15 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Circle;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Polygon;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Position;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.metrics.Shape;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Circle;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Polygon;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Position;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Shape;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Checkpoint;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Boat;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Courant;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Stream;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.OceanEntityType;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Recif;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Reef;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
 
 import java.util.ArrayList;
@@ -153,7 +153,7 @@ public class BumpParser {
 
         List<String> positionComponents = Arrays.asList(secondEntityLine.split(" "));
         Position position = buildPosition(positionComponents.subList(2,4+1));
-        
+
         Shape shape = buildShape(shapeName,shapeParams);
         return buildEntity(name,shape,position);
     }
@@ -167,13 +167,13 @@ public class BumpParser {
      */
     private VisibleEntity buildEntity(String name, Shape shape, Position position) {
         if (STREAM_TOKEN.equals(name)) {
-            return new Courant(position, shape,150.0);
+            return new Stream(position, shape,150.0);
         }
         if (SHIP_TOKEN.equals(name)) {
             return new Boat(position,0,0,0,null,shape);
         }
         if (REEF_TOKEN.equals(name)) {
-            return new Recif(position, shape);
+            return new Reef(position, shape);
         }
         if (CHECKPOINT_TOKEN.equals(name)) {
             return new Checkpoint(position,shape);
@@ -217,18 +217,18 @@ public class BumpParser {
     /**
      * Retrieve parsed reefs
      */
-    public List<Recif> getReefs() {
-        return entities.stream().filter(ent ->  OceanEntityType.RECIF.entityCode.equals(ent.getType()))
-                .map(ent -> (Recif) ent)
+    public List<Reef> getReefs() {
+        return entities.stream().filter(ent ->  OceanEntityType.REEF.entityCode.equals(ent.getType()))
+                .map(ent -> (Reef) ent)
                 .collect(Collectors.toList());
     }
 
     /**
      * Retrieve parsed streams
      */
-    public List<Courant> getStreams() {
-        return entities.stream().filter(ent ->  OceanEntityType.COURANT.entityCode.equals(ent.getType()))
-                .map(ent -> (Courant) ent)
+    public List<Stream> getStreams() {
+        return entities.stream().filter(ent ->  OceanEntityType.STREAM.entityCode.equals(ent.getType()))
+                .map(ent -> (Stream) ent)
                 .collect(Collectors.toList());
     }
 
@@ -265,7 +265,7 @@ public class BumpParser {
         List<Checkpoint> checkpoints = getCheckpoints();
         JsonNode cpNode = mapper.valueToTree(checkpoints);
 
-        List<Recif> reefs = getReefs();
+        List<Reef> reefs = getReefs();
         JsonNode reefsNode = mapper.valueToTree(reefs);
 
         dataNode.set("checkpoints", cpNode);

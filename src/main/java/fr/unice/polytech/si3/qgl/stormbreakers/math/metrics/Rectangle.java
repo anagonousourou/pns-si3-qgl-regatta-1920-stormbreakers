@@ -12,6 +12,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.math.LineSegment2D;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.RectanglePositioned;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Utils;
+import fr.unice.polytech.si3.qgl.stormbreakers.visuals.draw.drawings.Drawing;
 
 public class Rectangle extends Shape {
     private double width;
@@ -241,6 +242,9 @@ public class Rectangle extends Shape {
         return rectanglePolygon.wrappingShape(margin);
     }
 
-    
-
+    // implements Drawable
+    @Override
+    public Drawing getDrawing() {
+        return rectanglePolygon.getDrawing();
+    }
 }
