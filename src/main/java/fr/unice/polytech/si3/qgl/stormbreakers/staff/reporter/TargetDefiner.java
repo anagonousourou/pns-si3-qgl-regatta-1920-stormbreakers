@@ -55,12 +55,12 @@ public class TargetDefiner {
             return null;
         }
         if (!this.streamManager.thereIsObstacleBetweenOrAround(cp) && !this.streamManager.insideOpenStream()) {
-            System.out.println("Not using Pathfinding:");
+            Logger.getInstance().log("Not using Pathfinding:");
             return new TupleDistanceOrientation(cp.distanceTo(boat),
                     this.navigator.additionalOrientationNeeded(boat.getPosition(), cp));
 
         }
-        System.out.println("Using pathfinding:");
+        Logger.getInstance().log("Using pathfinding:");
         IPoint target = cartographer.nextPoint();
         Logger.getInstance().log(target.toString());
         boolean insideStream = streamManager.insideOpenStream();

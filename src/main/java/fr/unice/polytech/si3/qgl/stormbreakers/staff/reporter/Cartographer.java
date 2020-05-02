@@ -42,7 +42,7 @@ public class Cartographer {
         double width = Math.abs((boat.y() - cp.y())) + MAP_MARGIN_Y;
 
         double d = boat.distanceTo(cp);
-        System.out.println("distanceToCp: " + d);
+        Logger.getInstance().log("distanceToCp: " + d);
 
         if(d >= 9000){
             gap=400;
@@ -59,7 +59,7 @@ public class Cartographer {
             gap = 100;
         }
 
-        System.out.println("Ecart choisi: " + gap);
+        Logger.getInstance().log("Ecart choisi: " + gap);
 
         IPoint center = IPoint.centerPoints(boat, cp);
 
@@ -67,7 +67,7 @@ public class Cartographer {
 
         graph.createSquaring(virtualMap.minX(), virtualMap.minY(), virtualMap.maxX(), virtualMap.maxY(), gap);
 
-        System.out.println("createSquaring: " + (System.currentTimeMillis() - t));
+        Logger.getInstance().log("createSquaring: " + (System.currentTimeMillis() - t));
 
         var start = new Vertex(boat);
         start = graph.addNode(start);
@@ -82,8 +82,8 @@ public class Cartographer {
 
         List<Vertex> path = graph.reducePath(destination);
 
-        System.out.println("Djisktra: " + (System.currentTimeMillis() - t));
-        System.out.println("Path computed: " + path);
+        Logger.getInstance().log("Djisktra: " + (System.currentTimeMillis() - t));
+        Logger.getInstance().log("Path computed: " + path);
         if (path.size() > 1) {
             return path.get(1).getPoint();
         } else {

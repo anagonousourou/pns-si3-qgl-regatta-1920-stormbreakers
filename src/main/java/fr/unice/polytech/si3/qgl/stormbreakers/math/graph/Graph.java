@@ -58,9 +58,9 @@ public class Graph {
             }
 
         }
-        System.out.println("xdif :" + (xmax - xmin));
-        System.out.println("ydif :" + (ymax - ymin));
-        System.out.println("Nodes size:" + this.nodes.size());
+        Logger.getInstance().log("xdif :" + (xmax - xmin));
+        Logger.getInstance().log("ydif :" + (ymax - ymin));
+        Logger.getInstance().log("Nodes size:" + this.nodes.size());
 
     }
 
@@ -114,7 +114,7 @@ public class Graph {
 
         }
 
-        System.out.println(System.currentTimeMillis() - t);
+        Logger.getInstance().log(System.currentTimeMillis() - t);
 
     }
 
