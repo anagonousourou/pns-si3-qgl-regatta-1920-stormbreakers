@@ -1,10 +1,14 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.data.navire;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class Sail extends Equipment {
 
     private boolean openned;
 
-    public Sail(int x, int y) {
+    @JsonCreator
+    public Sail(@JsonProperty("x") int x,@JsonProperty("y") int y) {
         super(EquipmentType.SAIL.code, x, y);
         openned = false;
     }

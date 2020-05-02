@@ -2,6 +2,8 @@ package fr.unice.polytech.si3.qgl.stormbreakers.data.navire;
 
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import fr.unice.polytech.si3.qgl.stormbreakers.io.Logable;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.MoveAction;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.IntPosition;
@@ -22,7 +24,8 @@ public class Sailor implements Logable {
      */
     private boolean doneTurn = false;
 
-    public Sailor(int id, int x, int y) {
+    @JsonCreator
+    public Sailor(@JsonProperty("id") int id, @JsonProperty("x") int x, @JsonProperty("y") int y) {
         this.id = id;
         this.position = new IntPosition(x, y);
     }

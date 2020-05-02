@@ -355,7 +355,7 @@ public class CaptainTest {
 
     @Test
     public void shouldMoveWhenTargetVeryClose() throws ParsingException {
-           
+
             Navigator navigator=new Navigator();
             WeatherAnalyst weatherAnalyst= mock(WeatherAnalyst.class);
             when(weatherAnalyst.currentExternalSpeed()).thenReturn(0.0);
@@ -366,12 +366,12 @@ public class CaptainTest {
                 var allSailors = this.parser.fetchAllSailors(gameData);
 
         CrewManager crewManager = new CrewManager(allSailors);
-        
+
         Coordinator coordinator=new Coordinator(crewManager, equipmentsManager);
             when(targetDefiner.defineNextTarget()).thenReturn(new TupleDistanceOrientation(18.0,0.0,false) );
-            
-        
-            
+
+
+
             Captain captain=new Captain( navigator, weatherAnalyst, coordinator, targetDefiner);
 
             List<SailorAction> actions=captain.nextRoundActions();

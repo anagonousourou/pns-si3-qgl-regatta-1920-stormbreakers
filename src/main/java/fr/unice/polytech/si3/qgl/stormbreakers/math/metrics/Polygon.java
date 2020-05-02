@@ -10,6 +10,8 @@ import fr.unice.polytech.si3.qgl.stormbreakers.io.Logable;
 import fr.unice.polytech.si3.qgl.stormbreakers.io.Logger;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.*;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Vector;
+import fr.unice.polytech.si3.qgl.stormbreakers.tools.visuals.draw.drawings.Drawing;
+import fr.unice.polytech.si3.qgl.stormbreakers.tools.visuals.draw.drawings.PolygonDrawing;
 
 public class Polygon extends Shape implements Orientable {
 
@@ -105,6 +107,8 @@ public class Polygon extends Shape implements Orientable {
     public Circle getBoundingCircle() {
         return new Circle(getMaxRadius(), getAnchor());
     }
+
+    // -- COLLISION = Intersection Only
 
     @Override
     public boolean collidesWith(Shape shape) {
@@ -376,4 +380,9 @@ public class Polygon extends Shape implements Orientable {
         return new Polygon(orientation, expandedVertices, getAnchor());
     }
 
+    // implements Drawable
+    @Override
+    public Drawing getDrawing() {
+        return new PolygonDrawing(this);
+    }
 }

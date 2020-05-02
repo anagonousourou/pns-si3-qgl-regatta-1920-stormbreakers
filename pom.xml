@@ -13,6 +13,9 @@
 		<junit.jupiter.version>5.5.1</junit.jupiter.version>
 		<mockito.core.version>3.2.0</mockito.core.version>
 		<jackson.databind.version>2.10.1</jackson.databind.version>
+		<sonar.exclusions>
+			**/tools/**
+		</sonar.exclusions>
 	</properties>
 
 	<build>

@@ -44,7 +44,6 @@ public class Captain {
     public List<SailorAction> nextRoundActions() {
         // On remet le statut doneTurn de tous les marins à false
         this.coordinator.resetAvailability();
-        
 
         var destination = this.targetDefiner.defineNextTarget();
 
