@@ -1,6 +1,7 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.visuals.bumps;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Checkpoint;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Reef;
 import fr.unice.polytech.si3.qgl.stormbreakers.visuals.draw.Displayer;
 
@@ -31,15 +32,16 @@ public class VisuBump {
             e.printStackTrace();
             return;
         }
+        List<Checkpoint> checkpoints = bumpParser.getCheckpoints();
+        List<Reef> reefs = bumpParser.getReefs();
 
-        displayer.setCheckpoints(bumpParser.getCheckpoints());
-        displayer.setReefs(bumpParser.getReefs());
+        displayer.setCheckpoints(checkpoints);
+        displayer.setReefs(reefs);
         displayer.setStreams(bumpParser.getStreams());
         displayer.setShipShape(bumpParser.getBoatShape());
         displayer.setShipPositions(bumpParser.getRoundPos());
 
-        List<Reef> reefs = bumpParser.getReefs();
-        displayer.showIndexingFor(new ArrayList<>(reefs));
+        displayer.showIndexingFor(new ArrayList<>(checkpoints));
         displayer.showWrappingShapes(reefs, null, 30);
 
         try {
