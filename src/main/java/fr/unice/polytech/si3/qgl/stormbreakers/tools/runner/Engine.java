@@ -31,12 +31,15 @@ import java.util.stream.Collectors;
 public class Engine {
 
     public static final int WEEK_NUM = 8; // CHANGE ME : [1,12]
+    private static final int ITERATIONS = 500;
+
+    private static final String RAW_PATH = "/tools/runner";
 
     private static final int MID_VISION = 1000;
     private static final int NB_STEP = 10;
     private static final double WIND = 0;
 
-    private static final String RAW_PATH = "/tools/runner";
+
     private String initGameJson;
     private InitGame initGame;
     private GameConfig game;
@@ -93,7 +96,7 @@ public class Engine {
         engine.updateNextRound();
 
         System.out.println(engine.ship.getPosition());
-        for (int i=0; i<500; i++) {
+        for (int i=0; i<ITERATIONS; i++) {
             engine.runNextRound();
             System.out.println(engine.ship.getPosition());
         }
