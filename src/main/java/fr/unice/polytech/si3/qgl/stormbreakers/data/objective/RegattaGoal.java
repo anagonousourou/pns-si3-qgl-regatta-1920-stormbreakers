@@ -10,7 +10,7 @@ public class RegattaGoal extends Goal {
 
     @JsonCreator
     public RegattaGoal(@JsonProperty("checkpoints") List<Checkpoint> checkpoints) {
-        super(BattleType.BATTLE.key);
+        super(BattleType.REGATTA.key);
         this.checkpoints = checkpoints;
     }
 
