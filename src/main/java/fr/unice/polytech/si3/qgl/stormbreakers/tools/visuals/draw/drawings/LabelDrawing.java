@@ -26,6 +26,11 @@ public class LabelDrawing extends Drawing {
         this.label = label;
     }
 
+    public LabelDrawing(String label, Position position, Color color) {
+        super(position, STRING_RADIUS, color);
+        this.label = label;
+    }
+
     public LabelDrawing(String label, double x, double y) {
         this(label, new Position(x,y));
     }
@@ -45,6 +50,8 @@ public class LabelDrawing extends Drawing {
         //Drawn from bottom left corner
         float labelX = (float) (canvasPos.x()-(textBounds.getWidth()/2)); // we center text around X
         float labelY = (float) (canvasPos.y()); // Label is just above given (X,Y)
+
+        g2d.setColor(getColor());
 
         // All these shenanigans because of re-inverted Y
         g2d.scale(1,-1); // Restore axis
