@@ -44,9 +44,6 @@ public class Captain {
     public List<SailorAction> nextRoundActions() {
         // On remet le statut doneTurn de tous les marins à false
         this.coordinator.resetAvailability();
-        
-
-        if (checkpointsManager.nextCheckpoint()==null) return List.of(); // No NPE when run already completed
 
         var destination = this.targetDefiner.defineNextTarget();
 
