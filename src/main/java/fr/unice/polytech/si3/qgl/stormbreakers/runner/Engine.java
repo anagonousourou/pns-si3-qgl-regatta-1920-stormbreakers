@@ -36,7 +36,7 @@ public class Engine {
     private static final int NB_STEP = 10;
     private static final double WIND = 0;
 
-    private static final String RAW_PATH = "/raw.runner";
+    private static final String RAW_PATH = "/tools/runner";
     private String initGameJson;
     private InitGame initGame;
     private GameConfig game;

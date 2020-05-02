@@ -12,7 +12,7 @@ import java.util.Scanner;
 
 public class VisuBump {
 
-    public static final String RAW_PATH = "/raw.visuals";
+    public static final String RAW_PATH = "/tools/visuals";
 
     public static void main(String[] args) {
         Displayer displayer = new Displayer();
