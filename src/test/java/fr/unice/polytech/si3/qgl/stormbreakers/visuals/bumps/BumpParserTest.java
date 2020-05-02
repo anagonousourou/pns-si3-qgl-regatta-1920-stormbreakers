@@ -34,7 +34,7 @@ class BumpParserTest {
         assertEquals(ShapeType.POLYGON,reef.getShape().getTypeEnum());
         Polygon polygonReef = (Polygon) reef.getShape();
 
-        assertEquals(polygonReef.getOrientation(),0);
+        assertEquals(0,polygonReef.getOrientation());
         assertEquals(new Position(5048.0192076830845,2530.0120048019226,0.8377580409572781),reef.getPosition());
 
         // Shape ?

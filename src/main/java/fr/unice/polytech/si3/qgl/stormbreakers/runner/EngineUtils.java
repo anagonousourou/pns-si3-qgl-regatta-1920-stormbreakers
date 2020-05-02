@@ -7,9 +7,6 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Boat;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Stream;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.OceanEntity;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Wind;
-import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Position;
-import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Shape;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Rudder;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.*;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.LineSegment2D;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Surface;
@@ -76,7 +73,6 @@ public class EngineUtils {
             if(displayer!=null) displayer.addDrawing(new DotDrawing(new Position(x,y,orientation), Color.GRAY));
             Position positionAtStep = new Position(x,y,orientation);
             Boat shipAtState = new Boat(positionAtStep,0,0,0,null,shipShape);
-            // TODO: 02/04/2020 Join speedX and speedY using vectors
             x=x+ Math.cos(orientation)*vitesseLineaire/nbStep + streamSpeedX(streams,shipAtState)/nbStep;
             y=y+ Math.sin(orientation)*vitesseLineaire/nbStep + streamSpeedY(streams,shipAtState)/nbStep;
             orientation = orientation + vitesseOrientation/nbStep;

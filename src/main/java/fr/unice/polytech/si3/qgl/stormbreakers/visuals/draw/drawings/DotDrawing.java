@@ -3,7 +3,6 @@ package fr.unice.polytech.si3.qgl.stormbreakers.visuals.draw.drawings;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Position;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
-import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Position;
 
 import java.awt.*;
 import java.awt.geom.Line2D;
@@ -11,10 +10,6 @@ import java.awt.geom.Line2D;
 public class DotDrawing extends Drawing {
 
     private static final int CROSS_SIZE = 4;
-
-    public DotDrawing(double x, double y) {
-        this(new Position(x,y));
-    }
 
     public DotDrawing(Position position, Color color) {
         super(position, CROSS_SIZE , color);

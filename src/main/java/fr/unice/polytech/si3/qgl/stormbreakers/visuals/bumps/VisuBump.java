@@ -43,8 +43,6 @@ public class VisuBump {
         displayer.setShipShape(bumpParser.getBoatShape());
         displayer.setShipPositions(bumpParser.getRoundPos());
 
-        //special(displayer,bumpParser);
-
         List<Reef> reefs = bumpParser.getReefs();
         addNumbersFor(new ArrayList<>(reefs),displayer);
         showWrappingShapes(reefs, null, 30, displayer);
@@ -95,16 +93,6 @@ public class VisuBump {
                     displayer.addDrawing(new LabelDrawing(label,cp.getDrawing().getPosition()));
                 }
         );
-    }
-
-    /**
-     * Here add elements to draw which are not originally part of the map
-     * either with {@code displayer.setSpecial(List<Drawable>)}
-     * or with {@code displayer.addDrawing(Drawing)}
-     */
-    private static void special(Displayer displayer, BumpParser bumpParser) {
-
-        drawOceanEntitiesFromJson(displayer);
     }
 
     /**

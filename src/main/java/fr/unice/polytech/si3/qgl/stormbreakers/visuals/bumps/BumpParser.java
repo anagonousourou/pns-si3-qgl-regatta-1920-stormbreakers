@@ -41,7 +41,7 @@ public class BumpParser {
     private static final String CIRCLE_TOKEN = "circle";
     private static final String POLYGON_TOKEN = "polygon";
 
-    private static final String STORMBREAKERS_ID = "1652807864";
+    private static final String STORMBREAKERS_ID = "1652807864"; // CHANGE ME
 
     public BumpParser(Scanner scanner) {
         positionsPerStep = new ArrayList<>();
@@ -256,7 +256,6 @@ public class BumpParser {
      */
     public String getJsonData() throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
-        //mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         mapper.disable(MapperFeature.AUTO_DETECT_GETTERS);
 
         ObjectNode rootNode = mapper.createObjectNode();

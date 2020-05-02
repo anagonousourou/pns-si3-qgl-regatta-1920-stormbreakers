@@ -12,7 +12,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.Line2D;
 import java.awt.geom.Path2D;
 import java.util.ArrayList;
 import java.util.List;
@@ -186,8 +185,6 @@ public class DrawPanel extends JPanel {
 
         frameContent(g2d);
 
-        //drawAxes(g2d,new Point2D(0,0),Color.RED);
-
         g.setColor(Color.BLACK);
         for (Drawing drawing : drawings) {
             paintDrawing(g,drawing);
@@ -272,19 +269,6 @@ public class DrawPanel extends JPanel {
         g2d.scale(xRatio,yRatio); // for box to fit
         g2d.scale(1,-1); // y-axis: facing down -> facing up
         g2d.translate(-minX,-minY); // Origin: bottom left -> (xMin,yMin))
-    }
-
-    // -- AXES --
-
-    /**
-     * Draws axis on the panel
-     * @param center the anchor point / origin
-     * @param color the drawing color
-     */
-    private void drawAxes(Graphics2D g2d, Point2D center, Color color) {
-        g2d.setColor(color);
-        g2d.draw(new Line2D.Double(0.0,center.y(),getWidth(),center.y())); // (Ox)
-        g2d.draw(new Line2D.Double(center.x(),0.0,center.x(),getHeight())); // (Oy)
     }
 
     // -- PIXEL MAPPING --

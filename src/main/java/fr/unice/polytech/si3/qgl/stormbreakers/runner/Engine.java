@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 
 public class Engine {
 
-    public static final int WEEK_NUM = 6;
+    public static final int WEEK_NUM = 2; // CHANGE ME : [1,11] except 8
 
     private static final int MID_VISION = 1000;
     private static final int NB_STEP = 10;
@@ -110,9 +110,7 @@ public class Engine {
         );*/
 
         engine.game.getReefs().forEach(r ->
-                {
-                    displayer.addDrawing(r.getShape().wrappingShape(engine.boat.securityMargin()).getDrawing());
-                }
+                displayer.addDrawing(r.getShape().wrappingShape(engine.boat.securityMargin()).getDrawing())
         );
 
         System.out.println(engine.mjollnir.getLogs());
@@ -120,7 +118,6 @@ public class Engine {
     }
 
     private List<OceanEntity> visibleEntitiesInRadius(Position position, int radius) {
-        // TODO: 02/04/2020 Add Higher radius support
         Circle visibleArea = new Circle(radius,position);
         return game.getEntities().stream().filter(ent -> ent.getShape().getBoundingCircle().collidesWith(visibleArea))
                 .collect(Collectors.toList());

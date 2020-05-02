@@ -4,7 +4,6 @@ import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Polygon;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
 
 import java.awt.*;
-import java.awt.geom.Line2D;
 import java.awt.geom.Path2D;
 import java.util.ArrayList;
 import java.util.List;
