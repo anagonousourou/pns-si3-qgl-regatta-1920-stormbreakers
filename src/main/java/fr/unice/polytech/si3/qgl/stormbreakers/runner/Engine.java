@@ -20,8 +20,6 @@ import fr.unice.polytech.si3.qgl.stormbreakers.runner.serializing.Ship;
 import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.CrewManager;
 import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.EquipmentsManager;
 import fr.unice.polytech.si3.qgl.stormbreakers.visuals.draw.Displayer;
-import fr.unice.polytech.si3.qgl.stormbreakers.visuals.draw.drawings.LabelDrawing;
-import fr.unice.polytech.si3.qgl.stormbreakers.visuals.draw.drawings.PosDrawing;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -101,17 +99,8 @@ public class Engine {
         displayer.setStreams(engine.game.getStreams());
         displayer.setCheckpoints(engine.game.getCheckpoints());
 
-        /*
-        engine.game.getCheckpoints().forEach(cp ->
-                {
-                    String label = "#" + engine.game.getCheckpoints().indexOf(cp);
-                    displayer.addDrawing(new LabelDrawing(label,cp.getDrawing().getPosition()));
-                }
-        );*/
-
-        engine.game.getReefs().forEach(r ->
-                displayer.addDrawing(r.getShape().wrappingShape(engine.boat.securityMargin()).getDrawing())
-        );
+        displayer.showIndexingFor(new ArrayList<>(engine.game.getCheckpoints()));
+        displayer.showWrappingShapes(engine.game.getReefs(), null, engine.boat.securityMargin());
 
         System.out.println(engine.mjollnir.getLogs());
         displayer.disp();
@@ -143,7 +132,7 @@ public class Engine {
         Position newPos = EngineUtils.nextPosition(positionInit,nbOarsRightActive,nbOarsLeftActive,nbOars,
                 rudder,wind,streams,nbsail,nbSailOpenned,shipShape,reefs,NB_STEP,displayer);
 
-        if(displayer!=null) displayer.addDrawing(new PosDrawing(newPos));
+        if(displayer!=null) displayer.addPosition(newPos);
 
 
         nextRound.setShipPos(newPos);

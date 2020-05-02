@@ -4,7 +4,6 @@ import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Position;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.*;
 import fr.unice.polytech.si3.qgl.stormbreakers.visuals.draw.drawings.DotDrawing;
 import fr.unice.polytech.si3.qgl.stormbreakers.visuals.draw.drawings.Drawing;
-import fr.unice.polytech.si3.qgl.stormbreakers.visuals.draw.drawings.PosDrawing;
 
 import javax.swing.*;
 import java.awt.*;
@@ -146,14 +145,6 @@ public class DrawPanel extends JPanel {
     }
 
     // -- QUEUING --
-
-    /**
-     * Adds a position to display
-     * @param position the position
-     */
-    public void addPos(Position position) {
-        drawings.add(new PosDrawing(position.x(),position.y()));
-    }
 
     /**
      * Adds a drawing to display

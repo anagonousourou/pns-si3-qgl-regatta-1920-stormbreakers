@@ -1,13 +1,19 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.visuals.draw;
 
+import com.fasterxml.jackson.databind.MapperFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.OceanEntity;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Position;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Shape;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Checkpoint;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Stream;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Reef;
 import fr.unice.polytech.si3.qgl.stormbreakers.visuals.draw.drawings.Drawing;
+import fr.unice.polytech.si3.qgl.stormbreakers.visuals.draw.drawings.LabelDrawing;
+import fr.unice.polytech.si3.qgl.stormbreakers.visuals.draw.drawings.PosDrawing;
 
 import java.awt.*;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,10 +43,6 @@ public class Displayer {
         special = new ArrayList<>();
 
         drawableManager = new DrawableManager();
-    }
-
-    public DrawableManager getDrawableManager(){
-        return drawableManager;
     }
 
     /**
@@ -124,6 +126,8 @@ public class Displayer {
         shipShape = boatShape;
     }
 
+    // Basic drawing methods
+
     /**
      * Adds any drawing as a "special" element
      * by wrapping it as a Drawable
@@ -132,7 +136,73 @@ public class Displayer {
         special.add(wrapDrawing(drawing));
     }
 
+    /**
+     * Adds a position to display
+     * @param position the position
+     */
+    public void addPosition(Position position) {
+        this.addDrawing(new PosDrawing(position));
+    }
+
     private Drawable wrapDrawing(Drawing drawing) {
         return () -> drawing;
     }
+
+    // Advanced drawing methods
+
+    /**
+     * Shows for given shapes (by id) in the given list their wrapping shape
+     * @param indexes if null shows all wrapping shapes
+     *        {@code new int[] {2,4,6}} will show shapes of indexes 2,4,6
+     */
+    public void showWrappingShapes(List<Reef> reefs, int[] indexes, double margin) {
+        if (indexes != null) {
+            for (int idx : indexes) {
+                if (0<idx && idx<reefs.size()) showWrappingShape(reefs.get(idx), margin);
+            }
+        }
+        else {
+            for (Reef recif : reefs) {
+                showWrappingShape(recif, margin);
+            }
+        }
+    }
+
+    /**
+     * Shows for a given shape it's wrapping shape
+     */
+    public void showWrappingShape(Reef recif, double margin) {
+        this.addDrawing(recif.getShape().wrappingShape(margin).getDrawing());
+    }
+
+    /**
+     * Adds on top of each drawable a label with a number
+     * which represents it's index in the given list
+     */
+    public void showIndexingFor(List<Drawable> drawables) {
+        drawables.stream().forEach(cp ->
+                {
+                    String label = "#" + drawables.indexOf(cp);
+                    this.addDrawing(new LabelDrawing(label,cp.getDrawing().getPosition()));
+                }
+        );
+    }
+
+    /**
+     * Draws entities stored in the given json resource file
+     */
+    private void drawOceanEntitiesFromJson(String jsonRessourcePath) {
+        try {
+            String specialStr = new String(Displayer.class.getResourceAsStream(jsonRessourcePath).readAllBytes());
+
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.disable(MapperFeature.AUTO_DETECT_GETTERS);
+            List<Reef> specials = mapper.readValue(specialStr, mapper.getTypeFactory().constructCollectionType(List.class, OceanEntity.class));
+            this.setSpecial(new ArrayList<>(specials));
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

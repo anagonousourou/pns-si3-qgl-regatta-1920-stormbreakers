@@ -1,13 +1,8 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.visuals.bumps;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.MapperFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.OceanEntity;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Reef;
 import fr.unice.polytech.si3.qgl.stormbreakers.visuals.draw.Displayer;
-import fr.unice.polytech.si3.qgl.stormbreakers.visuals.draw.Drawable;
-import fr.unice.polytech.si3.qgl.stormbreakers.visuals.draw.drawings.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -44,8 +39,8 @@ public class VisuBump {
         displayer.setShipPositions(bumpParser.getRoundPos());
 
         List<Reef> reefs = bumpParser.getReefs();
-        addNumbersFor(new ArrayList<>(reefs),displayer);
-        showWrappingShapes(reefs, null, 30, displayer);
+        displayer.showIndexingFor(new ArrayList<>(reefs));
+        displayer.showWrappingShapes(reefs, null, 30);
 
         try {
             System.out.println(bumpParser.getJsonData());
@@ -57,58 +52,4 @@ public class VisuBump {
         displayer.disp();
     }
 
-    /**
-     * Shows for given shapes (by id) in the given list their wrapping shape
-     * @param indexes if null shows all wrapping shapes
-     *        {@code new int[] {2,4,6}} will show shapes of indexes 2,4,6
-     */
-    private static void showWrappingShapes(List<Reef> reefs, int[] indexes, double margin, Displayer displayer) {
-        if (indexes != null) {
-            for (int idx : indexes) {
-                showWrappingShape(reefs.get(idx), margin, displayer);
-            }
-        }
-        else {
-            for (Reef recif : reefs) {
-                showWrappingShape(recif, margin, displayer);
-            }
-        }
-    }
-
-    /**
-     * Shows for a given shape it's wrapping shape
-     */
-    private static void showWrappingShape(Reef recif, double margin, Displayer displayer) {
-        displayer.addDrawing(recif.getShape().wrappingShape(margin).getDrawing());
-    }
-
-    /**
-     * Adds on top of each drawable given a number
-     * which represents it's index in parsing order
-     */
-    private static void addNumbersFor(List<Drawable> drawables, Displayer displayer) {
-        drawables.stream().forEach(cp ->
-                {
-                    String label = "#" + drawables.indexOf(cp);
-                    displayer.addDrawing(new LabelDrawing(label,cp.getDrawing().getPosition()));
-                }
-        );
-    }
-
-    /**
-     * Draws entities stored in the special.json resource file
-     */
-    private static void drawOceanEntitiesFromJson(Displayer displayer) {
-        try {
-            String specialStr = new String(VisuBump.class.getResourceAsStream(RAW_PATH + "/special.json").readAllBytes());
-
-            ObjectMapper mapper = new ObjectMapper();
-            mapper.disable(MapperFeature.AUTO_DETECT_GETTERS);
-            List<Reef> specials = mapper.readValue(specialStr, mapper.getTypeFactory().constructCollectionType(List.class, OceanEntity.class));
-            displayer.setSpecial(new ArrayList<>(specials));
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 }
