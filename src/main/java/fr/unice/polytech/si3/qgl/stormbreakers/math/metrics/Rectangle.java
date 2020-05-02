@@ -12,7 +12,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.math.LineSegment2D;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.RectanglePositioned;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Utils;
-import fr.unice.polytech.si3.qgl.stormbreakers.visuals.draw.drawings.Drawing;
+import fr.unice.polytech.si3.qgl.stormbreakers.tools.visuals.draw.drawings.Drawing;
 
 public class Rectangle extends Shape {
     private double width;

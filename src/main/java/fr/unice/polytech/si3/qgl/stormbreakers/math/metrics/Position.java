@@ -8,9 +8,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import fr.unice.polytech.si3.qgl.stormbreakers.io.Logable;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Utils;
-import fr.unice.polytech.si3.qgl.stormbreakers.visuals.draw.Drawable;
-import fr.unice.polytech.si3.qgl.stormbreakers.visuals.draw.drawings.Drawing;
-import fr.unice.polytech.si3.qgl.stormbreakers.visuals.draw.drawings.PosDrawing;
+import fr.unice.polytech.si3.qgl.stormbreakers.tools.visuals.draw.Drawable;
+import fr.unice.polytech.si3.qgl.stormbreakers.tools.visuals.draw.drawings.Drawing;
+import fr.unice.polytech.si3.qgl.stormbreakers.tools.visuals.draw.drawings.PosDrawing;
 
 public class Position implements Logable, IPoint , Drawable {
     private final double x;

@@ -9,9 +9,10 @@ import fr.unice.polytech.si3.qgl.stormbreakers.io.Logable;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Position;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Shape;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Surface;
-import fr.unice.polytech.si3.qgl.stormbreakers.visuals.bumps.VisibleEntity;
+import fr.unice.polytech.si3.qgl.stormbreakers.tools.visuals.bumps.VisibleEntity;
 
 public class Checkpoint implements Logable, Surface, VisibleEntity {
+    public static final String BUMP_TOKEN = "Checkpoint";
     private Position position;
     private Shape shape;
 
@@ -79,7 +80,7 @@ public class Checkpoint implements Logable, Surface, VisibleEntity {
     // Implements Visible Entity
     @Override
     public String getType() {
-        return VisibleEntity.CHECKPOINT_TOKEN;
+        return Checkpoint.BUMP_TOKEN;
     }
 
 }

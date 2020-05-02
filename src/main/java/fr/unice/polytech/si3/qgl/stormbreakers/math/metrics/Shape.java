@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.io.Logable;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
-import fr.unice.polytech.si3.qgl.stormbreakers.visuals.draw.Drawable;
+import fr.unice.polytech.si3.qgl.stormbreakers.tools.visuals.draw.Drawable;
 
 /**
  * Classe representant une forme geometrique Prend son centre comme origine

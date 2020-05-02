@@ -12,8 +12,8 @@ import fr.unice.polytech.si3.qgl.stormbreakers.math.LineSegment2D;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Utils;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Vector;
-import fr.unice.polytech.si3.qgl.stormbreakers.visuals.draw.drawings.CircleDrawing;
-import fr.unice.polytech.si3.qgl.stormbreakers.visuals.draw.drawings.Drawing;
+import fr.unice.polytech.si3.qgl.stormbreakers.tools.visuals.draw.drawings.CircleDrawing;
+import fr.unice.polytech.si3.qgl.stormbreakers.tools.visuals.draw.drawings.Drawing;
 
 public class Circle extends Shape {
     private double radius;
