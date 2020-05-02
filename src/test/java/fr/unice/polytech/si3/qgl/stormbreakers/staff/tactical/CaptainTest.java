@@ -19,15 +19,13 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.OarAction;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.SailorAction;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.Turn;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Equipment;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Rudder;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Oar;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Rudder;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.Sailor;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Boat;
 import fr.unice.polytech.si3.qgl.stormbreakers.exceptions.ParsingException;
 import fr.unice.polytech.si3.qgl.stormbreakers.io.InputParser;
 import fr.unice.polytech.si3.qgl.stormbreakers.io.json.JsonInputParser;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.IntPosition;
-import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.CheckpointsManager;
 import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.CrewManager;
 import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.EquipmentsManager;
 import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.TargetDefiner;
@@ -49,7 +47,7 @@ public class CaptainTest {
     void accelerateTest() {
         Coordinator coordinator = mock(Coordinator.class);
         TargetDefiner targetDefiner = new TargetDefiner(null, null, null, null);
-        rogers = new Captain(null, null, null, null, coordinator, targetDefiner);
+        rogers = new Captain(null, null, coordinator, targetDefiner);
         List<SailorAction> sailorsActions = List.of(new OarAction(1), new OarAction(3));
         when(coordinator.nbOars()).thenReturn(4);
 
@@ -77,7 +75,7 @@ public class CaptainTest {
 
         Coordinator coordinator = new Coordinator(crewManager, equipmentsManager);
 
-        rogers = new Captain(null, null, null, null, coordinator, null);
+        rogers = new Captain( null, null, coordinator, null);
 
         rogers.validateActions(List.of(new OarAction(1), new OarAction(3)));
 
@@ -91,7 +89,7 @@ public class CaptainTest {
     @Test
     void calculateSpeedTest() {
         Coordinator coordinator = mock(Coordinator.class);
-        rogers = new Captain(null, null, null, null, coordinator, null);
+        rogers = new Captain( null, null, coordinator, null);
 
         when(coordinator.nbOars()).thenReturn(2);
         assertEquals(165 * ((double) 1 / 2),
@@ -114,7 +112,7 @@ public class CaptainTest {
         List<SailorAction> actions;
 
         Coordinator coordinator = new Coordinator(crewManager, equipmentsManager);
-        rogers = new Captain(null, null, navigator, null, coordinator, null);
+        rogers = new Captain( navigator, null, coordinator, null);
 
         actions = List.of(sailors.get(0).howToMoveTo(equipments.get(2).getPosition()), new OarAction(0),
                 sailors.get(1).howToMoveTo(equipments.get(3).getPosition()), new OarAction(1));
@@ -138,7 +136,7 @@ public class CaptainTest {
         EquipmentsManager equipmentsManager = new EquipmentsManager(equipments, 2);
         Navigator navigator = new Navigator();
         Coordinator coordinator = new Coordinator(crewManager, equipmentsManager);
-        rogers = new Captain(null, null, navigator, null, coordinator, null);
+        rogers = new Captain( navigator, null, coordinator, null);
 
         List<SailorAction> actions = List.of(sailors.get(0).howToMoveTo(equipments.get(0).getPosition()),
                 new OarAction(0));
@@ -156,7 +154,7 @@ public class CaptainTest {
         EquipmentsManager equipmentsManager = new EquipmentsManager(equipments, 3);
         Coordinator coordinator = new Coordinator(crewManager, equipmentsManager);
         Navigator navigator = new Navigator();
-        rogers = new Captain(null, null, navigator, null, coordinator, null);
+        rogers = new Captain( navigator, null, coordinator, null);
 
         List<SailorAction> actualActions = rogers.actionsToOrientate(-Math.PI / 5, 100.0);
 
@@ -183,7 +181,7 @@ public class CaptainTest {
         EquipmentsManager equipmentsManager = new EquipmentsManager(equipments, 3);
         Coordinator coordinator = new Coordinator(crewManager, equipmentsManager);
         Navigator navigator = new Navigator();
-        rogers = new Captain(null, null, navigator, null, coordinator, null);
+        rogers = new Captain( navigator, null, coordinator, null);
 
         List<SailorAction> actualActions = rogers.actionsToOrientate(Math.PI / 2, 0.1);
 
@@ -209,7 +207,7 @@ public class CaptainTest {
         EquipmentsManager equipmentsManager = new EquipmentsManager(equipments, 2);
         Coordinator coordinator = new Coordinator(crewManager, equipmentsManager);
         Navigator navigator = new Navigator();
-        rogers = new Captain(null, null, navigator, null, coordinator, null);
+        rogers = new Captain( navigator, null, coordinator, null);
 
         List<SailorAction> actualActions = rogers.actionsToOrientate(Math.PI, 180);
 
@@ -232,7 +230,7 @@ public class CaptainTest {
         EquipmentsManager equipmentsManager = new EquipmentsManager(equipments, 2);
         Coordinator coordinator = new Coordinator(crewManager, equipmentsManager);
         Navigator navigator = new Navigator();
-        rogers = new Captain(null, null, navigator, null, coordinator, null);
+        rogers = new Captain( navigator, null, coordinator, null);
 
         List<SailorAction> actions = rogers.orientateWithRudder(-Math.PI, 100);
 
@@ -257,7 +255,7 @@ public class CaptainTest {
         EquipmentsManager equipmentsManager = new EquipmentsManager(equipments, 2);
         Coordinator coordinator = new Coordinator(crewManager, equipmentsManager);
         Navigator navigator = new Navigator();
-        rogers = new Captain(null, null, navigator, null, coordinator, null);
+        rogers = new Captain( navigator, null, coordinator, null);
 
         List<SailorAction> actualActions = rogers.actionsToOrientate(Math.PI / 10, 0.0);
         assertEquals(2, actualActions.size());
@@ -277,7 +275,7 @@ public class CaptainTest {
 
         WeatherAnalyst weatherAnalyst = mock(WeatherAnalyst.class);
 
-        rogers = new Captain(null, null, null, weatherAnalyst, coordinator, null);
+        rogers = new Captain( null, weatherAnalyst, coordinator, null);
 
         when(weatherAnalyst.speedFromWindExists()).thenReturn(false);
 
@@ -304,7 +302,7 @@ public class CaptainTest {
 
         WeatherAnalyst weatherAnalyst = mock(WeatherAnalyst.class);
 
-        rogers = new Captain(null, null, null, weatherAnalyst, coordinator, null);
+        rogers = new Captain( null, weatherAnalyst, coordinator, null);
 
         when(weatherAnalyst.speedFromWindExists()).thenReturn(true);
         when(weatherAnalyst.potentialSpeedAcquirable()).thenReturn(200.56);
@@ -352,6 +350,35 @@ public class CaptainTest {
         assertFalse(results.stream().anyMatch(action -> action.getType().equals(ActionType.LOWERSAIL.actionCode)),
                 "et Certainement pas de  LowerAction puique currentExternalSpeed==0 donc voiles supposées baissées ");
 
+    }
+
+
+    @Test
+    public void shouldMoveWhenTargetVeryClose() throws ParsingException {
+
+            Navigator navigator=new Navigator();
+            WeatherAnalyst weatherAnalyst= mock(WeatherAnalyst.class);
+            when(weatherAnalyst.currentExternalSpeed()).thenReturn(0.0);
+            when(weatherAnalyst.potentialSpeedAcquirable()).thenReturn(0.0);
+            TargetDefiner targetDefiner=mock(TargetDefiner.class);
+            EquipmentsManager equipmentsManager= new EquipmentsManager(parser.fetchEquipments(gameData),
+                parser.fetchBoatWidth(gameData), parser);
+                var allSailors = this.parser.fetchAllSailors(gameData);
+
+        CrewManager crewManager = new CrewManager(allSailors);
+
+        Coordinator coordinator=new Coordinator(crewManager, equipmentsManager);
+            when(targetDefiner.defineNextTarget()).thenReturn(new TupleDistanceOrientation(18.0,0.0,false) );
+
+
+
+            Captain captain=new Captain( navigator, weatherAnalyst, coordinator, targetDefiner);
+
+            List<SailorAction> actions=captain.nextRoundActions();
+
+            
+
+            assertTrue(actions.stream().anyMatch(action -> action.getType().equals(ActionType.OAR.actionCode)));
     }
 
 }

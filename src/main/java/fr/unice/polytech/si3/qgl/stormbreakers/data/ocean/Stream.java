@@ -5,6 +5,9 @@ import java.util.Optional;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import fr.unice.polytech.si3.qgl.stormbreakers.math.RectanglePositioned;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.Utils;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.Vector;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Circle;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.IPoint;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Polygon;
@@ -12,10 +15,6 @@ import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Position;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Rectangle;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Shape;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.ShapeType;
-import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
-import fr.unice.polytech.si3.qgl.stormbreakers.math.RectanglePositioned;
-import fr.unice.polytech.si3.qgl.stormbreakers.math.Utils;
-import fr.unice.polytech.si3.qgl.stormbreakers.math.Vector;
 
 public class Stream extends OceanEntity {
     private double strength;
