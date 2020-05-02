@@ -70,7 +70,7 @@ public class EngineUtils {
         double vitesseOrientation = Math.PI*(nbOarsRightActive-nbOarsLeftActive)/nbOars + angleGouvernail;
 
         for(int i = 0;i<nbStep;i++){
-            if(displayer!=null) displayer.addDrawing(new DotDrawing(new Position(x,y,orientation), Color.GRAY));
+            if(displayer!=null) displayer.addDot(new Position(x,y,orientation), Displayer.SPECIAL_COLOR);
             Position positionAtStep = new Position(x,y,orientation);
             Boat shipAtState = new Boat(positionAtStep,0,0,0,null,shipShape);
             x=x+ Math.cos(orientation)*vitesseLineaire/nbStep + streamSpeedX(streams,shipAtState)/nbStep;

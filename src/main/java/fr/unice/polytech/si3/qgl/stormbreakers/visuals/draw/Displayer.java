@@ -8,6 +8,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Shape;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Checkpoint;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Stream;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Reef;
+import fr.unice.polytech.si3.qgl.stormbreakers.visuals.draw.drawings.DotDrawing;
 import fr.unice.polytech.si3.qgl.stormbreakers.visuals.draw.drawings.Drawing;
 import fr.unice.polytech.si3.qgl.stormbreakers.visuals.draw.drawings.LabelDrawing;
 import fr.unice.polytech.si3.qgl.stormbreakers.visuals.draw.drawings.PosDrawing;
@@ -33,6 +34,7 @@ public class Displayer {
     private Shape shipShape;
 
     private List<Drawable> special;
+    public static final Color SPECIAL_COLOR = new Color(170,0,255);
 
     public Displayer(){
         checkpoints = new ArrayList<>();
@@ -59,14 +61,22 @@ public class Displayer {
      * Adds for display every map element with their corresponding color
      */
     private void graphDrawableShapes(List<Checkpoint> checkpoints, List<Reef> reefs, List<Stream> streams, List<Position> shipPos) {
-        graphColoredShapes(new ArrayList<>(checkpoints), Color.GREEN);
-        graphColoredShapes(new ArrayList<>(reefs),Color.RED);
-        graphColoredShapes(new ArrayList<>(streams),Color.BLUE);
-        graphColoredShapes(new ArrayList<>(shipPos),Color.BLACK);
+        graphShapes(new ArrayList<>(checkpoints), Color.GREEN);
+        graphShapes(new ArrayList<>(reefs), new Color(255, 206, 21));
+        graphShapes(new ArrayList<>(streams),Color.BLUE);
+        graphShapes(new ArrayList<>(shipPos),Color.BLACK);
 
-        graphColoredShapes(new ArrayList<>(special),new Color(170,0,255));
+        graphColoredShapes(new ArrayList<>(special));
 
-        graphColoredShapes(List.of(shipShape),Color.ORANGE);
+        graphShapes(List.of(shipShape),Color.ORANGE);
+    }
+
+    /**
+     * Adds drawables for display with their own color
+     * @param drawables list of drawables
+     */
+    private void graphColoredShapes(ArrayList<Drawable> drawables) {
+        drawables.forEach(drawableManager::addElement);
     }
 
     /**
@@ -74,7 +84,7 @@ public class Displayer {
      * @param drawables list of drawables
      * @param color display color
      */
-    private void graphColoredShapes(List<Drawable> drawables, Color color) {
+    private void graphShapes(List<Drawable> drawables, Color color) {
         drawables.forEach(elt -> drawableManager.addElement(elt,color));
     }
 
@@ -144,6 +154,14 @@ public class Displayer {
         this.addDrawing(new PosDrawing(position));
     }
 
+    /**
+     * Adds a position to display
+     * @param position the dot's position
+     */
+    public void addDot(Position position, Color color) {
+        this.addDrawing(new DotDrawing(position, color));
+    }
+
     private Drawable wrapDrawing(Drawing drawing) {
         return () -> drawing;
     }
@@ -172,7 +190,10 @@ public class Displayer {
      * Shows for a given shape it's wrapping shape
      */
     public void showWrappingShape(Reef recif, double margin) {
-        this.addDrawing(recif.getShape().wrappingShape(margin).getDrawing());
+        Shape wrappingShape = recif.getShape().wrappingShape(margin);
+        Drawing drawing = wrappingShape.getDrawing();
+        drawing.setColor(Color.RED);
+        this.addDrawing(drawing);
     }
 
     /**
