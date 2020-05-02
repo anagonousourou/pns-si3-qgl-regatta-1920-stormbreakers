@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.unice.polytech.si3.qgl.stormbreakers.Cockpit;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.*;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.navire.*;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.Utils;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Circle;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Position;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Shape;
@@ -29,7 +30,7 @@ import java.util.stream.Collectors;
 
 public class Engine {
 
-    public static final int WEEK_NUM = 8; // CHANGE ME : [1,11]
+    public static final int WEEK_NUM = 8; // CHANGE ME : [1,12]
 
     private static final int MID_VISION = 1000;
     private static final int NB_STEP = 10;
@@ -71,7 +72,7 @@ public class Engine {
         mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
         mapper.disable(MapperFeature.AUTO_DETECT_GETTERS);
 
-        int weekNb = WEEK_NUM;
+        int weekNb = (int) Utils.clamp(WEEK_NUM,1,12);
         if (weekNb==8) weekNb--; // Week 7 == Week 8
 
         String weekInputsPath = RAW_PATH + "\\week" + weekNb;
