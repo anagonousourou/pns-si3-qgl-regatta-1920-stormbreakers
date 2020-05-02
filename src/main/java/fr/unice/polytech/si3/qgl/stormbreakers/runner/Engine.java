@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 
 public class Engine {
 
-    public static final int WEEK_NUM = 2; // CHANGE ME : [1,11] except 8
+    public static final int WEEK_NUM = 8; // CHANGE ME : [1,11]
 
     private static final int MID_VISION = 1000;
     private static final int NB_STEP = 10;
@@ -71,7 +71,10 @@ public class Engine {
         mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
         mapper.disable(MapperFeature.AUTO_DETECT_GETTERS);
 
-        String weekInputsPath = RAW_PATH + "\\week" + WEEK_NUM;
+        int weekNb = WEEK_NUM;
+        if (weekNb==8) weekNb--; // Week 7 == Week 8
+
+        String weekInputsPath = RAW_PATH + "\\week" + weekNb;
 
         initGameJson = new String(Engine.class.getResourceAsStream( weekInputsPath+ "/initgame.json").readAllBytes());
         initGame = mapper.readValue(initGameJson, InitGame.class);
