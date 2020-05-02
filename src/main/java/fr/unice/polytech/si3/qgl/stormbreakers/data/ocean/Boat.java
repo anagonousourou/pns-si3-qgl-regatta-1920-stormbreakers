@@ -6,7 +6,6 @@ import java.beans.PropertyChangeListener;
 import fr.unice.polytech.si3.qgl.stormbreakers.exceptions.ParsingException;
 import fr.unice.polytech.si3.qgl.stormbreakers.io.InputParser;
 import fr.unice.polytech.si3.qgl.stormbreakers.io.Logger;
-import fr.unice.polytech.si3.qgl.stormbreakers.math.Surface;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Position;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Rectangle;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Shape;
@@ -15,7 +14,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Shape;
  * Le bateau implémente Propertychange listener pour permettre la mise à jour
  * des infos du bateau notamment la vie et la position-orientation
  */
-public class Boat extends OceanEntity implements PropertyChangeListener, Surface {
+public class Boat extends OceanEntity implements PropertyChangeListener {
     private Shape boatShape;
     private final int deckwidth;
     private final int decklength;
@@ -23,7 +22,7 @@ public class Boat extends OceanEntity implements PropertyChangeListener, Surface
     private InputParser parser;
 
     public Boat(Position position, int decklength, int deckwidth, int life, InputParser parser, Shape boatShape) {
-        super(OceanEntityType.BOAT.entityCode, position, boatShape); // DUCT TAPE
+        super(OceanEntityType.BOAT.entityCode, position, boatShape);
         this.decklength = decklength;
         this.deckwidth = deckwidth;
         this.life = life;
@@ -43,6 +42,7 @@ public class Boat extends OceanEntity implements PropertyChangeListener, Surface
         this.parser = parser;
     }
 
+    @Override
     public Shape getShape() {
         return boatShape;
     }

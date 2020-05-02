@@ -16,6 +16,10 @@ import java.awt.event.WindowEvent;
 
 public class DrawableManager extends JFrame {
 
+    /**
+     *
+     */
+    private static final long serialVersionUID = -8888346433477453536L;
     private final DrawPanel drawPanel;
 
 

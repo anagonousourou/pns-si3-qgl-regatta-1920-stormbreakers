@@ -114,7 +114,7 @@ public class Graph {
 
         }
 
-        Logger.getInstance().log(System.currentTimeMillis() - t);
+        Logger.getInstance().log(String.valueOf(System.currentTimeMillis() - t));
 
     }
 

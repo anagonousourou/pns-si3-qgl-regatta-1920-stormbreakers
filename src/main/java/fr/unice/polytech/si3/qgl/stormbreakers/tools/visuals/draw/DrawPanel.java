@@ -20,7 +20,12 @@ import java.util.List;
  */
 
 public class DrawPanel extends JPanel {
-    private final List<Drawing> drawings =new ArrayList<>();
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
+
+    private final List<Drawing> drawings = new ArrayList<>();
 
     // interest Box
     private double xValMin=Double.MAX_VALUE; // Can only go down
