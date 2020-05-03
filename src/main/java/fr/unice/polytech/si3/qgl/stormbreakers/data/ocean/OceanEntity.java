@@ -8,14 +8,15 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Position;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Shape;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Surface;
+import fr.unice.polytech.si3.qgl.stormbreakers.tools.visuals.bumps.VisibleEntity;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
 
-@JsonSubTypes({ @JsonSubTypes.Type(value = Courant.class, name = "stream"),
+@JsonSubTypes({ @JsonSubTypes.Type(value = Stream.class, name = "stream"),
     @JsonSubTypes.Type(value = OtherBoat.class, name = "ship"),
-    @JsonSubTypes.Type(value = Recif.class, name = "reef") })
+    @JsonSubTypes.Type(value = Reef.class, name = "reef") })
 
-public abstract class OceanEntity implements Surface {
+public abstract class OceanEntity implements Surface, VisibleEntity {
   private String type;
   protected Position position;
   protected Shape shape;

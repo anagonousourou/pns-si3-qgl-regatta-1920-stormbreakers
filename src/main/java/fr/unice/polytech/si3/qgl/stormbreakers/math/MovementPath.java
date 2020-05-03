@@ -8,11 +8,6 @@ public class MovementPath {
     private int deltaX;
     private int deltaY;
 
-    MovementPath(int deltaX, int deltaY) {
-        this.deltaX = deltaX;
-        this.deltaY = deltaY;
-    }
-
     MovementPath(IntPosition start, IntPosition end) {
         this.deltaX = end.x() - start.x();
         this.deltaY = end.y() - start.y();

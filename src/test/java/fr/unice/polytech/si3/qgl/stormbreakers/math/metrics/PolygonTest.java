@@ -54,8 +54,6 @@ class PolygonTest {
         hexagon = new Polygon(0.0, List.of(hexA, hexB, hexC, hexD, hexE, hexF));
         orientedRectangle = new Polygon(0.5 * Math.PI, rectangleVertices);
 
-        // LATER: 04/03/2020 Use more than rectangle
-
         Point2D triA = new Point2D(0, 10);
         Point2D triB = new Point2D(-5, 0);
         Point2D triC = new Point2D(5, 0);
@@ -98,14 +96,14 @@ class PolygonTest {
         List<Point2D> vertices = List.of(A, B, C);
         Polygon polygon = new Polygon(0.0, vertices);
 
-        // LATER: 15/03/2020 Maybe avoid computing points
+
         List<Point2D> translatedVertices = vertices.stream().map(point -> point.getTranslatedBy(0, 10))
                 .collect(Collectors.toList());
         Polygon translatedPolygon = new Polygon(0.0, translatedVertices);
         polygon.setAnchor(new Position(0, 10));
         assertEquals(translatedPolygon.getHull(), polygon.getHull());
 
-        // LATER: 15/03/2020 Maybe avoid computing points
+
         List<Point2D> rotatedVertices = vertices.stream().map(point -> point.getRotatedBy(Math.toRadians(50)))
                 .collect(Collectors.toList());
         Polygon rotatedPolygon = new Polygon(0.0, rotatedVertices);
@@ -228,6 +226,10 @@ class PolygonTest {
         assertTrue(triangle.collidesWith(upsideDownTriangleEdgeToEdge));
         assertFalse(triangle.collidesWith(upsideDownTriangleApart));
 
+
+        // Very far appart
+        Polygon rectangleFarApart = new Polygon(0, rectangleVertices, new Position(10000, 10000));
+        assertFalse(orientedRectangle.collidesWith(rectangleFarApart)); // No collision
     }
 
     @Test
@@ -257,7 +259,7 @@ class PolygonTest {
         Polygon expanded = (Polygon) original.wrappingShape(margin);
 
         assertEquals(original.getVertices().size(), expanded.getVertices().size());
-        System.out.println(expanded.getVertices());
+        expanded.getVertices();
         /*
          * for (int i = 0; i < vertices.size(); i++) { assertEquals(margin,
          * vertices.get(i).distanceTo(expanded.getVertices().get(i)), 1e-3); }
@@ -313,7 +315,6 @@ class PolygonTest {
 
         Point2D depart = new Point2D(2306.962592519181, 5190.275946479242);
         Point2D arrive = new Point2D(3600.0, 5160);
-        System.out.println(depart.distanceTo(arrive));
 
         assertTrue(rePart.collidesWith(new LineSegment2D(depart, arrive)));
         assertTrue(rePart.wrappingShape(12).collidesWith(new LineSegment2D(depart, arrive)));
@@ -347,4 +348,57 @@ class PolygonTest {
         assertTrue(polyReIsland.collidesWith(segmentBC));
     }
 
+    @Test void testBoundingCircle() {
+        List<Point2D> points = new ArrayList<>(List.of(
+           new Point2D(50,50),
+           new Point2D(-50,50),
+           new Point2D(-50,-50),
+           new Point2D(50,-50)
+        ));
+        Position anchor = new Position(1000,1000);
+        Polygon square = new Polygon(0,points,anchor);
+        assertEquals(new Circle(50*Math.sqrt(2), anchor),square.getBoundingCircle());
+
+        points = new ArrayList<>(List.of(
+                new Point2D(0,100),
+                new Point2D(-50,-50),
+                new Point2D(50,-50)
+        ));
+        anchor = new Position(0,0);
+        Polygon triangle = new Polygon(0,points,anchor);
+        assertEquals(new Circle(100, anchor),triangle.getBoundingCircle());
+    }
+
+    @Test void testIsPointInsideOpenShape() {
+        List<Point2D> points = new ArrayList<>(List.of(
+                new Point2D(50,50),
+                new Point2D(-50,50),
+                new Point2D(-50,-50),
+                new Point2D(50,-50)
+        ));
+        Position anchor = new Position(0,0);
+        Polygon square = new Polygon(0,points,anchor);
+        assertTrue(square.isInsideOpenShape(new Point2D(49.5,49.5))); // le bateau est dans la forme
+        assertFalse(square.isInsideOpenShape(new Point2D(50,50))); // Le bateau est  sur le coin de la forme
+        assertFalse(square.isInsideOpenShape(new Point2D(50,49.5))); // Le bateau est  sur une arrete de la forme
+        assertFalse(square.isInsideOpenShape(new Point2D(50.5,50.5))); // le bateau est en dehors de la surface
+
+        Polygon squareRotated = new Polygon(Math.PI/4,points,anchor);
+        double maxY = Math.sqrt(2) * 50;
+        assertTrue(squareRotated.isInsideOpenShape(new Point2D(0,maxY-0.5)));
+        assertFalse(squareRotated.isInsideOpenShape(new Point2D(0,maxY)));
+        assertFalse(squareRotated.isInsideOpenShape(new Point2D(0,maxY+0.5)));
+
+
+        points = new ArrayList<>(List.of(
+                new Point2D(0,50),
+                new Point2D(-50,0),
+                new Point2D(0,-50),
+                new Point2D(50,0)
+        ));
+        anchor = new Position(1000,1000);
+        Polygon square2 = new Polygon(0,points,anchor);
+        assertTrue(square2.isInsideOpenShape(new Point2D(1000,1049.5)));
+        assertFalse(square2.isInsideOpenShape(new Point2D(1000,1050)));
+        assertFalse(square2.isInsideOpenShape(new Point2D(1000,1050.5)));    }
 }

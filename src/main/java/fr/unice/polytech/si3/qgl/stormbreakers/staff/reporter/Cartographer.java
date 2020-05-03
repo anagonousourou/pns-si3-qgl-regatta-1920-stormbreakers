@@ -9,7 +9,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Boat;
 import fr.unice.polytech.si3.qgl.stormbreakers.io.Logger;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.RectangularSurface;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.graph.Graph;
-import fr.unice.polytech.si3.qgl.stormbreakers.math.graph.Sommet;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.graph.Vertex;
 
 public class Cartographer {
 
@@ -19,7 +19,7 @@ public class Cartographer {
     private RectangularSurface virtualMap;
     private static final double MAP_MARGIN_Y = 2000;
     private static final double MAP_MARGIN_X = 6000;
-    private static final double ECART = 50.0;
+    private static final double GAP = 50.0;
 
     public Cartographer(CheckpointsManager checkpointsManager, Graph graph, Boat boat) {
         this.boat = boat;
@@ -31,63 +31,63 @@ public class Cartographer {
     public IPoint nextPoint() {
         Checkpoint cp = this.checkpointsManager.nextCheckpoint();
 
-        return caseBuildMap(cp); // nouveau graph
+        return caseBuildMap(cp); // new graph
 
     }
 
     IPoint caseBuildMap(Checkpoint cp) {
         long t = System.currentTimeMillis();
-        double ecart = ECART;
+        double gap = GAP;
         double height = Math.abs((boat.x() - cp.x())) + MAP_MARGIN_X;
         double width = Math.abs((boat.y() - cp.y())) + MAP_MARGIN_Y;
 
         double d = boat.distanceTo(cp);
-        System.out.println("distanceToCp: " + d);
+        Logger.getInstance().log("distanceToCp: " + d);
 
         if(d >= 9000){
-            ecart=400;
+            gap=400;
         }
         else if (d >= 8000) {
-            ecart = 350;
+            gap = 350;
         } else if (d >= 6000) {
-            ecart = 300;
+            gap = 300;
         } else if (d >= 3000) {
-            ecart = 200;
+            gap = 200;
         } else if (d >= 2000) {
-            ecart = 150;
+            gap = 150;
         } else if (d > 1000) {
-            ecart = 100;
+            gap = 100;
         }
 
-        System.out.println("Ecart choisi: " + ecart);
+        Logger.getInstance().log("Ecart choisi: " + gap);
 
         IPoint center = IPoint.centerPoints(boat, cp);
 
         this.virtualMap = new RectangularSurface(center.x(), center.y(), 0.0, new Rectangle(width, height, 0.0));
 
-        graph.createSquaring(virtualMap.minX(), virtualMap.minY(), virtualMap.maxX(), virtualMap.maxY(), ecart);
+        graph.createSquaring(virtualMap.minX(), virtualMap.minY(), virtualMap.maxX(), virtualMap.maxY(), gap);
 
-        System.out.println("createSquaring: " + (System.currentTimeMillis() - t));
+        Logger.getInstance().log("createSquaring: " + (System.currentTimeMillis() - t));
 
-        var depart = new Sommet(boat);
-        depart = graph.addNode(depart);
+        var start = new Vertex(boat);
+        start = graph.addNode(start);
 
-        var destination = new Sommet(cp);
+        var destination = new Vertex(cp);
         destination = graph.addNode(destination);
 
         // en principe inutile
         graph.clearShortestPaths();
 
-        graph.calculateShortestPathFromSource(depart, destination, ecart);
+        graph.calculateShortestPathFromSource(start, destination, gap);
 
-        List<Sommet> path = graph.reducePath(destination);
+        List<Vertex> path = graph.reducePath(destination);
 
-        System.out.println("Djisktra: " + (System.currentTimeMillis() - t));
-        System.out.println("Path computed: " + path);
+        Logger.getInstance().log("Djisktra: " + (System.currentTimeMillis() - t));
+        Logger.getInstance().log("Path computed: " + path);
         if (path.size() > 1) {
             return path.get(1).getPoint();
         } else {
-            Logger.getInstance().log("Oh no path found :screwed");
+            Logger.getInstance().log("Oh no path found :bad");
             return cp;
         }
     }

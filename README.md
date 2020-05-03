@@ -15,7 +15,4 @@ Nom du bateau : Mjollnir
 
 Etudiants non-apprentis
 
-## Portion de code provenant partiellement de sources externes
-
-- LineSegment2D.java
-- Fraction.java
+Outils en plus : voir [README](./src/main/java/fr/unice/polytech/si3/qgl/stormbreakers/tools/README.md)

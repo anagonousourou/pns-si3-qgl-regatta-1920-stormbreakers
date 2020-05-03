@@ -6,6 +6,7 @@
 
 * [Master](#master)
 * [Prod](#prod)
+* [Develop](#develop)
 * [Feature](#feature)
 * [Hotfix](#hotfix)
 
@@ -21,6 +22,13 @@ Convention de nommage de la branche prod : **prod**
 * Avant le merge vers master, attendre que les autres contributeurs acceptent la pull request.
   * :exclamation: Ne sera mergée à master que lorsque son contenu contiendra tout ce qui est requis pour la release correspondante, et qu'il soit documentée et complétement testé.
   * Le commit qui déclenchera le merge doit être taggé avec le bon nom de la nouvelle release.
+
+### Develop
+
+Convention de nommage de la branche prod : **develop**
+
+* La branche develop peut être modifiée à n'importe quel moment, et est faite pour être instable.
+* Le but de cette branche est la mise en commun de branches de type Feature lorsque cela est nécessaire (par exemple, si une feature a besoin qu'une autre soit réalisée pour être complète).
 
 ### Feature
 

@@ -10,6 +10,8 @@ import fr.unice.polytech.si3.qgl.stormbreakers.io.Logable;
 import fr.unice.polytech.si3.qgl.stormbreakers.io.Logger;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.*;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Vector;
+import fr.unice.polytech.si3.qgl.stormbreakers.tools.visuals.draw.drawings.Drawing;
+import fr.unice.polytech.si3.qgl.stormbreakers.tools.visuals.draw.drawings.PolygonDrawing;
 
 public class Polygon extends Shape implements Orientable {
 
@@ -22,6 +24,12 @@ public class Polygon extends Shape implements Orientable {
         LEFT, RIGHT, MIDDLE
     }
 
+    /**
+     * 
+     * @param orientation
+     * @param vertices position des sommet par rapport au centre du polygon
+     * @param anchor
+     */
     public Polygon(double orientation, List<Point2D> vertices, Position anchor) {
         super("polygon", anchor);
         this.orientation = orientation;
@@ -100,6 +108,8 @@ public class Polygon extends Shape implements Orientable {
         return new Circle(getMaxRadius(), getAnchor());
     }
 
+    // -- COLLISION = Intersection Only
+
     @Override
     public boolean collidesWith(Shape shape) {
         return shape.collidesWith(this); // collide w/ polygon
@@ -107,7 +117,6 @@ public class Polygon extends Shape implements Orientable {
 
     @Override
     public boolean collidesWith(Polygon polygon) {
-        // LATER: 12/03/2020 Missing Test where bounding circles don't collide
         if (!this.getBoundingCircle().collidesWith(polygon.getBoundingCircle())) {
             // Bounding circles don't even intersect
             return false;
@@ -136,7 +145,6 @@ public class Polygon extends Shape implements Orientable {
 
     @Override
     public boolean collidesWith(LineSegment2D lineSegment2D) {
-        // LATER: 16/03/2020 If lineSegment inside
         List<LineSegment2D> edges = bordersActualPos;
 
         for (LineSegment2D border : edges) {
@@ -196,14 +204,14 @@ public class Polygon extends Shape implements Orientable {
         Vector borderVector = new Vector(a, b);
         Vector toCompare = new Vector(a, t);
 
-        double scal = Vector.crossZ(borderVector, toCompare);
+        double val = Vector.crossZ(borderVector, toCompare);
 
         Side side = null;
-        if (Utils.almostEquals(scal, 0))
+        if (Utils.almostEquals(val, 0))
             side = Side.MIDDLE;
-        else if (scal < 0)
+        else if (val < 0)
             side = Side.LEFT;
-        else if (scal > 0)
+        else if (val > 0)
             side = Side.RIGHT;
 
         return side;
@@ -235,8 +243,8 @@ public class Polygon extends Shape implements Orientable {
     }
 
     public double getMaxRadius() {
-        IPoint center = getAnchorPoint();
-        var optfarPt = this.vertices.stream().max((a, b) -> Double.compare(center.distanceTo(a), center.distanceTo(b)));
+        IPoint center = new Point2D(0,0);
+        var optfarPt = this.vertices.stream().max(Comparator.comparingDouble(center::distanceTo));
 
         if (optfarPt.isPresent()) {
             return center.distanceTo(optfarPt.get());
@@ -251,8 +259,29 @@ public class Polygon extends Shape implements Orientable {
 
     @Override
     public boolean isInsideOpenShape(IPoint pt) {
-        // LATER URGENT Auto-generated method stub
-        return isPtInside(pt);
+        Iterator<LineSegment2D> it = bordersActualPos.iterator();
+        Side lastSide = null;
+
+        while (it.hasNext()) {
+            LineSegment2D currentBorder = it.next();
+
+            Side currentSide = getPointSideComparedToVector(currentBorder.firstPoint(), currentBorder.lastPoint(),
+                    pt);
+
+            if (currentSide==Side.MIDDLE) return false; // The point is on one of the borders
+
+            if (lastSide == null) {
+                // Side of point compared to one edge
+                lastSide = currentSide;
+            } else if (currentSide != lastSide) {
+                // If the point changes side when cycling through borders
+                // The point is outside the CONVEX polygon
+                return false;
+            }
+        }
+
+        // If we reach here then the point is inside
+        return true;
     }
 
     @Override
@@ -351,4 +380,9 @@ public class Polygon extends Shape implements Orientable {
         return new Polygon(orientation, expandedVertices, getAnchor());
     }
 
+    // implements Drawable
+    @Override
+    public Drawing getDrawing() {
+        return new PolygonDrawing(this);
+    }
 }

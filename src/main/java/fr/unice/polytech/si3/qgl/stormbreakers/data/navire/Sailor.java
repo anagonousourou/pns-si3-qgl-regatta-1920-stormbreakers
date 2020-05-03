@@ -1,9 +1,9 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.data.navire;
 
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import fr.unice.polytech.si3.qgl.stormbreakers.io.Logable;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.MoveAction;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.IntPosition;
@@ -24,10 +24,8 @@ public class Sailor implements Logable {
      */
     private boolean doneTurn = false;
 
-    // Potentiellement à enlever
-    private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
-
-    public Sailor(int id, int x, int y) {
+    @JsonCreator
+    public Sailor(@JsonProperty("id") int id, @JsonProperty("x") int x, @JsonProperty("y") int y) {
         this.id = id;
         this.position = new IntPosition(x, y);
     }
@@ -39,15 +37,6 @@ public class Sailor implements Logable {
     public Sailor(int id, IntPosition pos, String name) {
         this(id, pos.x(), pos.y());
         this.name = name;
-
-    }
-
-    public void addPropertyChangeListener(PropertyChangeListener listener) {
-        this.pcs.addPropertyChangeListener(listener);
-    }
-
-    public void removePropertyChangeListener(PropertyChangeListener listener) {
-        this.pcs.removePropertyChangeListener(listener);
     }
 
     /**

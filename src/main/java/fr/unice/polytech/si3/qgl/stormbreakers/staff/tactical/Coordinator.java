@@ -35,13 +35,12 @@ public class Coordinator {
     }
 
     void validateActions(List<SailorAction> actions) {
-        actions.forEach(action -> this.getMarinById(action.getSailorId()).get().setDoneTurn(true));
+        actions.forEach(action -> this.getSailorById(action.getSailorId()).get().setDoneTurn(true));
 
     }
 
     public boolean rudderIsAccesible() {
-
-        return this.crewManager.marinAround(this.equipmentsManager.rudderPosition());
+        return this.crewManager.sailorAround(this.equipmentsManager.rudderPosition());
     }
 
     /**
@@ -49,19 +48,19 @@ public class Coordinator {
      * 
      * @return
      */
-    public Optional<Sailor> marineForRudder() {
+    public Optional<Sailor> sailorForRudder() {
         return this.crewManager.availableSailorAtPosition(this.equipmentsManager.rudderPosition())
                 .or(() -> this.crewManager.availableSailorClosestTo(this.equipmentsManager.rudderPosition()));
     }
 
     public List<SailorAction> activateRudder(double orientation) {
-        var optMarine = this.marineForRudder();
+        var optMarine = this.sailorForRudder();
         if (optMarine.isPresent() && rudderIsAccesible()) {
-            Sailor rudderMarine = optMarine.get();
+            Sailor rudderSailor = optMarine.get();
             List<SailorAction> actions = new ArrayList<>(2);
             
-            actions.add(rudderMarine.howToMoveTo(this.rudderPosition()));
-            actions.add(new Turn(rudderMarine.getId(), orientation));
+            actions.add(rudderSailor.howToMoveTo(this.rudderPosition()));
+            actions.add(new Turn(rudderSailor.getId(), orientation));
             return actions;
         }
         return List.of();
@@ -94,15 +93,15 @@ public class Coordinator {
 
     public int lowerSailsPartially(List<SailorAction> actions) {
         int nbOpenned = this.nbSailsOpenned();
-        List<Sailor> marinesBusy = new ArrayList<>();
-        var marinsDisponibles = this.marinsDisponiblesVoiles(true);
+        List<Sailor> busySailors = new ArrayList<>();
+        var availableSailors = this.availableSailorsForSails(true);
         for (Sail sail : this.equipmentsManager.sails(true)) {
 
-            for (Sailor sailor : marinsDisponibles.get(sail)) {
-                if (!sailor.isDoneTurn() && !marinesBusy.contains(sailor)) {
+            for (Sailor sailor : availableSailors.get(sail)) {
+                if (!sailor.isDoneTurn() && !busySailors.contains(sailor)) {
                     actions.add(sailor.howToMoveTo(sail.getPosition()));
                     actions.add(new LowerSail(sailor.getId()));
-                    marinesBusy.add(sailor);
+                    busySailors.add(sailor);
                     nbOpenned--;
                     break;
                 }
@@ -114,14 +113,14 @@ public class Coordinator {
 
     public int liftSailsPartially(List<SailorAction> actions) {
         int nbOpenned = this.nbSailsOpenned();
-        List<Sailor> marinesBusy = new ArrayList<>();
-        var marinsDisponibles = this.marinsDisponiblesVoiles(false);
+        List<Sailor> busySailors = new ArrayList<>();
+        var availableSailors = this.availableSailorsForSails(false);
         for (Sail sail : this.equipmentsManager.closedSails()) {
-            for (Sailor sailor : marinsDisponibles.get(sail)) {
-                if (!sailor.isDoneTurn() && !marinesBusy.contains(sailor)) {
+            for (Sailor sailor : availableSailors.get(sail)) {
+                if (!sailor.isDoneTurn() && !busySailors.contains(sailor)) {
                     actions.add(sailor.howToMoveTo(sail.getPosition()));
                     actions.add(new LiftSail(sailor.getId()));
-                    marinesBusy.add(sailor);
+                    busySailors.add(sailor);
                     nbOpenned++;
                     break;
                 }
@@ -131,34 +130,20 @@ public class Coordinator {
         return nbOpenned;
     }
 
-    public boolean allSailsAreOpenned() {
-        return this.nbSails() == this.nbSailsOpenned();
-    }
-
     private int nbSailsOpenned() {
         return this.equipmentsManager.nbOpennedSails();
     }
 
-    public int nbMarinsOnLeftOars() {
-        return (int) this.equipmentsManager.allLeftOars().stream()
-                .filter(oar -> this.crewManager.marineAtPosition(oar.getPosition()).isPresent()).count();
-    }
-
-    public int nbMarinsOnRightOars() {
-        return (int) this.equipmentsManager.allRightOars().stream()
-                .filter(oar -> this.crewManager.marineAtPosition(oar.getPosition()).isPresent()).count();
-    }
-
-    public Map<Oar, List<Sailor>> marinsDisponiblesForOar() {
+    public Map<Oar, List<Sailor>> availableSailorsForOar() {
         HashMap<Oar, List<Sailor>> results = new HashMap<>();
-        this.equipmentsManager.oars().forEach(oar -> results.put(oar, this.crewManager.marins().stream()
+        this.equipmentsManager.oars().forEach(oar -> results.put(oar, this.crewManager.sailors().stream()
                 .filter(m -> m.canReach(oar.getPosition())).collect(Collectors.toList())));
         return results;
     }
 
-    public Map<Equipment, List<Sailor>> marinsDisponiblesVoiles(boolean isOpened) {
+    public Map<Equipment, List<Sailor>> availableSailorsForSails(boolean isOpened) {
         HashMap<Equipment, List<Sailor>> results = new HashMap<>();
-        this.equipmentsManager.sails(isOpened).forEach(sail -> results.put(sail, this.crewManager.marins().stream()
+        this.equipmentsManager.sails(isOpened).forEach(sail -> results.put(sail, this.crewManager.sailors().stream()
                 .filter(m -> m.canReach(sail.getPosition())).collect(Collectors.toList())));
         return results;
     }
@@ -186,16 +171,6 @@ public class Coordinator {
         return this.activateNbOars(this.equipmentsManager.allRightOars(), nb);
     }
 
-    public List<SailorAction> activateOarsOnRight(int nb, List<Sailor> busy) {
-        // Use the isDoneTurn method to know if a sailor has been used or not
-        return this.activateNbOars(this.equipmentsManager.allRightOars(), nb, busy);
-    }
-
-    public List<SailorAction> activateOarsOnLeft(int nb, List<Sailor> busy) {
-        // Use the isDoneTurn method to know if a sailor has been used or not
-        return this.activateNbOars(this.equipmentsManager.allLeftOars(), nb, busy);
-    }
-
     List<SailorAction> activateNbOars(List<Oar> oars, int nb) {
         return this.activateNbOars(oars, nb, new ArrayList<>());
 
@@ -206,10 +181,10 @@ public class Coordinator {
         // but do not set value doneTurn only methods in Captain will do that
         List<SailorAction> result = new ArrayList<>();
         int compteur = 0;
-        Map<Oar, List<Sailor>> correspondances = this.marinsDisponiblesForOar();
+        Map<Oar, List<Sailor>> matches = this.availableSailorsForOar();
         for (Oar oar : oars) {
-            if (correspondances.get(oar) != null) {
-                for (Sailor m : correspondances.get(oar)) {
+            if (matches.get(oar) != null) {
+                for (Sailor m : matches.get(oar)) {
                     if (!yetBusy.contains(m) && !m.isDoneTurn()) {
                         yetBusy.add(m);
                         result.add(m.howToMoveTo(new IntPosition(oar.x(), oar.y())));
@@ -225,20 +200,6 @@ public class Coordinator {
 
         }
         return result;
-    }
-
-    /**
-     * @param nb différence entre nbdroite-nbgauche
-     * @return
-     */
-    public List<SailorAction> activateOars(int nb) {
-
-        if (nb > 0) {
-            return this.activateOarsOnRight(nb);
-        } else {
-            return this.activateOarsOnLeft(-nb);
-        }
-
     }
 
     public List<SailorAction> activateOarsNotStrict(int nb) {
@@ -294,7 +255,7 @@ public class Coordinator {
 
             IntPosition targetPos = currLeftOar.getPosition();
             List<Sailor> sailorsInReach = crewManager.getSailorsWhoCanReach(availableSailors, targetPos);
-            leftSailorOpt = crewManager.marineClosestTo(targetPos, sailorsInReach);
+            leftSailorOpt = crewManager.sailorClosestTo(targetPos, sailorsInReach);
         }
 
         if (leftSailorOpt.isPresent()) {
@@ -308,7 +269,7 @@ public class Coordinator {
 
                 IntPosition targetPos = currRightOar.getPosition();
                 List<Sailor> sailorsInReach = crewManager.getSailorsWhoCanReach(availableSailors, targetPos);
-                rightSailorOpt = crewManager.marineClosestTo(targetPos, sailorsInReach);
+                rightSailorOpt = crewManager.sailorClosestTo(targetPos, sailorsInReach);
             }
         }
 
@@ -331,8 +292,8 @@ public class Coordinator {
         this.equipmentsManager.resetUsedStatus();
     }
 
-    public Optional<Sailor> getMarinById(int id) {
-        return this.crewManager.getMarinById(id);
+    public Optional<Sailor> getSailorById(int id) {
+        return this.crewManager.getSailorById(id);
     }
 
     /**
@@ -343,7 +304,7 @@ public class Coordinator {
     public List<Sailor> leftSailorsOnOars() {
         List<Sailor> sailors = new ArrayList<>();
         for (Oar oar : equipmentsManager.allLeftOars()) {
-            Optional<Sailor> theSailor = this.crewManager.marineAtPosition(oar.getPosition());
+            Optional<Sailor> theSailor = this.crewManager.sailorAtPosition(oar.getPosition());
             theSailor.ifPresent(sailors::add);
         }
 
@@ -359,7 +320,7 @@ public class Coordinator {
     public List<Sailor> rightSailorsOnOars() {
         List<Sailor> sailors = new ArrayList<>();
         for (Oar oar : equipmentsManager.allRightOars()) {
-            Optional<Sailor> theSailor = this.crewManager.marineAtPosition(oar.getPosition());
+            Optional<Sailor> theSailor = this.crewManager.sailorAtPosition(oar.getPosition());
             theSailor.ifPresent(sailors::add);
         }
 
@@ -376,16 +337,16 @@ public class Coordinator {
 
     private boolean canActOnSails(boolean isOpened) {
         List<Sail> sails = equipmentsManager.sails(isOpened);
-        Map<Equipment, List<Sailor>> correspondances = marinsDisponiblesVoiles(isOpened);
+        Map<Equipment, List<Sailor>> matches = availableSailorsForSails(isOpened);
         for (Sail sail : sails) {
-            if (correspondances.get(sail).isEmpty()) {
+            if (matches.get(sail).isEmpty()) {
                 return false;
             }
-            Sailor firstSailor = correspondances.get(sail).get(0);
+            Sailor firstSailor = matches.get(sail).get(0);
             // Retrieve the sailor that can act on the current sail
             // from every entry, so that next sails will know that this sailor can't act on
             // them
-            correspondances.entrySet().forEach(c -> {
+            matches.entrySet().forEach(c -> {
                 if (c.getValue().contains(firstSailor)) {
                     c.getValue().remove(firstSailor);
                 }
@@ -416,11 +377,11 @@ public class Coordinator {
 
         for (SailorAction oa : actions) {
 
-            var optMarin = this.crewManager.getMarinById(oa.getSailorId());
+            var optSailor = this.crewManager.getSailorById(oa.getSailorId());
 
-            if (optMarin.isPresent()) {
+            if (optSailor.isPresent()) {
 
-                Sailor sailor = optMarin.get();
+                Sailor sailor = optSailor.get();
 
                 var eq = this.equipmentsManager.equipmentAt(sailor.getPosition());
 
@@ -506,7 +467,7 @@ public class Coordinator {
     
     Optional<Sailor> findSailorForWatch(){
     	IntPosition watchPos = equipmentsManager.watchPosition();
-    	if(this.crewManager.marinAround(this.equipmentsManager.watchPosition()))
+    	if(this.crewManager.sailorAround(this.equipmentsManager.watchPosition()))
     	 return this.crewManager.availableSailorAtPosition(watchPos)
         .or(() -> this.crewManager.availableSailorClosestTo(watchPos));
     	return Optional.empty();

@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.io.Logable;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
+import fr.unice.polytech.si3.qgl.stormbreakers.tools.visuals.draw.Drawable;
 
 /**
  * Classe representant une forme geometrique Prend son centre comme origine
@@ -17,7 +18,7 @@ import fr.unice.polytech.si3.qgl.stormbreakers.math.Point2D;
 @JsonSubTypes({ @JsonSubTypes.Type(value = Circle.class, name = "circle"),
         @JsonSubTypes.Type(value = Rectangle.class, name = "rectangle"),
         @JsonSubTypes.Type(value = Polygon.class, name = "polygon") })
-public abstract class Shape implements Logable, CanCollide {
+public abstract class Shape implements Logable, CanCollide, Drawable {
     protected static Point2D origin = new Point2D(0, 0); // For internal context
     protected Position anchor; // For external context
     private String type;

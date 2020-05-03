@@ -28,7 +28,7 @@ class CrewManagerTest {
         CrewManager crewManager = new CrewManager(sailors);
 
         IntPosition pos = new IntPosition(0,0);
-        assertTrue(crewManager.marineClosestTo(pos,sailors).isEmpty());
+        assertTrue(crewManager.sailorClosestTo(pos,sailors).isEmpty());
     }
     
     @Test
@@ -50,31 +50,31 @@ class CrewManagerTest {
     }
 
     @Test
-    void marineClosestToTestWhenTie() {
+    void sailorClosestToTestWhenTie() {
         List<Sailor> sailors = new ArrayList<>();
         sailors.add(new Sailor(0,new IntPosition(2,0)));
         sailors.add(new Sailor(1,new IntPosition(1,1)));
         CrewManager crewManager = new CrewManager(sailors);
 
         IntPosition pos = new IntPosition(0,0);
-        Optional<Sailor> optionalMarine = crewManager.marineClosestTo(pos,sailors);
-        assertTrue(optionalMarine.isPresent());
+        Optional<Sailor> optionalSailor = crewManager.sailorClosestTo(pos,sailors);
+        assertTrue(optionalSailor.isPresent());
         // First in the list
-        assertEquals(0,optionalMarine.get().getId());
+        assertEquals(0,optionalSailor.get().getId());
     }
 
     @Test
-    void marineClosestToTestWhenOnSpot() {
+    void sailorClosestToTestWhenOnSpot() {
         List<Sailor> sailors = new ArrayList<>();
         sailors.add(new Sailor(0,new IntPosition(0,0)));
         sailors.add(new Sailor(1,new IntPosition(1,1)));
         CrewManager crewManager = new CrewManager(sailors);
 
         IntPosition pos = new IntPosition(0,0);
-        Optional<Sailor> optionalMarine = crewManager.marineClosestTo(pos,sailors);
-        assertTrue(optionalMarine.isPresent());
+        Optional<Sailor> optionalSailor = crewManager.sailorClosestTo(pos,sailors);
+        assertTrue(optionalSailor.isPresent());
         // First in the list
-        assertEquals(0,optionalMarine.get().getId());
+        assertEquals(0,optionalSailor.get().getId());
     }
 
     @Test

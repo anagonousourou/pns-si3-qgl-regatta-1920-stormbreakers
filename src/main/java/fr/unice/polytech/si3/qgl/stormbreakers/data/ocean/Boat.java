@@ -6,24 +6,23 @@ import java.beans.PropertyChangeListener;
 import fr.unice.polytech.si3.qgl.stormbreakers.exceptions.ParsingException;
 import fr.unice.polytech.si3.qgl.stormbreakers.io.InputParser;
 import fr.unice.polytech.si3.qgl.stormbreakers.io.Logger;
-import fr.unice.polytech.si3.qgl.stormbreakers.math.Surface;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Position;
+import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Rectangle;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Shape;
 
 /**
  * Le bateau implémente Propertychange listener pour permettre la mise à jour
  * des infos du bateau notamment la vie et la position-orientation
  */
-public class Boat implements PropertyChangeListener, Surface {
+public class Boat extends OceanEntity implements PropertyChangeListener {
     private Shape boatShape;
-    private Position position;
     private final int deckwidth;
     private final int decklength;
     private int life;
     private InputParser parser;
 
     public Boat(Position position, int decklength, int deckwidth, int life, InputParser parser, Shape boatShape) {
-        this.position = position;
+        super(OceanEntityType.BOAT.entityCode, position, boatShape);
         this.decklength = decklength;
         this.deckwidth = deckwidth;
         this.life = life;
@@ -36,13 +35,14 @@ public class Boat implements PropertyChangeListener, Surface {
      * Constructor for test compatibility (No shape)
      */
     public Boat(Position position, int decklength, int deckwidth, int life, InputParser parser) {
-        this.position = position;
+        super(OceanEntityType.BOAT.entityCode, position, new Rectangle(deckwidth,deckwidth,0)); // DUCT TAPE
         this.decklength = decklength;
         this.deckwidth = deckwidth;
         this.life = life;
         this.parser = parser;
     }
 
+    @Override
     public Shape getShape() {
         return boatShape;
     }
@@ -87,6 +87,7 @@ public class Boat implements PropertyChangeListener, Surface {
 
     }
 
+    @Override
     public Position getPosition() {
         return position;
     }
@@ -99,6 +100,12 @@ public class Boat implements PropertyChangeListener, Surface {
     @Override
     public double y() {
         return this.position.y();
+    }
+
+    // extends OceanEntity
+    @Override
+    public OceanEntityType getEnumType() {
+        return OceanEntityType.BOAT;
     }
 
     public double securityMargin(){

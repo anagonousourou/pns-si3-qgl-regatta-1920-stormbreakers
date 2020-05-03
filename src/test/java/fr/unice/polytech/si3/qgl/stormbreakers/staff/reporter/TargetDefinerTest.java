@@ -17,8 +17,8 @@ import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Position;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.metrics.Rectangle;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Checkpoint;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Boat;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Courant;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Recif;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Stream;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Reef;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Wind;
 import fr.unice.polytech.si3.qgl.stormbreakers.io.InputParser;
 import fr.unice.polytech.si3.qgl.stormbreakers.io.json.JsonInputParser;
@@ -33,10 +33,10 @@ public class TargetDefinerTest {
   private Boat boat;
 
   private InputParser parser = new JsonInputParser();
-  private Courant courant1 = new Courant(new Position(500.0, 0.0, 0.0), new Rectangle(300, 600, 0.0), 40.0);
-  private Courant courant2 = new Courant(new Position(900.0, 900.0, -0.52), new Rectangle(300, 600, 0.0), 80.0);
-  private Courant courant3 = new Courant(new Position(500.0, 0.0, 0.0), new Rectangle(400, 600, 0.0), 100.0);
-  private Courant courant4 = new Courant(new Position(500.0, 500.0, 0.78539), new Rectangle(400, 400, 0.0), 80.0);
+  private Stream stream1 = new Stream(new Position(500.0, 0.0, 0.0), new Rectangle(300, 600, 0.0), 40.0);
+  private Stream stream2 = new Stream(new Position(900.0, 900.0, -0.52), new Rectangle(300, 600, 0.0), 80.0);
+  private Stream stream3 = new Stream(new Position(500.0, 0.0, 0.0), new Rectangle(400, 600, 0.0), 100.0);
+  private Stream stream4 = new Stream(new Position(500.0, 500.0, 0.78539), new Rectangle(400, 400, 0.0), 80.0);
 
   private Checkpoint cp1 = new Checkpoint(new Position(1500, 300), new Circle(50));
   private Checkpoint cp2 = new Checkpoint(new Position(300, 1500), new Circle(50));
@@ -66,7 +66,7 @@ public class TargetDefinerTest {
     boat = new Boat(Position.create(0.0, 0.0, 0.0), 2, 2, 100, null);
     streamManager = new StreamManager(parser, boat);
 
-    streamManager.setCourants(List.of(courant1, courant2));
+    streamManager.setStreams(List.of(stream1, stream2));
     targetDefiner = new TargetDefiner(checkpointsManager, streamManager, boat, navigator);
 
     assertTrue(targetDefiner.thereIsStreamOnTrajectory());
@@ -75,7 +75,7 @@ public class TargetDefinerTest {
 
     boat = new Boat(Position.create(300.0, 300.0, 0.0), 2, 2, 100, null);
     streamManager = new StreamManager(parser, boat);
-    streamManager.setCourants(List.of(courant1, courant2));
+    streamManager.setStreams(List.of(stream1, stream2));
     targetDefiner = new TargetDefiner(checkpointsManager, streamManager, boat, navigator);
 
     assertFalse(targetDefiner.thereIsStreamOnTrajectory());
@@ -89,11 +89,11 @@ public class TargetDefinerTest {
     boat = mock(Boat.class);
     streamManager = new StreamManager(parser, boat);
     navigator = new Navigator();
-    streamManager.setCourants(List.of(courant1, courant2));
+    streamManager.setStreams(List.of(stream1, stream2));
     targetDefiner = new TargetDefiner(checkpointsManager, streamManager, boat, navigator);
 
     when(boat.getPosition()).thenReturn(Position.create(0, 0));
-    assertEquals(courant1, targetDefiner.nextStreamOnTrajectory());
+    assertEquals(stream1, targetDefiner.nextStreamOnTrajectory());
   }
 
   @Test
@@ -102,8 +102,8 @@ public class TargetDefinerTest {
     boat = new Boat(new Position(0, 0), 5, 3, 3, parser);
     when(checkpointsManager.nextCheckpoint()).thenReturn(cp4);
     streamManager = new StreamManager(parser, boat);
-    streamManager.setCourants(List.of(courant3, courant4));
-    streamManager.setObstacles(List.of(courant3, courant4));
+    streamManager.setStreams(List.of(stream3, stream4));
+    streamManager.setObstacles(List.of(stream3, stream4));
     
 
     wind = new Wind(null);
@@ -117,32 +117,32 @@ public class TargetDefinerTest {
     cartographer = new Cartographer(checkpointsManager, graph, boat);
     targetDefiner = new TargetDefiner(checkpointsManager, streamManager, boat, navigator, cartographer);
 
-    var reponse = targetDefiner.defineNextTarget();
+    var answer = targetDefiner.defineNextTarget();
 
-    assertNotNull(reponse);
+    assertNotNull(answer);
 
     //le checkpoint se trouve dans un stream et le bateau est hors du stream
     when(checkpointsManager.nextCheckpoint()).thenReturn(cp6);
 
-    reponse = targetDefiner.defineNextTarget();
+    answer = targetDefiner.defineNextTarget();
 
-    assertNotNull(reponse);
+    assertNotNull(answer);
 
     
     // le ep se trouve de l'autre coté du courant4
     when(checkpointsManager.nextCheckpoint()).thenReturn(cp5);
 
-    reponse = targetDefiner.defineNextTarget();
+    answer = targetDefiner.defineNextTarget();
 
-    assertNotNull(reponse);
+    assertNotNull(answer);
 
     boat.setPosition(new Position(1000, 100));
 
     when(checkpointsManager.nextCheckpoint()).thenReturn(cp4);
 
-    reponse = targetDefiner.defineNextTarget();
+    answer = targetDefiner.defineNextTarget();
 
-    assertNotNull(reponse);
+    assertNotNull(answer);
 
     // boat inside stream and checkpoint inside, stream have favorable direction
 
@@ -150,9 +150,9 @@ public class TargetDefinerTest {
 
     when(checkpointsManager.nextCheckpoint()).thenReturn(cp6);
 
-    reponse = targetDefiner.defineNextTarget();
+    answer = targetDefiner.defineNextTarget();
 
-    assertNotNull(reponse);
+    assertNotNull(answer);
 
     // boat inside stream and checkpoint inside, stream have defavorable direction
 
@@ -160,9 +160,9 @@ public class TargetDefinerTest {
 
     when(checkpointsManager.nextCheckpoint()).thenReturn(cp6);
 
-    reponse = targetDefiner.defineNextTarget();
+    answer = targetDefiner.defineNextTarget();
 
-    assertNotNull(reponse);
+    assertNotNull(answer);
 
     // boat inside stream checkpoint outside, stream have defavorable orientation
 
@@ -170,9 +170,9 @@ public class TargetDefinerTest {
 
     when(checkpointsManager.nextCheckpoint()).thenReturn(cp4);
 
-    reponse = targetDefiner.defineNextTarget();
+    answer = targetDefiner.defineNextTarget();
 
-    assertNotNull(reponse);
+    assertNotNull(answer);
 
     // no stream reefs on the trajectory
 
@@ -180,10 +180,10 @@ public class TargetDefinerTest {
 
     when(checkpointsManager.nextCheckpoint()).thenReturn(cp5);
     streamManager.setObstacles(List.of());
-    streamManager.setCourants(List.of());
-    reponse = targetDefiner.defineNextTarget();
+    streamManager.setStreams(List.of());
+    answer = targetDefiner.defineNextTarget();
 
-    assertNotNull(reponse);
+    assertNotNull(answer);
     
   }
 
@@ -196,7 +196,7 @@ public class TargetDefinerTest {
 
     when(boat.getOrientation()).thenReturn(Math.PI/2);
     StreamManager streamManager=new StreamManager(parser, boat);
-    Recif reef1=new Recif(new Position(600,400), new Rectangle(190*2, 100*2, 0));
+    Reef reef1=new Reef(new Position(600,400), new Rectangle(190*2, 100*2, 0));
     streamManager.setBoatsAndReefs(List.of(reef1));
     TargetDefiner targetDefiner=new TargetDefiner(null, streamManager, boat, navigator);
 

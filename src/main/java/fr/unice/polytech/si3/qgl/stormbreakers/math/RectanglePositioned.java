@@ -105,18 +105,6 @@ public class RectanglePositioned {
     }
 
     /**
-     * Retourne le point du rectangle le plus proche de point2d
-     * 
-     * @param point2d
-     * @return
-     */
-    // LATER: 15/03/2020 KEEP
-    public Optional<Point2D> closestPointTo(IPoint point2d) {
-        return List.of(largeur1, longueur1, largeur2, longueur2).stream().map(l -> l.closestPointTo(point2d))
-                .min((p, pother) -> Double.compare(p.distanceTo(point2d), pother.distanceTo(point2d)));
-    }
-
-    /**
      * Return a list of points of the rectangle there must me enough points
      */
     public List<IPoint> pointsOfRectangle(double step) {

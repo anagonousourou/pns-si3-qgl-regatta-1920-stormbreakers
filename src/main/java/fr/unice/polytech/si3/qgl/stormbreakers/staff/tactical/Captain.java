@@ -6,9 +6,7 @@ import java.util.Optional;
 
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.ActionType;
 import fr.unice.polytech.si3.qgl.stormbreakers.data.actions.SailorAction;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Boat;
 import fr.unice.polytech.si3.qgl.stormbreakers.math.Utils;
-import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.CheckpointsManager;
 import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.OarsConfig;
 import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.TargetDefiner;
 import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.TupleDistanceOrientation;
@@ -16,9 +14,9 @@ import fr.unice.polytech.si3.qgl.stormbreakers.staff.reporter.WeatherAnalyst;
 
 public class Captain {
 
-    private Boat boat;
+    
 
-    private CheckpointsManager checkpointsManager;
+   
     private Coordinator coordinator;
     private Navigator navigator;
 
@@ -27,12 +25,12 @@ public class Captain {
     private WeatherAnalyst weatherAnalyst;
 
     private TargetDefiner targetDefiner;
-    private TupleDistanceOrientation objectif;
+    private TupleDistanceOrientation goal;
 
-    public Captain(Boat boat, CheckpointsManager checkpointsManager, Navigator navigator, WeatherAnalyst weatherAnalyst,
+    public Captain(Navigator navigator, WeatherAnalyst weatherAnalyst,
             Coordinator coordinator, TargetDefiner targetDefiner) {
-        this.boat = boat;
-        this.checkpointsManager = checkpointsManager;
+        
+        
         this.navigator = navigator;
         this.coordinator = coordinator;
         this.weatherAnalyst = weatherAnalyst;
@@ -46,19 +44,18 @@ public class Captain {
     public List<SailorAction> nextRoundActions() {
         // On remet le statut doneTurn de tous les marins à false
         this.coordinator.resetAvailability();
-        this.checkpointsManager.updateCheckpoint(boat);
 
         var destination = this.targetDefiner.defineNextTarget();
 
         if (destination == null) {
             return List.of();
         }
-        this.objectif=destination;
+        this.goal=destination;
         double orientation = destination.getOrientation();
         double distance = destination.getDistance();
 
         
-        if (Math.abs(orientation) >= 0.05 && this.coordinator.rudderIsPresent() && this.coordinator.rudderIsAccesible() && !targetDefiner.curveTrajectoryIsSafe(objectif)) {
+        if (Math.abs(orientation) >= 0.05 && this.coordinator.rudderIsPresent() && this.coordinator.rudderIsAccesible() && !targetDefiner.curveTrajectoryIsSafe(goal)) {
             
             distance = 0.0;
         }
@@ -127,7 +124,7 @@ public class Captain {
      * @param orientation
      * @return
      */
-    List<SailorAction> actionsToOrientate(double orientation, double vitesse) {
+    List<SailorAction> actionsToOrientate(double orientation, double speed) {
         
 
         // NO ORIENTATION NEEDED
@@ -138,13 +135,13 @@ public class Captain {
         // orientation needed is low but the rudder can be used for better adjustment so we use it:) 
         if (Utils.within(orientation, Utils.EPS) && this.coordinator.rudderIsPresent()
                 && this.coordinator.rudderIsAccesible()) {
-            return this.orientateWithRudder(orientation, vitesse);
+            return this.orientateWithRudder(orientation, speed);
         }
 
         
         //on a le rudder et il peut etre utilisé
         else if (this.coordinator.rudderIsPresent() && this.coordinator.rudderIsAccesible()) {
-            return this.orientateWithRudder(orientation, vitesse);
+            return this.orientateWithRudder(orientation, speed);
         } else {
             int diff = this.navigator.fromAngleToDiff(orientation, this.coordinator.nbLeftOars(),
                     this.coordinator.nbRightOars());
@@ -254,7 +251,7 @@ public class Captain {
 
         }
 
-        if(Utils.almostEquals(currentSpeed, 0.0) && objectif!=null && !objectif.isStrict()){
+        if(Utils.almostEquals(currentSpeed, 0.0) && goal!=null && !goal.isStrict()){
             return this.validateActions(this.coordinator.addOaringSailorsOnEachSide());
         }
         
