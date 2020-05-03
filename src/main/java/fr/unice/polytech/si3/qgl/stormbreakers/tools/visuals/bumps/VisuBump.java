@@ -1,14 +1,13 @@
 package fr.unice.polytech.si3.qgl.stormbreakers.tools.visuals.bumps;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Checkpoint;
-import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Reef;
-import fr.unice.polytech.si3.qgl.stormbreakers.tools.visuals.draw.Displayer;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+
+import fr.unice.polytech.si3.qgl.stormbreakers.data.objective.Checkpoint;
+import fr.unice.polytech.si3.qgl.stormbreakers.data.ocean.Reef;
+import fr.unice.polytech.si3.qgl.stormbreakers.tools.visuals.draw.Displayer;
 
 public class VisuBump {
 
