@@ -28,7 +28,6 @@ public class VisuBump {
             String bump = new String(VisuBump.class.getResourceAsStream(RAW_PATH + "/output.bump").readAllBytes());
             bumpParser = new BumpParser(new Scanner(bump));
         } catch (IOException e) {
-            System.out.println("ERROR");
             e.printStackTrace();
             return;
         }
@@ -43,13 +42,6 @@ public class VisuBump {
 
         displayer.showIndexingFor(new ArrayList<>(checkpoints));
         displayer.showWrappingShapes(reefs, null, 30);
-
-        try {
-            System.out.println(bumpParser.getJsonData());
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-
 
         displayer.disp();
     }

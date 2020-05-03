@@ -25,8 +25,6 @@ public class ReefTest {
 
     @org.junit.jupiter.api.Test
     void isInsideTest(){
-       //assertTrue(reef1.isPtInside(pos));
-       System.out.println(reef1);
        assertTrue(reef1.getShape().wrappingShape(7.5).isPtInside(pos));
        assertTrue(reef1.isInsideWrappingSurface(8, pos) );
 
