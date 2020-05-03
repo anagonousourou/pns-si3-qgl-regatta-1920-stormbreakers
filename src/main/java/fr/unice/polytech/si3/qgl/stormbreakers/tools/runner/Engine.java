@@ -95,10 +95,8 @@ public class Engine {
 
         engine.updateNextRound();
 
-        System.out.println(engine.ship.getPosition());
         for (int i=0; i<ITERATIONS; i++) {
             engine.runNextRound();
-            System.out.println(engine.ship.getPosition());
         }
 
         displayer.setShipShape(engine.boat.getShape());
@@ -109,7 +107,6 @@ public class Engine {
         displayer.showIndexingFor(new ArrayList<>(engine.game.getCheckpoints()));
         displayer.showWrappingShapes(engine.game.getReefs(), null, engine.boat.securityMargin());
 
-        System.out.println(engine.mjollnir.getLogs());
         displayer.disp();
     }
 

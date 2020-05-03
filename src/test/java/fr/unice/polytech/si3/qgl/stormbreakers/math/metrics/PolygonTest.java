@@ -259,7 +259,7 @@ class PolygonTest {
         Polygon expanded = (Polygon) original.wrappingShape(margin);
 
         assertEquals(original.getVertices().size(), expanded.getVertices().size());
-        System.out.println(expanded.getVertices());
+        expanded.getVertices();
         /*
          * for (int i = 0; i < vertices.size(); i++) { assertEquals(margin,
          * vertices.get(i).distanceTo(expanded.getVertices().get(i)), 1e-3); }
@@ -315,7 +315,6 @@ class PolygonTest {
 
         Point2D depart = new Point2D(2306.962592519181, 5190.275946479242);
         Point2D arrive = new Point2D(3600.0, 5160);
-        System.out.println(depart.distanceTo(arrive));
 
         assertTrue(rePart.collidesWith(new LineSegment2D(depart, arrive)));
         assertTrue(rePart.wrappingShape(12).collidesWith(new LineSegment2D(depart, arrive)));

@@ -51,7 +51,6 @@ public class BumpParser {
 
         preparse(scanner);
 
-        System.out.println("Bump parsed");
     }
 
     static class TupleRoundStepPosLines {
@@ -72,7 +71,6 @@ public class BumpParser {
      * @param scanner the input scanner
      */
     private void preparse(Scanner scanner) {
-        System.out.println("Now parsing ...");
 
         boolean stillInHeader = true;
         String currentLine;

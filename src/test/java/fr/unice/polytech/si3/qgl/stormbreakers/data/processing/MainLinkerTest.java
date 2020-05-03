@@ -41,28 +41,28 @@ public class MainLinkerTest {
     @Test
     public void actionsTest() {
 
-        assertDoesNotThrow(() -> System.out.println(constructor.sendActions(roundArchipel)));
+        assertDoesNotThrow(() -> constructor.sendActions(roundArchipel));
     }
 
     @Test
     public void harbourTest() {
 
         constructor = new MainLinker(gameHarbour);
-        assertDoesNotThrow(() -> System.out.println(constructor.sendActions(roundHarbour)));
+        assertDoesNotThrow(() -> (constructor.sendActions(roundHarbour)));
     }
 
     @Test
     public void harbour2Test() {
 
         constructor = new MainLinker(gameHarbour);
-        assertDoesNotThrow(() -> System.out.println(constructor.sendActions(roundHarbour2)));
+        assertDoesNotThrow(() -> (constructor.sendActions(roundHarbour2)));
     }
 
 
     @Test
     public void snakeTest(){
         constructor=new MainLinker(gameSnake);
-        assertDoesNotThrow(()->System.out.println(constructor.sendActions(roundSnake)));
+        assertDoesNotThrow(()->(constructor.sendActions(roundSnake)));
     }
 
 
