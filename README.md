@@ -14,3 +14,5 @@ Nom de l'équipe : Stormbreakers
 Nom du bateau : Mjollnir
 
 Etudiants non-apprentis
+
+Outils en plus : voir [README](./src/main/java/fr/unice/polytech/si3/qgl/stormbreakers/tools/README.md)
