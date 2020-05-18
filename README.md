@@ -16,3 +16,5 @@ Nom du bateau : Mjollnir
 Etudiants non-apprentis
 
 Outils en plus : voir [README](./src/main/java/fr/unice/polytech/si3/qgl/stormbreakers/tools/README.md)
+
+Lien du cours : voir [QGL](https://github.com/mathiascouste/qgl-1920)
